@@ -1,0 +1,381 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int            @id @default(autoincrement())
+  created_at       DateTime       @default(now())
+  updated_at       DateTime       @updatedAt
+  username         String
+  email            String         @unique
+  password         String?
+  block_expires_at DateTime?
+  googleId         String?        @unique
+  role             UserRole       @default(USER)
+  refreshTokens    RefreshToken[]
+  comments         Comment[]
+  tickets          Ticket[]
+  user_movies      UserMovie[]
+  otps             Otp[]
+  login_requests   LoginRequest[]
+
+  @@map("users")
+}
+
+model Movie {
+  id            Int                @id @default(autoincrement())
+  created_at    DateTime           @default(now())
+  updated_at    DateTime           @updatedAt
+  type          MovieType
+  seasons_count Int?
+  slug          String
+  episodes      Episode[]
+  films         Film[]
+  factors       MovieFactor[]
+  genres        MovieGenre[]
+  translations  MovieTranslation[]
+  seasons       Season[]
+  user_movies   UserMovie[]
+
+  @@map("movies")
+}
+
+model MovieTranslation {
+  id                Int         @id @default(autoincrement())
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+  title             String
+  short_description String
+  description       String
+  country           String
+  movie_language    String
+  language          AppLanguage
+  movie_id          Int
+  movie             Movie       @relation(fields: [movie_id], references: [id])
+
+  @@map("movie_translations")
+}
+
+model Season {
+  id            Int                 @id @default(autoincrement())
+  created_at    DateTime            @default(now())
+  updated_at    DateTime            @updatedAt
+  season_number Int
+  movie_id      Int
+  episodes      Episode[]
+  translations  SeasonTranslation[]
+  movie         Movie               @relation(fields: [movie_id], references: [id])
+
+  @@map("seasons")
+}
+
+model SeasonTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  title      String
+  season_id  Int
+  language   AppLanguage
+  season     Season      @relation(fields: [season_id], references: [id])
+
+  @@map("season_translation")
+}
+
+model Episode {
+  id             Int                  @id @default(autoincrement())
+  created_at     DateTime             @default(now())
+  updated_at     DateTime             @updatedAt
+  episode_number Int
+  season_id      Int
+  movie_id       Int
+  translations   EpisodeTranslation[]
+  movie          Movie                @relation(fields: [movie_id], references: [id])
+  season         Season               @relation(fields: [season_id], references: [id])
+
+  @@map("episodes")
+}
+
+model EpisodeTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  title      String
+  episode_id Int
+  language   AppLanguage
+  episode    Episode     @relation(fields: [episode_id], references: [id])
+
+  @@map("episode_translations")
+}
+
+model Film {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  duration   String
+  type       FilmType
+  movie_id   Int
+  movie      Movie    @relation(fields: [movie_id], references: [id])
+
+  @@map("films")
+}
+
+model Comment {
+  id             Int               @id @default(autoincrement())
+  created_at     DateTime          @default(now())
+  updated_at     DateTime          @updatedAt
+  likes_count    Int
+  dislikes_count Int
+  status         CommentStatus     @default(PENDING)
+  parent_id      Int?
+  entity_id      Int
+  entity_type    CommentEntityType
+  body           String
+  user_id        Int
+  parent         Comment?          @relation("CommentToReplies", fields: [parent_id], references: [id])
+  replies        Comment[]         @relation("CommentToReplies")
+  user           User              @relation(fields: [user_id], references: [id])
+
+  @@map("comments")
+}
+
+model Factor {
+  id            Int                 @id @default(autoincrement())
+  created_at    DateTime            @default(now())
+  updated_at    DateTime            @updatedAt
+  translations  FactorTranslation[]
+  movie_factors MovieFactor[]
+
+  @@map("factors")
+}
+
+model FactorTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  first_name String
+  last_name  String
+  language   AppLanguage
+  factor_id  Int
+  factor     Factor      @relation(fields: [factor_id], references: [id])
+
+  @@map("factor_translations")
+}
+
+model MovieFactor {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  movie_id   Int
+  factor_id  Int
+  role_id    Int
+  factor     Factor   @relation(fields: [factor_id], references: [id])
+  movie      Movie    @relation(fields: [movie_id], references: [id])
+  role       Role     @relation(fields: [role_id], references: [id])
+
+  @@map("movie_factors")
+}
+
+model Role {
+  id            Int               @id @default(autoincrement())
+  created_at    DateTime          @default(now())
+  updated_at    DateTime          @updatedAt
+  slug          String
+  movie_factors MovieFactor[]
+  translations  RoleTranslation[]
+
+  @@map("roles")
+}
+
+model RoleTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  name       String
+  role_id    Int
+  language   AppLanguage
+  role       Role        @relation(fields: [role_id], references: [id])
+
+  @@map("role_translations")
+}
+
+model Genre {
+  id           Int                @id @default(autoincrement())
+  created_at   DateTime           @default(now())
+  updated_at   DateTime           @updatedAt
+  slug         String
+  translations GenreTranslation[]
+  movies       MovieGenre[]
+
+  @@map("genres")
+}
+
+model GenreTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  name       String
+  genre_id   Int
+  language   AppLanguage
+  genre      Genre       @relation(fields: [genre_id], references: [id])
+
+  @@map("genre_translations")
+}
+
+model MovieGenre {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  genre_id   Int
+  movie_id   Int
+  genre      Genre    @relation(fields: [genre_id], references: [id])
+  movie      Movie    @relation(fields: [movie_id], references: [id])
+
+  @@map("movie_genres")
+}
+
+model UserMovie {
+  id         Int           @id @default(autoincrement())
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+  type       UserMovieType
+  user_id    Int
+  movie_id   Int
+  movie      Movie         @relation(fields: [movie_id], references: [id])
+  user       User          @relation(fields: [user_id], references: [id])
+
+  @@map("user_movies")
+}
+
+model Upload {
+  id          Int                 @id @default(autoincrement())
+  created_at  DateTime            @default(now())
+  updated_at  DateTime            @updatedAt
+  src         String
+  media_type  UserMovieMediaType
+  alt_text    String
+  entity_type UserMovieEntityType
+  entity_id   Int
+
+  @@map("uploads")
+}
+
+model Ticket {
+  id         Int          @id @default(autoincrement())
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  subject    String?
+  body       String
+  parent_id  Int?
+  status     TicketStatus @default(PENDING)
+  user_id    Int
+  user       User         @relation(fields: [user_id], references: [id])
+
+  @@map("tickets")
+}
+
+model RefreshToken {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  hashed_refresh String
+  created_at     DateTime @default(now())
+  expires_at     DateTime
+  user           User     @relation(fields: [user_id], references: [id])
+
+  @@map("refresh_tokens")
+}
+
+model Otp {
+  id           Int       @id @default(autoincrement())
+  user_id      Int?
+  user_email   String?
+  hashed_otp   String
+  created_at   DateTime  @default(now())
+  used_at      DateTime?
+  expires_at   DateTime
+  otp_attempts Int       @default(0)
+  type         OtpType
+  user         User?     @relation(fields: [user_id], references: [id])
+
+  @@index([user_id, expires_at])
+  @@index([user_id, used_at])
+  @@map("otps")
+}
+
+model LoginRequest {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id])
+
+  @@map("login_requests")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum MovieType {
+  CINEMATIC
+  SERIES
+}
+
+enum AppLanguage {
+  FA
+  EN
+  AR
+}
+
+enum FilmType {
+  CINEMATIC
+  TRAILER
+}
+
+enum CommentStatus {
+  APPROVED
+  REJECTED
+  PENDING
+}
+
+enum CommentEntityType {
+  MOVIE
+  EPISODE
+}
+
+enum UserMovieType {
+  BOOKMARK
+  LIKE
+  RECENT_WATCH
+}
+
+enum UserMovieMediaType {
+  IMAGE
+  VIDEO
+}
+
+enum TicketStatus {
+  PENDING
+  APPROVED
+}
+
+enum UserMovieEntityType {
+  FACTOR_PROFILE
+  MOVIE_COVER
+  SEASON_COVER
+  EPISODE_COVER
+  MOVIE_VIDEO
+  EPISODE_VIDEO
+}
+
+enum OtpType {
+  Login
+  Forget_Password
+  Signup
+}

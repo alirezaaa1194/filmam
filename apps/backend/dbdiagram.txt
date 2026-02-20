@@ -1,0 +1,192 @@
+Table users {
+  id integer [primary key]
+  username varchar
+  email varchar
+  password varchar(255)
+  role enum (user, admin)
+  created_at timestamp
+}
+Table movies {
+  id integer [primary key]
+  type enum (cinematic, series)
+  seasons_count integer (nullable)
+  slug varchar
+  created_at timestamp
+}
+Table movie_translations {
+  title varchar
+  short_description varchar
+  description varchar
+  country varchar
+  movie_language varchar
+  language enum(fa, en, ar)
+  movie_id integer
+  created_at timestamp
+}
+Table seasons {
+  id integer [primary key]
+  season_number integer
+  movie_id integer
+  created_at timestamp
+}
+Table season_translations {
+  id integer [primary key]
+  title varchar
+  season_id integer
+  created_at timestamp
+}
+Table episodes {
+  id integer [primary key]
+  episode_number integer
+  season_id integer
+  movie_id integer
+  created_at timestamp
+}
+Table episode_translations {
+  id integer [primary key]
+  title varchar
+  episode_id integer
+  created_at timestamp
+}
+Table films {
+  id integer [primary key]
+  duration varchar
+  type enum(cinematic, trailer)
+  movie_id integer
+  created_at timestamp
+}
+Table comments {
+  id integer [primary key]
+  user_id integer
+  likes_count integer
+  dislikes_count integer
+  status enum (approved, rejected, pending)
+  parent_id integer
+  entity_id integer
+  entity_type enum (movie, episode)
+  body text
+  created_at timestamp
+}
+
+Table factors {
+  id integer [primary key]
+  created_at timestamp
+}
+
+Table factor_translations {
+  id integer [primary key]
+  first_name varchar
+  last_name varchar
+  factor_id integer
+  created_at timestamp
+}
+
+Table movie_factors {
+  id integer [primary key]
+  movie_id integer
+  factor_id integer
+  role_id integer
+  created_at timestamp
+}
+
+Table roles {
+  id integer [primary key]
+  slug varchar
+  created_at timestamp
+}
+
+Table role_translations {
+  id integer [primary key]
+  name varchar
+  role_id integer
+  created_at timestamp
+}
+
+Table genres {
+  id integer [primary key]
+  slug varchar
+  created_at timestamp
+}
+
+Table genre_translations {
+  id integer [primary key]
+  name varchar
+  genre_id integer
+  created_at timestamp
+}
+Table movie_genres {
+  id integer [primary key]
+  genre_id integer
+  movie_id integer
+  created_at timestamp
+}
+Table user_movies {
+  id integer [primary key]
+  movie_id integer
+  user_id integer
+  type enum(bookmark, like, recent_watch)
+  created_at timestamp
+}
+
+Table uploads {
+  id integer [primary key]
+  src varchar
+  media_type enum (image, video)
+  alt_text varchar
+  entity_type enum  (factor_profile,
+  movie_cover,
+  season_cover,
+  episode_cover,
+  movie_video,
+  episode_video)
+  entity_id integer
+  created_at timestamp
+}
+Table tickets {
+  id integer [primary key]
+  user_id integer
+  subject varchar(nullable)
+  body varchar
+  parent_id integer(nullable)
+  status enum (approved, pending)
+  created_at timestamp
+} 
+
+Ref: users.id > user_movies.user_id
+Ref: users.id > comments.user_id 
+Ref: users.id > tickets.user_id
+
+Ref: movies.id > comments.entity_id
+Ref: movies.id > movie_translations.movie_id
+Ref: movies.id > movie_genres.movie_id
+Ref: movies.id > films.movie_id
+Ref: movies.id > seasons.movie_id
+Ref: movies.id > episodes.movie_id
+Ref: movies.id > uploads.entity_id
+
+Ref: seasons.id > uploads.entity_id
+Ref: seasons.id > episodes.season_id
+Ref: seasons.id > season_translations.season_id
+
+Ref: episodes.id > uploads.entity_id
+Ref: episodes.id > comments.entity_id
+Ref: episodes.id > episode_translations.episode_id
+
+Ref: comments.id > comments.parent_id
+
+Ref: factors.id > factor_translations.factor_id
+Ref: factors.id > uploads.entity_id
+
+Ref: movie_factors.movie_id > movies.id
+Ref: movie_factors.factor_id > factors.id
+Ref: movie_factors.role_id > roles.id
+
+Ref: roles.id > role_translations.role_id
+
+Ref: genres.id > genre_translations.genre_id
+Ref: genres.id > movie_genres.genre_id
+
+Ref: films.id > uploads.entity_id
+
+Ref: user_movies.movie_id > movies.id
+
