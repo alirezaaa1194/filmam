@@ -17,13 +17,9 @@ import { createHash, randomUUID, randomInt } from 'crypto';
 import { Resend } from 'resend';
 import { OtpService } from 'src/otp/otp.service';
 import { OtpDto, SignupOtpDto } from './dto/otp.dto';
-import { OtpType, UserRole } from 'src/generated/prisma/enums';
 import { ResetPasswordDto } from './dto/password.dto';
 import { LoginRequestService } from 'src/login-request/login-request.service';
-type VerifyOtpInput = {
-  email: string;
-  otp: number;
-} & Partial<Pick<SignupOtpDto, 'username' | 'password'>>;
+import { OtpType, UserRole } from '@prisma/client';
 
 @Injectable()
 export class AuthService {

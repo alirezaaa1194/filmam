@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Is_Admin_Key } from 'src/common/decorators/role.decorator';
-import { UserRole } from 'src/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
 import { UserType } from '../auth.type';
 

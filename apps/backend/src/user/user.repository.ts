@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleAuthDto, SignUpDto } from 'src/auth/dto/signup.dto';
-import { UserRole } from 'src/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 import { prisma } from 'src/lib/prisma';
 
 @Injectable()

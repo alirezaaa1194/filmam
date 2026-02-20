@@ -29,7 +29,7 @@ import {
 import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
 import { OtpDto, SignupOtpDto } from './dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { OtpType } from 'src/generated/prisma/enums';
+import { OtpType } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {

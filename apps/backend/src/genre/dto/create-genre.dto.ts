@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { AppLanguage } from 'src/generated/prisma/enums';
+import { AppLanguage } from '@prisma/client';
 
 export class CreateGenreDto {
   @IsNotEmpty()

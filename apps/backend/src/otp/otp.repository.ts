@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { OtpType } from 'src/generated/prisma/enums';
+import { OtpType } from '@prisma/client';
 import { prisma } from 'src/lib/prisma';
 
 @Injectable()
