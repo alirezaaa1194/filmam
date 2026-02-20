@@ -1,5 +1,5 @@
 import { Body, Injectable } from '@nestjs/common';
-import { prisma } from 'src/lib/prisma';
+import { prisma } from '../lib/prisma';
 import { CreateGenreDto } from './dto/create-genre.dto';
 
 @Injectable()

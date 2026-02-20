@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { prisma } from 'src/lib/prisma';
+import { prisma } from '../lib/prisma';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()

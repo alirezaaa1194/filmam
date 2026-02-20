@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from 'src/lib/prisma';
+import { prisma } from '../lib/prisma';
 
 @Injectable()
 export class LoginRequestRepository {
