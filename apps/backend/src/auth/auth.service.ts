@@ -6,19 +6,19 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { UserType } from './auth.type';
 import { createHash, randomUUID, randomInt } from 'crypto';
 import { Resend } from 'resend';
-import { OtpService } from 'src/otp/otp.service';
+import { OtpService } from '../otp/otp.service';
 import { OtpDto, SignupOtpDto } from './dto/otp.dto';
 import { ResetPasswordDto } from './dto/password.dto';
-import { LoginRequestService } from 'src/login-request/login-request.service';
+import { LoginRequestService } from '../login-request/login-request.service';
 import { OtpType, UserRole } from '@prisma/client';
 
 @Injectable()

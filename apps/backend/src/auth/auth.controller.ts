@@ -20,13 +20,13 @@ import { SignUpDto } from './dto/signup.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtAuthGuard as RefreshJwtAuthGuard } from './local-auth.guard';
 import { RoleGuard } from './guards/role.guard';
-import { Admin } from 'src/common/decorators/role.decorator';
+import { Admin } from '../common/decorators/role.decorator';
 import {
   ChangePasswordDto,
   ForgetPasswordDto,
   ResetPasswordDto,
 } from './dto/password.dto';
-import { RefreshTokenService } from 'src/refresh-token/refresh-token.service';
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { OtpDto, SignupOtpDto } from './dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { OtpType } from '@prisma/client';
