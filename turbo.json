@@ -3,7 +3,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["PORT", "DATABASE_URL", "JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET", "RESEND_API_KEY", "CRON_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"]
     },
     "dev": {
       "cache": false
