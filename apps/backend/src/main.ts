@@ -12,14 +12,10 @@ async function bootstrap() {
     .setTitle('Filmam Api')
     .setVersion('1.0')
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory, {
-    customCss: `
-      .swagger-ui .topbar { 
-        display: none !important; 
-      }
-    `,
-  });
+
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('docs', app, document);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT ?? 3000);
 }
