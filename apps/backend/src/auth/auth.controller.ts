@@ -58,7 +58,7 @@ export class AuthController {
     return await this.authService.verifyOtp(signupOtpDto);
   }
 
-  // @Admin()
+  @Admin()
   // @UseGuards(JwtAuthGuard, RoleGuard)
   @UseGuards(JwtAuthGuard)
   @Get('me')
