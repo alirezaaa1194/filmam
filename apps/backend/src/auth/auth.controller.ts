@@ -1,14 +1,12 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Headers,
   HttpCode,
   HttpStatus,
   Post,
   Put,
-  Query,
   Req,
   Request,
   Res,
@@ -17,8 +15,8 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { JwtAuthGuard as RefreshJwtAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard as RefreshJwtAuthGuard } from './guards/refresh-token.guard';
 import { RoleGuard } from './guards/role.guard';
 import { Admin } from '../common/decorators/role.decorator';
 import {
@@ -26,46 +24,91 @@ import {
   ForgetPasswordDto,
   ResetPasswordDto,
 } from './dto/password.dto';
-import { RefreshTokenService } from '../refresh-token/refresh-token.service';
-import { OtpDto, SignupOtpDto } from './dto/otp.dto';
+import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { OtpType } from '@prisma/client';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { MeResponseDto } from './dto/me.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.login(loginDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+      },
+    },
+  })
   @HttpCode(HttpStatus.OK)
   @Post('verify')
-  async verify(@Body() otpDto: OtpDto) {
+  async verify(@Body() otpDto: LoginOtpDto) {
     return await this.authService.verifyOtp(otpDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
   @HttpCode(HttpStatus.OK)
   @Post('signup')
   async signup(@Body() signupDto: SignUpDto) {
     return await this.authService.signup(signupDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+      },
+    },
+  })
   @Post('signup-verify')
   async signupVerify(@Body() signupOtpDto: SignupOtpDto) {
     return await this.authService.verifyOtp(signupOtpDto);
   }
 
-  @Admin()
+  // @Admin()
   // @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiResponse({ type: MeResponseDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async me(@Request() req) {
     return await this.authService.me(req.user);
   }
 
+  @ApiResponse({
+    status: 204,
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put('change-password')
   async changePassword(
@@ -78,17 +121,44 @@ export class AuthController {
       changePasswordDto.newPassword,
     );
   }
+
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
   @HttpCode(HttpStatus.OK)
   @Post('forget-password')
   async forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {
     return await this.authService.forgetPassword(forgetPasswordDto.email);
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
   @Put('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return await this.authService.resetPassword(resetPasswordDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+      },
+    },
+  })
+  @ApiBearerAuth()
   @Post('refresh')
   @UseGuards(RefreshJwtAuthGuard)
   async refreshToken(@Request() req) {
@@ -96,6 +166,15 @@ export class AuthController {
     return this.authService.refresh(req.user.userId, refreshToken);
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Post('logout')
   @UseGuards(RefreshJwtAuthGuard)
@@ -110,17 +189,17 @@ export class AuthController {
     return await this.authService.cleanupOtp(secret);
   }
 
+  @ApiBearerAuth()
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth() {}
 
+  @ApiBearerAuth()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res) {
     const user = req.user;
     const tokens = await this.authService.jwtGenerator(user.id, user.email);
-    // return { message: 'Login successful', ...tokens };
-
     const html = `
     <html>
       <body>

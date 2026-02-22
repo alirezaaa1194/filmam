@@ -13,7 +13,6 @@ import { TicketModule } from './ticket/ticket.module';
 import { AuthModule } from './auth/auth.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 import { OtpModule } from './otp/otp.module';
-import { AuthStrategy } from './auth/google.strategy';
 import { LoginRequestService } from './login-request/login-request.service';
 import { LoginRequestModule } from './login-request/login-request.module';
 

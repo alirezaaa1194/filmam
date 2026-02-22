@@ -12,11 +12,11 @@ import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
-import { UserType } from './auth.type';
+import { UserType } from './types/auth.type';
 import { createHash, randomUUID, randomInt } from 'crypto';
 import { Resend } from 'resend';
 import { OtpService } from '../otp/otp.service';
-import { OtpDto, SignupOtpDto } from './dto/otp.dto';
+import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { ResetPasswordDto } from './dto/password.dto';
 import { LoginRequestService } from '../login-request/login-request.service';
 import { OtpType, UserRole } from '@prisma/client';
@@ -161,7 +161,7 @@ export class AuthService {
     }
   }
 
-  async verifyOtp(otpDto: OtpDto | SignupOtpDto) {
+  async verifyOtp(otpDto: LoginOtpDto | SignupOtpDto) {
     const { email, otp } = otpDto;
     let user = await this.userService.getUserByEmail(email);
 
@@ -316,7 +316,7 @@ export class AuthService {
             };
           }
         } else {
-          throw new UnauthorizedException('Invalid current password');
+          throw new BadRequestException('Invalid current password');
         }
       } else {
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);

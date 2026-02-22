@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Is_Admin_Key } from '../../common/decorators/role.decorator';
 import { UserRole } from '@prisma/client';
 import { UserService } from '../../user/user.service';
-import { UserType } from '../auth.type';
+import { UserType } from '../types/auth.type';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

@@ -5,7 +5,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
 
 @Injectable()
