@@ -38,14 +38,25 @@ model Movie {
   seasons_count Int?
   slug          String
   episodes      Episode[]
-  films         Film[]
   factors       MovieFactor[]
   genres        MovieGenre[]
   translations  MovieTranslation[]
   seasons       Season[]
   user_movies   UserMovie[]
+  movie_files   MovieFile[]
 
   @@map("movies")
+}
+
+model MovieFile {
+  id        Int           @id @default(autoincrement())
+  movie_id  Int
+  upload_id Int
+  type      MovieFileType
+  movie     Movie         @relation(fields: [movie_id], references: [id])
+  upload    Upload        @relation(fields: [upload_id], references: [id])
+
+  @@map("MovieFiles")
 }
 
 model MovieTranslation {
@@ -73,8 +84,20 @@ model Season {
   episodes      Episode[]
   translations  SeasonTranslation[]
   movie         Movie               @relation(fields: [movie_id], references: [id])
+  season_files  SeasonFile[]
 
   @@map("seasons")
+}
+
+model SeasonFile {
+  id        Int            @id @default(autoincrement())
+  season_id Int
+  upload_id Int
+  type      SeasonFileType
+  season    Season         @relation(fields: [season_id], references: [id])
+  upload    Upload         @relation(fields: [upload_id], references: [id])
+
+  @@map("SeasonFiles")
 }
 
 model SeasonTranslation {
@@ -99,8 +122,20 @@ model Episode {
   translations   EpisodeTranslation[]
   movie          Movie                @relation(fields: [movie_id], references: [id])
   season         Season               @relation(fields: [season_id], references: [id])
+  episode_files  EpisodeFile[]
 
   @@map("episodes")
+}
+
+model EpisodeFile {
+  id         Int             @id @default(autoincrement())
+  episode_id Int
+  upload_id  Int
+  type       EpisodeFileType
+  upload     Upload          @relation(fields: [upload_id], references: [id])
+  episode    Episode         @relation(fields: [episode_id], references: [id])
+
+  @@map("EpisodeFiles")
 }
 
 model EpisodeTranslation {
@@ -113,18 +148,6 @@ model EpisodeTranslation {
   episode    Episode     @relation(fields: [episode_id], references: [id])
 
   @@map("episode_translations")
-}
-
-model Film {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  duration   String
-  type       FilmType
-  movie_id   Int
-  movie      Movie    @relation(fields: [movie_id], references: [id])
-
-  @@map("films")
 }
 
 model Comment {
@@ -152,8 +175,20 @@ model Factor {
   updated_at    DateTime            @updatedAt
   translations  FactorTranslation[]
   movie_factors MovieFactor[]
+  factorFiles   FactorFile[]
 
   @@map("factors")
+}
+
+model FactorFile {
+  id        Int            @id @default(autoincrement())
+  factor_id Int
+  upload_id Int
+  type      FactorFileType
+  factor    Factor         @relation(fields: [factor_id], references: [id])
+  upload    Upload         @relation(fields: [upload_id], references: [id])
+
+  @@map("FactorFiles")
 }
 
 model FactorTranslation {
@@ -255,14 +290,22 @@ model UserMovie {
 }
 
 model Upload {
-  id          Int                 @id @default(autoincrement())
-  created_at  DateTime            @default(now())
-  updated_at  DateTime            @updatedAt
-  src         String
-  media_type  UserMovieMediaType
-  alt_text    String
-  entity_type UserMovieEntityType
-  entity_id   Int
+  id           Int           @id @default(autoincrement())
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  path         String
+  mime_type    String
+  file_name    String
+  source_type  SourceType
+  alt_text     String?
+  size         Int?
+  width        String?
+  height       String?
+  duration     String?
+  movieFiles   MovieFile[]
+  seasonFiles  SeasonFile[]
+  episodeFiles EpisodeFile[]
+  factorFiles  FactorFile[]
 
   @@map("uploads")
 }
@@ -356,27 +399,40 @@ enum UserMovieType {
   RECENT_WATCH
 }
 
-enum UserMovieMediaType {
-  IMAGE
-  VIDEO
-}
-
 enum TicketStatus {
   PENDING
   APPROVED
 }
 
-enum UserMovieEntityType {
-  FACTOR_PROFILE
-  MOVIE_COVER
-  SEASON_COVER
-  EPISODE_COVER
-  MOVIE_VIDEO
-  EPISODE_VIDEO
+enum MovieFileType {
+  POSTER
+  BANNER
+  THUMBNAIL
+  TRAILER
+  FILM
+}
+
+enum SeasonFileType {
+  BANNER
+  TRAILER
+}
+
+enum EpisodeFileType {
+  BANNER
+  TRAILER
+}
+
+enum FactorFileType {
+  PROFILE
 }
 
 enum OtpType {
   Login
   Forget_Password
   Signup
+}
+
+enum SourceType {
+  FROM_FILE
+  FROM_URL
 }

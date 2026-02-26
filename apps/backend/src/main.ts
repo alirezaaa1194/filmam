@@ -9,17 +9,17 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Filmam Api')
     .setVersion('1.0')
-    .addBearerAuth(
-      // {
-      //   type: 'http',
-      //   scheme: 'bearer',
-      //   bearerFormat: 'JWT',
-      //   name: 'JWT',
-      //   description: 'Enter JWT token',
-      //   in: 'header',
-      // },
-      // 'JWT-auth', // This name here is important for matching up with @ApiBearerAuth() in your controller!
-    )
+    .addBearerAuth
+    // {
+    //   type: 'http',
+    //   scheme: 'bearer',
+    //   bearerFormat: 'JWT',
+    //   name: 'JWT',
+    //   description: 'Enter JWT token',
+    //   in: 'header',
+    // },
+    // 'JWT-auth', // This name here is important for matching up with @ApiBearerAuth() in your controller!
+    ()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document, {
@@ -41,13 +41,18 @@ async function bootstrap() {
     ],
   });
   app.useGlobalPipes(new ValidationPipe());
+  // app.enableCors({
+  //   origin: [
+  //     'https://filmamapp.ir',
+  //     'http://localhost:3000',
+  //     // 'http://localhost:4000',
+  //     'http://localhost:7700',
+  //   ],
+  //   credentials: true,
+  // });
   app.enableCors({
-    origin: [
-      'https://filmamapp.ir',
-      'http://localhost:3000',
-      // 'http://localhost:4000',
-      'http://localhost:7700',
-    ],
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
   await app.listen(process.env.PORT ?? 4000);

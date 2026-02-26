@@ -3,7 +3,6 @@ import { UserModule } from './user/user.module';
 import { MovieModule } from './movie/movie.module';
 import { SeasonModule } from './season/season.module';
 import { EpisodeModule } from './episode/episode.module';
-import { FilmModule } from './film/film.module';
 import { CommentModule } from './comment/comment.module';
 import { FactorModule } from './factor/factor.module';
 import { RoleModule } from './role/role.module';
@@ -13,7 +12,6 @@ import { TicketModule } from './ticket/ticket.module';
 import { AuthModule } from './auth/auth.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 import { OtpModule } from './otp/otp.module';
-import { LoginRequestService } from './login-request/login-request.service';
 import { LoginRequestModule } from './login-request/login-request.module';
 
 @Module({
@@ -22,7 +20,6 @@ import { LoginRequestModule } from './login-request/login-request.module';
     MovieModule,
     SeasonModule,
     EpisodeModule,
-    FilmModule,
     CommentModule,
     FactorModule,
     RoleModule,
@@ -35,6 +32,6 @@ import { LoginRequestModule } from './login-request/login-request.module';
     LoginRequestModule,
   ],
   controllers: [],
-  providers: [LoginRequestService],
+  providers: [],
 })
 export class AppModule {}
