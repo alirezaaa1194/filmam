@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { SignUpDto } from '../auth/dto/signup.dto';
+import { SignUpDto } from '../../auth/dto/signup.dto';
 import { UserRole } from '@prisma/client';
-import { prisma } from '../lib/prisma';
-import { GoogleAuthDto } from '../auth/dto/google-auth.dto';
+import { prisma } from '../../lib/prisma';
+import { GoogleAuthDto } from '../../auth/dto/google-auth.dto';
 
 @Injectable()
 export class UserRepository {

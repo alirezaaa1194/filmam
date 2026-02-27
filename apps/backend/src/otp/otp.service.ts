@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { OtpRepository } from './otp.repository';
+import { OtpRepository } from './repository/otp.repository';
 import { OtpType } from '@prisma/client';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RefreshTokenService } from './refresh-token.service';
-import { RefreshTokenRepository } from './refresh-token.repository';
+import { RefreshTokenRepository } from './repository/refresh-token.repository';
 
 @Module({
   providers: [RefreshTokenService, RefreshTokenRepository],

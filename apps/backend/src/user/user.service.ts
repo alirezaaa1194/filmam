@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SignUpDto } from '../auth/dto/signup.dto';
-import { UserRepository } from './user.repository';
+import { UserRepository } from './repository/user.repository';
 import { GoogleAuthDto } from '../auth/dto/google-auth.dto';
 
 @Injectable()

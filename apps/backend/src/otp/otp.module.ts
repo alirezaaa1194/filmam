@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { OtpService } from './otp.service';
-import { OtpRepository } from './otp.repository';
+import { OtpRepository } from './repository/otp.repository';
 
 @Module({
   providers: [OtpService, OtpRepository],

@@ -53,8 +53,8 @@ model MovieFile {
   movie_id  Int
   upload_id Int
   type      MovieFileType
-  movie     Movie         @relation(fields: [movie_id], references: [id])
-  upload    Upload        @relation(fields: [upload_id], references: [id])
+  movie     Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  upload    Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)
 
   @@map("MovieFiles")
 }
@@ -70,7 +70,7 @@ model MovieTranslation {
   movie_language    String
   language          AppLanguage
   movie_id          Int
-  movie             Movie       @relation(fields: [movie_id], references: [id])
+  movie             Movie       @relation(fields: [movie_id], references: [id], onDelete: Cascade)
 
   @@map("movie_translations")
 }
@@ -83,7 +83,7 @@ model Season {
   movie_id      Int
   episodes      Episode[]
   translations  SeasonTranslation[]
-  movie         Movie               @relation(fields: [movie_id], references: [id])
+  movie         Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)
   season_files  SeasonFile[]
 
   @@map("seasons")
@@ -94,8 +94,8 @@ model SeasonFile {
   season_id Int
   upload_id Int
   type      SeasonFileType
-  season    Season         @relation(fields: [season_id], references: [id])
-  upload    Upload         @relation(fields: [upload_id], references: [id])
+  season    Season         @relation(fields: [season_id], references: [id], onDelete: Cascade)
+  upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)
 
   @@map("SeasonFiles")
 }
@@ -107,7 +107,7 @@ model SeasonTranslation {
   title      String
   season_id  Int
   language   AppLanguage
-  season     Season      @relation(fields: [season_id], references: [id])
+  season     Season      @relation(fields: [season_id], references: [id], onDelete: Cascade)
 
   @@map("season_translation")
 }
@@ -120,8 +120,8 @@ model Episode {
   season_id      Int
   movie_id       Int
   translations   EpisodeTranslation[]
-  movie          Movie                @relation(fields: [movie_id], references: [id])
-  season         Season               @relation(fields: [season_id], references: [id])
+  movie          Movie                @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  season         Season               @relation(fields: [season_id], references: [id], onDelete: Cascade)
   episode_files  EpisodeFile[]
 
   @@map("episodes")
@@ -132,8 +132,8 @@ model EpisodeFile {
   episode_id Int
   upload_id  Int
   type       EpisodeFileType
-  upload     Upload          @relation(fields: [upload_id], references: [id])
-  episode    Episode         @relation(fields: [episode_id], references: [id])
+  upload     Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)
+  episode    Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@map("EpisodeFiles")
 }
@@ -145,7 +145,7 @@ model EpisodeTranslation {
   title      String
   episode_id Int
   language   AppLanguage
-  episode    Episode     @relation(fields: [episode_id], references: [id])
+  episode    Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@map("episode_translations")
 }
@@ -164,7 +164,7 @@ model Comment {
   user_id        Int
   parent         Comment?          @relation("CommentToReplies", fields: [parent_id], references: [id])
   replies        Comment[]         @relation("CommentToReplies")
-  user           User              @relation(fields: [user_id], references: [id])
+  user           User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("comments")
 }
@@ -185,8 +185,8 @@ model FactorFile {
   factor_id Int
   upload_id Int
   type      FactorFileType
-  factor    Factor         @relation(fields: [factor_id], references: [id])
-  upload    Upload         @relation(fields: [upload_id], references: [id])
+  factor    Factor         @relation(fields: [factor_id], references: [id], onDelete: Cascade)
+  upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)
 
   @@map("FactorFiles")
 }
@@ -199,7 +199,7 @@ model FactorTranslation {
   last_name  String
   language   AppLanguage
   factor_id  Int
-  factor     Factor      @relation(fields: [factor_id], references: [id])
+  factor     Factor      @relation(fields: [factor_id], references: [id], onDelete: Cascade)
 
   @@map("factor_translations")
 }
@@ -211,9 +211,9 @@ model MovieFactor {
   movie_id   Int
   factor_id  Int
   role_id    Int
-  factor     Factor   @relation(fields: [factor_id], references: [id])
-  movie      Movie    @relation(fields: [movie_id], references: [id])
-  role       Role     @relation(fields: [role_id], references: [id])
+  factor     Factor   @relation(fields: [factor_id], references: [id], onDelete: Cascade)
+  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  role       Role     @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@map("movie_factors")
 }
@@ -236,7 +236,7 @@ model RoleTranslation {
   name       String
   role_id    Int
   language   AppLanguage
-  role       Role        @relation(fields: [role_id], references: [id])
+  role       Role        @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@map("role_translations")
 }
@@ -259,7 +259,7 @@ model GenreTranslation {
   name       String
   genre_id   Int
   language   AppLanguage
-  genre      Genre       @relation(fields: [genre_id], references: [id])
+  genre      Genre       @relation(fields: [genre_id], references: [id], onDelete: Cascade)
 
   @@map("genre_translations")
 }
@@ -270,8 +270,8 @@ model MovieGenre {
   updated_at DateTime @updatedAt
   genre_id   Int
   movie_id   Int
-  genre      Genre    @relation(fields: [genre_id], references: [id])
-  movie      Movie    @relation(fields: [movie_id], references: [id])
+  genre      Genre    @relation(fields: [genre_id], references: [id], onDelete: Cascade)
+  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
 
   @@map("movie_genres")
 }
@@ -283,8 +283,8 @@ model UserMovie {
   type       UserMovieType
   user_id    Int
   movie_id   Int
-  movie      Movie         @relation(fields: [movie_id], references: [id])
-  user       User          @relation(fields: [user_id], references: [id])
+  movie      Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("user_movies")
 }
@@ -319,7 +319,7 @@ model Ticket {
   parent_id  Int?
   status     TicketStatus @default(PENDING)
   user_id    Int
-  user       User         @relation(fields: [user_id], references: [id])
+  user       User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("tickets")
 }
@@ -330,7 +330,7 @@ model RefreshToken {
   hashed_refresh String
   created_at     DateTime @default(now())
   expires_at     DateTime
-  user           User     @relation(fields: [user_id], references: [id])
+  user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("refresh_tokens")
 }
@@ -345,7 +345,7 @@ model Otp {
   expires_at   DateTime
   otp_attempts Int       @default(0)
   type         OtpType
-  user         User?     @relation(fields: [user_id], references: [id])
+  user         User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id, expires_at])
   @@index([user_id, used_at])
@@ -356,7 +356,7 @@ model LoginRequest {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
   user_id    Int
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("login_requests")
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LoginRequestRepository } from './login-request.repository';
+import { LoginRequestRepository } from './repository/login-request.repository';
 
 @Injectable()
 export class LoginRequestService {

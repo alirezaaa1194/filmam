@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { UploadFromFileDto, UploadFromUrlDto } from './dto/upload.dto';
-import { UploadRepository } from './upload.repository';
+import { UploadRepository } from './repository/upload.repository';
 
 @Injectable()
 export class UploadService {
@@ -13,7 +13,8 @@ export class UploadService {
 
   async uploadFromFile(file: Express.Multer.File, body: UploadFromFileDto) {
     const bucket = process.env.SUPABASE_BUCKET!;
-    const filePath = `files/${Date.now()}-${file.originalname}`;
+    const fileName = `${Date.now()}-${file.originalname}`;
+    const filePath = `files/${fileName}`;
 
     const { error } = await this.supabase.storage
       .from(bucket)
@@ -29,11 +30,27 @@ export class UploadService {
     return await this.uploadRepository.createUploadFromFile({
       file,
       body,
+      fileName,
       publicUrl: publicUrlData.publicUrl,
     });
   }
 
   async uploadFromUrl(body: UploadFromUrlDto) {
     return await this.uploadRepository.createUploadFromUrl(body);
+  }
+
+  async deleteUploads(uploadIds: number[]) {
+    const uploads = await this.uploadRepository.getUploads(uploadIds);
+    const uploadNames = uploads.map((upload) => `files/${upload.file_name}`);
+    await this.uploadRepository.deleteUploads(uploadIds);
+    const { error } = await this.supabase.storage
+      .from(process.env.SUPABASE_BUCKET!)
+      .remove(uploadNames);
+    if (error) {
+      throw new Error('Failed to delete files from storage');
+    }
+    return {
+      message: 'Uploads deleted successfully',
+    };
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   ParseFilePipe,
   Post,
   UploadedFile,
@@ -12,7 +13,11 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadFromFileDto, UploadFromUrlDto } from './dto/upload.dto';
+import {
+  DeleteUploadDto,
+  UploadFromFileDto,
+  UploadFromUrlDto,
+} from './dto/upload.dto';
 
 @Controller('upload')
 export class UploadController {
@@ -39,5 +44,12 @@ export class UploadController {
   @Post('from-url')
   async uploadFromUrl(@Body() body: UploadFromUrlDto) {
     return await this.uploadService.uploadFromUrl(body);
+  }
+
+  @Admin()
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Delete()
+  async deleteUploads(@Body() body: DeleteUploadDto) {
+    return await this.uploadService.deleteUploads(body.uploadIds);
   }
 }

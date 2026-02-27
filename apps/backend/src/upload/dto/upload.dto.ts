@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UploadFromFileDto {
   @IsString()
@@ -42,4 +42,11 @@ export class UploadFromUrlDto {
   @IsString()
   @IsNotEmpty()
   path: string;
+}
+
+export class DeleteUploadDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  uploadIds: number[];
 }
