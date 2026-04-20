@@ -11,7 +11,7 @@ export class MeResponseDto {
   role: string;
 
   @ApiProperty()
-  googleId: string | null;
+  google_id: string | null;
 
   @ApiProperty()
   created_at: Date;

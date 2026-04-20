@@ -8,5 +8,5 @@ export class GoogleAuthDto {
   @IsEmail()
   email: string;
 
-  googleId: string;
+  google_id: string;
 }

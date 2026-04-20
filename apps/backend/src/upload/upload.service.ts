@@ -43,12 +43,12 @@ export class UploadService {
     const uploads = await this.uploadRepository.getUploads(uploadIds);
     const uploadNames = uploads.map((upload) => `files/${upload.file_name}`);
     await this.uploadRepository.deleteUploads(uploadIds);
-    const { error } = await this.supabase.storage
-      .from(process.env.SUPABASE_BUCKET!)
-      .remove(uploadNames);
-    if (error) {
-      throw new Error('Failed to delete files from storage');
-    }
+    // const { error } = await this.supabase.storage
+    //   .from(process.env.SUPABASE_BUCKET!)
+    //   .remove(uploadNames);
+    // if (error) {
+    //   throw new Error('Failed to delete files from storage');
+    // }
     return {
       message: 'Uploads deleted successfully',
     };

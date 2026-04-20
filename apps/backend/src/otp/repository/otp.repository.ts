@@ -19,7 +19,7 @@ export class OtpRepository {
       data: {
         user_id: userId,
         user_email: userEmail,
-        type: OtpType.Login,
+        type: OtpType.LOGIN,
         hashed_otp: hashedOtp,
         expires_at: expiresAt,
       },

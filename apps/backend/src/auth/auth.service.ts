@@ -9,7 +9,6 @@ import {
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
-import { SignUpDto } from './dto/signup.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { UserType } from './types/auth.type';
@@ -19,6 +18,8 @@ import { OtpService } from '../otp/otp.service';
 import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { ResetPasswordDto } from './dto/password.dto';
 import { LoginRequestService } from '../login-request/login-request.service';
+import { accessTokenExpTime } from '../lib/utils';
+import { CreateUserDto } from '../user/dto/user.dto';
 import { OtpType, UserRole } from '@prisma/client';
 
 @Injectable()
@@ -36,7 +37,8 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_SECRET,
-      expiresIn: '15m',
+      // expiresIn: '15m',
+      expiresIn: accessTokenExpTime,
     });
     const refreshToken = this.jwtService.sign(
       { ...payload, jti: randomUUID() },
@@ -112,7 +114,7 @@ export class AuthService {
         from: 'Filmam <noreply@filmamapp.ir>',
         to: user?.email || userEmail || '',
         subject:
-          otpType === OtpType.Login
+          otpType === OtpType.LOGIN
             ? 'کد ورود به فیلمام'
             : 'کد فعال‌سازی فیلمام',
         headers: {
@@ -128,7 +130,7 @@ export class AuthService {
       
       <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
         <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
-          ${otpType === OtpType.Login ? 'کد ورود شما:' : 'کد فعال‌سازی شما:'}
+          ${otpType === OtpType.LOGIN ? 'کد ورود شما:' : 'کد فعال‌سازی شما:'}
         </p>
         <div style="background: #00925d; padding: 20px; border-radius: 8px; display: inline-block;">
           <span style="font-size: 40px; font-weight: bold; color: white; letter-spacing: 5px; direction: ltr;">${otp}</span>
@@ -187,17 +189,17 @@ export class AuthService {
 
     if (comparedOtp) {
       await this.otpService.expireUserCurrentOtp(otpInfo.id);
-      if (!user && otpType === OtpType.Signup) {
+      if (!user && otpType === OtpType.SIGNUP) {
         if (!('username' in otpDto) || !('password' in otpDto)) {
           throw new BadRequestException('Invalid signup data');
         }
         const hashedPassword = await bcrypt.hash(otpDto.password, 10);
-        user = await this.userService.createUser({
+        user = await this.userService.signupUser({
           username: otpDto.username,
           email,
           password: hashedPassword,
         });
-      } else if (!user && otpType === OtpType.Login) {
+      } else if (!user && otpType === OtpType.LOGIN) {
         throw new NotFoundException('User not found');
       }
       if (user) {
@@ -207,6 +209,75 @@ export class AuthService {
       throw new UnauthorizedException('OTP is not correct');
     }
   }
+
+  // async login(loginDto: LoginDto) {
+  //   const { email, password } = loginDto;
+  //   const user = await this.userService.getUserByEmail(email);
+  //   if (user) {
+  //     if (
+  //       user.role !== UserRole.ADMIN &&
+  //       user.block_expires_at &&
+  //       new Date(user.block_expires_at) > new Date()
+  //     ) {
+  //       const userBlockedTime =
+  //         (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
+  //       throw new BadRequestException(
+  //         `Too many login attempts, try again after ${userBlockedTime} seconds`,
+  //       );
+  //     } else {
+  //       const getUserRecentLoggedInRequestsCounts =
+  //         await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
+  //           user.id,
+  //         );
+
+  //       if (
+  //         user.role !== UserRole.ADMIN &&
+  //         getUserRecentLoggedInRequestsCounts >= 5
+  //       ) {
+  //         const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
+  //         await this.userService.blockUser(user.id, oneHourNextTime);
+  //         const userBlockedTime =
+  //           (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
+  //           1000;
+  //         throw new BadRequestException(
+  //           `Too many login attempts, try again after ${userBlockedTime} seconds`,
+  //         );
+  //       }
+  //       if (user.password) {
+  //         const comparedPassword = await bcrypt.compare(
+  //           password,
+  //           user.password,
+  //         );
+  //         if (comparedPassword) {
+  //           return await this.sendOtpEmail({
+  //             userId: user.id,
+  //             otpType: OtpType.Login,
+  //           });
+  //         } else {
+  //           throw new UnauthorizedException('Invalid email or password');
+  //         }
+  //       } else {
+  //         throw new UnauthorizedException('Invalid email or password');
+  //       }
+  //     }
+  //   } else {
+  //     throw new NotFoundException('User not found');
+  //   }
+  // }
+
+  // async signup(signupDto: CreateUserDto) {
+  //   const { email } = signupDto;
+  //   const user = await this.userService.getUserByEmail(email);
+
+  //   if (user) {
+  //     throw new ConflictException('User with this email already exists');
+  //   } else {
+  //     return await this.sendOtpEmail({
+  //       userEmail: email,
+  //       otpType: OtpType.Signup,
+  //     });
+  //   }
+  // }
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
@@ -247,10 +318,7 @@ export class AuthService {
             user.password,
           );
           if (comparedPassword) {
-            return await this.sendOtpEmail({
-              userId: user.id,
-              otpType: OtpType.Login,
-            });
+            return await this.jwtGenerator(user.id, user.email);
           } else {
             throw new UnauthorizedException('Invalid email or password');
           }
@@ -263,17 +331,20 @@ export class AuthService {
     }
   }
 
-  async signup(signupDto: SignUpDto) {
-    const { email } = signupDto;
+  async signup(signupDto: CreateUserDto) {
+    const { email, password, username } = signupDto;
     const user = await this.userService.getUserByEmail(email);
 
     if (user) {
       throw new ConflictException('User with this email already exists');
     } else {
-      return await this.sendOtpEmail({
-        userEmail: email,
-        otpType: OtpType.Signup,
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const createdUser = await this.userService.signupUser({
+        username: username,
+        email,
+        password: hashedPassword,
       });
+      return await this.jwtGenerator(createdUser.id, createdUser.email);
     }
   }
 
@@ -365,7 +436,7 @@ export class AuthService {
           await this.loginRequestService.createLoginRequest(user.id);
           return await this.sendOtpEmail({
             userEmail: email,
-            otpType: OtpType.Forget_Password,
+            otpType: OtpType.FORGET_PASSWORD,
           });
         }
       }
@@ -375,7 +446,7 @@ export class AuthService {
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
-    const { email, newPassword, otp } = resetPasswordDto;
+    const { email, new_password, otp } = resetPasswordDto;
     const user = await this.userService.getUserByEmail(email);
     if (user) {
       const otpInfo = await this.otpService.getUserValidOtp({
@@ -400,7 +471,7 @@ export class AuthService {
         await this.otpService.expireUserCurrentOtp(otpInfo.id);
 
         try {
-          const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+          const hashedNewPassword = await bcrypt.hash(new_password, 10);
           await this.userService.changeUserPassword(email, hashedNewPassword);
           return {
             message: 'Password has been reset successfully',

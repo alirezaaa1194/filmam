@@ -8,7 +8,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Admin } from '../common/decorators/role.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { UploadService } from './upload.service';
@@ -18,12 +17,13 @@ import {
   UploadFromFileDto,
   UploadFromUrlDto,
 } from './dto/upload.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('upload')
 export class UploadController {
   constructor(private uploadService: UploadService) {}
 
-  @Admin()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('file'))
   @Post('from-file')
@@ -39,17 +39,17 @@ export class UploadController {
     return await this.uploadService.uploadFromFile(file, body);
   }
 
-  @Admin()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('from-url')
   async uploadFromUrl(@Body() body: UploadFromUrlDto) {
     return await this.uploadService.uploadFromUrl(body);
   }
 
-  @Admin()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete()
   async deleteUploads(@Body() body: DeleteUploadDto) {
-    return await this.uploadService.deleteUploads(body.uploadIds);
+    return await this.uploadService.deleteUploads(body.upload_ids);
   }
 }

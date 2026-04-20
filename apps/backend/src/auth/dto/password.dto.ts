@@ -9,7 +9,7 @@ export class ChangePasswordDto {
   })
   @IsNotEmpty()
   @MinLength(8)
-  currentPassword: string;
+  current_password: string;
 
   @ApiProperty({
     example: '12345678',
@@ -18,7 +18,7 @@ export class ChangePasswordDto {
   })
   @IsNotEmpty()
   @MinLength(8)
-  newPassword: string;
+  new_password: string;
 }
 
 export class ForgetPasswordDto {
@@ -49,7 +49,7 @@ export class ResetPasswordDto {
   })
   @IsNotEmpty()
   @MinLength(8)
-  newPassword: string;
+  new_password: string;
 
   @ApiProperty({
     example: '12345',

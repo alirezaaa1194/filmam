@@ -14,11 +14,8 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { JwtAuthGuard as RefreshJwtAuthGuard } from './guards/refresh-token.guard';
-import { RoleGuard } from './guards/role.guard';
-import { Admin } from '../common/decorators/role.decorator';
+import { JwtRefreshGuard } from './guards/refresh-token.guard';
 import {
   ChangePasswordDto,
   ForgetPasswordDto,
@@ -28,6 +25,7 @@ import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { MeResponseDto } from './dto/me.dto';
+import { CreateUserDto } from '../user/dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -52,12 +50,20 @@ export class AuthController {
     schema: {
       properties: {
         access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        accessTokenExpiresIn: {
+          type: 'string',
+          example: new Date().toISOString(),
+        },
         refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        refreshTokenExpiresIn: {
+          type: 'string',
+          example: new Date().toISOString(),
+        },
       },
     },
   })
   @HttpCode(HttpStatus.OK)
-  @Post('verify')
+  @Post('login-verify')
   async verify(@Body() otpDto: LoginOtpDto) {
     return await this.authService.verifyOtp(otpDto);
   }
@@ -72,7 +78,7 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @Post('signup')
-  async signup(@Body() signupDto: SignUpDto) {
+  async signup(@Body() signupDto: CreateUserDto) {
     return await this.authService.signup(signupDto);
   }
 
@@ -81,7 +87,15 @@ export class AuthController {
     schema: {
       properties: {
         access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        accessTokenExpiresIn: {
+          type: 'string',
+          example: new Date().toISOString(),
+        },
         refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        refreshTokenExpiresIn: {
+          type: 'string',
+          example: new Date().toISOString(),
+        },
       },
     },
   })
@@ -90,8 +104,6 @@ export class AuthController {
     return await this.authService.verifyOtp(signupOtpDto);
   }
 
-  // @Admin()
-  // @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiResponse({ type: MeResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -117,8 +129,8 @@ export class AuthController {
   ) {
     return await this.authService.changePassword(
       req.user.email,
-      changePasswordDto.currentPassword,
-      changePasswordDto.newPassword,
+      changePasswordDto.current_password,
+      changePasswordDto.new_password,
     );
   }
 
@@ -154,13 +166,21 @@ export class AuthController {
     schema: {
       properties: {
         access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        accessTokenExpiresIn: {
+          type: 'string',
+          example: new Date().toISOString(),
+        },
         refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
+        refreshTokenExpiresIn: {
+          type: 'string',
+          example: new Date().toISOString(),
+        },
       },
     },
   })
   @ApiBearerAuth()
   @Post('refresh')
-  @UseGuards(RefreshJwtAuthGuard)
+  @UseGuards(JwtRefreshGuard)
   async refreshToken(@Request() req) {
     const refreshToken = req.headers.authorization?.replace('Bearer ', '');
     return this.authService.refresh(req.user.userId, refreshToken);
@@ -177,7 +197,7 @@ export class AuthController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  @UseGuards(RefreshJwtAuthGuard)
+  @UseGuards(JwtRefreshGuard)
   async logout(@Request() req) {
     const refreshToken = req.headers.authorization?.replace('Bearer ', '');
     return this.authService.logout(req.user.userId, refreshToken);

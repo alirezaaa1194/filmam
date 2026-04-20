@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { SignUpDto } from '../../auth/dto/signup.dto';
 import { UserRole } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { GoogleAuthDto } from '../../auth/dto/google-auth.dto';
+import { CreateUserDto, UpdateUserInfoDto } from '../dto/user.dto';
 
 @Injectable()
 export class UserRepository {
-  async createUser(userInfo: SignUpDto | GoogleAuthDto, usersCount: number) {
+  async createUser(
+    userInfo: CreateUserDto | GoogleAuthDto,
+    userRole: UserRole,
+  ) {
     return await prisma.user.create({
-      data: { ...userInfo, role: usersCount ? UserRole.USER : UserRole.ADMIN },
+      data: { ...userInfo, role: userRole },
     });
   }
+
   async getUserByEmail(userEmail: string) {
     return await prisma.user.findUnique({
       where: {
@@ -18,6 +22,7 @@ export class UserRepository {
       },
     });
   }
+
   async getUserById(userId: number) {
     return await prisma.user.findUnique({
       where: {
@@ -25,6 +30,7 @@ export class UserRepository {
       },
     });
   }
+
   async changeUserPassword(userEmail: string, newPassword: string) {
     return await prisma.user.update({
       data: {
@@ -33,13 +39,107 @@ export class UserRepository {
       where: { email: userEmail },
     });
   }
+
   async getUsersCount() {
     return await prisma.user.count();
   }
-  async blockUser(userId: number, expireTime: Date) {
+
+  async blockUser(userId: number, expireTime: Date | null) {
     return await prisma.user.update({
       data: { block_expires_at: expireTime },
-      where: { id: userId },
+      where: { id: userId, role: { not: UserRole.ADMIN } },
+    });
+  }
+
+  async getAllUsersAdmin(query: {
+    page: number;
+    page_size: number;
+    search: string;
+    sort: 'asc' | 'desc';
+    blocked: boolean;
+  }) {
+    return await prisma.user.findMany({
+      skip: query.page,
+      take: query.page_size,
+      where: {
+        OR: [
+          {
+            username: {
+              contains: query.search,
+            },
+          },
+          {
+            email: {
+              contains: query.search,
+            },
+          },
+        ],
+        AND: {
+          ...(query.blocked ? { block_expires_at: { gt: new Date() } } : {}),
+        },
+      },
+      orderBy: {
+        created_at: query.sort,
+      },
+    });
+  }
+
+  async deleteUserAdmin(usersIds: number[]) {
+    return await prisma.user.deleteMany({
+      where: {
+        id: { in: usersIds },
+        role: { not: UserRole.ADMIN },
+      },
+    });
+  }
+
+  async deleteUserAccount(userId: number) {
+    return await prisma.user.delete({
+      where: {
+        id: userId,
+        role: { not: UserRole.ADMIN },
+      },
+    });
+  }
+
+  async getAdminsCount() {
+    return await prisma.user.count({
+      where: {
+        role: UserRole.ADMIN,
+      },
+    });
+  }
+
+  async changeUserRoleAdmin(userId: number, userNewRole: UserRole) {
+    return await prisma.user.update({
+      data: {
+        role: userNewRole,
+      },
+      where: {
+        id: userId,
+      },
+    });
+  }
+
+  async changeUserPasswordAdmin(userId: number, newPassword: string) {
+    return await prisma.user.update({
+      data: {
+        password: newPassword,
+      },
+      where: {
+        id: userId,
+      },
+    });
+  }
+
+  async updateUserInfo(userId: number, newInfo: UpdateUserInfoDto) {
+    return await prisma.user.update({
+      data: {
+        ...newInfo,
+      },
+      where: {
+        id: userId,
+      },
     });
   }
 }

@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt-refresh') {
+export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
   getRequest(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     return req;

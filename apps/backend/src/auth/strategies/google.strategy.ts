@@ -20,16 +20,16 @@ export class AuthStrategy extends PassportStrategy(GoogleStrategy) {
     let user = await this.userService.getUserByEmail(profile.emails[0].value);
 
     if (!user) {
-      user = await this.userService.createUser({
+      user = await this.userService.signupUser({
         email: profile.emails[0].value,
-        googleId: profile.id,
+        google_id: profile.id,
         username: profile.displayName,
       });
     }
 
-    if (!user.googleId) {
+    if (!user.google_id) {
       user = await prisma.user.update({
-        data: { googleId: profile.id },
+        data: { google_id: profile.id },
         where: { id: user.id },
       });
     }

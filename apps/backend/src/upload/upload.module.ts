@@ -8,6 +8,6 @@ import { UploadRepository } from './repository/upload.repository';
   imports: [UserModule],
   controllers: [UploadController],
   providers: [UploadService, UploadRepository],
-  exports: [UploadRepository],
+  exports: [UploadService, UploadRepository],
 })
 export class UploadModule {}

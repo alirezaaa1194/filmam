@@ -33,17 +33,17 @@ export class UploadRepository {
   async createUploadFromUrl(body: UploadFromUrlDto) {
     return await prisma.upload.create({
       data: {
-        file_name: String(Date.now()),
-        mime_type: body.mimeType,
+        mime_type: body.mime_type,
         path: body.path,
         width: body.width,
         height: body.height,
         duration: body.duration,
         source_type: SourceType.FROM_URL,
+        alt_text: body.alt,
       },
     });
   }
-  
+
   async getUploads(uploadIds: number[]) {
     return await prisma.upload.findMany({
       where: {
