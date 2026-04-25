@@ -5,20 +5,15 @@ import {
   GetFactorMoviesDto,
 } from './dto/movie-factor.dto';
 import {
-  calculateMovieUserActivityCounts,
   defaultLang,
   normalizeMovieDetail,
   paginationCalculator,
 } from '../lib/utils';
-import { UserMovieService } from '../user-movie/user-movie.service';
 import { TransactionType } from '../common/types/types';
 
 @Injectable()
 export class MovieFactorService {
-  constructor(
-    private movieFactorRepository: MovieFactorRepository,
-    private userMovieService: UserMovieService,
-  ) {}
+  constructor(private movieFactorRepository: MovieFactorRepository) {}
   async createMovieFactors(
     body: CreateMovieFactorsDto[],
     movieId: number,
@@ -56,19 +51,8 @@ export class MovieFactorService {
       page_size,
     );
 
-    const movieIds = factorMovies.map((factorMovie) => factorMovie.movie.id);
-    const movieUserActivities =
-      await this.userMovieService.getMovieUserActivities(movieIds);
-
     const normalizedFactorsMovies = factorMovies.map((factorMovie) => {
-      const movieUserActivitiesCounts = calculateMovieUserActivityCounts(
-        movieUserActivities,
-        factorMovie.movie.id,
-      );
-      return {
-        ...normalizeMovieDetail(factorMovie.movie),
-        ...movieUserActivitiesCounts,
-      };
+      return normalizeMovieDetail(factorMovie.movie);
     });
     const factorMoviesCount =
       await this.movieFactorRepository.getFactorMoviesCount(factorSlug);

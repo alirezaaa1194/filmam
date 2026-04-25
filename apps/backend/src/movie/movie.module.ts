@@ -12,6 +12,7 @@ import { MovieCountryModule } from '../movie-country/movie-country.module';
 import { MovieLanguageModule } from '../movie-language/movie-language.module';
 import { UserMovieModule } from '../user-movie/user-movie.module';
 import { MovieTagModule } from '../movie-tag/movie-tag.module';
+import { SectionModule } from '../section/section.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MovieTagModule } from '../movie-tag/movie-tag.module';
     MovieLanguageModule,
     UserMovieModule,
     MovieTagModule,
+    SectionModule,
   ],
   controllers: [MovieController],
   providers: [MovieService, MovieRepository, MovieResolver],

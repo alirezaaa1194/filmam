@@ -13,7 +13,6 @@ import { SectionTranslationService } from '../section-translation/section-transl
 import { SectionMovieService } from '../section-movie/section-movie.service';
 import {
   AppLanguage,
-  CommentEntityType,
   MovieType,
   SectionFilterKey,
   SectionMovieViewMode,
@@ -25,12 +24,12 @@ import {
 } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import {
-  calculateMovieUserActivityCounts,
   defaultLang,
   normalizeMovieDetail,
   paginationCalculator,
 } from '../lib/utils';
 import { UserMovieService } from '../user-movie/user-movie.service';
+import { SortType } from '../common/enums';
 
 @Injectable()
 export class SectionService {
@@ -267,6 +266,8 @@ export class SectionService {
       page,
       page_size,
       query.lang || defaultLang,
+      query.search?.trim(),
+      query.sort || SortType.ASC,
     );
 
     const normalizedSection = sections.map(async (section) => {
@@ -284,52 +285,14 @@ export class SectionService {
                 : 0),
       );
       if (otherSectionData.selection_mode === SectionSelectionMode.MANUAL) {
-        const sectionMovies = await prisma.sectionMovie.findMany({
-          where: { section_id: otherSectionData.id },
-          include: {
-            movie: {
-              include: {
-                translations: {
-                  where: {
-                    language: query.lang,
-                  },
-                },
-                files: {
-                  select: {
-                    upload: true,
-                    type: true,
-                  },
-                },
-              },
-            },
-          },
-          skip: 0,
-          take: query.movies_size || 10,
-          orderBy: {
-            order: 'asc',
-          },
-        });
-
-        const sectionMovieIds = sectionMovies.map(
-          (sectionMovie) => sectionMovie.movie.id,
+        const sectionMovies = await this.sectionRepository.getSectionMovies(
+          otherSectionData.id,
+          query.lang,
+          query.movies_size,
         );
 
-        const sectionMovieUserActivities =
-          await this.userMovieService.getMovieUserActivities(
-            sectionMovieIds,
-            CommentEntityType.MOVIE,
-          );
-
         movies = sectionMovies.map((sectionMovie) => {
-          const movieUserActivityCounts = calculateMovieUserActivityCounts(
-            sectionMovieUserActivities,
-            sectionMovie.movie.id,
-            CommentEntityType.MOVIE,
-          );
-          return normalizeMovieDetail({
-            ...sectionMovie.movie,
-            ...movieUserActivityCounts,
-          });
+          return normalizeMovieDetail(sectionMovie.movie);
         });
 
         const sectionTranslation = translations[0];
@@ -417,15 +380,23 @@ export class SectionService {
                       OR: [
                         {
                           type: UserMovieType.WATCHED,
-                          updated_at: {
-                            gte: daysAgo,
-                          },
+                          ...(hasPeriodBase
+                            ? {
+                                updated_at: {
+                                  gte: daysAgo,
+                                },
+                              }
+                            : {}),
                         },
                         {
                           type: UserMovieType.WATCHING,
-                          updated_at: {
-                            gte: daysAgo,
-                          },
+                          ...(hasPeriodBase
+                            ? {
+                                updated_at: {
+                                  gte: daysAgo,
+                                },
+                              }
+                            : {}),
                         },
                       ],
                     },
@@ -436,9 +407,13 @@ export class SectionService {
                     user_movies: {
                       some: {
                         type: UserMovieType.LIKE,
-                        created_at: {
-                          gte: daysAgo,
-                        },
+                        ...(hasPeriodBase
+                          ? {
+                              created_at: {
+                                gte: daysAgo,
+                              },
+                            }
+                          : {}),
                       },
                     },
                   }
@@ -572,21 +547,9 @@ export class SectionService {
           return null;
         }
 
-        const movieIds = sectionRelatedMovies.map((movie) => movie.id);
-        const movieUserActivities =
-          await this.userMovieService.getMovieUserActivities(
-            movieIds,
-            CommentEntityType.MOVIE,
-          );
-
         movies = sectionRelatedMovies.map((movie, index) => {
-          const movieActivityInfo = calculateMovieUserActivityCounts(
-            movieUserActivities,
-            movie.id,
-          );
           return normalizeMovieDetail({
             ...movie,
-            ...movieActivityInfo,
             movie_id: movie.id,
             view_mode:
               otherSectionData.view_mode === 'PUZZLE'
@@ -602,7 +565,7 @@ export class SectionService {
           ...otherSectionData,
           title: sectionTranslation.title,
           description: sectionTranslation.description,
-          filter: `${otherSectionData.section_filters.map((sf, i) => `${i === 0 ? '?' : '&'}${sf.filter_key}=${sf.filter_value}`).join('')}`,
+          filter: `${[...otherSectionData.section_filters, { filter_key: 'lang', filter_value: query.lang }, { filter_key: 'page', filter_value: 1 }, { filter_key: 'page_size', filter_value: 20 }].map((sf, i) => `${i === 0 ? '?' : '&'}${sf.filter_key.toLowerCase()}=${sf.filter_value}`).join('')}`,
           movies,
         };
       } else if (section.selection_mode === 'USER_MOVIE' && userId) {
@@ -625,14 +588,11 @@ export class SectionService {
           movies: userRecentMovies.data,
         };
       }
-      //  else if (section.selection_mode === 'USER_MOVIE' && !userId) {
-      //   throw new UnauthorizedException(
-      //     'Authentication credentials was not found',
-      //   );
-      // }
     });
     const sectionsData = await Promise.all(normalizedSection);
-    const sectionsCount = await prisma.section.count();
+    const sectionsCount = await this.sectionRepository.getSectionsCount(
+      query.search?.trim(),
+    );
     return {
       page: page + 1,
       page_size,
@@ -658,6 +618,10 @@ export class SectionService {
         movies: normalizedSectionMovies,
       };
     }
+  }
+
+  async getSectionDetailPublic(sectionSlug: string) {
+    return await this.sectionRepository.getSectionDetailPublic(sectionSlug);
   }
 
   async deleteSectionsAdmin(body: DeleteSectionsDto) {

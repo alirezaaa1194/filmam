@@ -1,10 +1,11 @@
 generator client {
-  provider     = "prisma-client-js"
+  provider        = "prisma-client-js"
   // output       = "../../generated/prisma"
   // output       = "./node_modules/.prisma/client"
-  output       = "../../../node_modules/.prisma/client"
+  output          = "../../../node_modules/.prisma/client"
   // output       = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  moduleFormat    = "cjs"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -41,6 +42,9 @@ model Movie {
   slug           String             @unique
   age_limit      Int?
   released_year  Int
+  likes_count    Int                @default(0)
+  dislikes_count Int                @default(0)
+  watches_count  Int                @default(0)
   episodes       Episode[]
   factors        MovieFactor[]
   translations   MovieTranslation[]
@@ -195,6 +199,9 @@ model Episode {
   episode_number Int
   season_id      Int
   movie_id       Int
+  likes_count    Int                  @default(0)
+  dislikes_count Int                  @default(0)
+  watches_count  Int                  @default(0)
   translations   EpisodeTranslation[]
   movie          Movie                @relation(fields: [movie_id], references: [id], onDelete: Cascade)
   season         Season               @relation(fields: [season_id], references: [id], onDelete: Cascade)

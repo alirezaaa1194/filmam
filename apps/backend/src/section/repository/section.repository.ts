@@ -1,16 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '../../lib/prisma';
-import {
-  CreateSectionDto,
-  SectionMovieFilter,
-  UpdateSectionDto,
-} from '../dto/section.dto';
+import { CreateSectionDto, SectionMovieFilter } from '../dto/section.dto';
 import { AppLanguage } from '@prisma/client';
 import { TransactionType } from '../../common/types/types';
+import { defaultLang } from '../../lib/utils';
+import { SortType } from '../../common/enums';
 
 @Injectable()
 export class SectionRepository {
-  constructor() {}
+  async getSectionsCount(search: string = '') {
+    return await prisma.section.count({
+      where: {
+        translations: {
+          some: {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+    });
+  }
+
   async createSectionAdmin(body: CreateSectionDto, tx: TransactionType) {
     return await tx.section.create({
       data: {
@@ -24,40 +36,35 @@ export class SectionRepository {
     });
   }
 
-  async getSectionMoviesPublic(
-    slug: string,
-    page: number,
-    pageSize: number,
-    lang: AppLanguage,
+  async getSectionMovies(
+    sectionId: number,
+    lang: AppLanguage = defaultLang,
+    moviesSize?: number,
   ) {
-    return await prisma.movie.findMany({
-      where: {
-        section_movies: {
-          some: {
-            section: {
-              slug,
+    return await prisma.sectionMovie.findMany({
+      where: { section_id: sectionId },
+      include: {
+        movie: {
+          include: {
+            translations: {
+              where: {
+                language: lang,
+              },
+            },
+            files: {
+              select: {
+                upload: true,
+                type: true,
+              },
             },
           },
         },
       },
-      include: {
-        translations: {
-          select: {
-            title: true,
-          },
-          where: {
-            language: lang,
-          },
-        },
-        files: {
-          select: {
-            upload: true,
-            type: true,
-          },
-        },
+      skip: 0,
+      take: moviesSize || 10,
+      orderBy: {
+        order: 'asc',
       },
-      skip: page,
-      take: pageSize,
     });
   }
 
@@ -93,10 +100,26 @@ export class SectionRepository {
     });
   }
 
-  async getAllSections(page: number, pageSize: number, lang: AppLanguage) {
+  async getAllSections(
+    page: number,
+    pageSize: number,
+    lang: AppLanguage,
+    search: string = '',
+    sort: SortType,
+  ) {
     return await prisma.section.findMany({
       skip: page,
       take: pageSize,
+      where: {
+        translations: {
+          some: {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
       include: {
         section_filters: true,
         translations: {
@@ -106,7 +129,15 @@ export class SectionRepository {
         },
       },
       orderBy: {
-        order: 'asc',
+        order: sort === 'ASC' ? 'asc' : 'desc',
+      },
+    });
+  }
+
+  async getSectionDetailPublic(sectionSlug: string) {
+    return await prisma.section.findUnique({
+      where: {
+        slug: sectionSlug,
       },
     });
   }
@@ -118,7 +149,7 @@ export class SectionRepository {
   }
 
   async updateSection(
-    body: UpdateSectionDto,
+    body: CreateSectionDto,
     sectionId: number,
     tx: TransactionType,
   ) {

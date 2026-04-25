@@ -2,10 +2,11 @@ import { AppLanguage, CommentEntityType, UserMovieType } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { UpdateUserMoviesDto } from '../dto/user-movie.dto';
 import { GetUserMovieByTypeBodyType } from '../type/user-movie.type';
+import { TransactionType } from '../../common/types/types';
 
 export class UserMovieRepository {
   async getUserMovieByType(body: GetUserMovieByTypeBodyType, userId: number) {
-    return await prisma.userMovie.findFirst({
+    return await prisma.userMovie.findMany({
       where: {
         ...(body.entity_type === CommentEntityType.EPISODE
           ? { episode_id: body.episode_id }
@@ -16,22 +17,30 @@ export class UserMovieRepository {
     });
   }
 
-  async deleteUserMovie(actionId: number) {
-    return await prisma.userMovie.delete({
+  async deleteUserMovie(actionId: number, tx: TransactionType) {
+    return await tx.userMovie.delete({
       where: {
         id: actionId,
       },
     });
   }
 
-  async createUserMovie(body: UpdateUserMoviesDto, userId: number) {
-    return await prisma.userMovie.create({
+  async createUserMovie(
+    body: UpdateUserMoviesDto,
+    userId: number,
+    tx: TransactionType,
+  ) {
+    return await tx.userMovie.create({
       data: { ...body, user_id: userId },
     });
   }
 
-  async updateUserMovie(actionId: number, body: UpdateUserMoviesDto) {
-    return await prisma.userMovie.update({
+  async updateUserMovie(
+    actionId: number,
+    body: UpdateUserMoviesDto,
+    tx: TransactionType,
+  ) {
+    return await tx.userMovie.update({
       where: {
         id: actionId,
       },
@@ -43,8 +52,9 @@ export class UserMovieRepository {
     body: UpdateUserMoviesDto,
     userId: number,
     type: 'LIKE' | 'DISLIKE',
+    tx: TransactionType,
   ) {
-    return await prisma.userMovie.deleteMany({
+    return await tx.userMovie.deleteMany({
       where: {
         ...(body.entity_type === CommentEntityType.EPISODE
           ? { episode_id: body.episode_id }
@@ -133,33 +143,6 @@ export class UserMovieRepository {
       skip: page,
       take: pageSize,
     });
-  }
-
-  async getMovieUserActivities(
-    entityIds: number[],
-    entityType: CommentEntityType,
-  ) {
-    if (entityType === CommentEntityType.MOVIE) {
-      return await prisma.userMovie.groupBy({
-        by: ['movie_id', 'type'],
-        where: {
-          movie_id: { in: entityIds },
-        },
-        _count: {
-          _all: true,
-        },
-      });
-    } else {
-      return await prisma.userMovie.groupBy({
-        by: ['episode_id', 'type'],
-        where: {
-          episode_id: { in: entityIds },
-        },
-        _count: {
-          _all: true,
-        },
-      });
-    }
   }
 
   async getUserMoviesCount(userId: number, type: UserMovieType[]) {

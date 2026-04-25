@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateMovieDto, DeleteMoviesDto } from './dto/movie.dto';
 import { MovieRepository } from './repository/movie.repository';
 import { MovieFileService } from '../movie-file/movie-file.service';
@@ -8,12 +12,12 @@ import {
   CommentEntityType,
   MovieFileType,
   MovieType,
+  SectionSelectionMode,
   UserMovieType,
 } from '@prisma/client';
 import { MovieFactorService } from '../movie-factor/movie-factor.service';
 import { MovieGenreService } from '../movie-genre/movie-genre.service';
 import {
-  calculateMovieUserActivityCounts,
   defaultLang,
   normalizeMovieDetail,
   paginationCalculator,
@@ -26,6 +30,7 @@ import { UserMovieService } from '../user-movie/user-movie.service';
 import { UpdateUserMoviesDto } from '../user-movie/dto/user-movie.dto';
 import { MovieTagService } from '../movie-tag/movie-tag.service';
 import { prisma } from '../lib/prisma';
+import { SectionService } from '../section/section.service';
 
 @Injectable()
 export class MovieService {
@@ -39,6 +44,7 @@ export class MovieService {
     private movieLanguageService: MovieLanguageService,
     private userMovieService: UserMovieService,
     private movieTagService: MovieTagService,
+    private sectionService: SectionService,
   ) {}
 
   async createMovieAdmin(body: CreateMovieDto) {
@@ -231,20 +237,13 @@ export class MovieService {
   async getMovieDetailPublic(slug: string, lang: AppLanguage = defaultLang) {
     const movie = await this.movieRepository.getMovieDetailPublic(slug, lang);
     if (movie) {
-      const movieUserActivities =
-        await this.userMovieService.getMovieUserActivities([movie.id]);
-      const movieUserActivitiesCounts = calculateMovieUserActivityCounts(
-        movieUserActivities,
-        movie.id,
-      );
       return normalizeMovieDetail({
         ...movie,
-        ...movieUserActivitiesCounts,
       });
     }
   }
 
-  async getAllMovies(filter: MovieFilterInput) {
+  async getAllMovies(filter: MovieFilterInput, userId?: number) {
     const where: {
       translations?: any;
       genres?: any;
@@ -253,6 +252,11 @@ export class MovieService {
       type?: any;
       age_limit?: any;
       tags?: any;
+      released_year?: any;
+      user_movies?: any;
+      section_movies?: any;
+      factors?: any;
+      OR?: any;
     } = {};
     const pagination: { take: number; skip: number } = {
       skip: 0,
@@ -261,19 +265,93 @@ export class MovieService {
     let sort: any = {};
 
     if (filter.search) {
-      where.translations = {
-        some: {
-          title: {
-            contains: filter.search,
-            mode: 'insensitive',
+      const searchTerms = filter.search?.trim().split(/\s+/) ?? [];
+      where.OR = [
+        {
+          translations: {
+            some: {
+              OR: [
+                {
+                  title: {
+                    contains: filter.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  description: {
+                    contains: filter.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  short_description: {
+                    contains: filter.search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
           },
         },
-      };
+        {
+          factors: {
+            some: {
+              factor: {
+                AND: searchTerms.map((term) => ({
+                  OR: [
+                    {
+                      translations: {
+                        some: {
+                          first_name: {
+                            contains: term,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                    {
+                      translations: {
+                        some: {
+                          last_name: {
+                            contains: term,
+                            mode: 'insensitive',
+                          },
+                        },
+                      },
+                    },
+                  ],
+                })),
+              },
+            },
+          },
+        },
+        {
+          genres: {
+            some: {
+              genre: {
+                translations: {
+                  some: {
+                    name: {
+                      contains: filter.search,
+                      mode: 'insensitive',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
     }
 
     if (filter.sort_by) {
       if (filter.sort_by === SortByType.CREATED_AT) {
         sort.created_at = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
+      } else if (filter.sort_by === SortByType.LIKES) {
+        sort.likes_count = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
+      } else if (filter.sort_by === SortByType.WATCHES) {
+        sort.watches_count =
+          filter.sort_order === SortType.ASC ? 'asc' : 'desc';
       }
     } else {
       sort.created_at = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
@@ -329,6 +407,45 @@ export class MovieService {
       };
     }
 
+    if (filter.released_year_from && filter.released_year_to) {
+      where.released_year = {
+        gte: +filter.released_year_from,
+        lte: +filter.released_year_to,
+      };
+    }
+
+    if (filter.section) {
+      const section = await this.sectionService.getSectionDetailPublic(
+        filter.section,
+      );
+
+      if (section) {
+        if (
+          section.selection_mode === SectionSelectionMode.USER_MOVIE &&
+          userId
+        ) {
+          where.user_movies = {
+            some: {
+              user_id: userId,
+            },
+          };
+        } else if (
+          section.selection_mode === SectionSelectionMode.USER_MOVIE &&
+          !userId
+        ) {
+          throw new UnauthorizedException();
+        } else if (section.selection_mode === SectionSelectionMode.MANUAL) {
+          where.section_movies = {
+            some: {
+              section: {
+                slug: filter.section,
+              },
+            },
+          };
+        }
+      }
+    }
+
     const { page, page_size } = paginationCalculator(
       filter.page || 1,
       filter.page_size || 10,
@@ -344,44 +461,16 @@ export class MovieService {
       pagination,
     );
 
-    const movieIds = movies.map((movie) => movie.id);
-
-    const movieUserActivities =
-      await this.userMovieService.getMovieUserActivities(
-        movieIds,
-        CommentEntityType.MOVIE,
-      );
-
     const updatedMovies = movies.map((movie) => {
-      const movieUserActivityCounts = calculateMovieUserActivityCounts(
-        movieUserActivities,
-        movie.id,
-      );
-
-      return normalizeMovieDetail({ ...movie, ...movieUserActivityCounts });
+      return normalizeMovieDetail({ ...movie });
     });
-
-    const sortedMoviesByLikesOrWatches =
-      filter.sort_by === SortByType.LIKES
-        ? updatedMovies.sort((a, b) =>
-            filter.sort_order === SortType.ASC
-              ? a.likes_counts - b.likes_counts
-              : b.likes_counts - a.likes_counts,
-          )
-        : filter.sort_by === SortByType.WATCHES
-          ? updatedMovies.sort((a, b) =>
-              filter.sort_order === SortType.ASC
-                ? a.watches_counts - b.watches_counts
-                : b.watches_counts - a.watches_counts,
-            )
-          : updatedMovies;
 
     const allMoviesCount = await this.movieRepository.getAllMoviesCount(where);
     return {
       page: page + 1,
       page_size,
       count: allMoviesCount,
-      data: sortedMoviesByLikesOrWatches,
+      data: updatedMovies,
     };
   }
 
@@ -402,7 +491,10 @@ export class MovieService {
   }
 
   async deleteUserMovie(actionId: number) {
-    return await this.userMovieService.deleteUserMovie(actionId);
+    const result = await prisma.$transaction(async (tx) => {
+      return await this.userMovieService.deleteUserMovie(actionId, tx);
+    });
+    return result;
   }
 
   async getUserMovieActions(

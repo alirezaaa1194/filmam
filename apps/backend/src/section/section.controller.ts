@@ -16,7 +16,6 @@ import {
   DeleteSectionsDto,
   GetAllSectionsDto,
   GetSectionDetailDto,
-  UpdateSectionDto,
 } from './dto/section.dto';
 import { SectionService } from './section.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -34,22 +33,6 @@ export class SectionController {
   async createSectionAdmin(@Body() body: CreateSectionDto) {
     return await this.sectionService.createSectionAdmin(body);
   }
-
-  // @ApiBearerAuth()
-  // @Public()
-  // @UseGuards(JwtAuthGuard)
-  // @Get('/:slug/movies')
-  // async getSectionMoviesPublic(
-  //   @Req() req,
-  //   @Param('slug') slug: string,
-  //   @Query() query: GetSectionMoviesQuery,
-  // ) {
-  //   return await this.sectionService.getSectionMoviesPublic(
-  //     slug,
-  //     query,
-  //     req?.user?.userId,
-  //   );
-  // }
 
   @ApiBearerAuth()
   @Get('admin/:sectionId')

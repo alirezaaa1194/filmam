@@ -27,6 +27,7 @@ import {
   UpdateUserMoviesDto,
 } from '../user-movie/dto/user-movie.dto';
 import { MovieFilterInput } from './entity/movie.entity';
+import { Public } from '../common/decorators/public.decorator';
 
 @Controller('movie')
 export class MovieController {
@@ -66,8 +67,10 @@ export class MovieController {
   //graphql
   @ApiBearerAuth()
   @Get('all')
-  async getAllMovies(@Query() query: GetAllMoviesPublicDto) {
-    return await this.movieService.getAllMovies(query as MovieFilterInput);
+  @Public()
+  @UseGuards(JwtAuthGuard)
+  async getAllMovies(@Query() query: GetAllMoviesPublicDto, @Req() req) {
+    return await this.movieService.getAllMovies(query as MovieFilterInput, req?.user?.userId);
   }
 
   @ApiBearerAuth()

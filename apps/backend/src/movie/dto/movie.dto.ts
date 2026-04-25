@@ -5,16 +5,14 @@ import {
   ArrayMinSize,
   IsArray,
   IsEnum,
-  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  Max,
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { CreateMovieFilesDto } from '../../movie-file/dto/movie-file.dto';
 import { CreateMovieFactorsDto } from '../../movie-factor/dto/movie-factor.dto';
 import { appLanguages, defaultLang } from '../../lib/utils';
@@ -162,9 +160,9 @@ export class GetAllMoviesPublicDto {
 
   @ApiProperty({
     name: 'lang',
-    example: defaultLang,
     required: false,
     default: defaultLang,
+    enum: AppLanguage,
   })
   @IsEnum(AppLanguage)
   @IsOptional()
@@ -172,10 +170,8 @@ export class GetAllMoviesPublicDto {
 
   @ApiProperty({
     name: 'page',
-    example: 1,
     required: false,
     minimum: 1,
-    default: 1,
   })
   @IsNumber()
   @Min(1)
@@ -185,89 +181,77 @@ export class GetAllMoviesPublicDto {
 
   @ApiProperty({
     name: 'page_size',
-    example: 10,
     required: false,
-    minimum: 1,
-    maximum: 100,
-    default: 10,
   })
   @IsNumber()
-  @Min(1)
-  @Max(100)
   @IsOptional()
   @Type(() => Number)
   page_size?: number = 10;
 
   @ApiProperty({
     name: 'genres',
-    example: [1, 2, 3],
     required: false,
-    type: [Number],
+    type: Number,
     isArray: true,
   })
-  @IsArray()
-  @IsInt({ each: true })
+  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @IsOptional()
   @Type(() => Number)
   genres?: number[];
 
   @ApiProperty({
     name: 'age_limits',
-    example: [12, 15, 18],
     required: false,
-    type: [Number],
+    type: Number,
     isArray: true,
   })
-  @IsArray()
-  @IsInt({ each: true })
-  @Min(0, { each: true })
-  @Max(18, { each: true })
+  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @IsOptional()
   @Type(() => Number)
   age_limits?: number[];
 
   @ApiProperty({
     name: 'countries',
-    example: ['us', 'uk', 'ir'],
     required: false,
-    type: [String],
+    type: Number,
     isArray: true,
   })
-  @IsArray()
-  @IsString({ each: true })
+  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @IsOptional()
-  countries?: string[];
+  @Type(() => Number)
+  countries?: number[];
 
   @ApiProperty({
     name: 'tags',
-    example: ['trending', 'popular', 'new'],
     required: false,
-    type: [String],
+    type: Number,
     isArray: true,
   })
-  @IsArray()
-  @IsString({ each: true })
+  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @IsOptional()
+  @Type(() => Number)
   tags?: string[];
 
   @ApiProperty({
     name: 'languages',
-    example: ['fa', 'en', 'ar'],
     required: false,
-    type: [String],
+    type: Number,
     isArray: true,
   })
-  @IsArray()
-  @IsString({ each: true })
+  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @IsOptional()
+  @Type(() => Number)
   languages?: string[];
 
   @ApiProperty({
     name: 'sort_by',
-    example: 'created_at',
     required: false,
     enum: SortByType,
-    default: SortByType.CREATED_AT,
   })
   @IsEnum(SortByType)
   @IsOptional()
@@ -275,10 +259,8 @@ export class GetAllMoviesPublicDto {
 
   @ApiProperty({
     name: 'sort_order',
-    example: 'DESC',
     required: false,
     enum: SortType,
-    default: SortType.DESC,
   })
   @IsEnum(SortType)
   @IsOptional()
@@ -286,7 +268,6 @@ export class GetAllMoviesPublicDto {
 
   @ApiProperty({
     name: 'type',
-    example: 'MOVIE',
     required: false,
     enum: MovieType,
   })

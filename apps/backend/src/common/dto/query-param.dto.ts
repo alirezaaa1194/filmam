@@ -34,8 +34,9 @@ export class CommonQueryParamsDto {
 
   @ApiPropertyOptional({
     name: 'lang',
-    example: defaultLang,
     required: false,
+    default: defaultLang,
+    enum: AppLanguage,
   })
   @IsEnum(AppLanguage)
   @IsOptional()
@@ -44,6 +45,8 @@ export class CommonQueryParamsDto {
   @ApiPropertyOptional({
     name: 'sort',
     required: false,
+    default: SortType.ASC,
+    enum: SortType,
   })
   @IsEnum(SortType)
   @IsOptional()

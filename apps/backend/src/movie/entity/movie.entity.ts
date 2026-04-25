@@ -276,4 +276,13 @@ export class MovieFilterInput {
 
   @Field(() => MovieType, { nullable: true })
   type?: MovieType;
+
+  @Field(() => Int, { nullable: true })
+  released_year_from?: number;
+
+  @Field(() => Int, { nullable: true })
+  released_year_to?: number;
+
+  @Field(() => String, { nullable: true })
+  section?: string;
 }

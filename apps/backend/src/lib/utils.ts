@@ -1,4 +1,4 @@
-import { AppLanguage, CommentEntityType } from '@prisma/client';
+import { AppLanguage } from '@prisma/client';
 
 export const defaultLang = AppLanguage.FA;
 export const accessTokenExpTime = '30d';
@@ -73,78 +73,6 @@ export const normalizeMovieDetail = (movie) => {
     languages: movieLanguages,
     files: movieFiles,
   };
-};
-
-export const calculateMovieUserActivityCounts = (
-  movieUserActivities: any[],
-  entityId: number,
-  entityType: CommentEntityType = CommentEntityType.MOVIE,
-) => {
-  if (entityType === CommentEntityType.MOVIE) {
-    const userActivities = movieUserActivities;
-    const likes =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'LIKE' && userActivity.movie_id === entityId,
-      )?._count?._all || 0;
-    const dislikes =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'DISLIKE' && userActivity.movie_id === entityId,
-      )?._count?._all || 0;
-    const watched =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'WATCHED' && userActivity.movie_id === entityId,
-      )?._count?._all || 0;
-    const watching =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'WATCHING' &&
-          userActivity.movie_id === entityId,
-      )?._count?._all || 0;
-
-    const likesPercent = Math.round((likes / (likes + dislikes)) * 100);
-
-    return {
-      likes_counts: likes,
-      likes_percent: isNaN(likesPercent) ? 0 : likesPercent,
-      watches_counts: watching + watched,
-    };
-  } else {
-    const userActivities = movieUserActivities;
-    const likes =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'LIKE' && userActivity.episode_id === entityId,
-      )?._count?._all || 0;
-    const dislikes =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'DISLIKE' &&
-          userActivity.episode_id === entityId,
-      )?._count?._all || 0;
-    const watched =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'WATCHED' &&
-          userActivity.episode_id === entityId,
-      )?._count?._all || 0;
-    const watching =
-      userActivities.find(
-        (userActivity) =>
-          userActivity.type === 'WATCHING' &&
-          userActivity.episode_id === entityId,
-      )?._count?._all || 0;
-
-    const likesPercent = Math.round((likes / (likes + dislikes)) * 100);
-
-    return {
-      likes_counts: likes,
-      likes_percent: isNaN(likesPercent) ? 0 : likesPercent,
-      watches_counts: watching + watched,
-    };
-  }
 };
 
 export const appLanguages = [

@@ -115,16 +115,6 @@ export class SectionMovieFilter {
   filter_value: string;
 }
 
-export class UpdateSectionDto extends CreateSectionDto {
-  @ApiProperty({
-    example: [1, 2, 3],
-    required: false,
-  })
-  @IsArray()
-  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  section_exclude_movies?: number[];
-}
-
 export class DeleteSectionsDto {
   @ApiProperty({ example: [1, 2, 3], required: true })
   @IsNotEmpty()

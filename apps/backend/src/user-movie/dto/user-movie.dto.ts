@@ -27,15 +27,14 @@ export class UpdateUserMoviesDto {
     example: 1,
     required: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  movie_id?: number;
+  movie_id: number;
 
   @ApiProperty({
     type: 'number',
     example: 1,
-    required: true,
   })
   @IsOptional()
   @IsNumber()
@@ -45,7 +44,6 @@ export class UpdateUserMoviesDto {
   @ApiProperty({
     type: 'number',
     example: 1,
-    required: true,
   })
   @IsOptional()
   @IsNumber()

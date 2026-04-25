@@ -97,6 +97,7 @@ export class FactorRepository {
   }
 
   async getAllFactors(query: RepositoryPaginationQueryProps) {
+    const searchTerms = query.search?.trim().split(/\s+/) ?? [];
     return await prisma.factor.findMany({
       include: {
         files: {
@@ -112,30 +113,34 @@ export class FactorRepository {
           },
         },
       },
-      where: {
-        OR: [
-          {
-            translations: {
-              some: {
-                first_name: {
-                  contains: query.search,
-                  mode: 'insensitive',
+      where: searchTerms.length
+        ? {
+            AND: searchTerms.map((term) => ({
+              OR: [
+                {
+                  translations: {
+                    some: {
+                      first_name: {
+                        contains: term,
+                        mode: 'insensitive',
+                      },
+                    },
+                  },
                 },
-              },
-            },
-          },
-          {
-            translations: {
-              some: {
-                last_name: {
-                  contains: query.search,
-                  mode: 'insensitive',
+                {
+                  translations: {
+                    some: {
+                      last_name: {
+                        contains: term,
+                        mode: 'insensitive',
+                      },
+                    },
+                  },
                 },
-              },
-            },
-          },
-        ],
-      },
+              ],
+            })),
+          }
+        : undefined,
       orderBy: {
         created_at: query.sort_type,
       },
