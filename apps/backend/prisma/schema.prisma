@@ -29,6 +29,7 @@ model User {
   user_movies      UserMovie[]
   otps             Otp[]
   login_requests   LoginRequest[]
+  commentVotes     CommentVote[]
 
   @@map("users")
 }
@@ -38,7 +39,6 @@ model Movie {
   created_at     DateTime           @default(now())
   updated_at     DateTime           @updatedAt
   type           MovieType
-  seasons_count  Int                @default(1)
   slug           String             @unique
   age_limit      Int?
   released_year  Int
@@ -56,6 +56,7 @@ model Movie {
   countries      MovieCountry[]
   tags           MovieTag[]
   section_movies SectionMovie[]
+  comments       Comment[]
 
   @@map("movies")
 }
@@ -156,15 +157,16 @@ model LanguageTranslation {
 }
 
 model Season {
-  id            Int                 @id @default(autoincrement())
-  created_at    DateTime            @default(now())
-  updated_at    DateTime            @updatedAt
-  season_number Int
-  movie_id      Int
-  episodes      Episode[]
-  translations  SeasonTranslation[]
-  movie         Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)
-  files         SeasonFile[]
+  id           Int                 @id @default(autoincrement())
+  created_at   DateTime            @default(now())
+  updated_at   DateTime            @updatedAt
+  order        Int
+  slug         String              @unique
+  movie_id     Int
+  episodes     Episode[]
+  translations SeasonTranslation[]
+  movie        Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  files        SeasonFile[]
 
   @@map("seasons")
 }
@@ -196,7 +198,8 @@ model Episode {
   id             Int                  @id @default(autoincrement())
   created_at     DateTime             @default(now())
   updated_at     DateTime             @updatedAt
-  episode_number Int
+  order          Int
+  slug           String               @unique
   season_id      Int
   movie_id       Int
   likes_count    Int                  @default(0)
@@ -207,6 +210,7 @@ model Episode {
   season         Season               @relation(fields: [season_id], references: [id], onDelete: Cascade)
   files          EpisodeFile[]
   user_movies    UserMovie[]
+  comments       Comment[]
 
   @@map("episodes")
 }
@@ -223,13 +227,14 @@ model EpisodeFile {
 }
 
 model EpisodeTranslation {
-  id         Int         @id @default(autoincrement())
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  title      String
-  episode_id Int
-  language   AppLanguage
-  episode    Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  id                Int         @id @default(autoincrement())
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+  title             String
+  short_description String
+  episode_id        Int
+  language          AppLanguage
+  episode           Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@map("episode_translations")
 }
@@ -238,19 +243,36 @@ model Comment {
   id             Int               @id @default(autoincrement())
   created_at     DateTime          @default(now())
   updated_at     DateTime          @updatedAt
-  likes_count    Int
-  dislikes_count Int
+  likes_count    Int               @default(0)
+  dislikes_count Int               @default(0)
   status         CommentStatus     @default(PENDING)
-  parent_id      Int?
-  entity_id      Int
   entity_type    CommentEntityType
+  movie_id       Int
+  episode_id     Int?
   body           String
   user_id        Int
-  parent         Comment?          @relation("CommentToReplies", fields: [parent_id], references: [id])
-  replies        Comment[]         @relation("CommentToReplies")
+  // parent_id      Int?
+  // parent         Comment?          @relation("CommentToReplies", fields: [parent_id], references: [id])
+  // replies        Comment[]         @relation("CommentToReplies")
+  movie          Movie             @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  episode        Episode?          @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  votes          CommentVote[]
   user           User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("comments")
+}
+
+model CommentVote {
+  id          Int               @id @default(autoincrement())
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @updatedAt
+  comment_id  Int
+  user_id     Int
+  vote_status CommentVoteStatus
+  user        User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  comment     Comment           @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+
+  @@map("comment_votes")
 }
 
 model Factor {
@@ -607,13 +629,15 @@ enum MovieFileType {
 }
 
 enum SeasonFileType {
-  BANNER
+  POSTER
   TRAILER
 }
 
 enum EpisodeFileType {
-  BANNER
+  POSTER
   TRAILER
+  COVER
+  FILM
 }
 
 enum FactorFileType {
@@ -681,4 +705,9 @@ enum SectionFilterKey {
   TYPE
   RELEASED_YEAR_FROM
   RELEASED_YEAR_TO
+}
+
+enum CommentVoteStatus {
+  LIKE
+  DISLIKE
 }

@@ -70,7 +70,10 @@ export class MovieController {
   @Public()
   @UseGuards(JwtAuthGuard)
   async getAllMovies(@Query() query: GetAllMoviesPublicDto, @Req() req) {
-    return await this.movieService.getAllMovies(query as MovieFilterInput, req?.user?.userId);
+    return await this.movieService.getAllMovies(
+      query as MovieFilterInput,
+      req?.user?.userId,
+    );
   }
 
   @ApiBearerAuth()
@@ -80,36 +83,5 @@ export class MovieController {
     @Query() query: GetMovieDetailPublicDto,
   ) {
     return this.movieService.getMovieDetailPublic(slug, query.lang);
-  }
-
-  @ApiBearerAuth()
-  @Post('user_movies')
-  @UseGuards(JwtAuthGuard)
-  async updateUserMovies(@Body() body: UpdateUserMoviesDto, @Req() req) {
-    return this.movieService.updateUserMovies(body, req.user.userId);
-  }
-
-  @ApiBearerAuth()
-  @Delete('user_movies/:actionId')
-  @UseGuards(JwtAuthGuard)
-  async deleteUserMovieAction(
-    @Param('actionId', ParseIntPipe) actionId: number,
-  ) {
-    return this.movieService.deleteUserMovie(actionId);
-  }
-
-  @ApiBearerAuth()
-  @Get('user_movie_actions/:entityId')
-  @UseGuards(JwtAuthGuard)
-  async getUserMovieActions(
-    @Req() req,
-    @Param('entityId', ParseIntPipe) entityId: number,
-    @Query() query: GetUserMovieActionsDto,
-  ) {
-    return await this.movieService.getUserMovieActions(
-      req.user.userId,
-      query.entity_type,
-      entityId,
-    );
   }
 }

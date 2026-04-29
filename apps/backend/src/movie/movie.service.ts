@@ -9,11 +9,9 @@ import { MovieFileService } from '../movie-file/movie-file.service';
 import { MovieTranslationService } from '../movie-translation/movie-translation.service';
 import {
   AppLanguage,
-  CommentEntityType,
   MovieFileType,
   MovieType,
   SectionSelectionMode,
-  UserMovieType,
 } from '@prisma/client';
 import { MovieFactorService } from '../movie-factor/movie-factor.service';
 import { MovieGenreService } from '../movie-genre/movie-genre.service';
@@ -26,11 +24,10 @@ import { MovieFilterInput } from './entity/movie.entity';
 import { SortType, SortByType } from '../common/enums';
 import { MovieCountryService } from '../movie-country/movie-country.service';
 import { MovieLanguageService } from '../movie-language/movie-language.service';
-import { UserMovieService } from '../user-movie/user-movie.service';
-import { UpdateUserMoviesDto } from '../user-movie/dto/user-movie.dto';
 import { MovieTagService } from '../movie-tag/movie-tag.service';
 import { prisma } from '../lib/prisma';
 import { SectionService } from '../section/section.service';
+import { TransactionType } from '../common/types/types';
 
 @Injectable()
 export class MovieService {
@@ -42,7 +39,6 @@ export class MovieService {
     private movieGenreService: MovieGenreService,
     private movieCountryService: MovieCountryService,
     private movieLanguageService: MovieLanguageService,
-    private userMovieService: UserMovieService,
     private movieTagService: MovieTagService,
     private sectionService: SectionService,
   ) {}
@@ -195,8 +191,8 @@ export class MovieService {
     return result;
   }
 
-  async getMovieDetailAdmin(movieId: number) {
-    const movie = await this.movieRepository.getMovieDetailAdmin(movieId);
+  async getMovieDetailAdmin(movieId: number, tx?: TransactionType) {
+    const movie = await this.movieRepository.getMovieDetailAdmin(movieId, tx);
     if (movie) {
       const { factors, genres, files, ...otherMovieData } = movie;
 
@@ -472,40 +468,5 @@ export class MovieService {
       count: allMoviesCount,
       data: updatedMovies,
     };
-  }
-
-  async updateUserMovies(body: UpdateUserMoviesDto, user_id: number) {
-    if (
-      (!body.movie_id && !body.episode_id) ||
-      (body.movie_id && body.episode_id)
-    ) {
-      throw new BadRequestException(
-        'one of movie_id or episode_id is required',
-      );
-    }
-    if (body.type === UserMovieType.WATCHING && !body.progress_time) {
-      throw new BadRequestException('progress time is required');
-    }
-
-    return await this.userMovieService.updateUserMovies(body, user_id);
-  }
-
-  async deleteUserMovie(actionId: number) {
-    const result = await prisma.$transaction(async (tx) => {
-      return await this.userMovieService.deleteUserMovie(actionId, tx);
-    });
-    return result;
-  }
-
-  async getUserMovieActions(
-    userId: number,
-    entityType: CommentEntityType,
-    entityId: number,
-  ) {
-    return await this.userMovieService.getUserMovieActions(
-      userId,
-      entityType,
-      entityId,
-    );
   }
 }

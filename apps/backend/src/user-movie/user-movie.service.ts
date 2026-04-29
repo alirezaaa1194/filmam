@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserMovieRepository } from './repository/user-movie.repository';
-import { UpdateUserMoviesDto } from './dto/user-movie.dto';
 import { CommentEntityType, UserMovieType } from '@prisma/client';
 import { GetAllUserMovieDto } from '../user/dto/user.dto';
 import {
@@ -13,24 +12,28 @@ import {
   SubmitUserMovieActionProps,
 } from './type/user-movie.type';
 import { prisma } from '../lib/prisma';
-import { TransactionType } from '../common/types/types';
+import { UpdateUserMoviesDto } from './dto/user-movie.dto';
+import { EpisodeService } from '../episode/episode.service';
 
 @Injectable()
 export class UserMovieService {
-  constructor(private userMovieRepository: UserMovieRepository) {}
+  constructor(
+    private userMovieRepository: UserMovieRepository,
+    private episodeService: EpisodeService,
+  ) {}
 
   async hasUserDidAction(body: GetUserMovieByTypeBodyType, userId: number) {
     return await this.userMovieRepository.getUserMovieByType(body, userId);
   }
 
-  async deleteUserMovie(actionId: number, tx: TransactionType) {
-    return await this.userMovieRepository.deleteUserMovie(actionId, tx);
+  async deleteUserMovie(actionId: number) {
+    return await this.userMovieRepository.deleteUserMovie(actionId);
   }
-  
+
   async submitUserMovieAction(props: SubmitUserMovieActionProps) {
     if (props.hasUserDidAction) {
       if (props.actionMode === 'DELETE') {
-        return await this.deleteUserMovie(props.hasUserDidAction.id, props.tx);
+        return await this.deleteUserMovie(props.hasUserDidAction.id);
       } else {
         return await this.userMovieRepository.updateUserMovie(
           props.hasUserDidAction.id,
@@ -399,5 +402,38 @@ export class UserMovieService {
       count: userMoviesCount,
       data: [...updatedEpisodes, ...normalizedUserMovies],
     };
+  }
+
+  async updateUserMovies2(body: UpdateUserMoviesDto, user_id: number) {
+    if (body.entity_type === CommentEntityType.MOVIE && !body.movie_id) {
+      throw new BadRequestException('movie_id is required');
+    } else if (
+      body.entity_type === CommentEntityType.EPISODE &&
+      !body.episode_id
+    ) {
+      throw new BadRequestException('episode_id is required');
+    }
+
+    let movie_id: number | null = null;
+
+    if (body.entity_type === CommentEntityType.MOVIE && body.movie_id) {
+      movie_id = body.movie_id;
+    } else if (
+      body.entity_type === CommentEntityType.EPISODE &&
+      body.episode_id
+    ) {
+      const episode = await this.episodeService.getEpisodeDetailAdmin(
+        body.episode_id,
+      );
+      movie_id = episode.movie_id;
+    }
+
+    if (body.type === UserMovieType.WATCHING && !body.progress_time) {
+      throw new BadRequestException('progress time is required');
+    }
+
+    if (movie_id) {
+      return await this.updateUserMovies({ ...body, movie_id }, user_id);
+    }
   }
 }

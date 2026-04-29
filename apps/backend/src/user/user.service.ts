@@ -136,7 +136,7 @@ export class UserService {
     return await this.userRepository.updateUserInfo(userId, newInfo);
   }
 
-  async getAllUserMovies(userId: number, query: GetAllUserMovieDto) {
-    return await this.userMovieService.getAllUserMovies(userId, query);
-  }
+  // async getAllUserMovies(userId: number, query: GetAllUserMovieDto) {
+  //   return await this.userMovieService.getAllUserMovies(userId, query);
+  // }
 }

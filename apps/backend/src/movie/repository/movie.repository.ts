@@ -39,10 +39,16 @@ export class MovieRepository {
     });
   }
 
-  async getMovieDetailAdmin(movieId: number) {
-    return await prisma.movie.findUnique({
+  async getMovieDetailAdmin(movieId: number, tx?: TransactionType) {
+    return await (tx ? tx : prisma).movie.findUnique({
       where: { id: movieId },
       include: {
+        _count: {
+          select: {
+            seasons: true,
+            episodes: true,
+          },
+        },
         seasons: true,
         episodes: true,
         translations: true,
@@ -95,6 +101,12 @@ export class MovieRepository {
     return await prisma.movie.findUnique({
       where: { slug },
       include: {
+        _count: {
+          select: {
+            seasons: true,
+            episodes: true,
+          },
+        },
         translations: {
           where: {
             language: lang,
@@ -179,6 +191,24 @@ export class MovieRepository {
             type: true,
           },
         },
+        seasons: {
+          orderBy: {
+            order: 'asc',
+          },
+          include: {
+            translations: {
+              where: {
+                language: lang,
+              },
+            },
+            files: {
+              select: {
+                upload: true,
+                type: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -191,6 +221,12 @@ export class MovieRepository {
   ) {
     return await prisma.movie.findMany({
       include: {
+        _count: {
+          select: {
+            seasons: true,
+            episodes: true,
+          },
+        },
         translations: {
           where: {
             language: lang,

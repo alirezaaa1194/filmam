@@ -17,8 +17,8 @@ export class UserMovieRepository {
     });
   }
 
-  async deleteUserMovie(actionId: number, tx: TransactionType) {
-    return await tx.userMovie.delete({
+  async deleteUserMovie(actionId: number) {
+    return await prisma.userMovie.delete({
       where: {
         id: actionId,
       },
@@ -75,7 +75,10 @@ export class UserMovieRepository {
       where: {
         ...(entityType === CommentEntityType.EPISODE
           ? { episode_id: entityId }
-          : { movie_id: entityId }),
+          : {
+              movie_id: entityId,
+              entity_type: { not: CommentEntityType.EPISODE },
+            }),
         user_id: userId,
       },
     });
@@ -102,6 +105,13 @@ export class UserMovieRepository {
         entity_type: true,
         movie: {
           include: {
+            _count: {
+              select: {
+                seasons: true,
+                episodes: true,
+              },
+            },
+            seasons: true,
             translations: {
               select: {
                 title: true,

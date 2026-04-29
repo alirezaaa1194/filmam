@@ -1,4 +1,9 @@
-import { CommentEntityType, Prisma, UserMovie, UserMovieType } from '@prisma/client';
+import {
+  CommentEntityType,
+  Prisma,
+  UserMovie,
+  UserMovieType,
+} from '@prisma/client';
 import { UpdateUserMoviesDto } from '../dto/user-movie.dto';
 import { TransactionType } from '../../common/types/types';
 
@@ -16,4 +21,8 @@ export type SubmitUserMovieActionProps = {
   tx: TransactionType;
   hasUserDidAction?: UserMovie;
   callback?: Promise<Prisma.BatchPayload>;
+};
+
+export type UpdateUserMoviesPropsType = UpdateUserMoviesDto & {
+  movie_id: number;
 };

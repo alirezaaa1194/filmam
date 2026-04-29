@@ -108,10 +108,10 @@ export class UserController {
     return await this.userService.updateUserInfo(req.user.userId, body);
   }
 
-  @ApiBearerAuth()
-  @Get('movies')
-  @UseGuards(JwtAuthGuard)
-  async getAllUserMovies(@Req() req, @Query() query: GetAllUserMovieDto) {
-    return await this.userService.getAllUserMovies(req.user.userId, query);
-  }
+  // @ApiBearerAuth()
+  // @Get('movies')
+  // @UseGuards(JwtAuthGuard)
+  // async getAllUserMovies(@Req() req, @Query() query: GetAllUserMovieDto) {
+  //   return await this.userService.getAllUserMovies(req.user.userId, query);
+  // }
 }
