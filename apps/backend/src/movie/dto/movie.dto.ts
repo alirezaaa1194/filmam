@@ -56,6 +56,14 @@ export class CreateMovieDto {
   slug: string;
 
   @ApiProperty({
+    type: 'string',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  combined_tags: string;
+
+  @ApiProperty({
     example: [1, 2, 3],
     required: true,
   })
@@ -157,6 +165,15 @@ export class GetAllMoviesPublicDto {
   @IsString()
   @IsOptional()
   search?: string;
+
+  @ApiProperty({
+    name: 'section',
+    type: 'string',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  section?: string;
 
   @ApiProperty({
     name: 'lang',

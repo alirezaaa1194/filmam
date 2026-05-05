@@ -90,8 +90,9 @@ export class UserMovieRepository {
     page: number,
     pageSize: number,
     lang: AppLanguage,
+    tx?: TransactionType,
   ) {
-    return await prisma.userMovie.findMany({
+    return await (tx ? tx : prisma).userMovie.findMany({
       where: {
         type: { in: type },
         user_id: userId,
@@ -111,7 +112,15 @@ export class UserMovieRepository {
                 episodes: true,
               },
             },
-            seasons: true,
+            seasons: {
+              include: {
+                translations: {
+                  where: {
+                    language: lang,
+                  },
+                },
+              },
+            },
             translations: {
               select: {
                 title: true,
@@ -142,6 +151,9 @@ export class UserMovieRepository {
               select: {
                 upload: true,
                 type: true,
+                intro_start_time: true,
+                intro_duration: true,
+                outro_duration: true,
               },
             },
           },
@@ -155,8 +167,12 @@ export class UserMovieRepository {
     });
   }
 
-  async getUserMoviesCount(userId: number, type: UserMovieType[]) {
-    return await prisma.userMovie.count({
+  async getUserMoviesCount(
+    userId: number,
+    type: UserMovieType[],
+    tx?: TransactionType,
+  ) {
+    return await (tx ? tx : prisma).userMovie.count({
       where: {
         type: { in: type },
         user_id: userId,

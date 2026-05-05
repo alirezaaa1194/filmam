@@ -8,6 +8,7 @@ export class MovieRepository {
       type: MovieType;
       released_year: number;
       slug: string;
+      combined_tags: string;
     },
     tx: TransactionType,
   ) {
@@ -218,8 +219,9 @@ export class MovieRepository {
     orderBy: any,
     lang: AppLanguage,
     pagination: { take: number; skip: number },
+    tx?: TransactionType,
   ) {
-    return await prisma.movie.findMany({
+    return await (tx ? tx : prisma).movie.findMany({
       include: {
         _count: {
           select: {
@@ -306,6 +308,9 @@ export class MovieRepository {
           select: {
             upload: true,
             type: true,
+            intro_start_time: true,
+            intro_duration: true,
+            outro_duration: true,
           },
         },
       },

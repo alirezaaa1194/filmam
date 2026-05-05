@@ -45,6 +45,7 @@ model Movie {
   likes_count    Int                @default(0)
   dislikes_count Int                @default(0)
   watches_count  Int                @default(0)
+  combined_tags  String
   episodes       Episode[]
   factors        MovieFactor[]
   translations   MovieTranslation[]
@@ -62,12 +63,15 @@ model Movie {
 }
 
 model MovieFile {
-  id        Int           @id @default(autoincrement())
-  movie_id  Int
-  upload_id Int
-  type      MovieFileType
-  movie     Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
-  upload    Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)
+  id               Int           @id @default(autoincrement())
+  movie_id         Int
+  upload_id        Int
+  type             MovieFileType
+  intro_start_time Int?
+  intro_duration   Int?
+  outro_duration   Int?
+  movie            Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  upload           Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)
 
   @@map("movie_files")
 }
@@ -216,12 +220,15 @@ model Episode {
 }
 
 model EpisodeFile {
-  id         Int             @id @default(autoincrement())
-  episode_id Int
-  upload_id  Int
-  type       EpisodeFileType
-  upload     Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)
-  episode    Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  id               Int             @id @default(autoincrement())
+  episode_id       Int
+  upload_id        Int
+  type             EpisodeFileType
+  intro_start_time Int?
+  intro_duration   Int?
+  outro_duration   Int?
+  upload           Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)
+  episode          Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@map("episode_files")
 }
@@ -609,6 +616,7 @@ enum CommentEntityType {
 
 enum UserMovieType {
   BOOKMARK
+  NOTIFICATION
   LIKE
   DISLIKE
   WATCHING
@@ -663,6 +671,7 @@ enum RoleType {
 enum SectionSelectionMode {
   AUTO
   USER_MOVIE
+  SUGGESTION
   MANUAL
 }
 

@@ -9,6 +9,8 @@ import { MovieFileService } from '../movie-file/movie-file.service';
 import { MovieTranslationService } from '../movie-translation/movie-translation.service';
 import {
   AppLanguage,
+  CommentEntityType,
+  Movie,
   MovieFileType,
   MovieType,
   SectionSelectionMode,
@@ -28,6 +30,7 @@ import { MovieTagService } from '../movie-tag/movie-tag.service';
 import { prisma } from '../lib/prisma';
 import { SectionService } from '../section/section.service';
 import { TransactionType } from '../common/types/types';
+import * as natural from 'natural';
 
 @Injectable()
 export class MovieService {
@@ -66,6 +69,15 @@ export class MovieService {
       throw new BadRequestException(
         'Movie with type Series must not take Film',
       );
+    }
+
+    if (
+      otherMovieData.type === MovieType.CINEMATIC &&
+      (typeof movieFilms[0].intro_start_time !== 'number' ||
+        typeof movieFilms[0].intro_duration !== 'number' ||
+        typeof movieFilms[0].outro_duration !== 'number')
+    ) {
+      throw new BadRequestException('Intro or outro information is not valid');
     }
 
     const moviePosters = files.filter(
@@ -240,233 +252,399 @@ export class MovieService {
   }
 
   async getAllMovies(filter: MovieFilterInput, userId?: number) {
-    const where: {
-      translations?: any;
-      genres?: any;
-      countries?: any;
-      languages?: any;
-      type?: any;
-      age_limit?: any;
-      tags?: any;
-      released_year?: any;
-      user_movies?: any;
-      section_movies?: any;
-      factors?: any;
-      OR?: any;
-    } = {};
-    const pagination: { take: number; skip: number } = {
-      skip: 0,
-      take: 0,
-    };
-    let sort: any = {};
+    const result = await prisma.$transaction(async (tx) => {
+      const where: {
+        translations?: any;
+        genres?: any;
+        countries?: any;
+        languages?: any;
+        type?: any;
+        age_limit?: any;
+        tags?: any;
+        released_year?: any;
+        user_movies?: any;
+        section_movies?: any;
+        factors?: any;
+        OR?: any;
+        NOT?: any;
+      } = {};
+      const pagination: { take: number; skip: number } = {
+        skip: 0,
+        take: 0,
+      };
 
-    if (filter.search) {
-      const searchTerms = filter.search?.trim().split(/\s+/) ?? [];
-      where.OR = [
-        {
-          translations: {
-            some: {
-              OR: [
-                {
-                  title: {
-                    contains: filter.search,
-                    mode: 'insensitive',
-                  },
-                },
-                {
-                  description: {
-                    contains: filter.search,
-                    mode: 'insensitive',
-                  },
-                },
-                {
-                  short_description: {
-                    contains: filter.search,
-                    mode: 'insensitive',
-                  },
-                },
-              ],
-            },
-          },
-        },
-        {
-          factors: {
-            some: {
-              factor: {
-                AND: searchTerms.map((term) => ({
-                  OR: [
-                    {
-                      translations: {
-                        some: {
-                          first_name: {
-                            contains: term,
-                            mode: 'insensitive',
-                          },
-                        },
-                      },
-                    },
-                    {
-                      translations: {
-                        some: {
-                          last_name: {
-                            contains: term,
-                            mode: 'insensitive',
-                          },
-                        },
-                      },
-                    },
-                  ],
-                })),
-              },
-            },
-          },
-        },
-        {
-          genres: {
-            some: {
-              genre: {
-                translations: {
-                  some: {
-                    name: {
+      let sort: any = {};
+
+      if (filter.search) {
+        const searchTerms = filter.search?.trim().split(/\s+/) ?? [];
+        where.OR = [
+          {
+            translations: {
+              some: {
+                OR: [
+                  {
+                    title: {
                       contains: filter.search,
                       mode: 'insensitive',
                     },
                   },
+                  {
+                    description: {
+                      contains: filter.search,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    short_description: {
+                      contains: filter.search,
+                      mode: 'insensitive',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            factors: {
+              some: {
+                factor: {
+                  AND: searchTerms.map((term) => ({
+                    OR: [
+                      {
+                        translations: {
+                          some: {
+                            first_name: {
+                              contains: term,
+                              mode: 'insensitive',
+                            },
+                          },
+                        },
+                      },
+                      {
+                        translations: {
+                          some: {
+                            last_name: {
+                              contains: term,
+                              mode: 'insensitive',
+                            },
+                          },
+                        },
+                      },
+                    ],
+                  })),
                 },
               },
             },
           },
-        },
-      ];
-    }
-
-    if (filter.sort_by) {
-      if (filter.sort_by === SortByType.CREATED_AT) {
-        sort.created_at = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
-      } else if (filter.sort_by === SortByType.LIKES) {
-        sort.likes_count = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
-      } else if (filter.sort_by === SortByType.WATCHES) {
-        sort.watches_count =
-          filter.sort_order === SortType.ASC ? 'asc' : 'desc';
-      }
-    } else {
-      sort.created_at = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
-    }
-
-    if (filter.genres && filter.genres.length) {
-      where.genres = {
-        some: {
-          genre_id: {
-            in: filter.genres,
-          },
-        },
-      };
-    }
-
-    if (filter.tags && filter.tags.length) {
-      where.tags = {
-        some: {
-          tag_id: {
-            in: filter.tags,
-          },
-        },
-      };
-    }
-
-    if (filter.countries && filter.countries.length) {
-      where.countries = {
-        some: {
-          country_id: {
-            in: filter.countries,
-          },
-        },
-      };
-    }
-
-    if (filter.languages && filter.languages.length) {
-      where.languages = {
-        some: {
-          language_id: {
-            in: filter.languages,
-          },
-        },
-      };
-    }
-
-    if (filter.type) {
-      where.type = filter.type;
-    }
-
-    if (filter.age_limits && filter.age_limits.length) {
-      where.age_limit = {
-        in: filter.age_limits,
-      };
-    }
-
-    if (filter.released_year_from && filter.released_year_to) {
-      where.released_year = {
-        gte: +filter.released_year_from,
-        lte: +filter.released_year_to,
-      };
-    }
-
-    if (filter.section) {
-      const section = await this.sectionService.getSectionDetailPublic(
-        filter.section,
-      );
-
-      if (section) {
-        if (
-          section.selection_mode === SectionSelectionMode.USER_MOVIE &&
-          userId
-        ) {
-          where.user_movies = {
-            some: {
-              user_id: userId,
-            },
-          };
-        } else if (
-          section.selection_mode === SectionSelectionMode.USER_MOVIE &&
-          !userId
-        ) {
-          throw new UnauthorizedException();
-        } else if (section.selection_mode === SectionSelectionMode.MANUAL) {
-          where.section_movies = {
-            some: {
-              section: {
-                slug: filter.section,
+          {
+            genres: {
+              some: {
+                genre: {
+                  translations: {
+                    some: {
+                      name: {
+                        contains: filter.search,
+                        mode: 'insensitive',
+                      },
+                    },
+                  },
+                },
               },
             },
+          },
+        ];
+      }
+
+      if (filter.sort_by) {
+        if (filter.sort_by === SortByType.CREATED_AT) {
+          sort.created_at = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
+        } else if (filter.sort_by === SortByType.LIKES) {
+          sort.likes_count =
+            filter.sort_order === SortType.ASC ? 'asc' : 'desc';
+        } else if (filter.sort_by === SortByType.WATCHES) {
+          sort.watches_count =
+            filter.sort_order === SortType.ASC ? 'asc' : 'desc';
+        }
+      } else {
+        sort.created_at = filter.sort_order === SortType.ASC ? 'asc' : 'desc';
+      }
+
+      if (filter.genres && filter.genres.length) {
+        where.genres = {
+          some: {
+            genre_id: {
+              in: filter.genres,
+            },
+          },
+        };
+      }
+
+      if (filter.tags && filter.tags.length) {
+        where.tags = {
+          some: {
+            tag_id: {
+              in: filter.tags,
+            },
+          },
+        };
+      }
+
+      if (filter.countries && filter.countries.length) {
+        where.countries = {
+          some: {
+            country_id: {
+              in: filter.countries,
+            },
+          },
+        };
+      }
+
+      if (filter.languages && filter.languages.length) {
+        where.languages = {
+          some: {
+            language_id: {
+              in: filter.languages,
+            },
+          },
+        };
+      }
+
+      if (filter.type) {
+        where.type = filter.type;
+      }
+
+      if (filter.age_limits && filter.age_limits.length) {
+        where.age_limit = {
+          in: filter.age_limits,
+        };
+      }
+
+      if (filter.released_year_from && filter.released_year_to) {
+        where.released_year = {
+          gte: +filter.released_year_from,
+          lte: +filter.released_year_to,
+        };
+      }
+
+      let sectionSelectionMode: SectionSelectionMode | null = null;
+
+      if (filter.section) {
+        const section = await this.sectionService.getSectionDetailPublic(
+          filter.section,
+          tx,
+        );
+
+        if (section) {
+          sectionSelectionMode = section.selection_mode;
+
+          if (
+            section.selection_mode === SectionSelectionMode.USER_MOVIE &&
+            userId
+          ) {
+            where.user_movies = {
+              some: {
+                user_id: userId,
+              },
+            };
+          } else if (section.selection_mode === SectionSelectionMode.MANUAL) {
+            where.section_movies = {
+              some: {
+                section: {
+                  slug: filter.section,
+                },
+              },
+            };
+          } else if (
+            section.selection_mode === SectionSelectionMode.SUGGESTION &&
+            userId
+          ) {
+            where.NOT = {
+              user_movies: {
+                some: {
+                  user_id: userId,
+                  type: {
+                    in: [
+                      'WATCHED',
+                      'WATCHING',
+                      'BOOKMARK',
+                      'LIKE',
+                      'DISLIKE',
+                      'NOTIFICATION',
+                    ],
+                  },
+                },
+              },
+            };
+          }
+        }
+      }
+
+      const { page, page_size } = paginationCalculator(
+        filter.page || 1,
+        filter.page_size || 10,
+      );
+
+      pagination.skip = page;
+      pagination.take = page_size;
+
+      const movies = await this.movieRepository.getAllMovies(
+        where,
+        sort,
+        filter.lang || defaultLang,
+        pagination,
+        tx,
+      );
+
+      const updatedMovies = movies.map((movie) => {
+        return normalizeMovieDetail({ ...movie });
+      });
+
+      const allMoviesCount =
+        await this.movieRepository.getAllMoviesCount(where);
+
+      if (filter.section) {
+        if (
+          sectionSelectionMode === SectionSelectionMode.SUGGESTION &&
+          userId
+        ) {
+          const userRecentMovies = await tx.userMovie.findMany({
+            where: {
+              user_id: userId,
+              type: {
+                in: ['WATCHED', 'WATCHING', 'BOOKMARK', 'LIKE', 'NOTIFICATION'],
+              },
+            },
+            include: { movie: true },
+          });
+
+          const allUserRecentMovies = userRecentMovies
+            .filter((urm) => urm.entity_type === CommentEntityType.MOVIE)
+            .map((urm) => urm.movie);
+
+          const allMoviesWithCurrent = [
+            ...allUserRecentMovies,
+            ...updatedMovies,
+          ].filter((movie) => movie !== null);
+
+          const tfidf = new natural.TfIdf();
+
+          allMoviesWithCurrent.forEach((movie) => {
+            tfidf.addDocument(movie.combined_tags);
+          });
+
+          const terms = allUserRecentMovies
+            .map((urm) => urm?.combined_tags)
+            .join(' ')
+            .split(' ');
+          let similarMovies: { movie: Movie; score: number }[] = [];
+
+          for (
+            let i = allUserRecentMovies.length;
+            i < allMoviesWithCurrent.length;
+            i++
+          ) {
+            let score = 0;
+            terms.forEach((term) => {
+              const tfidf1 = tfidf.tfidf(term, 0);
+              const tfidf2 = tfidf.tfidf(term, i);
+              score += tfidf1 * tfidf2;
+            });
+
+            if (score > 0) {
+              similarMovies.push({
+                movie: allMoviesWithCurrent[i],
+                score,
+              });
+            }
+          }
+
+          const allSimilarMovies = similarMovies
+            .sort((a, b) => b.score - a.score)
+            .map((item) => item.movie);
+
+          return {
+            page: page + 1,
+            page_size,
+            count: allMoviesCount,
+            data: allSimilarMovies,
           };
         }
       }
-    }
 
-    const { page, page_size } = paginationCalculator(
-      filter.page || 1,
-      filter.page_size || 10,
-    );
-
-    pagination.skip = page;
-    pagination.take = page_size;
-
-    const movies = await this.movieRepository.getAllMovies(
-      where,
-      sort,
-      filter.lang || defaultLang,
-      pagination,
-    );
-
-    const updatedMovies = movies.map((movie) => {
-      return normalizeMovieDetail({ ...movie });
+      return {
+        page: page + 1,
+        page_size,
+        count: allMoviesCount,
+        data: updatedMovies,
+      };
     });
 
-    const allMoviesCount = await this.movieRepository.getAllMoviesCount(where);
-    return {
-      page: page + 1,
-      page_size,
-      count: allMoviesCount,
-      data: updatedMovies,
-    };
+    return result;
+  }
+
+  async getRecommendedMovies(
+    movieSlug: string,
+    lang: AppLanguage = defaultLang,
+  ) {
+    try {
+      const currentMovie = await this.movieRepository.getMovieDetailPublic(
+        movieSlug,
+        lang,
+      );
+
+      if (!currentMovie || !currentMovie.combined_tags) {
+        return [];
+      }
+
+      const allMovies = await prisma.movie.findMany({
+        where: { slug: { not: movieSlug } },
+        include: {
+          translations: { where: { language: lang } },
+          files: { include: { upload: true } },
+        },
+      });
+
+      if (allMovies.length === 0) return [];
+
+      const allMoviesWithCurrent = [currentMovie, ...allMovies].filter(
+        (movie) => movie !== null,
+      );
+      const normalizedMovies = allMoviesWithCurrent.map((movie) =>
+        normalizeMovieDetail(movie),
+      );
+
+      const tfidf = new natural.TfIdf();
+
+      normalizedMovies.forEach((movie) => {
+        tfidf.addDocument(movie.combined_tags);
+      });
+
+      const terms = currentMovie.combined_tags.split(' ');
+      let similarMovies: { movie: Movie; score: number }[] = [];
+
+      for (let i = 1; i < normalizedMovies.length; i++) {
+        let score = 0;
+        terms.forEach((term) => {
+          const tfidf1 = tfidf.tfidf(term, 0);
+          const tfidf2 = tfidf.tfidf(term, i);
+          score += tfidf1 * tfidf2;
+        });
+
+        if (score > 0) {
+          similarMovies.push({
+            movie: normalizedMovies[i],
+            score,
+          });
+        }
+      }
+
+      return similarMovies
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 15)
+        .map((item) => item.movie);
+    } catch (err) {
+      console.error('Error in getRecommendedMovies:', err);
+      return [];
+    }
   }
 }

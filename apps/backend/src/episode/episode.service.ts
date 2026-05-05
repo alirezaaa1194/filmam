@@ -50,6 +50,16 @@ export class EpisodeService {
         throw new BadRequestException('Episode must take one Film');
       }
 
+      if (
+        typeof episodeFilms[0].intro_start_time !== 'number' ||
+        typeof episodeFilms[0].intro_duration !== 'number' ||
+        typeof episodeFilms[0].outro_duration !== 'number'
+      ) {
+        throw new BadRequestException(
+          'Intro or outro information is not valid',
+        );
+      }
+
       const episodePosters = files.filter(
         (file) => file.type === EpisodeFileType.POSTER,
       );
@@ -143,9 +153,11 @@ export class EpisodeService {
     return result;
   }
 
-  async getEpisodeDetailAdmin(episodeId: number, tx?:TransactionType) {
-    const episode =
-      await this.episodeRepository.getEpisodeDetailAdmin(episodeId, tx);
+  async getEpisodeDetailAdmin(episodeId: number, tx?: TransactionType) {
+    const episode = await this.episodeRepository.getEpisodeDetailAdmin(
+      episodeId,
+      tx,
+    );
 
     if (episode) {
       const { files, ...otherEpisodeData } = episode;
@@ -170,7 +182,13 @@ export class EpisodeService {
     if (episode) {
       const { files, translations, movie, ...otherEpisodeData } = episode;
       const episodeFiles = files.map((file) => {
-        return { ...file.upload, type: file.type };
+        return {
+          ...file.upload,
+          type: file.type,
+          intro_start_time: file.intro_start_time,
+          intro_duration: file.intro_duration,
+          outro_duration: file.outro_duration,
+        };
       });
       const episodeTranslation = translations[0];
       const normalizedMovie = normalizeMovieDetail(movie);
@@ -204,7 +222,13 @@ export class EpisodeService {
         episode;
 
       const episodeFiles = files.map((file) => {
-        return { ...file.upload, type: file.type };
+        return {
+          ...file.upload,
+          type: file.type,
+          intro_start_time: file.intro_start_time,
+          intro_duration: file.intro_duration,
+          outro_duration: file.outro_duration,
+        };
       });
 
       const episodesTranslation = translations[0];

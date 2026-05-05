@@ -1,6 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserMovieRepository } from './repository/user-movie.repository';
-import { CommentEntityType, UserMovieType } from '@prisma/client';
+import {
+  CommentEntityType,
+  Episode,
+  EpisodeFile,
+  UserMovieType,
+} from '@prisma/client';
 import { GetAllUserMovieDto } from '../user/dto/user.dto';
 import {
   defaultLang,
@@ -14,6 +19,7 @@ import {
 import { prisma } from '../lib/prisma';
 import { UpdateUserMoviesDto } from './dto/user-movie.dto';
 import { EpisodeService } from '../episode/episode.service';
+import { TransactionType } from '../common/types/types';
 
 @Injectable()
 export class UserMovieService {
@@ -78,6 +84,16 @@ export class UserMovieService {
     });
     const result = await prisma.$transaction(async (tx) => {
       switch (body.type) {
+        case UserMovieType.NOTIFICATION: {
+          return await this.submitUserMovieAction({
+            userId,
+            body,
+            actionMode: 'DELETE',
+            hasUserDidAction,
+            tx,
+          });
+        }
+
         case UserMovieType.BOOKMARK: {
           return await this.submitUserMovieAction({
             userId,
@@ -346,7 +362,11 @@ export class UserMovieService {
     );
   }
 
-  async getAllUserMovies(userId: number, query: GetAllUserMovieDto) {
+  async getAllUserMovies(
+    userId: number,
+    query: GetAllUserMovieDto,
+    tx?: TransactionType,
+  ) {
     const { page, page_size } = paginationCalculator(
       query.page || 1,
       query.page_size || 10,
@@ -358,6 +378,7 @@ export class UserMovieService {
       page,
       page_size,
       query.lang || defaultLang,
+      tx,
     );
 
     /////////////////////////////
@@ -367,11 +388,37 @@ export class UserMovieService {
     );
 
     const updatedEpisodes = episodes.map((userMovie) => {
-      const { episode, ...otherUserMovieData } = userMovie;
+      const { episode, movie, ...otherUserMovieData } = userMovie;
+
+      const normalizedMovie = normalizeMovieDetail(movie);
+
+      let normalizedEpisode: {} | null = null;
+
+      if (episode) {
+        const { translations, files, ...otherEpisodeData } = episode;
+
+        const episodeFiles = files.map((file) => {
+          return {
+            ...file.upload,
+            type: file.type,
+            intro_start_time: file.intro_start_time,
+            intro_duration: file.intro_duration,
+            outro_duration: file.outro_duration,
+          };
+        });
+
+        const episodesTranslation = translations[0];
+        normalizedEpisode = {
+          ...otherEpisodeData,
+          title: episodesTranslation.title,
+          files: episodeFiles,
+        };
+      }
 
       return {
         ...otherUserMovieData,
-        episode,
+        movie: normalizedMovie,
+        episode: normalizedEpisode,
       };
     });
 
@@ -394,6 +441,7 @@ export class UserMovieService {
     const userMoviesCount = await this.userMovieRepository.getUserMoviesCount(
       userId,
       query.type,
+      tx,
     );
 
     return {
@@ -404,7 +452,7 @@ export class UserMovieService {
     };
   }
 
-  async updateUserMovies2(body: UpdateUserMoviesDto, user_id: number) {
+  async voteUserMovies(body: UpdateUserMoviesDto, user_id: number) {
     if (body.entity_type === CommentEntityType.MOVIE && !body.movie_id) {
       throw new BadRequestException('movie_id is required');
     } else if (
@@ -412,6 +460,15 @@ export class UserMovieService {
       !body.episode_id
     ) {
       throw new BadRequestException('episode_id is required');
+    }
+
+    if (
+      body.type === UserMovieType.NOTIFICATION &&
+      body.entity_type === CommentEntityType.EPISODE
+    ) {
+      throw new BadRequestException(
+        'Notification can not activate for episode',
+      );
     }
 
     let movie_id: number | null = null;

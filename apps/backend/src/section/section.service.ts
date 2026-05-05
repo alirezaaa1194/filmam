@@ -13,6 +13,8 @@ import { SectionTranslationService } from '../section-translation/section-transl
 import { SectionMovieService } from '../section-movie/section-movie.service';
 import {
   AppLanguage,
+  CommentEntityType,
+  Movie,
   MovieType,
   SectionFilterKey,
   SectionMovieViewMode,
@@ -30,6 +32,8 @@ import {
 } from '../lib/utils';
 import { UserMovieService } from '../user-movie/user-movie.service';
 import { SortType } from '../common/enums';
+import * as natural from 'natural';
+import { TransactionType } from '../common/types/types';
 
 @Injectable()
 export class SectionService {
@@ -258,347 +262,447 @@ export class SectionService {
   }
 
   async getAllSections(query: GetAllSectionsDto, userId?: number) {
-    const { page, page_size } = paginationCalculator(
-      query.page || 1,
-      query.page_size || 10,
-    );
-    const sections = await this.sectionRepository.getAllSections(
-      page,
-      page_size,
-      query.lang || defaultLang,
-      query.search?.trim(),
-      query.sort || SortType.ASC,
-    );
-
-    const normalizedSection = sections.map(async (section) => {
-      let movies: any[] = [];
-      const { translations, ...otherSectionData } = section;
-      const daysAgo = new Date();
-      daysAgo.setDate(
-        daysAgo.getDate() -
-          (otherSectionData.period_base === SectionPeriodBase.A_DAY_AGO
-            ? 1
-            : otherSectionData.period_base === SectionPeriodBase.A_WEEK_AGO
-              ? 7
-              : otherSectionData.period_base === SectionPeriodBase.A_MONTH_AGO
-                ? 30
-                : 0),
+    const result = await prisma.$transaction(async (tx) => {
+      const { page, page_size } = paginationCalculator(
+        query.page || 1,
+        query.page_size || 10,
       );
-      if (otherSectionData.selection_mode === SectionSelectionMode.MANUAL) {
-        const sectionMovies = await this.sectionRepository.getSectionMovies(
-          otherSectionData.id,
-          query.lang,
-          query.movies_size,
+      const sections = await this.sectionRepository.getAllSections(
+        page,
+        page_size,
+        query.lang || defaultLang,
+        query.search?.trim(),
+        query.sort || SortType.ASC,
+        tx,
+      );
+
+      const normalizedSection = sections.map(async (section) => {
+        let movies: any[] = [];
+        const { translations, ...otherSectionData } = section;
+        const daysAgo = new Date();
+        daysAgo.setDate(
+          daysAgo.getDate() -
+            (otherSectionData.period_base === SectionPeriodBase.A_DAY_AGO
+              ? 1
+              : otherSectionData.period_base === SectionPeriodBase.A_WEEK_AGO
+                ? 7
+                : otherSectionData.period_base === SectionPeriodBase.A_MONTH_AGO
+                  ? 30
+                  : 0),
         );
+        if (otherSectionData.selection_mode === SectionSelectionMode.MANUAL) {
+          const sectionMovies = await this.sectionRepository.getSectionMovies(
+            otherSectionData.id,
+            query.lang,
+            query.movies_size,
+            tx,
+          );
 
-        movies = sectionMovies.map((sectionMovie) => {
-          return normalizeMovieDetail(sectionMovie.movie);
-        });
+          movies = sectionMovies.map((sectionMovie) => {
+            return normalizeMovieDetail(sectionMovie.movie);
+          });
 
-        const sectionTranslation = translations[0];
+          const sectionTranslation = translations[0];
 
-        return {
-          ...{
-            ...otherSectionData,
-            title: sectionTranslation.title,
-            description: sectionTranslation.description,
-          },
-          movies,
-        };
-      } else if (
-        otherSectionData.selection_mode === SectionSelectionMode.AUTO
-      ) {
-        otherSectionData.section_filters;
-        const hasPeriodBase =
-          otherSectionData.period_base === SectionPeriodBase.A_DAY_AGO ||
-          otherSectionData.period_base === SectionPeriodBase.A_MONTH_AGO ||
-          otherSectionData.period_base === SectionPeriodBase.A_WEEK_AGO;
+          return {
+            ...{
+              ...otherSectionData,
+              title: sectionTranslation.title,
+              description: sectionTranslation.description,
+            },
+            movies,
+          };
+        } else if (
+          otherSectionData.selection_mode === SectionSelectionMode.AUTO
+        ) {
+          otherSectionData.section_filters;
+          const hasPeriodBase =
+            otherSectionData.period_base === SectionPeriodBase.A_DAY_AGO ||
+            otherSectionData.period_base === SectionPeriodBase.A_MONTH_AGO ||
+            otherSectionData.period_base === SectionPeriodBase.A_WEEK_AGO;
 
-        const genresFilter = otherSectionData.section_filters
-          .filter((sf) => sf.filter_key === SectionFilterKey.GENRES)
-          .map((sf) => +sf.filter_value);
+          const genresFilter = otherSectionData.section_filters
+            .filter((sf) => sf.filter_key === SectionFilterKey.GENRES)
+            .map((sf) => +sf.filter_value);
 
-        const countriesFilter = otherSectionData.section_filters
-          .filter((sf) => sf.filter_key === SectionFilterKey.COUNTRIES)
-          .map((sf) => +sf.filter_value);
+          const countriesFilter = otherSectionData.section_filters
+            .filter((sf) => sf.filter_key === SectionFilterKey.COUNTRIES)
+            .map((sf) => +sf.filter_value);
 
-        const languagesFilter = otherSectionData.section_filters
-          .filter((sf) => sf.filter_key === SectionFilterKey.LANGUAGES)
-          .map((sf) => +sf.filter_value);
+          const languagesFilter = otherSectionData.section_filters
+            .filter((sf) => sf.filter_key === SectionFilterKey.LANGUAGES)
+            .map((sf) => +sf.filter_value);
 
-        const tagsFilter = otherSectionData.section_filters
-          .filter((sf) => sf.filter_key === SectionFilterKey.TAGS)
-          .map((sf) => +sf.filter_value);
+          const tagsFilter = otherSectionData.section_filters
+            .filter((sf) => sf.filter_key === SectionFilterKey.TAGS)
+            .map((sf) => +sf.filter_value);
 
-        const searchFilter = otherSectionData.section_filters.find(
-          (sf) => sf.filter_key === SectionFilterKey.SEARCH,
-        );
+          const searchFilter = otherSectionData.section_filters.find(
+            (sf) => sf.filter_key === SectionFilterKey.SEARCH,
+          );
 
-        const typeFilter = otherSectionData.section_filters.find(
-          (sf) => sf.filter_key === SectionFilterKey.TYPE,
-        );
+          const typeFilter = otherSectionData.section_filters.find(
+            (sf) => sf.filter_key === SectionFilterKey.TYPE,
+          );
 
-        const sectionAgeLimit = otherSectionData.section_filters
-          .filter((sf) => sf.filter_key === SectionFilterKey.AGE_LIMITS)
-          .sort((a, b) => +a.filter_value - +b.filter_value);
+          const sectionAgeLimit = otherSectionData.section_filters
+            .filter((sf) => sf.filter_key === SectionFilterKey.AGE_LIMITS)
+            .sort((a, b) => +a.filter_value - +b.filter_value);
 
-        const hasReleasedYearFromFilter = otherSectionData.section_filters.some(
-          (sf) => sf.filter_key === SectionFilterKey.RELEASED_YEAR_FROM,
-        );
-        const hasReleasedYearToFilter = otherSectionData.section_filters.some(
-          (sf) => sf.filter_key === SectionFilterKey.RELEASED_YEAR_TO,
-        );
+          const hasReleasedYearFromFilter =
+            otherSectionData.section_filters.some(
+              (sf) => sf.filter_key === SectionFilterKey.RELEASED_YEAR_FROM,
+            );
+          const hasReleasedYearToFilter = otherSectionData.section_filters.some(
+            (sf) => sf.filter_key === SectionFilterKey.RELEASED_YEAR_TO,
+          );
 
-        const sectionRelatedMovies = await prisma.movie.findMany({
-          ...(otherSectionData.sort_mode === SectionSortMode.NEWEST
-            ? {
-                orderBy: {
-                  created_at: 'desc',
-                },
-              }
-            : otherSectionData.sort_mode === SectionSortMode.OLDEST
+          const sectionRelatedMovies = await tx.movie.findMany({
+            ...(otherSectionData.sort_mode === SectionSortMode.NEWEST
               ? {
                   orderBy: {
-                    created_at: 'asc',
+                    created_at: 'desc',
                   },
                 }
-              : otherSectionData.sort_mode === SectionSortMode.MOST_VIEWED ||
-                  otherSectionData.sort_mode === SectionSortMode.TOP_RATED
+              : otherSectionData.sort_mode === SectionSortMode.OLDEST
                 ? {
                     orderBy: {
-                      user_movies: {
-                        _count: 'desc',
-                      },
+                      created_at: 'asc',
                     },
                   }
-                : {}),
-          where: {
-            ...(otherSectionData.sort_mode === SectionSortMode.MOST_VIEWED
-              ? {
-                  user_movies: {
-                    some: {
-                      OR: [
-                        {
-                          type: UserMovieType.WATCHED,
-                          ...(hasPeriodBase
-                            ? {
-                                updated_at: {
-                                  gte: daysAgo,
-                                },
-                              }
-                            : {}),
-                        },
-                        {
-                          type: UserMovieType.WATCHING,
-                          ...(hasPeriodBase
-                            ? {
-                                updated_at: {
-                                  gte: daysAgo,
-                                },
-                              }
-                            : {}),
-                        },
-                      ],
-                    },
-                  },
-                }
-              : otherSectionData.sort_mode === SectionSortMode.TOP_RATED
-                ? {
-                    user_movies: {
-                      some: {
-                        type: UserMovieType.LIKE,
-                        ...(hasPeriodBase
-                          ? {
-                              created_at: {
-                                gte: daysAgo,
-                              },
-                            }
-                          : {}),
-                      },
-                    },
-                  }
-                : otherSectionData.sort_mode === SectionSortMode.TRENDING
+                : otherSectionData.sort_mode === SectionSortMode.MOST_VIEWED ||
+                    otherSectionData.sort_mode === SectionSortMode.TOP_RATED
                   ? {
-                      tags: {
-                        some: {
-                          tag: {
-                            slug: {
-                              contains: 'trend',
-                              mode: 'insensitive',
-                            },
-                          },
+                      orderBy: {
+                        user_movies: {
+                          _count: 'desc',
                         },
                       },
                     }
                   : {}),
-            ...(genresFilter.length
-              ? {
-                  // AND: genresFilter.map((genreId) => ({
-                  //   genres: {
-                  //     some: {
-                  //       genre_id: genreId,
-                  //     },
-                  //   },
-                  // })),
-                  genres: {
-                    some: {
-                      genre_id: {
-                        in: genresFilter,
+            where: {
+              ...(otherSectionData.sort_mode === SectionSortMode.MOST_VIEWED
+                ? {
+                    user_movies: {
+                      some: {
+                        OR: [
+                          {
+                            type: UserMovieType.WATCHED,
+                            ...(hasPeriodBase
+                              ? {
+                                  updated_at: {
+                                    gte: daysAgo,
+                                  },
+                                }
+                              : {}),
+                          },
+                          {
+                            type: UserMovieType.WATCHING,
+                            ...(hasPeriodBase
+                              ? {
+                                  updated_at: {
+                                    gte: daysAgo,
+                                  },
+                                }
+                              : {}),
+                          },
+                        ],
                       },
                     },
-                  },
-                }
-              : {}),
-            ...(countriesFilter.length
-              ? {
-                  countries: {
-                    some: {
-                      country_id: {
-                        in: countriesFilter,
+                  }
+                : otherSectionData.sort_mode === SectionSortMode.TOP_RATED
+                  ? {
+                      user_movies: {
+                        some: {
+                          type: UserMovieType.LIKE,
+                          ...(hasPeriodBase
+                            ? {
+                                created_at: {
+                                  gte: daysAgo,
+                                },
+                              }
+                            : {}),
+                        },
                       },
-                    },
-                  },
-                }
-              : {}),
-            ...(languagesFilter.length
-              ? {
-                  languages: {
-                    some: {
-                      language_id: {
-                        in: languagesFilter,
-                      },
-                    },
-                  },
-                }
-              : {}),
-            ...(tagsFilter.length
-              ? {
-                  tags: {
-                    some: {
-                      tag_id: {
-                        in: tagsFilter,
-                      },
-                    },
-                  },
-                }
-              : {}),
-            ...(searchFilter
-              ? {
-                  translations: {
-                    some: {
-                      title: {
-                        contains: searchFilter.filter_value,
-                        mode: 'insensitive',
-                      },
-                    },
-                  },
-                }
-              : {}),
-            ...(typeFilter
-              ? {
-                  type: typeFilter.filter_value as MovieType,
-                }
-              : {}),
-            ...(sectionAgeLimit.length
-              ? {
-                  ...(sectionAgeLimit.length > 1
+                    }
+                  : otherSectionData.sort_mode === SectionSortMode.TRENDING
                     ? {
-                        age_limit: {
-                          gte: +sectionAgeLimit[0],
-                          lt: +sectionAgeLimit[sectionAgeLimit.length - 1],
+                        tags: {
+                          some: {
+                            tag: {
+                              slug: {
+                                contains: 'trend',
+                                mode: 'insensitive',
+                              },
+                            },
+                          },
                         },
                       }
-                    : {
-                        age_limit: {
-                          lte: +sectionAgeLimit[0],
+                    : {}),
+              ...(genresFilter.length
+                ? {
+                    // AND: genresFilter.map((genreId) => ({
+                    //   genres: {
+                    //     some: {
+                    //       genre_id: genreId,
+                    //     },
+                    //   },
+                    // })),
+                    genres: {
+                      some: {
+                        genre_id: {
+                          in: genresFilter,
                         },
-                      }),
-                }
-              : {}),
-            ...(hasReleasedYearFromFilter && hasReleasedYearToFilter
-              ? {
-                  released_year: {
-                    gte: +hasReleasedYearFromFilter,
-                    lte: +hasReleasedYearToFilter,
-                  },
-                }
-              : {}),
-          },
-          include: {
-            translations: {
-              where: {
-                language: query.lang,
+                      },
+                    },
+                  }
+                : {}),
+              ...(countriesFilter.length
+                ? {
+                    countries: {
+                      some: {
+                        country_id: {
+                          in: countriesFilter,
+                        },
+                      },
+                    },
+                  }
+                : {}),
+              ...(languagesFilter.length
+                ? {
+                    languages: {
+                      some: {
+                        language_id: {
+                          in: languagesFilter,
+                        },
+                      },
+                    },
+                  }
+                : {}),
+              ...(tagsFilter.length
+                ? {
+                    tags: {
+                      some: {
+                        tag_id: {
+                          in: tagsFilter,
+                        },
+                      },
+                    },
+                  }
+                : {}),
+              ...(searchFilter
+                ? {
+                    translations: {
+                      some: {
+                        title: {
+                          contains: searchFilter.filter_value,
+                          mode: 'insensitive',
+                        },
+                      },
+                    },
+                  }
+                : {}),
+              ...(typeFilter
+                ? {
+                    type: typeFilter.filter_value as MovieType,
+                  }
+                : {}),
+              ...(sectionAgeLimit.length
+                ? {
+                    ...(sectionAgeLimit.length > 1
+                      ? {
+                          age_limit: {
+                            gte: +sectionAgeLimit[0],
+                            lt: +sectionAgeLimit[sectionAgeLimit.length - 1],
+                          },
+                        }
+                      : {
+                          age_limit: {
+                            lte: +sectionAgeLimit[0],
+                          },
+                        }),
+                  }
+                : {}),
+              ...(hasReleasedYearFromFilter && hasReleasedYearToFilter
+                ? {
+                    released_year: {
+                      gte: +hasReleasedYearFromFilter,
+                      lte: +hasReleasedYearToFilter,
+                    },
+                  }
+                : {}),
+            },
+            include: {
+              translations: {
+                where: {
+                  language: query.lang,
+                },
+              },
+              files: {
+                select: {
+                  upload: true,
+                  type: true,
+                },
               },
             },
-            files: {
-              select: {
-                upload: true,
-                type: true,
-              },
-            },
-          },
-          take: query.movies_size || 10,
-        });
-
-        if (
-          otherSectionData.view_mode === SectionViewMode.PUZZLE &&
-          sectionRelatedMovies.length < 5
-        ) {
-          return null;
-        }
-
-        movies = sectionRelatedMovies.map((movie, index) => {
-          return normalizeMovieDetail({
-            ...movie,
-            movie_id: movie.id,
-            view_mode:
-              otherSectionData.view_mode === 'PUZZLE'
-                ? index < 4
-                  ? 'PUZZLE'
-                  : 'SLIDER_ITEM'
-                : null,
-            order: index + 1,
+            take: query.movies_size || 10,
           });
-        });
-        const sectionTranslation = translations[0];
-        return {
-          ...otherSectionData,
-          title: sectionTranslation.title,
-          description: sectionTranslation.description,
-          filter: `${[...otherSectionData.section_filters, { filter_key: 'lang', filter_value: query.lang }, { filter_key: 'page', filter_value: 1 }, { filter_key: 'page_size', filter_value: 20 }].map((sf, i) => `${i === 0 ? '?' : '&'}${sf.filter_key.toLowerCase()}=${sf.filter_value}`).join('')}`,
-          movies,
-        };
-      } else if (section.selection_mode === 'USER_MOVIE' && userId) {
-        const userRecentMovies = await this.userMovieService.getAllUserMovies(
-          userId,
-          {
-            type: ['WATCHED', 'WATCHING'],
-            lang: query.lang,
-            page: 1,
-            page_size: query.movies_size,
-          },
-        );
-        const sectionTranslation = translations[0];
-        return {
-          ...{
+
+          if (
+            otherSectionData.view_mode === SectionViewMode.PUZZLE &&
+            sectionRelatedMovies.length < 5
+          ) {
+            return null;
+          }
+
+          movies = sectionRelatedMovies.map((movie, index) => {
+            return normalizeMovieDetail({
+              ...movie,
+              movie_id: movie.id,
+              view_mode:
+                otherSectionData.view_mode === 'PUZZLE'
+                  ? index < 4
+                    ? 'PUZZLE'
+                    : 'SLIDER_ITEM'
+                  : null,
+              order: index + 1,
+            });
+          });
+          const sectionTranslation = translations[0];
+          return {
             ...otherSectionData,
             title: sectionTranslation.title,
             description: sectionTranslation.description,
-          },
-          movies: userRecentMovies.data,
-        };
-      }
+            filter: `${[...otherSectionData.section_filters, { filter_key: 'lang', filter_value: query.lang }, { filter_key: 'page', filter_value: 1 }, { filter_key: 'page_size', filter_value: 20 }].map((sf, i) => `${i === 0 ? '?' : '&'}${sf.filter_key.toLowerCase()}=${sf.filter_value}`).join('')}`,
+            movies,
+          };
+        } else if (
+          section.selection_mode === SectionSelectionMode.USER_MOVIE &&
+          userId
+        ) {
+          const userRecentMovies = await this.userMovieService.getAllUserMovies(
+            userId,
+            {
+              type: ['WATCHED', 'WATCHING'],
+              lang: query.lang,
+              page: 1,
+              page_size: query.movies_size,
+            },
+          );
+          const sectionTranslation = translations[0];
+          return {
+            ...{
+              ...otherSectionData,
+              title: sectionTranslation.title,
+              description: sectionTranslation.description,
+            },
+            movies: userRecentMovies.data,
+          };
+        } else if (
+          section.selection_mode === SectionSelectionMode.SUGGESTION &&
+          userId
+        ) {
+          const userRecentMovies = await this.userMovieService.getAllUserMovies(
+            userId,
+            {
+              type: [
+                'WATCHED',
+                'WATCHING',
+                'BOOKMARK',
+                'LIKE',
+                'DISLIKE',
+                'NOTIFICATION',
+              ],
+              lang: query.lang,
+              page: 1,
+              page_size: query.movies_size,
+            },
+            tx,
+          );
+          const allUserRecentMovies = userRecentMovies.data
+            .filter((urm) => urm.entity_type === CommentEntityType.MOVIE)
+            .map((urm) => urm.movie);
+
+          const userRecentMoviesIds = allUserRecentMovies.map(
+            (userRecentMovie) => userRecentMovie.id,
+          );
+
+          const allMovies = await tx.movie.findMany({
+            where: { id: { not: { in: userRecentMoviesIds } } },
+            include: {
+              translations: { where: { language: query.lang } },
+              files: { include: { upload: true } },
+            },
+          });
+
+          if (allMovies.length === 0) return [];
+
+          const allMoviesWithCurrent = [
+            ...allUserRecentMovies,
+            ...allMovies,
+          ].filter((movie) => movie !== null);
+
+          const tfidf = new natural.TfIdf();
+
+          allMoviesWithCurrent.forEach((movie) => {
+            tfidf.addDocument(movie.combined_tags);
+          });
+
+          const terms = allUserRecentMovies
+            .map((urm) => urm.combined_tags)
+            .join(' ')
+            .split(' ');
+          let similarMovies: { movie: Movie; score: number }[] = [];
+
+          for (
+            let i = allUserRecentMovies.length;
+            i < allMoviesWithCurrent.length;
+            i++
+          ) {
+            let score = 0;
+            terms.forEach((term) => {
+              const tfidf1 = tfidf.tfidf(term, 0);
+              const tfidf2 = tfidf.tfidf(term, i);
+              score += tfidf1 * tfidf2;
+            });
+
+            if (score > 0) {
+              similarMovies.push({
+                movie: normalizeMovieDetail(allMoviesWithCurrent[i]),
+                score,
+              });
+            }
+          }
+
+          const allSimilarMovies = similarMovies
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 15)
+            .map((item) => item.movie);
+
+          const sectionTranslation = translations[0];
+          return {
+            ...{
+              ...otherSectionData,
+              title: sectionTranslation.title,
+              description: sectionTranslation.description,
+            },
+            movies: allSimilarMovies,
+          };
+        }
+      });
+      const sectionsData = await Promise.all(normalizedSection);
+      const sectionsCount = await this.sectionRepository.getSectionsCount(
+        query.search?.trim(),
+        tx,
+      );
+      return {
+        page: page + 1,
+        page_size,
+        count: sectionsCount,
+        data: sectionsData,
+      };
     });
-    const sectionsData = await Promise.all(normalizedSection);
-    const sectionsCount = await this.sectionRepository.getSectionsCount(
-      query.search?.trim(),
-    );
-    return {
-      page: page + 1,
-      page_size,
-      count: sectionsCount,
-      data: sectionsData,
-    };
+    return result;
   }
 
   async getSectionDetailAdmin(sectionId: number, lang?: AppLanguage) {
@@ -620,8 +724,8 @@ export class SectionService {
     }
   }
 
-  async getSectionDetailPublic(sectionSlug: string) {
-    return await this.sectionRepository.getSectionDetailPublic(sectionSlug);
+  async getSectionDetailPublic(sectionSlug: string, tx?: TransactionType) {
+    return await this.sectionRepository.getSectionDetailPublic(sectionSlug, tx);
   }
 
   async deleteSectionsAdmin(body: DeleteSectionsDto) {

@@ -13,7 +13,11 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { GetAllUserMovieDto, GetUserMovieActionsDto, UpdateUserMoviesDto } from './dto/user-movie.dto';
+import {
+  GetAllUserMovieDto,
+  GetUserMovieActionsDto,
+  UpdateUserMoviesDto,
+} from './dto/user-movie.dto';
 import { UserMovieService } from './user-movie.service';
 
 @Controller('user-movie')
@@ -31,7 +35,7 @@ export class UserMovieController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async updateUserMovies(@Body() body: UpdateUserMoviesDto, @Req() req) {
-    return this.userMovieService.updateUserMovies2(body, req.user.userId);
+    return this.userMovieService.voteUserMovies(body, req.user.userId);
   }
 
   @ApiBearerAuth()

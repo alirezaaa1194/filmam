@@ -15,7 +15,7 @@ export const normalizeMovieDetail = (movie) => {
   const movieFactors = otherMovieData.factors?.map((movieFactor) => {
     const { translations, movie_factors, ...otherMovieFactorData } =
       movieFactor.factor;
-    const movieFactorTranslation = translations[0];
+    const movieFactorTranslation = translations?.[0];
     const { first_name, last_name } = movieFactorTranslation;
 
     const mainMovieFactor = movie_factors?.find(
@@ -27,7 +27,7 @@ export const normalizeMovieDetail = (movie) => {
       translations: movieFactorRoleTranslation,
       ...otherMovieFactorRoleData
     } = movieFactor.role;
-    const { name } = movieFactorRoleTranslation[0];
+    const { name } = movieFactorRoleTranslation?.[0];
     return {
       ...otherMovieFactorData,
       first_name,
@@ -39,38 +39,44 @@ export const normalizeMovieDetail = (movie) => {
   const movieGenres = otherMovieData.genres?.map((movieGenre) => {
     const { genre } = movieGenre;
     const { translations, ...otherMovieGenreData } = genre;
-    const movieGenreTranslation = translations[0];
+    const movieGenreTranslation = translations?.[0];
     const { name } = movieGenreTranslation;
     return { ...otherMovieGenreData, name };
   });
   const movieCountries = otherMovieData.countries?.map((movieCountry) => {
     const { country } = movieCountry;
     const { translations, ...otherMovieCountryData } = country;
-    const movieCountryTranslation = translations[0];
+    const movieCountryTranslation = translations?.[0];
     const { label } = movieCountryTranslation;
     return { ...otherMovieCountryData, label };
   });
   const movieLanguages = otherMovieData.languages?.map((movieLanguage) => {
     const { language } = movieLanguage;
     const { translations, ...otherMovieLanguageData } = language;
-    const movieLanguageTranslation = translations[0];
+    const movieLanguageTranslation = translations?.[0];
     const { label } = movieLanguageTranslation;
     return { ...otherMovieLanguageData, label };
   });
   const movieFiles = files?.map((movieFile) => {
     const { upload, type } = movieFile;
-    return { ...upload, type };
+    return {
+      ...upload,
+      type,
+      intro_start_time: movieFile.intro_start_time,
+      intro_duration: movieFile.intro_duration,
+      outro_duration: movieFile.outro_duration,
+    };
   });
   const movieSeasons = seasons?.map((movieSeason) => {
     const { files, translations, ...otherSeasonData } = movieSeason;
-    const movieFiles = files.map((movieFile) => {
+    const movieFiles = files?.map((movieFile) => {
       const { upload, type } = movieFile;
       return { ...upload, type };
     });
-    const { title } = translations[0];
+    const { title } = translations?.[0];
     return { ...otherSeasonData, title, files: movieFiles };
   });
-  const { title, short_description, description } = translations[0];
+  const { title, short_description, description } = translations?.[0];
   return {
     ...otherMovieData,
     seasons_count: _count?.seasons,

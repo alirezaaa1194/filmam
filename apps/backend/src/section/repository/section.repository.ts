@@ -8,8 +8,8 @@ import { SortType } from '../../common/enums';
 
 @Injectable()
 export class SectionRepository {
-  async getSectionsCount(search: string = '') {
-    return await prisma.section.count({
+  async getSectionsCount(search: string = '', tx?: TransactionType) {
+    return await (tx ? tx : prisma).section.count({
       where: {
         translations: {
           some: {
@@ -40,8 +40,9 @@ export class SectionRepository {
     sectionId: number,
     lang: AppLanguage = defaultLang,
     moviesSize?: number,
+    tx?: TransactionType,
   ) {
-    return await prisma.sectionMovie.findMany({
+    return await (tx ? tx : prisma).sectionMovie.findMany({
       where: { section_id: sectionId },
       include: {
         movie: {
@@ -106,8 +107,9 @@ export class SectionRepository {
     lang: AppLanguage,
     search: string = '',
     sort: SortType,
+    tx?: TransactionType,
   ) {
-    return await prisma.section.findMany({
+    return await (tx ? tx : prisma).section.findMany({
       skip: page,
       take: pageSize,
       where: {
@@ -134,8 +136,8 @@ export class SectionRepository {
     });
   }
 
-  async getSectionDetailPublic(sectionSlug: string) {
-    return await prisma.section.findUnique({
+  async getSectionDetailPublic(sectionSlug: string, tx?: TransactionType) {
+    return await (tx ? tx : prisma).section.findUnique({
       where: {
         slug: sectionSlug,
       },

@@ -1,9 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MovieFileType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateMovieFilesDto {
+  @ApiProperty({ type: 'number', required: false })
+  @IsNumber()
+  @IsOptional()
+  intro_start_time?: number;
+
+  @ApiProperty({ type: 'number', required: false })
+  @IsNumber()
+  @IsOptional()
+  intro_duration?: number;
+
+  @ApiProperty({ type: 'number', required: false })
+  @IsNumber()
+  @IsOptional()
+  outro_duration?: number;
+
   @ApiProperty({
     example: 1,
     type: 'number',

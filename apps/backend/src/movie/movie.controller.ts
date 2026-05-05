@@ -76,6 +76,14 @@ export class MovieController {
     );
   }
 
+  @Get('recommended/:slug')
+  async getRecommendedMovies(
+    @Param('slug') slug: string,
+    @Query() query: GetMovieDetailPublicDto,
+  ) {
+    return this.movieService.getRecommendedMovies(slug, query.lang);
+  }
+
   @ApiBearerAuth()
   @Get('/:slug')
   async getMovieDetailPublic(
