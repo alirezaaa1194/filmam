@@ -1,4 +1,4 @@
-import { MovieFileType } from '@prisma/client';
+import { MovieFileType } from '../../generated/prisma';
 
 export type CreateMovieFileBodyType = {
   movie_id: number;

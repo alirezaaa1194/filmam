@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '../../lib/prisma';
 import { CreateSectionDto, SectionMovieFilter } from '../dto/section.dto';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { TransactionType } from '../../common/types/types';
 import { defaultLang } from '../../lib/utils';
 import { SortType } from '../../common/enums';
@@ -56,6 +56,45 @@ export class SectionRepository {
               select: {
                 upload: true,
                 type: true,
+              },
+            },
+          },
+        },
+        episode: {
+          include: {
+            translations: {
+              select: {
+                title: true,
+              },
+              where: {
+                language: lang,
+              },
+            },
+            files: {
+              select: {
+                upload: true,
+                type: true,
+                intro_start_time: true,
+                intro_duration: true,
+                outro_duration: true,
+              },
+            },
+            movie: {
+              include: {
+                translations: {
+                  where: {
+                    language: lang,
+                  },
+                },
+              },
+            },
+            season: {
+              include: {
+                translations: {
+                  where: {
+                    language: lang,
+                  },
+                },
               },
             },
           },

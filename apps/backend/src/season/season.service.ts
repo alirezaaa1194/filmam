@@ -12,6 +12,7 @@ import { MovieService } from '../movie/movie.service';
 import { defaultLang, paginationCalculator } from '../lib/utils';
 import { SortType } from '../common/enums';
 import { CommonQueryParamsDto } from '../common/dto/query-param.dto';
+import { UserMovieService } from '../user-movie/user-movie.service';
 
 @Injectable()
 export class SeasonService {
@@ -20,6 +21,7 @@ export class SeasonService {
     private readonly seasonTranslationService: SeasonTranslationService,
     private readonly seasonFileService: SeasonFileService,
     private readonly movieService: MovieService,
+    private readonly userMovieService: UserMovieService,
   ) {}
   async createSeason(body: CreateSeasonDto) {
     const result = await prisma.$transaction(async (tx) => {
@@ -162,7 +164,11 @@ export class SeasonService {
     };
   }
 
-  async getSeasonEpisodes(query: CommonQueryParamsDto, seasonSlug: string) {
+  async getSeasonEpisodes(
+    query: CommonQueryParamsDto,
+    seasonSlug: string,
+    userId?: number,
+  ) {
     const { page, page_size } = paginationCalculator(
       query.page || 1,
       query.page_size || 10,
@@ -177,10 +183,30 @@ export class SeasonService {
       },
       seasonSlug,
     );
+
+    const seasonUserMovieEpisodesMap = new Map();
+    if (userId) {
+      const seasonUserMovieEpisodes =
+        await this.userMovieService.getUserWatchEpisodes(userId);
+
+      seasonUserMovieEpisodes.forEach((seasonUserMovieEpisode) => {
+        seasonUserMovieEpisodesMap.set(
+          seasonUserMovieEpisode.episode_id,
+          seasonUserMovieEpisode,
+        );
+      });
+    }
+
     const normalizedEpisodes = seasonEpisodes.map((seasonEpisode) => {
       const { translations, movie, season, files, ...otherEpisodeData } =
         seasonEpisode;
-      const seasonFiles = files.map((file) => ({ type: file.type, ...file.upload }));
+
+      const userEpisode = seasonUserMovieEpisodesMap.get(seasonEpisode.id);
+
+      const seasonFiles = files.map((file) => ({
+        type: file.type,
+        ...file.upload,
+      }));
 
       return {
         ...otherEpisodeData,
@@ -188,6 +214,7 @@ export class SeasonService {
         movie_title: movie.translations[0].title,
         season_title: season.translations[0].title,
         movie_season_count: movie._count.seasons,
+        watch_progress_time: userEpisode ? userEpisode.progress_time : 0,
         files: seasonFiles,
       };
     });

@@ -1,4 +1,4 @@
-import { AppLanguage, FactorFileType } from '@prisma/client';
+import { AppLanguage, FactorFileType } from '../../generated/prisma';
 import {
   ArrayMinSize,
   IsArray,

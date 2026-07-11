@@ -20,7 +20,8 @@ import { ResetPasswordDto } from './dto/password.dto';
 import { LoginRequestService } from '../login-request/login-request.service';
 import { accessTokenExpTime } from '../lib/utils';
 import { CreateUserDto } from '../user/dto/user.dto';
-import { OtpType, UserRole } from '@prisma/client';
+import { OtpType, UserRole } from '../generated/prisma';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +31,7 @@ export class AuthService {
     private refreshTokenService: RefreshTokenService,
     private otpService: OtpService,
     private loginRequestService: LoginRequestService,
+    private mailService: MailService,
   ) {}
 
   async jwtGenerator(userId: number, email: string) {
@@ -70,6 +72,7 @@ export class AuthService {
       refreshTokenExpiresIn: refreshExp,
     };
   }
+
   async sendOtpEmail({
     userId,
     userEmail,
@@ -85,6 +88,11 @@ export class AuthService {
     } else if (userEmail) {
       user = await this.userService.getUserByEmail(userEmail);
     }
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
     const recentOtp = await this.otpService.getUserRecentOtp({
       userId: user?.id,
       otpType: otpType,
@@ -110,18 +118,48 @@ export class AuthService {
       //   html: `<strong>${otp}</strong>`,
       // });
 
-      const { error } = await resend.emails.send({
-        from: 'Filmam <noreply@filmamapp.ir>',
-        to: user?.email || userEmail || '',
-        subject:
-          otpType === OtpType.LOGIN
-            ? 'کد ورود به فیلمام'
-            : 'کد فعال‌سازی فیلمام',
-        headers: {
-          'Reply-To': 'filmamapp@gmail.com',
-          'X-Google-Original-From': 'filmamapp@gmail.com',
-        },
-        html: `
+      //     const { error } = await resend.emails.send({
+      //       from: 'Filmam <noreply@filmamapp.ir>',
+      //       to: user?.email || userEmail || '',
+      //       subject:
+      //         otpType === OtpType.LOGIN
+      //           ? 'کد ورود به فیلمام'
+      //           : 'کد فعال‌سازی فیلمام',
+      //       headers: {
+      //         'Reply-To': 'filmamapp@gmail.com',
+      //         'X-Google-Original-From': 'filmamapp@gmail.com',
+      //       },
+      //       html: `
+      //   <div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
+      //     <div style="text-align: center; margin-bottom: 30px;">
+      //       <h1 style="color: #00925d; margin: 0;">فیلمام</h1>
+      //       <p style="color: #999;">فیلم و سریال</p>
+      //     </div>
+
+      //     <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
+      //       <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
+      //         ${otpType === OtpType.LOGIN ? 'کد ورود شما:' : 'کد فعال‌سازی شما:'}
+      //       </p>
+      //       <div style="background: #00925d; padding: 20px; border-radius: 8px; display: inline-block;">
+      //         <span style="font-size: 40px; font-weight: bold; color: white; letter-spacing: 5px; direction: ltr;">${otp}</span>
+      //       </div>
+      //       <p style="color: #999; margin-top: 20px; font-size: 12px;">این کد تا 5 دقیقه معتبر است</p>
+      //     </div>
+
+      //     <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+
+      //     <p style="color: #999; font-size: 11px; text-align: center;">
+      //       اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.<br>
+      //       © 2026 فیلمام
+      //     </p>
+      //   </div>
+      // `,
+      //     });
+
+      const { error } = await this.mailService.sendEmail(
+        user?.email || userEmail,
+        otpType === OtpType.LOGIN ? 'کد ورود به فیلمام' : 'کد فعال‌سازی فیلمام',
+        `
     <div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
       <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="color: #00925d; margin: 0;">فیلمام</h1>
@@ -146,7 +184,7 @@ export class AuthService {
       </p>
     </div>
   `,
-      });
+      );
 
       if (error) {
         return console.error({ error });

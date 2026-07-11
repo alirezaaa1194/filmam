@@ -21,11 +21,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.19.2
+ * Prisma Client JS version: 6.19.3
  * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
  */
 Prisma.prismaVersion = {
-  client: "6.19.2",
+  client: "6.19.3",
   engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
 }
 
@@ -138,15 +138,23 @@ exports.Prisma.MovieScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   type: 'type',
-  seasons_count: 'seasons_count',
-  slug: 'slug'
+  slug: 'slug',
+  age_limit: 'age_limit',
+  released_year: 'released_year',
+  likes_count: 'likes_count',
+  dislikes_count: 'dislikes_count',
+  watches_count: 'watches_count',
+  combined_tags: 'combined_tags'
 };
 
 exports.Prisma.MovieFileScalarFieldEnum = {
   id: 'id',
   movie_id: 'movie_id',
   upload_id: 'upload_id',
-  type: 'type'
+  type: 'type',
+  intro_start_time: 'intro_start_time',
+  intro_duration: 'intro_duration',
+  outro_duration: 'outro_duration'
 };
 
 exports.Prisma.MovieTranslationScalarFieldEnum = {
@@ -156,17 +164,64 @@ exports.Prisma.MovieTranslationScalarFieldEnum = {
   title: 'title',
   short_description: 'short_description',
   description: 'description',
-  country: 'country',
-  movie_language: 'movie_language',
   language: 'language',
   movie_id: 'movie_id'
+};
+
+exports.Prisma.MovieLanguageScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  movie_id: 'movie_id',
+  language_id: 'language_id'
+};
+
+exports.Prisma.CountryScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  code: 'code'
+};
+
+exports.Prisma.CountryTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  label: 'label',
+  language: 'language',
+  country_id: 'country_id'
+};
+
+exports.Prisma.MovieCountryScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  movie_id: 'movie_id',
+  country_id: 'country_id'
+};
+
+exports.Prisma.LanguageScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  code: 'code'
+};
+
+exports.Prisma.LanguageTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  label: 'label',
+  lang: 'lang',
+  language_id: 'language_id'
 };
 
 exports.Prisma.SeasonScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  season_number: 'season_number',
+  order: 'order',
+  slug: 'slug',
   movie_id: 'movie_id'
 };
 
@@ -190,16 +245,23 @@ exports.Prisma.EpisodeScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  episode_number: 'episode_number',
+  order: 'order',
+  slug: 'slug',
   season_id: 'season_id',
-  movie_id: 'movie_id'
+  movie_id: 'movie_id',
+  likes_count: 'likes_count',
+  dislikes_count: 'dislikes_count',
+  watches_count: 'watches_count'
 };
 
 exports.Prisma.EpisodeFileScalarFieldEnum = {
   id: 'id',
   episode_id: 'episode_id',
   upload_id: 'upload_id',
-  type: 'type'
+  type: 'type',
+  intro_start_time: 'intro_start_time',
+  intro_duration: 'intro_duration',
+  outro_duration: 'outro_duration'
 };
 
 exports.Prisma.EpisodeTranslationScalarFieldEnum = {
@@ -207,6 +269,7 @@ exports.Prisma.EpisodeTranslationScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   title: 'title',
+  short_description: 'short_description',
   episode_id: 'episode_id',
   language: 'language'
 };
@@ -218,17 +281,27 @@ exports.Prisma.CommentScalarFieldEnum = {
   likes_count: 'likes_count',
   dislikes_count: 'dislikes_count',
   status: 'status',
-  parent_id: 'parent_id',
-  entity_id: 'entity_id',
   entity_type: 'entity_type',
+  movie_id: 'movie_id',
+  episode_id: 'episode_id',
   body: 'body',
   user_id: 'user_id'
+};
+
+exports.Prisma.CommentVoteScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  comment_id: 'comment_id',
+  user_id: 'user_id',
+  vote_status: 'vote_status'
 };
 
 exports.Prisma.FactorScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  slug: 'slug'
 };
 
 exports.Prisma.FactorFileScalarFieldEnum = {
@@ -254,7 +327,17 @@ exports.Prisma.MovieFactorScalarFieldEnum = {
   updated_at: 'updated_at',
   movie_id: 'movie_id',
   factor_id: 'factor_id',
-  role_id: 'role_id'
+  role_id: 'role_id',
+  order: 'order'
+};
+
+exports.Prisma.MovieFactorTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  role_name: 'role_name',
+  movie_factor_id: 'movie_factor_id',
+  language: 'language'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -298,13 +381,83 @@ exports.Prisma.MovieGenreScalarFieldEnum = {
   movie_id: 'movie_id'
 };
 
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  slug: 'slug'
+};
+
+exports.Prisma.TagTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  label: 'label',
+  language: 'language',
+  tag_id: 'tag_id'
+};
+
+exports.Prisma.MovieTagScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  tag_id: 'tag_id',
+  movie_id: 'movie_id'
+};
+
+exports.Prisma.SectionScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  slug: 'slug',
+  order: 'order',
+  view_mode: 'view_mode',
+  selection_mode: 'selection_mode',
+  sort_mode: 'sort_mode',
+  period_base: 'period_base'
+};
+
+exports.Prisma.SectionFilterScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  section_id: 'section_id',
+  filter_key: 'filter_key',
+  filter_value: 'filter_value'
+};
+
+exports.Prisma.SectionTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  title: 'title',
+  description: 'description',
+  language: 'language',
+  section_id: 'section_id'
+};
+
+exports.Prisma.SectionMovieScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  section_id: 'section_id',
+  entity_type: 'entity_type',
+  movie_id: 'movie_id',
+  episode_id: 'episode_id',
+  order: 'order',
+  view_mode: 'view_mode'
+};
+
 exports.Prisma.UserMovieScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
   type: 'type',
+  progress_time: 'progress_time',
   user_id: 'user_id',
-  movie_id: 'movie_id'
+  movie_id: 'movie_id',
+  episode_id: 'episode_id',
+  entity_type: 'entity_type'
 };
 
 exports.Prisma.UploadScalarFieldEnum = {
@@ -322,31 +475,32 @@ exports.Prisma.UploadScalarFieldEnum = {
   duration: 'duration'
 };
 
-exports.Prisma.TicketScalarFieldEnum = {
+exports.Prisma.ContactScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  subject: 'subject',
-  body: 'body',
-  parent_id: 'parent_id',
+  user_email: 'user_email',
+  message: 'message',
+  is_registered: 'is_registered',
   status: 'status',
-  user_id: 'user_id'
+  answer_message: 'answer_message',
+  rejected_detail: 'rejected_detail'
 };
 
 exports.Prisma.RefreshTokenScalarFieldEnum = {
   id: 'id',
+  created_at: 'created_at',
   user_id: 'user_id',
   hashed_refresh: 'hashed_refresh',
-  created_at: 'created_at',
   expires_at: 'expires_at'
 };
 
 exports.Prisma.OtpScalarFieldEnum = {
   id: 'id',
+  created_at: 'created_at',
   user_id: 'user_id',
   user_email: 'user_email',
   hashed_otp: 'hashed_otp',
-  created_at: 'created_at',
   used_at: 'used_at',
   expires_at: 'expires_at',
   otp_attempts: 'otp_attempts',
@@ -357,6 +511,34 @@ exports.Prisma.LoginRequestScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   user_id: 'user_id'
+};
+
+exports.Prisma.HeaderMenuScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  menu_type: 'menu_type',
+  href: 'href',
+  order: 'order',
+  parent_id: 'parent_id'
+};
+
+exports.Prisma.HeaderMenuTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  language: 'language',
+  title: 'title',
+  menu_id: 'menu_id'
+};
+
+exports.Prisma.HeaderMenuFilterScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  filter_key: 'filter_key',
+  filter_value: 'filter_value',
+  menu_id: 'menu_id'
 };
 
 exports.Prisma.SortOrder = {
@@ -398,13 +580,15 @@ exports.AppLanguage = exports.$Enums.AppLanguage = {
 };
 
 exports.SeasonFileType = exports.$Enums.SeasonFileType = {
-  BANNER: 'BANNER',
+  POSTER: 'POSTER',
   TRAILER: 'TRAILER'
 };
 
 exports.EpisodeFileType = exports.$Enums.EpisodeFileType = {
-  BANNER: 'BANNER',
-  TRAILER: 'TRAILER'
+  POSTER: 'POSTER',
+  TRAILER: 'TRAILER',
+  COVER: 'COVER',
+  FILM: 'FILM'
 };
 
 exports.CommentStatus = exports.$Enums.CommentStatus = {
@@ -418,6 +602,11 @@ exports.CommentEntityType = exports.$Enums.CommentEntityType = {
   EPISODE: 'EPISODE'
 };
 
+exports.CommentVoteStatus = exports.$Enums.CommentVoteStatus = {
+  LIKE: 'LIKE',
+  DISLIKE: 'DISLIKE'
+};
+
 exports.FactorFileType = exports.$Enums.FactorFileType = {
   PROFILE: 'PROFILE'
 };
@@ -427,10 +616,61 @@ exports.RoleType = exports.$Enums.RoleType = {
   ACTOR: 'ACTOR'
 };
 
+exports.SectionViewMode = exports.$Enums.SectionViewMode = {
+  HERO: 'HERO',
+  NORMAL_SLIDER: 'NORMAL_SLIDER',
+  KIDS_SLIDER: 'KIDS_SLIDER',
+  HERO_LIKE_SLIDER: 'HERO_LIKE_SLIDER',
+  PUZZLE: 'PUZZLE',
+  ADVERTISEMENT: 'ADVERTISEMENT'
+};
+
+exports.SectionSelectionMode = exports.$Enums.SectionSelectionMode = {
+  AUTO: 'AUTO',
+  USER_MOVIE: 'USER_MOVIE',
+  SUGGESTION: 'SUGGESTION',
+  MANUAL: 'MANUAL'
+};
+
+exports.SectionSortMode = exports.$Enums.SectionSortMode = {
+  NEWEST: 'NEWEST',
+  OLDEST: 'OLDEST',
+  MOST_VIEWED: 'MOST_VIEWED',
+  TOP_RATED: 'TOP_RATED',
+  TRENDING: 'TRENDING',
+  RANDOM: 'RANDOM'
+};
+
+exports.SectionPeriodBase = exports.$Enums.SectionPeriodBase = {
+  A_DAY_AGO: 'A_DAY_AGO',
+  A_WEEK_AGO: 'A_WEEK_AGO',
+  A_MONTH_AGO: 'A_MONTH_AGO'
+};
+
+exports.SectionFilterKey = exports.$Enums.SectionFilterKey = {
+  SEARCH: 'SEARCH',
+  GENRES: 'GENRES',
+  AGE_LIMITS: 'AGE_LIMITS',
+  COUNTRIES: 'COUNTRIES',
+  TAGS: 'TAGS',
+  LANGUAGES: 'LANGUAGES',
+  TYPE: 'TYPE',
+  RELEASED_YEAR_FROM: 'RELEASED_YEAR_FROM',
+  RELEASED_YEAR_TO: 'RELEASED_YEAR_TO'
+};
+
+exports.SectionMovieViewMode = exports.$Enums.SectionMovieViewMode = {
+  PUZZLE: 'PUZZLE',
+  SLIDER_ITEM: 'SLIDER_ITEM'
+};
+
 exports.UserMovieType = exports.$Enums.UserMovieType = {
   BOOKMARK: 'BOOKMARK',
+  NOTIFICATION: 'NOTIFICATION',
   LIKE: 'LIKE',
-  RECENT_WATCH: 'RECENT_WATCH'
+  DISLIKE: 'DISLIKE',
+  WATCHING: 'WATCHING',
+  WATCHED: 'WATCHED'
 };
 
 exports.SourceType = exports.$Enums.SourceType = {
@@ -438,15 +678,21 @@ exports.SourceType = exports.$Enums.SourceType = {
   FROM_URL: 'FROM_URL'
 };
 
-exports.TicketStatus = exports.$Enums.TicketStatus = {
+exports.ContactStatus = exports.$Enums.ContactStatus = {
   PENDING: 'PENDING',
-  APPROVED: 'APPROVED'
+  ANSWERED: 'ANSWERED',
+  REJECTED: 'REJECTED'
 };
 
 exports.OtpType = exports.$Enums.OtpType = {
-  Login: 'Login',
-  Forget_Password: 'Forget_Password',
-  Signup: 'Signup'
+  LOGIN: 'LOGIN',
+  FORGET_PASSWORD: 'FORGET_PASSWORD',
+  SIGNUP: 'SIGNUP'
+};
+
+exports.HeaderMenuType = exports.$Enums.HeaderMenuType = {
+  PAGE: 'PAGE',
+  FILTER: 'FILTER'
 };
 
 exports.Prisma.ModelName = {
@@ -454,6 +700,12 @@ exports.Prisma.ModelName = {
   Movie: 'Movie',
   MovieFile: 'MovieFile',
   MovieTranslation: 'MovieTranslation',
+  MovieLanguage: 'MovieLanguage',
+  Country: 'Country',
+  CountryTranslation: 'CountryTranslation',
+  MovieCountry: 'MovieCountry',
+  Language: 'Language',
+  LanguageTranslation: 'LanguageTranslation',
   Season: 'Season',
   SeasonFile: 'SeasonFile',
   SeasonTranslation: 'SeasonTranslation',
@@ -461,21 +713,33 @@ exports.Prisma.ModelName = {
   EpisodeFile: 'EpisodeFile',
   EpisodeTranslation: 'EpisodeTranslation',
   Comment: 'Comment',
+  CommentVote: 'CommentVote',
   Factor: 'Factor',
   FactorFile: 'FactorFile',
   FactorTranslation: 'FactorTranslation',
   MovieFactor: 'MovieFactor',
+  MovieFactorTranslation: 'MovieFactorTranslation',
   Role: 'Role',
   RoleTranslation: 'RoleTranslation',
   Genre: 'Genre',
   GenreTranslation: 'GenreTranslation',
   MovieGenre: 'MovieGenre',
+  Tag: 'Tag',
+  TagTranslation: 'TagTranslation',
+  MovieTag: 'MovieTag',
+  Section: 'Section',
+  SectionFilter: 'SectionFilter',
+  SectionTranslation: 'SectionTranslation',
+  SectionMovie: 'SectionMovie',
   UserMovie: 'UserMovie',
   Upload: 'Upload',
-  Ticket: 'Ticket',
+  Contact: 'Contact',
   RefreshToken: 'RefreshToken',
   Otp: 'Otp',
-  LoginRequest: 'LoginRequest'
+  LoginRequest: 'LoginRequest',
+  HeaderMenu: 'HeaderMenu',
+  HeaderMenuTranslation: 'HeaderMenuTranslation',
+  HeaderMenuFilter: 'HeaderMenuFilter'
 };
 
 /**

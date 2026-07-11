@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SectionMovieViewMode } from '@prisma/client';
+import { CommentEntityType, SectionMovieViewMode } from '../../generated/prisma';
+import { Type } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateSectionMovieDto {
@@ -7,7 +8,7 @@ export class CreateSectionMovieDto {
   @IsNumber()
   @IsNotEmpty()
   movie_id: number;
-  
+
   @ApiProperty({ example: SectionMovieViewMode.SLIDER_ITEM, required: false })
   @IsOptional()
   @IsEnum(SectionMovieViewMode)
@@ -17,4 +18,22 @@ export class CreateSectionMovieDto {
   @IsNumber()
   @IsNotEmpty()
   order: number;
+
+  @ApiProperty({
+    type: 'string',
+    example: 'MOVIE',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEnum(CommentEntityType)
+  entity_type: CommentEntityType;
+  
+  @ApiProperty({
+    type: 'number',
+    example: 1,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  episode_id?: number;
 }

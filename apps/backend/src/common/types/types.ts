@@ -1,4 +1,4 @@
-import { AppLanguage, Prisma, PrismaClient } from '@prisma/client';
+import { AppLanguage, Prisma, PrismaClient } from '../../generated/prisma';
 import { DefaultArgs } from '../../generated/prisma/runtime/library';
 
 export type RepositoryPaginationQueryProps = {

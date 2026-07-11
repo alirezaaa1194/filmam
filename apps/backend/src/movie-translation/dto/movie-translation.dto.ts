@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 
 export class CreateMovieTranslationDto {
   @ApiProperty({

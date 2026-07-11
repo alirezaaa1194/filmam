@@ -1,4 +1,4 @@
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../generated/prisma';
 
 export const defaultLang = AppLanguage.FA;
 export const accessTokenExpTime = '30d';

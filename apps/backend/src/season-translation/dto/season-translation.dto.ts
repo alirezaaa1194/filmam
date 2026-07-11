@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { defaultLang } from '../../lib/utils';
 

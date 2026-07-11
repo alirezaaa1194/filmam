@@ -7,7 +7,7 @@ import { MovieFileModule } from '../movie-file/movie-file.module';
 import { UserModule } from '../user/user.module';
 import { MovieFactorModule } from '../movie-factor/movie-factor.module';
 import { MovieGenreModule } from '../movie-genre/movie-genre.module';
-import { MovieResolver } from './movie.resolver';
+// import { MovieResolver } from './movie.resolver';
 import { MovieCountryModule } from '../movie-country/movie-country.module';
 import { MovieLanguageModule } from '../movie-language/movie-language.module';
 import { MovieTagModule } from '../movie-tag/movie-tag.module';
@@ -26,7 +26,7 @@ import { SectionModule } from '../section/section.module';
     SectionModule,
   ],
   controllers: [MovieController],
-  providers: [MovieService, MovieRepository, MovieResolver],
+  providers: [MovieService, MovieRepository],
   exports: [MovieService, MovieRepository],
 })
 export class MovieModule {}

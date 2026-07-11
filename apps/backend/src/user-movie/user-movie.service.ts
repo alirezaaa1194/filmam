@@ -1,11 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { UserMovieRepository } from './repository/user-movie.repository';
-import {
-  CommentEntityType,
-  Episode,
-  EpisodeFile,
-  UserMovieType,
-} from '@prisma/client';
+import { CommentEntityType, UserMovieType, UserRole } from '../generated/prisma';
 import { GetAllUserMovieDto } from '../user/dto/user.dto';
 import {
   defaultLang,
@@ -20,12 +15,15 @@ import { prisma } from '../lib/prisma';
 import { UpdateUserMoviesDto } from './dto/user-movie.dto';
 import { EpisodeService } from '../episode/episode.service';
 import { TransactionType } from '../common/types/types';
+// import { ForbiddenError } from '@nestjs/apollo';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class UserMovieService {
   constructor(
     private userMovieRepository: UserMovieRepository,
     private episodeService: EpisodeService,
+    private userService: UserService,
   ) {}
 
   async hasUserDidAction(body: GetUserMovieByTypeBodyType, userId: number) {
@@ -60,6 +58,18 @@ export class UserMovieService {
   }
 
   async updateUserMovies(body: UpdateUserMoviesDto, userId: number) {
+    const user = await this.userService.getUserById(userId);
+    if (
+      user &&
+      user.role !== UserRole.ADMIN &&
+      user.block_expires_at &&
+      new Date(user.block_expires_at) > new Date()
+    ) {
+      throw new ForbiddenException(
+        `You cannot do any action. Your block expires at ${user.block_expires_at}`,
+      );
+    }
+
     const userActions = await this.hasUserDidAction(
       {
         ...body,
@@ -492,5 +502,9 @@ export class UserMovieService {
     if (movie_id) {
       return await this.updateUserMovies({ ...body, movie_id }, user_id);
     }
+  }
+
+  async getUserWatchEpisodes(userId: number) {
+    return await this.userMovieRepository.getUserWatchEpisodes(userId);
   }
 }

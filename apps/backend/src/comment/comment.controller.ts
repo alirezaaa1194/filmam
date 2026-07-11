@@ -23,7 +23,7 @@ import {
 } from './dto/comment.dto';
 import { CommentService } from './comment.service';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { CommentEntityType } from '@prisma/client';
+import { CommentEntityType } from '../generated/prisma';
 import { Public } from '../common/decorators/public.decorator';
 
 @Controller('comment')

@@ -8,7 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CreateCountryTranslationDto } from '../../country-translation/dto/country-translation.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';

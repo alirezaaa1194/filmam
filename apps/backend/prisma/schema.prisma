@@ -1,10 +1,17 @@
+// generator client {
+//   provider        = "prisma-client-js"
+//   // output       = "../../generated/prisma"
+//   // output       = "./node_modules/.prisma/client"
+//   output          = "../../../node_modules/.prisma/client"
+//   // output       = "../src/generated/prisma"
+//   moduleFormat    = "cjs"
+//   previewFeatures = ["views"]
+// }
+
 generator client {
-  provider        = "prisma-client-js"
-  // output       = "../../generated/prisma"
-  // output       = "./node_modules/.prisma/client"
-  output          = "../../../node_modules/.prisma/client"
-  // output       = "../src/generated/prisma"
-  moduleFormat    = "cjs"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
   previewFeatures = ["views"]
 }
 
@@ -25,7 +32,6 @@ model User {
   role             UserRole       @default(USER)
   refresh_tokens   RefreshToken[]
   comments         Comment[]
-  contacts         Contact[]
   user_movies      UserMovie[]
   otps             Otp[]
   login_requests   LoginRequest[]
@@ -215,6 +221,7 @@ model Episode {
   files          EpisodeFile[]
   user_movies    UserMovie[]
   comments       Comment[]
+  sectionMovies  SectionMovie[]
 
   @@map("episodes")
 }
@@ -484,15 +491,18 @@ model SectionTranslation {
 }
 
 model SectionMovie {
-  id         Int                   @id @default(autoincrement())
-  created_at DateTime              @default(now())
-  updated_at DateTime              @updatedAt
-  section_id Int
-  movie_id   Int
-  order      Int
-  view_mode  SectionMovieViewMode?
-  section    Section               @relation(fields: [section_id], references: [id], onDelete: Cascade)
-  movie      Movie                 @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  id          Int                   @id @default(autoincrement())
+  created_at  DateTime              @default(now())
+  updated_at  DateTime              @updatedAt
+  section_id  Int
+  entity_type CommentEntityType
+  movie_id    Int
+  episode_id  Int?
+  order       Int
+  view_mode   SectionMovieViewMode?
+  section     Section               @relation(fields: [section_id], references: [id], onDelete: Cascade)
+  movie       Movie                 @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  episode     Episode?              @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@unique([section_id, movie_id, order])
   @@map("section_movies")
@@ -537,24 +547,24 @@ model Upload {
 }
 
 model Contact {
-  id         Int           @id @default(autoincrement())
-  created_at DateTime      @default(now())
-  updated_at DateTime      @updatedAt
-  subject    String?
-  body       String
-  parent_id  Int?
-  status     ContactStatus @default(PENDING)
-  user_id    Int
-  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id              Int           @id @default(autoincrement())
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  user_email      String
+  message         String
+  is_registered   Boolean
+  status          ContactStatus @default(PENDING)
+  answer_message  String?
+  rejected_detail String?
 
   @@map("contacts")
 }
 
 model RefreshToken {
   id             Int      @id @default(autoincrement())
+  created_at     DateTime @default(now())
   user_id        Int
   hashed_refresh String
-  created_at     DateTime @default(now())
   expires_at     DateTime
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
@@ -563,10 +573,10 @@ model RefreshToken {
 
 model Otp {
   id           Int       @id @default(autoincrement())
+  created_at   DateTime  @default(now())
   user_id      Int?
   user_email   String?
   hashed_otp   String
-  created_at   DateTime  @default(now())
   used_at      DateTime?
   expires_at   DateTime
   otp_attempts Int       @default(0)
@@ -585,6 +595,46 @@ model LoginRequest {
   user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("login_requests")
+}
+
+model HeaderMenu {
+  id           Int                     @id @default(autoincrement())
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+  menu_type    HeaderMenuType
+  href         String?
+  order        Int
+  parent_id    Int?
+  translations HeaderMenuTranslation[]
+  filters      HeaderMenuFilter[]
+  parent       HeaderMenu?             @relation("ParentMenu", fields: [parent_id], references: [id], onDelete: Cascade)
+  children     HeaderMenu[]            @relation("ParentMenu")
+
+  @@map("header_menus")
+}
+
+model HeaderMenuTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  language   AppLanguage
+  title      String
+  menu_id    Int
+  menu       HeaderMenu  @relation(fields: [menu_id], references: [id], onDelete: Cascade)
+
+  @@map("header_menu_translations")
+}
+
+model HeaderMenuFilter {
+  id           Int              @id @default(autoincrement())
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+  filter_key   SectionFilterKey
+  filter_value String
+  menu_id      Int
+  menu         HeaderMenu       @relation(fields: [menu_id], references: [id], onDelete: Cascade)
+
+  @@map("header_menu_filters")
 }
 
 enum UserRole {
@@ -625,7 +675,8 @@ enum UserMovieType {
 
 enum ContactStatus {
   PENDING
-  APPROVED
+  ANSWERED
+  REJECTED
 }
 
 enum MovieFileType {
@@ -719,4 +770,9 @@ enum SectionFilterKey {
 enum CommentVoteStatus {
   LIKE
   DISLIKE
+}
+
+enum HeaderMenuType {
+  PAGE
+  FILTER
 }

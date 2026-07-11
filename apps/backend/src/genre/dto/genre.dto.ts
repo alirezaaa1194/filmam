@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateGenreTranslationDto } from '../../genre-translation/dto/genre-translation.dto';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';

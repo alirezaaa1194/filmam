@@ -6,42 +6,38 @@ import {
 } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
 import { GoogleAuthDto } from '../auth/dto/google-auth.dto';
-import { UserRole } from '@prisma/client';
+
 import {
   ChangeUserPasswordAdminDto,
   CreateUserDto,
   DeleteUsersDto,
-  GetAllUserMovieDto,
   GetAllUsersDto,
   UpdateUserInfoDto,
 } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import { paginationCalculator } from '../lib/utils';
-import { UserMovieService } from '../user-movie/user-movie.service';
+import { UserRole } from '../generated/prisma';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private userRepository: UserRepository,
-    private userMovieService: UserMovieService,
-  ) {}
+  constructor(private userRepository: UserRepository) {}
 
   async getUserByEmail(userEmail: string) {
     const user = await this.userRepository.getUserByEmail(userEmail);
-    if (user) {
-      return user;
-    } else {
-      throw new NotFoundException('User not found');
-    }
+    return user;
+    // if (user) {
+    // } else {
+    //   throw new NotFoundException('User not found');
+    // }
   }
 
   async getUserById(userId: number) {
     const user = await this.userRepository.getUserById(userId);
-    if (user) {
-      return user;
-    } else {
-      throw new NotFoundException('User not found');
-    }
+    return user;
+    // if (user) {
+    // } else {
+    //   throw new NotFoundException('User not found');
+    // }
   }
 
   async signupUser(userInfo: CreateUserDto | GoogleAuthDto) {
@@ -81,14 +77,6 @@ export class UserService {
   }
 
   async blockUser(userId: number, expireTime: Date | null) {
-    if (
-      expireTime &&
-      Date.parse(expireTime.toString()) < Date.parse(new Date().toString())
-    ) {
-      throw new BadRequestException(
-        'block_expires_at must be greater than now time',
-      );
-    }
     return await this.userRepository.blockUser(userId, expireTime);
   }
 
@@ -112,6 +100,9 @@ export class UserService {
   async changeUserRoleAdmin(userId: number) {
     const adminsCount = await this.getAdminsCount();
     const user = await this.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     const userNewRole =
       user.role === UserRole.ADMIN ? UserRole.USER : UserRole.ADMIN;
     if (adminsCount > 1 || userNewRole === UserRole.ADMIN) {

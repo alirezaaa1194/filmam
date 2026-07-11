@@ -1,4 +1,4 @@
-import { CommentEntityType } from '@prisma/client';
+import { CommentEntityType } from '../../generated/prisma';
 
 export type CreateCommentRepositoryBodyType = {
   episode_id?: number;

@@ -1,4 +1,4 @@
-import { AppLanguage, MovieType } from '@prisma/client';
+import { AppLanguage, MovieType } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { TransactionType } from '../../common/types/types';
 

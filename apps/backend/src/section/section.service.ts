@@ -23,7 +23,7 @@ import {
   SectionSortMode,
   SectionViewMode,
   UserMovieType,
-} from '@prisma/client';
+} from '../generated/prisma';
 import { prisma } from '../lib/prisma';
 import {
   defaultLang,
@@ -299,7 +299,42 @@ export class SectionService {
           );
 
           movies = sectionMovies.map((sectionMovie) => {
-            return normalizeMovieDetail(sectionMovie.movie);
+            if (sectionMovie.entity_type === CommentEntityType.MOVIE) {
+              return normalizeMovieDetail({
+                ...sectionMovie.movie,
+                entity_type: sectionMovie.entity_type,
+              });
+            } else if (
+              sectionMovie.entity_type === CommentEntityType.EPISODE &&
+              sectionMovie.episode
+            ) {
+              const {
+                files,
+                translations,
+                movie,
+                season,
+                ...otherEpisodeData
+              } = sectionMovie.episode;
+              const episodeFiles = files.map((file) => {
+                return {
+                  ...file.upload,
+                  type: file.type,
+                  intro_start_time: file.intro_start_time,
+                  intro_duration: file.intro_duration,
+                  outro_duration: file.outro_duration,
+                };
+              });
+              const episodeTranslation = translations[0];
+
+              return {
+                ...otherEpisodeData,
+                title: episodeTranslation.title,
+                entity_type: sectionMovie.entity_type,
+                movie_title: movie.translations[0].title,
+                season_title: season.translations[0].title,
+                files: episodeFiles,
+              };
+            }
           });
 
           const sectionTranslation = translations[0];

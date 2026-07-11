@@ -65,8 +65,8 @@ export class EpisodeController {
     return await this.episodeService.getEpisodeDetailAdmin(episodeId);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @ApiBearerAuth()
+  // @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('/:episodeSlug')
   async getEpisodeDetailPublic(
     @Param('episodeSlug') episodeSlug: string,

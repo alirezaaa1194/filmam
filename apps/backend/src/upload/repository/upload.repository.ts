@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '../../lib/prisma';
 import { UploadFromFileDto, UploadFromUrlDto } from '../dto/upload.dto';
-import { SourceType } from '@prisma/client';
+import { SourceType } from '../../generated/prisma';
 
 @Injectable()
 export class UploadRepository {

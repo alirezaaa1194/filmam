@@ -5,7 +5,7 @@ import {
 } from '../../common/types/types';
 import { CreateEpisodeRepositoryProps } from '../type/episode.type';
 import { prisma } from '../../lib/prisma';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { defaultLang } from '../../lib/utils';
 
 @Injectable()
@@ -55,8 +55,9 @@ export class EpisodeRepository {
   async getEpisodeDetailPublic(
     episodeSlug: string,
     lang: AppLanguage = defaultLang,
+    tx: TransactionType,
   ) {
-    return await prisma.episode.findUnique({
+    return await tx.episode.findUnique({
       where: { slug: episodeSlug },
       include: {
         translations: {
@@ -151,6 +152,30 @@ export class EpisodeRepository {
               select: {
                 upload: true,
                 type: true,
+              },
+            },
+            seasons: {
+              include: {
+                translations: {
+                  where: {
+                    language: lang,
+                  },
+                },
+                files: {
+                  select: {
+                    upload: true,
+                    type: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        season: {
+          include: {
+            translations: {
+              where: {
+                language: lang,
               },
             },
           },
@@ -297,6 +322,80 @@ export class EpisodeRepository {
       },
       orderBy: {
         created_at: query.sort_type,
+      },
+    });
+  }
+
+  async getNextEpisode(
+    currentEpisodeOrder: number,
+    currentEpisodeSeasonOrder: number,
+    lang: AppLanguage = defaultLang,
+    tx: TransactionType,
+  ) {
+    const nextEpisode = await tx.episode.findFirst({
+      where: {
+        order: currentEpisodeOrder + 1,
+      },
+      include: {
+        translations: {
+          select: {
+            title: true,
+          },
+          where: {
+            language: lang,
+          },
+        },
+        season: {
+          include: {
+            translations: {
+              where: {
+                language: lang,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (nextEpisode) {
+      return nextEpisode;
+    }
+
+    return await this.getNextSeasonFirstEpisode(
+      currentEpisodeSeasonOrder,
+      lang,
+      tx,
+    );
+  }
+
+  async getNextSeasonFirstEpisode(
+    currentEpisodeSeasonOrder: number,
+    lang: AppLanguage,
+    tx: TransactionType,
+  ) {
+    return await tx.episode.findFirst({
+      where: {
+        order: 1,
+        season: { order: currentEpisodeSeasonOrder + 1 },
+      },
+      include: {
+        translations: {
+          select: {
+            title: true,
+          },
+          where: {
+            language: lang,
+          },
+        },
+        season: {
+          include: {
+            translations: {
+              where: {
+                language: lang,
+              },
+            },
+          },
+        },
       },
     });
   }

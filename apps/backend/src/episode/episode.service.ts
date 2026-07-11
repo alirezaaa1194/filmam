@@ -18,7 +18,7 @@ import {
   paginationCalculator,
 } from '../lib/utils';
 import { SortType } from '../common/enums';
-import { EpisodeFileType } from '@prisma/client';
+import { AppLanguage, EpisodeFileType } from '../generated/prisma';
 import { TransactionType } from '../common/types/types';
 
 @Injectable()
@@ -174,34 +174,85 @@ export class EpisodeService {
     episodeSlug: string,
     query: GetEpisodeDetailPublicDto,
   ) {
-    const episode = await this.episodeRepository.getEpisodeDetailPublic(
-      episodeSlug,
-      query.lang,
-    );
+    const result = await prisma.$transaction(async (tx) => {
+      const episode = await this.episodeRepository.getEpisodeDetailPublic(
+        episodeSlug,
+        query.lang,
+        tx,
+      );
 
-    if (episode) {
-      const { files, translations, movie, ...otherEpisodeData } = episode;
-      const episodeFiles = files.map((file) => {
+      if (episode) {
+        const { files, translations, movie, season, ...otherEpisodeData } =
+          episode;
+        const episodeFiles = files.map((file) => {
+          return {
+            ...file.upload,
+            type: file.type,
+            intro_start_time: file.intro_start_time,
+            intro_duration: file.intro_duration,
+            outro_duration: file.outro_duration,
+          };
+        });
+        const episodeTranslation = translations[0];
+        const normalizedMovie = normalizeMovieDetail(movie);
+        const {
+          translations: episodeSeasonTranslations,
+          ...otherEpisodeSeasonData
+        } = season;
+
+        const nextEpisode = await this.getNextEpisode(
+          episode.order,
+          episode.season.order,
+          query.lang,
+          tx,
+        );
         return {
-          ...file.upload,
-          type: file.type,
-          intro_start_time: file.intro_start_time,
-          intro_duration: file.intro_duration,
-          outro_duration: file.outro_duration,
+          ...otherEpisodeData,
+          title: episodeTranslation.title,
+          short_description: episodeTranslation.short_description,
+          files: episodeFiles,
+          movie: normalizedMovie,
+          season: {
+            title: episodeSeasonTranslations[0].title,
+            ...otherEpisodeSeasonData,
+          },
+          next_episode: nextEpisode,
         };
-      });
-      const episodeTranslation = translations[0];
-      const normalizedMovie = normalizeMovieDetail(movie);
+      } else {
+        throw new NotFoundException('episode was not found');
+      }
+    });
+
+    return result;
+  }
+
+  async getNextEpisode(
+    currentEpisodeOrder: number,
+    currentEpisodeSeasonOrder: number,
+    lang: AppLanguage = defaultLang,
+    tx: TransactionType,
+  ) {
+    const nextEpisode = await this.episodeRepository.getNextEpisode(
+      currentEpisodeOrder,
+      currentEpisodeSeasonOrder,
+      lang,
+      tx,
+    );
+    if (nextEpisode) {
+      const {
+        translations: nextEpisodeTranslations,
+        season: nextEpisodeSeason,
+        ...otherNextEpisodeData
+      } = nextEpisode ?? {};
+
       return {
-        ...otherEpisodeData,
-        title: episodeTranslation.title,
-        short_description: episodeTranslation.short_description,
-        files: episodeFiles,
-        movie: normalizedMovie,
+        ...otherNextEpisodeData,
+        title: nextEpisodeTranslations?.[0]?.title,
+        season_title: nextEpisodeSeason?.translations[0].title,
       };
-    } else {
-      throw new NotFoundException('episode was not found');
     }
+
+    return null;
   }
 
   async getAllEpisodes(query: GetAllEpisodesDto) {

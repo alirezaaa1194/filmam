@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -20,6 +21,7 @@ import {
   GetSeasonEpisodesDto,
 } from './dto/season.dto';
 import { SeasonService } from './season.service';
+import { Public } from '../common/decorators/public.decorator';
 
 @Controller('season')
 export class SeasonController {
@@ -63,11 +65,19 @@ export class SeasonController {
     return await this.seasonService.getSeasonDetail(seasonId);
   }
 
+  @ApiBearerAuth()
   @Get('/:seasonSlug/episodes')
+  @Public()
+  @UseGuards(JwtAuthGuard)
   async getSeasonEpisodes(
     @Param('seasonSlug') seasonSlug: string,
     @Query() query: GetSeasonEpisodesDto,
+    @Req() req,
   ) {
-    return await this.seasonService.getSeasonEpisodes(query, seasonSlug);
+    return await this.seasonService.getSeasonEpisodes(
+      query,
+      seasonSlug,
+      req?.user?.userId,
+    );
   }
 }

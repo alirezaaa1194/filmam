@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { FactorFileType } from '@prisma/client';
+import { FactorFileType } from '../../generated/prisma';
 
 export class CreateFactorFileDto {
   @IsNotEmpty()

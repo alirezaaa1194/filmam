@@ -3,7 +3,7 @@ import {
   Prisma,
   UserMovie,
   UserMovieType,
-} from '@prisma/client';
+} from '../../generated/prisma';
 import { UpdateUserMoviesDto } from '../dto/user-movie.dto';
 import { TransactionType } from '../../common/types/types';
 

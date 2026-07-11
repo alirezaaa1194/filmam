@@ -36,11 +36,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.19.2
+ * Prisma Client JS version: 6.19.3
  * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
  */
 Prisma.prismaVersion = {
-  client: "6.19.2",
+  client: "6.19.3",
   engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
 }
 
@@ -110,15 +110,23 @@ exports.Prisma.MovieScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   type: 'type',
-  seasons_count: 'seasons_count',
-  slug: 'slug'
+  slug: 'slug',
+  age_limit: 'age_limit',
+  released_year: 'released_year',
+  likes_count: 'likes_count',
+  dislikes_count: 'dislikes_count',
+  watches_count: 'watches_count',
+  combined_tags: 'combined_tags'
 };
 
 exports.Prisma.MovieFileScalarFieldEnum = {
   id: 'id',
   movie_id: 'movie_id',
   upload_id: 'upload_id',
-  type: 'type'
+  type: 'type',
+  intro_start_time: 'intro_start_time',
+  intro_duration: 'intro_duration',
+  outro_duration: 'outro_duration'
 };
 
 exports.Prisma.MovieTranslationScalarFieldEnum = {
@@ -128,17 +136,64 @@ exports.Prisma.MovieTranslationScalarFieldEnum = {
   title: 'title',
   short_description: 'short_description',
   description: 'description',
-  country: 'country',
-  movie_language: 'movie_language',
   language: 'language',
   movie_id: 'movie_id'
+};
+
+exports.Prisma.MovieLanguageScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  movie_id: 'movie_id',
+  language_id: 'language_id'
+};
+
+exports.Prisma.CountryScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  code: 'code'
+};
+
+exports.Prisma.CountryTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  label: 'label',
+  language: 'language',
+  country_id: 'country_id'
+};
+
+exports.Prisma.MovieCountryScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  movie_id: 'movie_id',
+  country_id: 'country_id'
+};
+
+exports.Prisma.LanguageScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  code: 'code'
+};
+
+exports.Prisma.LanguageTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  label: 'label',
+  lang: 'lang',
+  language_id: 'language_id'
 };
 
 exports.Prisma.SeasonScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  season_number: 'season_number',
+  order: 'order',
+  slug: 'slug',
   movie_id: 'movie_id'
 };
 
@@ -162,16 +217,23 @@ exports.Prisma.EpisodeScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  episode_number: 'episode_number',
+  order: 'order',
+  slug: 'slug',
   season_id: 'season_id',
-  movie_id: 'movie_id'
+  movie_id: 'movie_id',
+  likes_count: 'likes_count',
+  dislikes_count: 'dislikes_count',
+  watches_count: 'watches_count'
 };
 
 exports.Prisma.EpisodeFileScalarFieldEnum = {
   id: 'id',
   episode_id: 'episode_id',
   upload_id: 'upload_id',
-  type: 'type'
+  type: 'type',
+  intro_start_time: 'intro_start_time',
+  intro_duration: 'intro_duration',
+  outro_duration: 'outro_duration'
 };
 
 exports.Prisma.EpisodeTranslationScalarFieldEnum = {
@@ -179,6 +241,7 @@ exports.Prisma.EpisodeTranslationScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   title: 'title',
+  short_description: 'short_description',
   episode_id: 'episode_id',
   language: 'language'
 };
@@ -190,17 +253,27 @@ exports.Prisma.CommentScalarFieldEnum = {
   likes_count: 'likes_count',
   dislikes_count: 'dislikes_count',
   status: 'status',
-  parent_id: 'parent_id',
-  entity_id: 'entity_id',
   entity_type: 'entity_type',
+  movie_id: 'movie_id',
+  episode_id: 'episode_id',
   body: 'body',
   user_id: 'user_id'
+};
+
+exports.Prisma.CommentVoteScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  comment_id: 'comment_id',
+  user_id: 'user_id',
+  vote_status: 'vote_status'
 };
 
 exports.Prisma.FactorScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  slug: 'slug'
 };
 
 exports.Prisma.FactorFileScalarFieldEnum = {
@@ -226,7 +299,17 @@ exports.Prisma.MovieFactorScalarFieldEnum = {
   updated_at: 'updated_at',
   movie_id: 'movie_id',
   factor_id: 'factor_id',
-  role_id: 'role_id'
+  role_id: 'role_id',
+  order: 'order'
+};
+
+exports.Prisma.MovieFactorTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  role_name: 'role_name',
+  movie_factor_id: 'movie_factor_id',
+  language: 'language'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -270,13 +353,83 @@ exports.Prisma.MovieGenreScalarFieldEnum = {
   movie_id: 'movie_id'
 };
 
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  slug: 'slug'
+};
+
+exports.Prisma.TagTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  label: 'label',
+  language: 'language',
+  tag_id: 'tag_id'
+};
+
+exports.Prisma.MovieTagScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  tag_id: 'tag_id',
+  movie_id: 'movie_id'
+};
+
+exports.Prisma.SectionScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  slug: 'slug',
+  order: 'order',
+  view_mode: 'view_mode',
+  selection_mode: 'selection_mode',
+  sort_mode: 'sort_mode',
+  period_base: 'period_base'
+};
+
+exports.Prisma.SectionFilterScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  section_id: 'section_id',
+  filter_key: 'filter_key',
+  filter_value: 'filter_value'
+};
+
+exports.Prisma.SectionTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  title: 'title',
+  description: 'description',
+  language: 'language',
+  section_id: 'section_id'
+};
+
+exports.Prisma.SectionMovieScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  section_id: 'section_id',
+  entity_type: 'entity_type',
+  movie_id: 'movie_id',
+  episode_id: 'episode_id',
+  order: 'order',
+  view_mode: 'view_mode'
+};
+
 exports.Prisma.UserMovieScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
   type: 'type',
+  progress_time: 'progress_time',
   user_id: 'user_id',
-  movie_id: 'movie_id'
+  movie_id: 'movie_id',
+  episode_id: 'episode_id',
+  entity_type: 'entity_type'
 };
 
 exports.Prisma.UploadScalarFieldEnum = {
@@ -294,31 +447,32 @@ exports.Prisma.UploadScalarFieldEnum = {
   duration: 'duration'
 };
 
-exports.Prisma.TicketScalarFieldEnum = {
+exports.Prisma.ContactScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  subject: 'subject',
-  body: 'body',
-  parent_id: 'parent_id',
+  user_email: 'user_email',
+  message: 'message',
+  is_registered: 'is_registered',
   status: 'status',
-  user_id: 'user_id'
+  answer_message: 'answer_message',
+  rejected_detail: 'rejected_detail'
 };
 
 exports.Prisma.RefreshTokenScalarFieldEnum = {
   id: 'id',
+  created_at: 'created_at',
   user_id: 'user_id',
   hashed_refresh: 'hashed_refresh',
-  created_at: 'created_at',
   expires_at: 'expires_at'
 };
 
 exports.Prisma.OtpScalarFieldEnum = {
   id: 'id',
+  created_at: 'created_at',
   user_id: 'user_id',
   user_email: 'user_email',
   hashed_otp: 'hashed_otp',
-  created_at: 'created_at',
   used_at: 'used_at',
   expires_at: 'expires_at',
   otp_attempts: 'otp_attempts',
@@ -329,6 +483,34 @@ exports.Prisma.LoginRequestScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   user_id: 'user_id'
+};
+
+exports.Prisma.HeaderMenuScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  menu_type: 'menu_type',
+  href: 'href',
+  order: 'order',
+  parent_id: 'parent_id'
+};
+
+exports.Prisma.HeaderMenuTranslationScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  language: 'language',
+  title: 'title',
+  menu_id: 'menu_id'
+};
+
+exports.Prisma.HeaderMenuFilterScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  filter_key: 'filter_key',
+  filter_value: 'filter_value',
+  menu_id: 'menu_id'
 };
 
 exports.Prisma.SortOrder = {
@@ -361,11 +543,6 @@ exports.AppLanguage = exports.$Enums.AppLanguage = {
   AR: 'AR'
 };
 
-exports.FilmType = exports.$Enums.FilmType = {
-  CINEMATIC: 'CINEMATIC',
-  TRAILER: 'TRAILER'
-};
-
 exports.CommentStatus = exports.$Enums.CommentStatus = {
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
@@ -379,13 +556,17 @@ exports.CommentEntityType = exports.$Enums.CommentEntityType = {
 
 exports.UserMovieType = exports.$Enums.UserMovieType = {
   BOOKMARK: 'BOOKMARK',
+  NOTIFICATION: 'NOTIFICATION',
   LIKE: 'LIKE',
-  RECENT_WATCH: 'RECENT_WATCH'
+  DISLIKE: 'DISLIKE',
+  WATCHING: 'WATCHING',
+  WATCHED: 'WATCHED'
 };
 
-exports.TicketStatus = exports.$Enums.TicketStatus = {
+exports.ContactStatus = exports.$Enums.ContactStatus = {
   PENDING: 'PENDING',
-  APPROVED: 'APPROVED'
+  ANSWERED: 'ANSWERED',
+  REJECTED: 'REJECTED'
 };
 
 exports.MovieFileType = exports.$Enums.MovieFileType = {
@@ -397,13 +578,15 @@ exports.MovieFileType = exports.$Enums.MovieFileType = {
 };
 
 exports.SeasonFileType = exports.$Enums.SeasonFileType = {
-  BANNER: 'BANNER',
+  POSTER: 'POSTER',
   TRAILER: 'TRAILER'
 };
 
 exports.EpisodeFileType = exports.$Enums.EpisodeFileType = {
-  BANNER: 'BANNER',
-  TRAILER: 'TRAILER'
+  POSTER: 'POSTER',
+  TRAILER: 'TRAILER',
+  COVER: 'COVER',
+  FILM: 'FILM'
 };
 
 exports.FactorFileType = exports.$Enums.FactorFileType = {
@@ -411,9 +594,9 @@ exports.FactorFileType = exports.$Enums.FactorFileType = {
 };
 
 exports.OtpType = exports.$Enums.OtpType = {
-  Login: 'Login',
-  Forget_Password: 'Forget_Password',
-  Signup: 'Signup'
+  LOGIN: 'LOGIN',
+  FORGET_PASSWORD: 'FORGET_PASSWORD',
+  SIGNUP: 'SIGNUP'
 };
 
 exports.SourceType = exports.$Enums.SourceType = {
@@ -426,11 +609,75 @@ exports.RoleType = exports.$Enums.RoleType = {
   ACTOR: 'ACTOR'
 };
 
+exports.SectionSelectionMode = exports.$Enums.SectionSelectionMode = {
+  AUTO: 'AUTO',
+  USER_MOVIE: 'USER_MOVIE',
+  SUGGESTION: 'SUGGESTION',
+  MANUAL: 'MANUAL'
+};
+
+exports.SectionViewMode = exports.$Enums.SectionViewMode = {
+  HERO: 'HERO',
+  NORMAL_SLIDER: 'NORMAL_SLIDER',
+  KIDS_SLIDER: 'KIDS_SLIDER',
+  HERO_LIKE_SLIDER: 'HERO_LIKE_SLIDER',
+  PUZZLE: 'PUZZLE',
+  ADVERTISEMENT: 'ADVERTISEMENT'
+};
+
+exports.SectionSortMode = exports.$Enums.SectionSortMode = {
+  NEWEST: 'NEWEST',
+  OLDEST: 'OLDEST',
+  MOST_VIEWED: 'MOST_VIEWED',
+  TOP_RATED: 'TOP_RATED',
+  TRENDING: 'TRENDING',
+  RANDOM: 'RANDOM'
+};
+
+exports.SectionPeriodBase = exports.$Enums.SectionPeriodBase = {
+  A_DAY_AGO: 'A_DAY_AGO',
+  A_WEEK_AGO: 'A_WEEK_AGO',
+  A_MONTH_AGO: 'A_MONTH_AGO'
+};
+
+exports.SectionMovieViewMode = exports.$Enums.SectionMovieViewMode = {
+  PUZZLE: 'PUZZLE',
+  SLIDER_ITEM: 'SLIDER_ITEM'
+};
+
+exports.SectionFilterKey = exports.$Enums.SectionFilterKey = {
+  SEARCH: 'SEARCH',
+  GENRES: 'GENRES',
+  AGE_LIMITS: 'AGE_LIMITS',
+  COUNTRIES: 'COUNTRIES',
+  TAGS: 'TAGS',
+  LANGUAGES: 'LANGUAGES',
+  TYPE: 'TYPE',
+  RELEASED_YEAR_FROM: 'RELEASED_YEAR_FROM',
+  RELEASED_YEAR_TO: 'RELEASED_YEAR_TO'
+};
+
+exports.CommentVoteStatus = exports.$Enums.CommentVoteStatus = {
+  LIKE: 'LIKE',
+  DISLIKE: 'DISLIKE'
+};
+
+exports.HeaderMenuType = exports.$Enums.HeaderMenuType = {
+  PAGE: 'PAGE',
+  FILTER: 'FILTER'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Movie: 'Movie',
   MovieFile: 'MovieFile',
   MovieTranslation: 'MovieTranslation',
+  MovieLanguage: 'MovieLanguage',
+  Country: 'Country',
+  CountryTranslation: 'CountryTranslation',
+  MovieCountry: 'MovieCountry',
+  Language: 'Language',
+  LanguageTranslation: 'LanguageTranslation',
   Season: 'Season',
   SeasonFile: 'SeasonFile',
   SeasonTranslation: 'SeasonTranslation',
@@ -438,21 +685,33 @@ exports.Prisma.ModelName = {
   EpisodeFile: 'EpisodeFile',
   EpisodeTranslation: 'EpisodeTranslation',
   Comment: 'Comment',
+  CommentVote: 'CommentVote',
   Factor: 'Factor',
   FactorFile: 'FactorFile',
   FactorTranslation: 'FactorTranslation',
   MovieFactor: 'MovieFactor',
+  MovieFactorTranslation: 'MovieFactorTranslation',
   Role: 'Role',
   RoleTranslation: 'RoleTranslation',
   Genre: 'Genre',
   GenreTranslation: 'GenreTranslation',
   MovieGenre: 'MovieGenre',
+  Tag: 'Tag',
+  TagTranslation: 'TagTranslation',
+  MovieTag: 'MovieTag',
+  Section: 'Section',
+  SectionFilter: 'SectionFilter',
+  SectionTranslation: 'SectionTranslation',
+  SectionMovie: 'SectionMovie',
   UserMovie: 'UserMovie',
   Upload: 'Upload',
-  Ticket: 'Ticket',
+  Contact: 'Contact',
   RefreshToken: 'RefreshToken',
   Otp: 'Otp',
-  LoginRequest: 'LoginRequest'
+  LoginRequest: 'LoginRequest',
+  HeaderMenu: 'HeaderMenu',
+  HeaderMenuTranslation: 'HeaderMenuTranslation',
+  HeaderMenuFilter: 'HeaderMenuFilter'
 };
 /**
  * Create the Client
@@ -479,7 +738,9 @@ const config = {
         "native": true
       }
     ],
-    "previewFeatures": [],
+    "previewFeatures": [
+      "views"
+    ],
     "sourceFilePath": "C:\\Users\\ALIREZA\\Desktop\\filmam\\apps\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
@@ -488,7 +749,7 @@ const config = {
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
-  "clientVersion": "6.19.2",
+  "clientVersion": "6.19.3",
   "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
   "datasourceNames": [
     "db"
@@ -503,13 +764,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider     = \"prisma-client-js\"\n  // output       = \"../../generated/prisma\"\n  // output       = \"./node_modules/.prisma/client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id               Int            @id @default(autoincrement())\n  created_at       DateTime       @default(now())\n  updated_at       DateTime       @updatedAt\n  username         String\n  email            String         @unique\n  password         String?\n  block_expires_at DateTime?\n  google_id        String?        @unique\n  role             UserRole       @default(USER)\n  refresh_tokens   RefreshToken[]\n  comments         Comment[]\n  tickets          Ticket[]\n  user_movies      UserMovie[]\n  otps             Otp[]\n  login_requests   LoginRequest[]\n\n  @@map(\"users\")\n}\n\nmodel Movie {\n  id            Int                @id @default(autoincrement())\n  created_at    DateTime           @default(now())\n  updated_at    DateTime           @updatedAt\n  type          MovieType\n  seasons_count Int?\n  slug          String             @unique\n  episodes      Episode[]\n  factors       MovieFactor[]\n  genres        MovieGenre[]\n  translations  MovieTranslation[]\n  seasons       Season[]\n  user_movies   UserMovie[]\n  movie_files   MovieFile[]\n\n  @@map(\"movies\")\n}\n\nmodel MovieFile {\n  id        Int           @id @default(autoincrement())\n  movie_id  Int\n  upload_id Int\n  type      MovieFileType\n  movie     Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  upload    Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_files\")\n}\n\nmodel MovieTranslation {\n  id                Int         @id @default(autoincrement())\n  created_at        DateTime    @default(now())\n  updated_at        DateTime    @updatedAt\n  title             String\n  short_description String\n  description       String\n  country           String\n  movie_language    String\n  language          AppLanguage\n  movie_id          Int\n  movie             Movie       @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_translations\")\n}\n\nmodel Season {\n  id            Int                 @id @default(autoincrement())\n  created_at    DateTime            @default(now())\n  updated_at    DateTime            @updatedAt\n  season_number Int\n  movie_id      Int\n  episodes      Episode[]\n  translations  SeasonTranslation[]\n  movie         Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  season_files  SeasonFile[]\n\n  @@map(\"seasons\")\n}\n\nmodel SeasonFile {\n  id        Int            @id @default(autoincrement())\n  season_id Int\n  upload_id Int\n  type      SeasonFileType\n  season    Season         @relation(fields: [season_id], references: [id], onDelete: Cascade)\n  upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n\n  @@map(\"season_files\")\n}\n\nmodel SeasonTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  title      String\n  season_id  Int\n  language   AppLanguage\n  season     Season      @relation(fields: [season_id], references: [id], onDelete: Cascade)\n\n  @@map(\"season_translation\")\n}\n\nmodel Episode {\n  id             Int                  @id @default(autoincrement())\n  created_at     DateTime             @default(now())\n  updated_at     DateTime             @updatedAt\n  episode_number Int\n  season_id      Int\n  movie_id       Int\n  translations   EpisodeTranslation[]\n  movie          Movie                @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  season         Season               @relation(fields: [season_id], references: [id], onDelete: Cascade)\n  episode_files  EpisodeFile[]\n\n  @@map(\"episodes\")\n}\n\nmodel EpisodeFile {\n  id         Int             @id @default(autoincrement())\n  episode_id Int\n  upload_id  Int\n  type       EpisodeFileType\n  upload     Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n  episode    Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n\n  @@map(\"episode_files\")\n}\n\nmodel EpisodeTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  title      String\n  episode_id Int\n  language   AppLanguage\n  episode    Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n\n  @@map(\"episode_translations\")\n}\n\nmodel Comment {\n  id             Int               @id @default(autoincrement())\n  created_at     DateTime          @default(now())\n  updated_at     DateTime          @updatedAt\n  likes_count    Int\n  dislikes_count Int\n  status         CommentStatus     @default(PENDING)\n  parent_id      Int?\n  entity_id      Int\n  entity_type    CommentEntityType\n  body           String\n  user_id        Int\n  parent         Comment?          @relation(\"CommentToReplies\", fields: [parent_id], references: [id])\n  replies        Comment[]         @relation(\"CommentToReplies\")\n  user           User              @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"comments\")\n}\n\nmodel Factor {\n  id            Int                 @id @default(autoincrement())\n  created_at    DateTime            @default(now())\n  updated_at    DateTime            @updatedAt\n  translations  FactorTranslation[]\n  movie_factors MovieFactor[]\n  factor_files  FactorFile[]\n\n  @@map(\"factors\")\n}\n\nmodel FactorFile {\n  id        Int            @id @default(autoincrement())\n  factor_id Int\n  upload_id Int\n  type      FactorFileType\n  factor    Factor         @relation(fields: [factor_id], references: [id], onDelete: Cascade)\n  upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n\n  @@map(\"factor_files\")\n}\n\nmodel FactorTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  first_name String\n  last_name  String\n  language   AppLanguage\n  factor_id  Int\n  factor     Factor      @relation(fields: [factor_id], references: [id], onDelete: Cascade)\n\n  @@map(\"factor_translations\")\n}\n\nmodel MovieFactor {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n  movie_id   Int\n  factor_id  Int\n  role_id    Int\n  factor     Factor   @relation(fields: [factor_id], references: [id], onDelete: Cascade)\n  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  role       Role     @relation(fields: [role_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_factors\")\n}\n\nmodel Role {\n  id            Int               @id @default(autoincrement())\n  created_at    DateTime          @default(now())\n  updated_at    DateTime          @updatedAt\n  slug          String            @unique\n  type          RoleType\n  movie_factors MovieFactor[]\n  translations  RoleTranslation[]\n\n  @@map(\"roles\")\n}\n\nmodel RoleTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  name       String\n  role_id    Int\n  language   AppLanguage\n  role       Role        @relation(fields: [role_id], references: [id], onDelete: Cascade)\n\n  @@map(\"role_translations\")\n}\n\nmodel Genre {\n  id           Int                @id @default(autoincrement())\n  created_at   DateTime           @default(now())\n  updated_at   DateTime           @updatedAt\n  slug         String             @unique\n  translations GenreTranslation[]\n  movies       MovieGenre[]\n\n  @@map(\"genres\")\n}\n\nmodel GenreTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  name       String\n  genre_id   Int\n  language   AppLanguage\n  genre      Genre       @relation(fields: [genre_id], references: [id], onDelete: Cascade)\n\n  @@map(\"genre_translations\")\n}\n\nmodel MovieGenre {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n  genre_id   Int\n  movie_id   Int\n  genre      Genre    @relation(fields: [genre_id], references: [id], onDelete: Cascade)\n  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_genres\")\n}\n\nmodel UserMovie {\n  id         Int           @id @default(autoincrement())\n  created_at DateTime      @default(now())\n  updated_at DateTime      @updatedAt\n  type       UserMovieType\n  user_id    Int\n  movie_id   Int\n  movie      Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"user_movies\")\n}\n\nmodel Upload {\n  id            Int           @id @default(autoincrement())\n  created_at    DateTime      @default(now())\n  updated_at    DateTime      @updatedAt\n  path          String\n  mime_type     String\n  file_name     String?\n  source_type   SourceType\n  alt_text      String?\n  size          Int?\n  width         String?\n  height        String?\n  duration      String?\n  movie_files   MovieFile[]\n  season_files  SeasonFile[]\n  episode_files EpisodeFile[]\n  factor_files  FactorFile[]\n\n  @@map(\"uploads\")\n}\n\nmodel Ticket {\n  id         Int          @id @default(autoincrement())\n  created_at DateTime     @default(now())\n  updated_at DateTime     @updatedAt\n  subject    String?\n  body       String\n  parent_id  Int?\n  status     TicketStatus @default(PENDING)\n  user_id    Int\n  user       User         @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"tickets\")\n}\n\nmodel RefreshToken {\n  id             Int      @id @default(autoincrement())\n  user_id        Int\n  hashed_refresh String\n  created_at     DateTime @default(now())\n  expires_at     DateTime\n  user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"refresh_tokens\")\n}\n\nmodel Otp {\n  id           Int       @id @default(autoincrement())\n  user_id      Int?\n  user_email   String?\n  hashed_otp   String\n  created_at   DateTime  @default(now())\n  used_at      DateTime?\n  expires_at   DateTime\n  otp_attempts Int       @default(0)\n  type         OtpType\n  user         User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@index([user_id, expires_at])\n  @@index([user_id, used_at])\n  @@map(\"otps\")\n}\n\nmodel LoginRequest {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  user_id    Int\n  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"login_requests\")\n}\n\nenum UserRole {\n  USER\n  ADMIN\n}\n\nenum MovieType {\n  CINEMATIC\n  SERIES\n}\n\nenum AppLanguage {\n  FA\n  EN\n  AR\n}\n\nenum FilmType {\n  CINEMATIC\n  TRAILER\n}\n\nenum CommentStatus {\n  APPROVED\n  REJECTED\n  PENDING\n}\n\nenum CommentEntityType {\n  MOVIE\n  EPISODE\n}\n\nenum UserMovieType {\n  BOOKMARK\n  LIKE\n  RECENT_WATCH\n}\n\nenum TicketStatus {\n  PENDING\n  APPROVED\n}\n\nenum MovieFileType {\n  POSTER\n  BANNER\n  THUMBNAIL\n  TRAILER\n  FILM\n}\n\nenum SeasonFileType {\n  BANNER\n  TRAILER\n}\n\nenum EpisodeFileType {\n  BANNER\n  TRAILER\n}\n\nenum FactorFileType {\n  PROFILE\n}\n\nenum OtpType {\n  Login\n  Forget_Password\n  Signup\n}\n\nenum SourceType {\n  FROM_FILE\n  FROM_URL\n}\n\nenum RoleType {\n  CREATOR\n  ACTOR\n}\n",
-  "inlineSchemaHash": "6245824222a9325833837130f84f0a71ddefad150f741aac8d498a451f531435",
+  "inlineSchema": "// generator client {\n//   provider        = \"prisma-client-js\"\n//   // output       = \"../../generated/prisma\"\n//   // output       = \"./node_modules/.prisma/client\"\n//   output          = \"../../../node_modules/.prisma/client\"\n//   // output       = \"../src/generated/prisma\"\n//   moduleFormat    = \"cjs\"\n//   previewFeatures = [\"views\"]\n// }\n\ngenerator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../src/generated/prisma\"\n  moduleFormat    = \"cjs\"\n  previewFeatures = [\"views\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id               Int            @id @default(autoincrement())\n  created_at       DateTime       @default(now())\n  updated_at       DateTime       @updatedAt\n  username         String\n  email            String         @unique\n  password         String?\n  block_expires_at DateTime?\n  google_id        String?        @unique\n  role             UserRole       @default(USER)\n  refresh_tokens   RefreshToken[]\n  comments         Comment[]\n  user_movies      UserMovie[]\n  otps             Otp[]\n  login_requests   LoginRequest[]\n  commentVotes     CommentVote[]\n\n  @@map(\"users\")\n}\n\nmodel Movie {\n  id             Int                @id @default(autoincrement())\n  created_at     DateTime           @default(now())\n  updated_at     DateTime           @updatedAt\n  type           MovieType\n  slug           String             @unique\n  age_limit      Int?\n  released_year  Int\n  likes_count    Int                @default(0)\n  dislikes_count Int                @default(0)\n  watches_count  Int                @default(0)\n  combined_tags  String\n  episodes       Episode[]\n  factors        MovieFactor[]\n  translations   MovieTranslation[]\n  seasons        Season[]\n  user_movies    UserMovie[]\n  files          MovieFile[]\n  genres         MovieGenre[]\n  languages      MovieLanguage[]\n  countries      MovieCountry[]\n  tags           MovieTag[]\n  section_movies SectionMovie[]\n  comments       Comment[]\n\n  @@map(\"movies\")\n}\n\nmodel MovieFile {\n  id               Int           @id @default(autoincrement())\n  movie_id         Int\n  upload_id        Int\n  type             MovieFileType\n  intro_start_time Int?\n  intro_duration   Int?\n  outro_duration   Int?\n  movie            Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  upload           Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_files\")\n}\n\nmodel MovieTranslation {\n  id                Int         @id @default(autoincrement())\n  created_at        DateTime    @default(now())\n  updated_at        DateTime    @updatedAt\n  title             String\n  short_description String\n  description       String\n  language          AppLanguage\n  movie_id          Int\n  movie             Movie       @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_translations\")\n}\n\nmodel MovieLanguage {\n  id          Int      @id @default(autoincrement())\n  created_at  DateTime @default(now())\n  updated_at  DateTime @updatedAt\n  movie_id    Int\n  language_id Int\n  movie       Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  language    Language @relation(fields: [language_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_languages\")\n}\n\nmodel Country {\n  id              Int                  @id @default(autoincrement())\n  created_at      DateTime             @default(now())\n  updated_at      DateTime             @updatedAt\n  code            String               @unique\n  translations    CountryTranslation[]\n  movie_countries MovieCountry[]\n\n  @@map(\"countries\")\n}\n\nmodel CountryTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  label      String\n  language   AppLanguage\n  country_id Int\n  country    Country     @relation(fields: [country_id], references: [id], onDelete: Cascade)\n\n  @@map(\"country_translations\")\n}\n\nmodel MovieCountry {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n  movie_id   Int\n  country_id Int\n  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  country    Country  @relation(fields: [country_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_countries\")\n}\n\nmodel Language {\n  id              Int                   @id @default(autoincrement())\n  created_at      DateTime              @default(now())\n  updated_at      DateTime              @updatedAt\n  code            String                @unique\n  translations    LanguageTranslation[]\n  movie_languages MovieLanguage[]\n\n  @@map(\"languages\")\n}\n\nmodel LanguageTranslation {\n  id          Int         @id @default(autoincrement())\n  created_at  DateTime    @default(now())\n  updated_at  DateTime    @updatedAt\n  label       String\n  lang        AppLanguage\n  language_id Int\n  language    Language    @relation(fields: [language_id], references: [id], onDelete: Cascade)\n\n  @@map(\"language_translations\")\n}\n\nmodel Season {\n  id           Int                 @id @default(autoincrement())\n  created_at   DateTime            @default(now())\n  updated_at   DateTime            @updatedAt\n  order        Int\n  slug         String              @unique\n  movie_id     Int\n  episodes     Episode[]\n  translations SeasonTranslation[]\n  movie        Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  files        SeasonFile[]\n\n  @@map(\"seasons\")\n}\n\nmodel SeasonFile {\n  id        Int            @id @default(autoincrement())\n  season_id Int\n  upload_id Int\n  type      SeasonFileType\n  season    Season         @relation(fields: [season_id], references: [id], onDelete: Cascade)\n  upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n\n  @@map(\"season_files\")\n}\n\nmodel SeasonTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  title      String\n  season_id  Int\n  language   AppLanguage\n  season     Season      @relation(fields: [season_id], references: [id], onDelete: Cascade)\n\n  @@map(\"season_translation\")\n}\n\nmodel Episode {\n  id             Int                  @id @default(autoincrement())\n  created_at     DateTime             @default(now())\n  updated_at     DateTime             @updatedAt\n  order          Int\n  slug           String               @unique\n  season_id      Int\n  movie_id       Int\n  likes_count    Int                  @default(0)\n  dislikes_count Int                  @default(0)\n  watches_count  Int                  @default(0)\n  translations   EpisodeTranslation[]\n  movie          Movie                @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  season         Season               @relation(fields: [season_id], references: [id], onDelete: Cascade)\n  files          EpisodeFile[]\n  user_movies    UserMovie[]\n  comments       Comment[]\n  sectionMovies  SectionMovie[]\n\n  @@map(\"episodes\")\n}\n\nmodel EpisodeFile {\n  id               Int             @id @default(autoincrement())\n  episode_id       Int\n  upload_id        Int\n  type             EpisodeFileType\n  intro_start_time Int?\n  intro_duration   Int?\n  outro_duration   Int?\n  upload           Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n  episode          Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n\n  @@map(\"episode_files\")\n}\n\nmodel EpisodeTranslation {\n  id                Int         @id @default(autoincrement())\n  created_at        DateTime    @default(now())\n  updated_at        DateTime    @updatedAt\n  title             String\n  short_description String\n  episode_id        Int\n  language          AppLanguage\n  episode           Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n\n  @@map(\"episode_translations\")\n}\n\nmodel Comment {\n  id             Int               @id @default(autoincrement())\n  created_at     DateTime          @default(now())\n  updated_at     DateTime          @updatedAt\n  likes_count    Int               @default(0)\n  dislikes_count Int               @default(0)\n  status         CommentStatus     @default(PENDING)\n  entity_type    CommentEntityType\n  movie_id       Int\n  episode_id     Int?\n  body           String\n  user_id        Int\n  // parent_id      Int?\n  // parent         Comment?          @relation(\"CommentToReplies\", fields: [parent_id], references: [id])\n  // replies        Comment[]         @relation(\"CommentToReplies\")\n  movie          Movie             @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  episode        Episode?          @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n  votes          CommentVote[]\n  user           User              @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"comments\")\n}\n\nmodel CommentVote {\n  id          Int               @id @default(autoincrement())\n  created_at  DateTime          @default(now())\n  updated_at  DateTime          @updatedAt\n  comment_id  Int\n  user_id     Int\n  vote_status CommentVoteStatus\n  user        User              @relation(fields: [user_id], references: [id], onDelete: Cascade)\n  comment     Comment           @relation(fields: [comment_id], references: [id], onDelete: Cascade)\n\n  @@map(\"comment_votes\")\n}\n\nmodel Factor {\n  id            Int                 @id @default(autoincrement())\n  created_at    DateTime            @default(now())\n  updated_at    DateTime            @updatedAt\n  translations  FactorTranslation[]\n  movie_factors MovieFactor[]\n  slug          String              @unique\n  files         FactorFile[]\n\n  @@map(\"factors\")\n}\n\nmodel FactorFile {\n  id        Int            @id @default(autoincrement())\n  factor_id Int\n  upload_id Int\n  type      FactorFileType\n  factor    Factor?        @relation(fields: [factor_id], references: [id], onDelete: Cascade)\n  upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)\n\n  @@map(\"factor_files\")\n}\n\nmodel FactorTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  first_name String\n  last_name  String\n  language   AppLanguage\n  factor_id  Int\n  factor     Factor      @relation(fields: [factor_id], references: [id], onDelete: Cascade)\n\n  @@map(\"factor_translations\")\n}\n\nmodel MovieFactor {\n  id           Int                      @id @default(autoincrement())\n  created_at   DateTime                 @default(now())\n  updated_at   DateTime                 @updatedAt\n  movie_id     Int\n  factor_id    Int\n  role_id      Int\n  order        Int\n  factor       Factor                   @relation(fields: [factor_id], references: [id], onDelete: Cascade)\n  movie        Movie                    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  role         Role                     @relation(fields: [role_id], references: [id], onDelete: Cascade)\n  translations MovieFactorTranslation[]\n\n  @@unique([movie_id, order])\n  @@map(\"movie_factors\")\n}\n\nmodel MovieFactorTranslation {\n  id              Int         @id @default(autoincrement())\n  created_at      DateTime    @default(now())\n  updated_at      DateTime    @updatedAt\n  role_name       String\n  movie_factor_id Int\n  language        AppLanguage\n  movie_factor    MovieFactor @relation(fields: [movie_factor_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_factor_translations\")\n}\n\nmodel Role {\n  id            Int               @id @default(autoincrement())\n  created_at    DateTime          @default(now())\n  updated_at    DateTime          @updatedAt\n  slug          String            @unique\n  type          RoleType\n  movie_factors MovieFactor[]\n  translations  RoleTranslation[]\n\n  @@map(\"roles\")\n}\n\nmodel RoleTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  name       String\n  role_id    Int\n  language   AppLanguage\n  role       Role        @relation(fields: [role_id], references: [id], onDelete: Cascade)\n\n  @@map(\"role_translations\")\n}\n\nmodel Genre {\n  id           Int                @id @default(autoincrement())\n  created_at   DateTime           @default(now())\n  updated_at   DateTime           @updatedAt\n  slug         String             @unique\n  translations GenreTranslation[]\n  movies       MovieGenre[]\n\n  @@map(\"genres\")\n}\n\nmodel GenreTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  name       String\n  genre_id   Int\n  language   AppLanguage\n  genre      Genre       @relation(fields: [genre_id], references: [id], onDelete: Cascade)\n\n  @@map(\"genre_translations\")\n}\n\nmodel MovieGenre {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n  genre_id   Int\n  movie_id   Int\n  genre      Genre    @relation(fields: [genre_id], references: [id], onDelete: Cascade)\n  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_genres\")\n}\n\nmodel Tag {\n  id           Int              @id @default(autoincrement())\n  created_at   DateTime         @default(now())\n  updated_at   DateTime         @updatedAt\n  slug         String           @unique\n  translations TagTranslation[]\n  movie_tags   MovieTag[]\n\n  @@map(\"tags\")\n}\n\nmodel TagTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  label      String\n  language   AppLanguage\n  tag_id     Int\n  tag        Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade)\n\n  @@map(\"tag_translations\")\n}\n\nmodel MovieTag {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n  tag_id     Int\n  movie_id   Int\n  tag        Tag      @relation(fields: [tag_id], references: [id], onDelete: Cascade)\n  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n\n  @@map(\"movie_tags\")\n}\n\nmodel Section {\n  id              Int                  @id @default(autoincrement())\n  created_at      DateTime             @default(now())\n  updated_at      DateTime             @updatedAt\n  slug            String               @unique\n  order           Int                  @unique\n  view_mode       SectionViewMode\n  selection_mode  SectionSelectionMode\n  sort_mode       SectionSortMode?\n  period_base     SectionPeriodBase?\n  translations    SectionTranslation[]\n  section_movies  SectionMovie[]\n  section_filters SectionFilter[]\n\n  @@map(\"sections\")\n}\n\nmodel SectionFilter {\n  id           Int              @id @default(autoincrement())\n  created_at   DateTime         @default(now())\n  updated_at   DateTime         @updatedAt\n  section_id   Int\n  filter_key   SectionFilterKey\n  filter_value String\n  section      Section          @relation(fields: [section_id], references: [id], onDelete: Cascade)\n\n  @@map(\"section_filters\")\n}\n\nmodel SectionTranslation {\n  id          Int         @id @default(autoincrement())\n  created_at  DateTime    @default(now())\n  updated_at  DateTime    @updatedAt\n  title       String\n  description String?\n  language    AppLanguage\n  section_id  Int\n  section     Section     @relation(fields: [section_id], references: [id], onDelete: Cascade)\n\n  @@map(\"section_translations\")\n}\n\nmodel SectionMovie {\n  id          Int                   @id @default(autoincrement())\n  created_at  DateTime              @default(now())\n  updated_at  DateTime              @updatedAt\n  section_id  Int\n  entity_type CommentEntityType\n  movie_id    Int\n  episode_id  Int?\n  order       Int\n  view_mode   SectionMovieViewMode?\n  section     Section               @relation(fields: [section_id], references: [id], onDelete: Cascade)\n  movie       Movie                 @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  episode     Episode?              @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n\n  @@unique([section_id, movie_id, order])\n  @@map(\"section_movies\")\n}\n\nmodel UserMovie {\n  id            Int               @id @default(autoincrement())\n  created_at    DateTime          @default(now())\n  updated_at    DateTime          @updatedAt\n  type          UserMovieType\n  progress_time Int?\n  user_id       Int\n  movie_id      Int?\n  episode_id    Int?\n  entity_type   CommentEntityType\n  movie         Movie?            @relation(fields: [movie_id], references: [id], onDelete: Cascade)\n  episode       Episode?          @relation(fields: [episode_id], references: [id], onDelete: Cascade)\n  user          User              @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"user_movies\")\n}\n\nmodel Upload {\n  id            Int           @id @default(autoincrement())\n  created_at    DateTime      @default(now())\n  updated_at    DateTime      @updatedAt\n  path          String\n  mime_type     String\n  file_name     String?\n  source_type   SourceType\n  alt_text      String?\n  size          Int?\n  width         String?\n  height        String?\n  duration      String?\n  movie_files   MovieFile[]\n  season_files  SeasonFile[]\n  episode_files EpisodeFile[]\n  factor_files  FactorFile[]\n\n  @@map(\"uploads\")\n}\n\nmodel Contact {\n  id              Int           @id @default(autoincrement())\n  created_at      DateTime      @default(now())\n  updated_at      DateTime      @updatedAt\n  user_email      String\n  message         String\n  is_registered   Boolean\n  status          ContactStatus @default(PENDING)\n  answer_message  String?\n  rejected_detail String?\n\n  @@map(\"contacts\")\n}\n\nmodel RefreshToken {\n  id             Int      @id @default(autoincrement())\n  created_at     DateTime @default(now())\n  user_id        Int\n  hashed_refresh String\n  expires_at     DateTime\n  user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"refresh_tokens\")\n}\n\nmodel Otp {\n  id           Int       @id @default(autoincrement())\n  created_at   DateTime  @default(now())\n  user_id      Int?\n  user_email   String?\n  hashed_otp   String\n  used_at      DateTime?\n  expires_at   DateTime\n  otp_attempts Int       @default(0)\n  type         OtpType\n  user         User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@index([user_id, expires_at])\n  @@index([user_id, used_at])\n  @@map(\"otps\")\n}\n\nmodel LoginRequest {\n  id         Int      @id @default(autoincrement())\n  created_at DateTime @default(now())\n  user_id    Int\n  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)\n\n  @@map(\"login_requests\")\n}\n\nmodel HeaderMenu {\n  id           Int                     @id @default(autoincrement())\n  created_at   DateTime                @default(now())\n  updated_at   DateTime                @updatedAt\n  menu_type    HeaderMenuType\n  href         String?\n  order        Int\n  parent_id    Int?\n  translations HeaderMenuTranslation[]\n  filters      HeaderMenuFilter[]\n  parent       HeaderMenu?             @relation(\"ParentMenu\", fields: [parent_id], references: [id], onDelete: Cascade)\n  children     HeaderMenu[]            @relation(\"ParentMenu\")\n\n  @@map(\"header_menus\")\n}\n\nmodel HeaderMenuTranslation {\n  id         Int         @id @default(autoincrement())\n  created_at DateTime    @default(now())\n  updated_at DateTime    @updatedAt\n  language   AppLanguage\n  title      String\n  menu_id    Int\n  menu       HeaderMenu  @relation(fields: [menu_id], references: [id], onDelete: Cascade)\n\n  @@map(\"header_menu_translations\")\n}\n\nmodel HeaderMenuFilter {\n  id           Int              @id @default(autoincrement())\n  created_at   DateTime         @default(now())\n  updated_at   DateTime         @updatedAt\n  filter_key   SectionFilterKey\n  filter_value String\n  menu_id      Int\n  menu         HeaderMenu       @relation(fields: [menu_id], references: [id], onDelete: Cascade)\n\n  @@map(\"header_menu_filters\")\n}\n\nenum UserRole {\n  USER\n  ADMIN\n}\n\nenum MovieType {\n  CINEMATIC\n  SERIES\n}\n\nenum AppLanguage {\n  FA\n  EN\n  AR\n}\n\nenum CommentStatus {\n  APPROVED\n  REJECTED\n  PENDING\n}\n\nenum CommentEntityType {\n  MOVIE\n  EPISODE\n}\n\nenum UserMovieType {\n  BOOKMARK\n  NOTIFICATION\n  LIKE\n  DISLIKE\n  WATCHING\n  WATCHED\n}\n\nenum ContactStatus {\n  PENDING\n  ANSWERED\n  REJECTED\n}\n\nenum MovieFileType {\n  POSTER\n  BANNER\n  THUMBNAIL\n  TRAILER\n  FILM\n}\n\nenum SeasonFileType {\n  POSTER\n  TRAILER\n}\n\nenum EpisodeFileType {\n  POSTER\n  TRAILER\n  COVER\n  FILM\n}\n\nenum FactorFileType {\n  PROFILE\n}\n\nenum OtpType {\n  LOGIN\n  FORGET_PASSWORD\n  SIGNUP\n}\n\nenum SourceType {\n  FROM_FILE\n  FROM_URL\n}\n\nenum RoleType {\n  CREATOR\n  ACTOR\n}\n\nenum SectionSelectionMode {\n  AUTO\n  USER_MOVIE\n  SUGGESTION\n  MANUAL\n}\n\nenum SectionViewMode {\n  HERO\n  NORMAL_SLIDER\n  KIDS_SLIDER\n  HERO_LIKE_SLIDER\n  PUZZLE\n  ADVERTISEMENT\n}\n\nenum SectionSortMode {\n  NEWEST\n  OLDEST\n  MOST_VIEWED\n  TOP_RATED\n  TRENDING\n  RANDOM\n}\n\nenum SectionPeriodBase {\n  A_DAY_AGO\n  A_WEEK_AGO\n  A_MONTH_AGO\n}\n\nenum SectionMovieViewMode {\n  PUZZLE\n  SLIDER_ITEM\n}\n\nenum SectionFilterKey {\n  SEARCH\n  GENRES\n  AGE_LIMITS\n  COUNTRIES\n  TAGS\n  LANGUAGES\n  TYPE\n  RELEASED_YEAR_FROM\n  RELEASED_YEAR_TO\n}\n\nenum CommentVoteStatus {\n  LIKE\n  DISLIKE\n}\n\nenum HeaderMenuType {\n  PAGE\n  FILTER\n}\n",
+  "inlineSchemaHash": "59ccf1a9b54576759fa03e760ca75f1c43e81453f77454701de837c80a797059",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"block_expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"google_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"UserRole\"},{\"name\":\"refresh_tokens\",\"kind\":\"object\",\"type\":\"RefreshToken\",\"relationName\":\"RefreshTokenToUser\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToUser\"},{\"name\":\"tickets\",\"kind\":\"object\",\"type\":\"Ticket\",\"relationName\":\"TicketToUser\"},{\"name\":\"user_movies\",\"kind\":\"object\",\"type\":\"UserMovie\",\"relationName\":\"UserToUserMovie\"},{\"name\":\"otps\",\"kind\":\"object\",\"type\":\"Otp\",\"relationName\":\"OtpToUser\"},{\"name\":\"login_requests\",\"kind\":\"object\",\"type\":\"LoginRequest\",\"relationName\":\"LoginRequestToUser\"}],\"dbName\":\"users\"},\"Movie\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MovieType\"},{\"name\":\"seasons_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"episodes\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToMovie\"},{\"name\":\"factors\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"MovieToMovieFactor\"},{\"name\":\"genres\",\"kind\":\"object\",\"type\":\"MovieGenre\",\"relationName\":\"MovieToMovieGenre\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"MovieTranslation\",\"relationName\":\"MovieToMovieTranslation\"},{\"name\":\"seasons\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"MovieToSeason\"},{\"name\":\"user_movies\",\"kind\":\"object\",\"type\":\"UserMovie\",\"relationName\":\"MovieToUserMovie\"},{\"name\":\"movie_files\",\"kind\":\"object\",\"type\":\"MovieFile\",\"relationName\":\"MovieToMovieFile\"}],\"dbName\":\"movies\"},\"MovieFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MovieFileType\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieFile\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"MovieFileToUpload\"}],\"dbName\":\"movie_files\"},\"MovieTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"short_description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"country\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"movie_language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieTranslation\"}],\"dbName\":\"movie_translations\"},\"Season\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"season_number\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episodes\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToSeason\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"SeasonTranslation\",\"relationName\":\"SeasonToSeasonTranslation\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToSeason\"},{\"name\":\"season_files\",\"kind\":\"object\",\"type\":\"SeasonFile\",\"relationName\":\"SeasonToSeasonFile\"}],\"dbName\":\"seasons\"},\"SeasonFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"season_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"SeasonFileType\"},{\"name\":\"season\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"SeasonToSeasonFile\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"SeasonFileToUpload\"}],\"dbName\":\"season_files\"},\"SeasonTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"season_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"season\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"SeasonToSeasonTranslation\"}],\"dbName\":\"season_translation\"},\"Episode\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"episode_number\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"season_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"EpisodeTranslation\",\"relationName\":\"EpisodeToEpisodeTranslation\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"EpisodeToMovie\"},{\"name\":\"season\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"EpisodeToSeason\"},{\"name\":\"episode_files\",\"kind\":\"object\",\"type\":\"EpisodeFile\",\"relationName\":\"EpisodeToEpisodeFile\"}],\"dbName\":\"episodes\"},\"EpisodeFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"EpisodeFileType\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"EpisodeFileToUpload\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToEpisodeFile\"}],\"dbName\":\"episode_files\"},\"EpisodeTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToEpisodeTranslation\"}],\"dbName\":\"episode_translations\"},\"Comment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"likes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dislikes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"CommentStatus\"},{\"name\":\"parent_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"entity_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"entity_type\",\"kind\":\"enum\",\"type\":\"CommentEntityType\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"parent\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToReplies\"},{\"name\":\"replies\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToReplies\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"CommentToUser\"}],\"dbName\":\"comments\"},\"Factor\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"FactorTranslation\",\"relationName\":\"FactorToFactorTranslation\"},{\"name\":\"movie_factors\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"FactorToMovieFactor\"},{\"name\":\"factor_files\",\"kind\":\"object\",\"type\":\"FactorFile\",\"relationName\":\"FactorToFactorFile\"}],\"dbName\":\"factors\"},\"FactorFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"FactorFileType\"},{\"name\":\"factor\",\"kind\":\"object\",\"type\":\"Factor\",\"relationName\":\"FactorToFactorFile\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"FactorFileToUpload\"}],\"dbName\":\"factor_files\"},\"FactorTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"first_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor\",\"kind\":\"object\",\"type\":\"Factor\",\"relationName\":\"FactorToFactorTranslation\"}],\"dbName\":\"factor_translations\"},\"MovieFactor\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor\",\"kind\":\"object\",\"type\":\"Factor\",\"relationName\":\"FactorToMovieFactor\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieFactor\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"MovieFactorToRole\"}],\"dbName\":\"movie_factors\"},\"Role\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"RoleType\"},{\"name\":\"movie_factors\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"MovieFactorToRole\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"RoleTranslation\",\"relationName\":\"RoleToRoleTranslation\"}],\"dbName\":\"roles\"},\"RoleTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"RoleToRoleTranslation\"}],\"dbName\":\"role_translations\"},\"Genre\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"GenreTranslation\",\"relationName\":\"GenreToGenreTranslation\"},{\"name\":\"movies\",\"kind\":\"object\",\"type\":\"MovieGenre\",\"relationName\":\"GenreToMovieGenre\"}],\"dbName\":\"genres\"},\"GenreTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"genre_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"genre\",\"kind\":\"object\",\"type\":\"Genre\",\"relationName\":\"GenreToGenreTranslation\"}],\"dbName\":\"genre_translations\"},\"MovieGenre\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"genre_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"genre\",\"kind\":\"object\",\"type\":\"Genre\",\"relationName\":\"GenreToMovieGenre\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieGenre\"}],\"dbName\":\"movie_genres\"},\"UserMovie\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"UserMovieType\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToUserMovie\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserMovie\"}],\"dbName\":\"user_movies\"},\"Upload\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"path\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mime_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"file_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_type\",\"kind\":\"enum\",\"type\":\"SourceType\"},{\"name\":\"alt_text\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"width\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"height\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"movie_files\",\"kind\":\"object\",\"type\":\"MovieFile\",\"relationName\":\"MovieFileToUpload\"},{\"name\":\"season_files\",\"kind\":\"object\",\"type\":\"SeasonFile\",\"relationName\":\"SeasonFileToUpload\"},{\"name\":\"episode_files\",\"kind\":\"object\",\"type\":\"EpisodeFile\",\"relationName\":\"EpisodeFileToUpload\"},{\"name\":\"factor_files\",\"kind\":\"object\",\"type\":\"FactorFile\",\"relationName\":\"FactorFileToUpload\"}],\"dbName\":\"uploads\"},\"Ticket\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"subject\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parent_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"TicketStatus\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TicketToUser\"}],\"dbName\":\"tickets\"},\"RefreshToken\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"hashed_refresh\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"RefreshTokenToUser\"}],\"dbName\":\"refresh_tokens\"},\"Otp\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hashed_otp\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"used_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"otp_attempts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"OtpType\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OtpToUser\"}],\"dbName\":\"otps\"},\"LoginRequest\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"LoginRequestToUser\"}],\"dbName\":\"login_requests\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"block_expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"google_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"UserRole\"},{\"name\":\"refresh_tokens\",\"kind\":\"object\",\"type\":\"RefreshToken\",\"relationName\":\"RefreshTokenToUser\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToUser\"},{\"name\":\"user_movies\",\"kind\":\"object\",\"type\":\"UserMovie\",\"relationName\":\"UserToUserMovie\"},{\"name\":\"otps\",\"kind\":\"object\",\"type\":\"Otp\",\"relationName\":\"OtpToUser\"},{\"name\":\"login_requests\",\"kind\":\"object\",\"type\":\"LoginRequest\",\"relationName\":\"LoginRequestToUser\"},{\"name\":\"commentVotes\",\"kind\":\"object\",\"type\":\"CommentVote\",\"relationName\":\"CommentVoteToUser\"}],\"dbName\":\"users\"},\"Movie\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MovieType\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"age_limit\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"released_year\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"likes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dislikes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"watches_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"combined_tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"episodes\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToMovie\"},{\"name\":\"factors\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"MovieToMovieFactor\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"MovieTranslation\",\"relationName\":\"MovieToMovieTranslation\"},{\"name\":\"seasons\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"MovieToSeason\"},{\"name\":\"user_movies\",\"kind\":\"object\",\"type\":\"UserMovie\",\"relationName\":\"MovieToUserMovie\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"MovieFile\",\"relationName\":\"MovieToMovieFile\"},{\"name\":\"genres\",\"kind\":\"object\",\"type\":\"MovieGenre\",\"relationName\":\"MovieToMovieGenre\"},{\"name\":\"languages\",\"kind\":\"object\",\"type\":\"MovieLanguage\",\"relationName\":\"MovieToMovieLanguage\"},{\"name\":\"countries\",\"kind\":\"object\",\"type\":\"MovieCountry\",\"relationName\":\"MovieToMovieCountry\"},{\"name\":\"tags\",\"kind\":\"object\",\"type\":\"MovieTag\",\"relationName\":\"MovieToMovieTag\"},{\"name\":\"section_movies\",\"kind\":\"object\",\"type\":\"SectionMovie\",\"relationName\":\"MovieToSectionMovie\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToMovie\"}],\"dbName\":\"movies\"},\"MovieFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MovieFileType\"},{\"name\":\"intro_start_time\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"intro_duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"outro_duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieFile\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"MovieFileToUpload\"}],\"dbName\":\"movie_files\"},\"MovieTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"short_description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieTranslation\"}],\"dbName\":\"movie_translations\"},\"MovieLanguage\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieLanguage\"},{\"name\":\"language\",\"kind\":\"object\",\"type\":\"Language\",\"relationName\":\"LanguageToMovieLanguage\"}],\"dbName\":\"movie_languages\"},\"Country\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"CountryTranslation\",\"relationName\":\"CountryToCountryTranslation\"},{\"name\":\"movie_countries\",\"kind\":\"object\",\"type\":\"MovieCountry\",\"relationName\":\"CountryToMovieCountry\"}],\"dbName\":\"countries\"},\"CountryTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"country_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"country\",\"kind\":\"object\",\"type\":\"Country\",\"relationName\":\"CountryToCountryTranslation\"}],\"dbName\":\"country_translations\"},\"MovieCountry\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"country_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieCountry\"},{\"name\":\"country\",\"kind\":\"object\",\"type\":\"Country\",\"relationName\":\"CountryToMovieCountry\"}],\"dbName\":\"movie_countries\"},\"Language\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"LanguageTranslation\",\"relationName\":\"LanguageToLanguageTranslation\"},{\"name\":\"movie_languages\",\"kind\":\"object\",\"type\":\"MovieLanguage\",\"relationName\":\"LanguageToMovieLanguage\"}],\"dbName\":\"languages\"},\"LanguageTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lang\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"language_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"object\",\"type\":\"Language\",\"relationName\":\"LanguageToLanguageTranslation\"}],\"dbName\":\"language_translations\"},\"Season\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episodes\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToSeason\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"SeasonTranslation\",\"relationName\":\"SeasonToSeasonTranslation\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToSeason\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"SeasonFile\",\"relationName\":\"SeasonToSeasonFile\"}],\"dbName\":\"seasons\"},\"SeasonFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"season_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"SeasonFileType\"},{\"name\":\"season\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"SeasonToSeasonFile\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"SeasonFileToUpload\"}],\"dbName\":\"season_files\"},\"SeasonTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"season_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"season\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"SeasonToSeasonTranslation\"}],\"dbName\":\"season_translation\"},\"Episode\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"season_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"likes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dislikes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"watches_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"EpisodeTranslation\",\"relationName\":\"EpisodeToEpisodeTranslation\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"EpisodeToMovie\"},{\"name\":\"season\",\"kind\":\"object\",\"type\":\"Season\",\"relationName\":\"EpisodeToSeason\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"EpisodeFile\",\"relationName\":\"EpisodeToEpisodeFile\"},{\"name\":\"user_movies\",\"kind\":\"object\",\"type\":\"UserMovie\",\"relationName\":\"EpisodeToUserMovie\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToEpisode\"},{\"name\":\"sectionMovies\",\"kind\":\"object\",\"type\":\"SectionMovie\",\"relationName\":\"EpisodeToSectionMovie\"}],\"dbName\":\"episodes\"},\"EpisodeFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"EpisodeFileType\"},{\"name\":\"intro_start_time\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"intro_duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"outro_duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"EpisodeFileToUpload\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToEpisodeFile\"}],\"dbName\":\"episode_files\"},\"EpisodeTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"short_description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToEpisodeTranslation\"}],\"dbName\":\"episode_translations\"},\"Comment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"likes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dislikes_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"CommentStatus\"},{\"name\":\"entity_type\",\"kind\":\"enum\",\"type\":\"CommentEntityType\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"CommentToMovie\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"CommentToEpisode\"},{\"name\":\"votes\",\"kind\":\"object\",\"type\":\"CommentVote\",\"relationName\":\"CommentToCommentVote\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"CommentToUser\"}],\"dbName\":\"comments\"},\"CommentVote\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"comment_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"vote_status\",\"kind\":\"enum\",\"type\":\"CommentVoteStatus\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"CommentVoteToUser\"},{\"name\":\"comment\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToCommentVote\"}],\"dbName\":\"comment_votes\"},\"Factor\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"FactorTranslation\",\"relationName\":\"FactorToFactorTranslation\"},{\"name\":\"movie_factors\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"FactorToMovieFactor\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"FactorFile\",\"relationName\":\"FactorToFactorFile\"}],\"dbName\":\"factors\"},\"FactorFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"upload_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"FactorFileType\"},{\"name\":\"factor\",\"kind\":\"object\",\"type\":\"Factor\",\"relationName\":\"FactorToFactorFile\"},{\"name\":\"upload\",\"kind\":\"object\",\"type\":\"Upload\",\"relationName\":\"FactorFileToUpload\"}],\"dbName\":\"factor_files\"},\"FactorTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"first_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor\",\"kind\":\"object\",\"type\":\"Factor\",\"relationName\":\"FactorToFactorTranslation\"}],\"dbName\":\"factor_translations\"},\"MovieFactor\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"factor\",\"kind\":\"object\",\"type\":\"Factor\",\"relationName\":\"FactorToMovieFactor\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieFactor\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"MovieFactorToRole\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"MovieFactorTranslation\",\"relationName\":\"MovieFactorToMovieFactorTranslation\"}],\"dbName\":\"movie_factors\"},\"MovieFactorTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"movie_factor_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"movie_factor\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"MovieFactorToMovieFactorTranslation\"}],\"dbName\":\"movie_factor_translations\"},\"Role\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"RoleType\"},{\"name\":\"movie_factors\",\"kind\":\"object\",\"type\":\"MovieFactor\",\"relationName\":\"MovieFactorToRole\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"RoleTranslation\",\"relationName\":\"RoleToRoleTranslation\"}],\"dbName\":\"roles\"},\"RoleTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"RoleToRoleTranslation\"}],\"dbName\":\"role_translations\"},\"Genre\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"GenreTranslation\",\"relationName\":\"GenreToGenreTranslation\"},{\"name\":\"movies\",\"kind\":\"object\",\"type\":\"MovieGenre\",\"relationName\":\"GenreToMovieGenre\"}],\"dbName\":\"genres\"},\"GenreTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"genre_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"genre\",\"kind\":\"object\",\"type\":\"Genre\",\"relationName\":\"GenreToGenreTranslation\"}],\"dbName\":\"genre_translations\"},\"MovieGenre\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"genre_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"genre\",\"kind\":\"object\",\"type\":\"Genre\",\"relationName\":\"GenreToMovieGenre\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieGenre\"}],\"dbName\":\"movie_genres\"},\"Tag\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"TagTranslation\",\"relationName\":\"TagToTagTranslation\"},{\"name\":\"movie_tags\",\"kind\":\"object\",\"type\":\"MovieTag\",\"relationName\":\"MovieTagToTag\"}],\"dbName\":\"tags\"},\"TagTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"tag_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tag\",\"kind\":\"object\",\"type\":\"Tag\",\"relationName\":\"TagToTagTranslation\"}],\"dbName\":\"tag_translations\"},\"MovieTag\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tag_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tag\",\"kind\":\"object\",\"type\":\"Tag\",\"relationName\":\"MovieTagToTag\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToMovieTag\"}],\"dbName\":\"movie_tags\"},\"Section\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"view_mode\",\"kind\":\"enum\",\"type\":\"SectionViewMode\"},{\"name\":\"selection_mode\",\"kind\":\"enum\",\"type\":\"SectionSelectionMode\"},{\"name\":\"sort_mode\",\"kind\":\"enum\",\"type\":\"SectionSortMode\"},{\"name\":\"period_base\",\"kind\":\"enum\",\"type\":\"SectionPeriodBase\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"SectionTranslation\",\"relationName\":\"SectionToSectionTranslation\"},{\"name\":\"section_movies\",\"kind\":\"object\",\"type\":\"SectionMovie\",\"relationName\":\"SectionToSectionMovie\"},{\"name\":\"section_filters\",\"kind\":\"object\",\"type\":\"SectionFilter\",\"relationName\":\"SectionToSectionFilter\"}],\"dbName\":\"sections\"},\"SectionFilter\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"section_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"filter_key\",\"kind\":\"enum\",\"type\":\"SectionFilterKey\"},{\"name\":\"filter_value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"section\",\"kind\":\"object\",\"type\":\"Section\",\"relationName\":\"SectionToSectionFilter\"}],\"dbName\":\"section_filters\"},\"SectionTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"section_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"section\",\"kind\":\"object\",\"type\":\"Section\",\"relationName\":\"SectionToSectionTranslation\"}],\"dbName\":\"section_translations\"},\"SectionMovie\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"section_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"entity_type\",\"kind\":\"enum\",\"type\":\"CommentEntityType\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"view_mode\",\"kind\":\"enum\",\"type\":\"SectionMovieViewMode\"},{\"name\":\"section\",\"kind\":\"object\",\"type\":\"Section\",\"relationName\":\"SectionToSectionMovie\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToSectionMovie\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToSectionMovie\"}],\"dbName\":\"section_movies\"},\"UserMovie\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"UserMovieType\"},{\"name\":\"progress_time\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"movie_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"episode_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"entity_type\",\"kind\":\"enum\",\"type\":\"CommentEntityType\"},{\"name\":\"movie\",\"kind\":\"object\",\"type\":\"Movie\",\"relationName\":\"MovieToUserMovie\"},{\"name\":\"episode\",\"kind\":\"object\",\"type\":\"Episode\",\"relationName\":\"EpisodeToUserMovie\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserMovie\"}],\"dbName\":\"user_movies\"},\"Upload\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"path\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mime_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"file_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_type\",\"kind\":\"enum\",\"type\":\"SourceType\"},{\"name\":\"alt_text\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"width\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"height\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"movie_files\",\"kind\":\"object\",\"type\":\"MovieFile\",\"relationName\":\"MovieFileToUpload\"},{\"name\":\"season_files\",\"kind\":\"object\",\"type\":\"SeasonFile\",\"relationName\":\"SeasonFileToUpload\"},{\"name\":\"episode_files\",\"kind\":\"object\",\"type\":\"EpisodeFile\",\"relationName\":\"EpisodeFileToUpload\"},{\"name\":\"factor_files\",\"kind\":\"object\",\"type\":\"FactorFile\",\"relationName\":\"FactorFileToUpload\"}],\"dbName\":\"uploads\"},\"Contact\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_registered\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ContactStatus\"},{\"name\":\"answer_message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rejected_detail\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"contacts\"},\"RefreshToken\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"hashed_refresh\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"RefreshTokenToUser\"}],\"dbName\":\"refresh_tokens\"},\"Otp\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hashed_otp\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"used_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"otp_attempts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"OtpType\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OtpToUser\"}],\"dbName\":\"otps\"},\"LoginRequest\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"LoginRequestToUser\"}],\"dbName\":\"login_requests\"},\"HeaderMenu\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"menu_type\",\"kind\":\"enum\",\"type\":\"HeaderMenuType\"},{\"name\":\"href\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"parent_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"translations\",\"kind\":\"object\",\"type\":\"HeaderMenuTranslation\",\"relationName\":\"HeaderMenuToHeaderMenuTranslation\"},{\"name\":\"filters\",\"kind\":\"object\",\"type\":\"HeaderMenuFilter\",\"relationName\":\"HeaderMenuToHeaderMenuFilter\"},{\"name\":\"parent\",\"kind\":\"object\",\"type\":\"HeaderMenu\",\"relationName\":\"ParentMenu\"},{\"name\":\"children\",\"kind\":\"object\",\"type\":\"HeaderMenu\",\"relationName\":\"ParentMenu\"}],\"dbName\":\"header_menus\"},\"HeaderMenuTranslation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"language\",\"kind\":\"enum\",\"type\":\"AppLanguage\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"menu_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"menu\",\"kind\":\"object\",\"type\":\"HeaderMenu\",\"relationName\":\"HeaderMenuToHeaderMenuTranslation\"}],\"dbName\":\"header_menu_translations\"},\"HeaderMenuFilter\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"filter_key\",\"kind\":\"enum\",\"type\":\"SectionFilterKey\"},{\"name\":\"filter_value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"menu_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"menu\",\"kind\":\"object\",\"type\":\"HeaderMenu\",\"relationName\":\"HeaderMenuToHeaderMenuFilter\"}],\"dbName\":\"header_menu_filters\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

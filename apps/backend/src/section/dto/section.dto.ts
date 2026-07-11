@@ -6,7 +6,7 @@ import {
   SectionSelectionMode,
   SectionSortMode,
   SectionViewMode,
-} from '@prisma/client';
+} from '../../generated/prisma';
 import {
   ArrayMinSize,
   IsArray,

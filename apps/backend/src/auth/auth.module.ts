@@ -11,6 +11,7 @@ import { OtpModule } from '../otp/otp.module';
 import { AuthStrategy } from './strategies/google.strategy';
 import { LoginRequestModule } from '../login-request/login-request.module';
 import { accessTokenExpTime } from '../lib/utils';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { accessTokenExpTime } from '../lib/utils';
     RefreshTokenModule,
     LoginRequestModule,
     OtpModule,
+    MailModule,
     JwtModule.register({
       secret: process.env.JWT_ACCESS_SECRET,
       // signOptions: { expiresIn: '15m' },

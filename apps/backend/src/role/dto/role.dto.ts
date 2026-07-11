@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { RoleType } from '@prisma/client';
+import { RoleType } from '../../generated/prisma';
 import { CreateRoleTranslationDto } from '../../role-translation/dto/role-translation.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';

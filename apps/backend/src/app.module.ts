@@ -8,26 +8,28 @@ import { FactorModule } from './factor/factor.module';
 import { RoleModule } from './role/role.module';
 import { GenreModule } from './genre/genre.module';
 import { UploadModule } from './upload/upload.module';
-import { TicketModule } from './ticket/ticket.module';
+import { ContactModule } from './contact/contact.module';
 import { AuthModule } from './auth/auth.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 import { OtpModule } from './otp/otp.module';
 import { LoginRequestModule } from './login-request/login-request.module';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+// import { GraphQLModule } from '@nestjs/graphql';
+// import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { CountryModule } from './country/country.module';
 import { LanguageModule } from './language/language.module';
 import { TagModule } from './tag/tag.module';
 import { SectionModule } from './section/section.module';
+import { HeaderMenuModule } from './header-menu/header-menu.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      introspection: true,
-      playground: false,
-    }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: true,
+    //   introspection: true,
+    //   playground: false,
+    // }),
     MovieModule,
     UserModule,
     SeasonModule,
@@ -37,7 +39,7 @@ import { SectionModule } from './section/section.module';
     RoleModule,
     GenreModule,
     UploadModule,
-    TicketModule,
+    ContactModule,
     AuthModule,
     RefreshTokenModule,
     OtpModule,
@@ -46,6 +48,8 @@ import { SectionModule } from './section/section.module';
     LanguageModule,
     TagModule,
     SectionModule,
+    HeaderMenuModule,
+    StatsModule,
   ],
   controllers: [],
   providers: [],

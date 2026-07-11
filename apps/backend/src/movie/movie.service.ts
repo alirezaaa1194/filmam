@@ -14,7 +14,7 @@ import {
   MovieFileType,
   MovieType,
   SectionSelectionMode,
-} from '@prisma/client';
+} from '../generated/prisma';
 import { MovieFactorService } from '../movie-factor/movie-factor.service';
 import { MovieGenreService } from '../movie-genre/movie-genre.service';
 import {

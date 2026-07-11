@@ -1,4 +1,4 @@
-import { AppLanguage, CommentEntityType, UserMovieType } from '@prisma/client';
+import { AppLanguage, CommentEntityType, UserMovieType } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { UpdateUserMoviesDto } from '../dto/user-movie.dto';
 import { GetUserMovieByTypeBodyType } from '../type/user-movie.type';
@@ -176,6 +176,16 @@ export class UserMovieRepository {
       where: {
         type: { in: type },
         user_id: userId,
+      },
+    });
+  }
+
+  async getUserWatchEpisodes(userId: number) {
+    return await prisma.userMovie.findMany({
+      where: {
+        user_id: userId,
+        entity_type: 'EPISODE',
+        type: { in: ['WATCHING', 'WATCHED'] },
       },
     });
   }

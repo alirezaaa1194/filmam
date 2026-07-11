@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '../../lib/prisma';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { CreateGenreDto } from '../dto/genre.dto';
 import { TransactionType } from '../../common/types/types';
 

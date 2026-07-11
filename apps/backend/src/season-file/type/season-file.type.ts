@@ -1,4 +1,4 @@
-import { SeasonFileType } from "@prisma/client";
+import { SeasonFileType } from '../../generated/prisma';
 
 export type CreateSeasonFilePropsType = {
   season_id: number;

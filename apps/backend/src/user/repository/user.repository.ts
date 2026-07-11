@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+import { UserRole } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { GoogleAuthDto } from '../../auth/dto/google-auth.dto';
 import { CreateUserDto, UpdateUserInfoDto } from '../dto/user.dto';

@@ -3,7 +3,7 @@ import {
   CommentEntityType,
   CommentStatus,
   CommentVoteStatus,
-} from '@prisma/client';
+} from '../../generated/prisma';
 import {
   IsArray,
   IsEnum,

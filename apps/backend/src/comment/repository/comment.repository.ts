@@ -10,7 +10,7 @@ import {
 import { prisma } from '../../lib/prisma';
 import { SortType } from '../../common/enums';
 import { TransactionType } from '../../common/types/types';
-import { CommentEntityType, CommentStatus } from '@prisma/client';
+import { CommentEntityType, CommentStatus } from '../../generated/prisma';
 import { CreateCommentRepositoryBodyType } from '../type/comment.type';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import {
   CommentVoteDto,
   CreateCommentDto,
@@ -10,11 +10,18 @@ import {
 } from './dto/comment.dto';
 import { CommentRepository } from './repository/comment.repository';
 import { prisma } from '../lib/prisma';
-import { Comment, CommentEntityType, CommentVoteStatus } from '@prisma/client';
+import {
+  Comment,
+  CommentEntityType,
+  CommentVoteStatus,
+  UserRole,
+} from '../generated/prisma';
 import { MovieService } from '../movie/movie.service';
 import { EpisodeService } from '../episode/episode.service';
 import { paginationCalculator } from '../lib/utils';
 import { TransactionType } from '../common/types/types';
+import { UserService } from '../user/user.service';
+// import { ForbiddenError } from '@nestjs/apollo';
 
 @Injectable()
 export class CommentService {
@@ -22,9 +29,22 @@ export class CommentService {
     private readonly commentRepository: CommentRepository,
     private readonly movieService: MovieService,
     private readonly episodeService: EpisodeService,
+    private readonly userService: UserService,
   ) {}
 
   async createComment(userId: number, body: CreateCommentDto) {
+    const user = await this.userService.getUserById(userId);
+    if (
+      user &&
+      user.role !== UserRole.ADMIN &&
+      user.block_expires_at &&
+      new Date(user.block_expires_at) > new Date()
+    ) {
+      throw new ForbiddenException(
+        `You cannot save comment. Your block expires at ${user.block_expires_at}`,
+      );
+    }
+
     if (body.entity_type === CommentEntityType.MOVIE && !body.movie_id) {
       throw new BadRequestException('movie_id is required');
     } else if (

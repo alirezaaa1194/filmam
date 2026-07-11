@@ -1,4 +1,4 @@
-import { EpisodeFileType } from '@prisma/client';
+import { EpisodeFileType } from '../../generated/prisma';
 
 export type CreateEpisodeFilePropsType = {
   episode_id: number;

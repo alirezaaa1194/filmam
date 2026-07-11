@@ -1,4 +1,4 @@
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { CreateMovieFactorsBodyType } from '../type/movie-factor.type';
 import { TransactionType } from '../../common/types/types';

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AppLanguage, UserMovieType } from '@prisma/client';
+import { AppLanguage, UserMovieType } from '../../generated/prisma';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -23,7 +23,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
-  username: string;
+  username!: string;
 
   @ApiProperty({
     example: 'user@example.com',
@@ -31,7 +31,7 @@ export class CreateUserDto {
   })
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     example: '12345678',
@@ -40,7 +40,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
-  password: string;
+  password!: string;
 }
 
 export class GetAllUsersDto {
@@ -101,7 +101,7 @@ export class BlockUserDto {
   })
   @IsOptional()
   @IsISO8601()
-  block_expires_at: Date | null;
+  block_expires_at!: Date | null;
 }
 
 export class DeleteUsersDto {
@@ -112,7 +112,7 @@ export class DeleteUsersDto {
   @IsNotEmpty()
   @IsArray()
   @Type(() => Number)
-  users_ids: number[];
+  users_ids!: number[];
 }
 
 export class ChangeUserPasswordAdminDto {
@@ -122,7 +122,7 @@ export class ChangeUserPasswordAdminDto {
   })
   @IsNotEmpty()
   @MinLength(8)
-  new_password: string;
+  new_password!: string;
 }
 
 export class UpdateUserInfoDto {
@@ -133,7 +133,7 @@ export class UpdateUserInfoDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
-  username: string;
+  username!: string;
 }
 
 export class GetAllUserMovieDto {
@@ -146,7 +146,7 @@ export class GetAllUserMovieDto {
   @IsNotEmpty()
   @IsEnum(UserMovieType, { each: true })
   @Transform(({ value }) => (typeof value === 'string' ? [value] : value))
-  type: UserMovieType[];
+  type!: UserMovieType[];
 
   @ApiPropertyOptional({
     name: 'page',

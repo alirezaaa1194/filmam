@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 
 export class CreateMovieFactorTranslationDto {
   @ApiProperty({

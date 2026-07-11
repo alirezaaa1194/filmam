@@ -8,7 +8,7 @@ import {
 import { FactorTranslationService } from '../factor-translation/factor-translation.service';
 import { FactorFileService } from '../factor-file/factor-file.service';
 import { UploadService } from '../upload/upload.service';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../generated/prisma';
 import { defaultLang, paginationCalculator } from '../lib/utils';
 import { MovieFactorService } from '../movie-factor/movie-factor.service';
 import { GetFactorMoviesDto } from '../movie-factor/dto/movie-factor.dto';

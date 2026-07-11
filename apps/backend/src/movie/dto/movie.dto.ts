@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AppLanguage, MovieType } from '@prisma/client';
+import { AppLanguage, MovieType } from '../../generated/prisma';
 import { CreateMovieTranslationDto } from '../../movie-translation/dto/movie-translation.dto';
 import {
   ArrayMinSize,

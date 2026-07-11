@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SeasonFileType } from '@prisma/client';
+import { SeasonFileType } from '../../generated/prisma';
 import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateSeasonFileDto {

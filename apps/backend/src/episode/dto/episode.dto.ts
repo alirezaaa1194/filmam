@@ -14,7 +14,7 @@ import { appLanguages, defaultLang } from '../../lib/utils';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { CreateEpisodeTranslationDto } from '../../episode-translation/dto/episode-translation.dto';
 import { CreateEpisodeFileDto } from '../../episode-file/dto/episode-file.dto';
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 
 export class CreateEpisodeDto {
   @ApiProperty({

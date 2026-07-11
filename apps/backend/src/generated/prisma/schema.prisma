@@ -1,9 +1,18 @@
+// generator client {
+//   provider        = "prisma-client-js"
+//   // output       = "../../generated/prisma"
+//   // output       = "./node_modules/.prisma/client"
+//   output          = "../../../node_modules/.prisma/client"
+//   // output       = "../src/generated/prisma"
+//   moduleFormat    = "cjs"
+//   previewFeatures = ["views"]
+// }
+
 generator client {
-  provider     = "prisma-client-js"
-  // output       = "../../generated/prisma"
-  // output       = "./node_modules/.prisma/client"
-  output       = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -23,39 +32,52 @@ model User {
   role             UserRole       @default(USER)
   refresh_tokens   RefreshToken[]
   comments         Comment[]
-  tickets          Ticket[]
   user_movies      UserMovie[]
   otps             Otp[]
   login_requests   LoginRequest[]
+  commentVotes     CommentVote[]
 
   @@map("users")
 }
 
 model Movie {
-  id            Int                @id @default(autoincrement())
-  created_at    DateTime           @default(now())
-  updated_at    DateTime           @updatedAt
-  type          MovieType
-  seasons_count Int?
-  slug          String             @unique
-  episodes      Episode[]
-  factors       MovieFactor[]
-  genres        MovieGenre[]
-  translations  MovieTranslation[]
-  seasons       Season[]
-  user_movies   UserMovie[]
-  movie_files   MovieFile[]
+  id             Int                @id @default(autoincrement())
+  created_at     DateTime           @default(now())
+  updated_at     DateTime           @updatedAt
+  type           MovieType
+  slug           String             @unique
+  age_limit      Int?
+  released_year  Int
+  likes_count    Int                @default(0)
+  dislikes_count Int                @default(0)
+  watches_count  Int                @default(0)
+  combined_tags  String
+  episodes       Episode[]
+  factors        MovieFactor[]
+  translations   MovieTranslation[]
+  seasons        Season[]
+  user_movies    UserMovie[]
+  files          MovieFile[]
+  genres         MovieGenre[]
+  languages      MovieLanguage[]
+  countries      MovieCountry[]
+  tags           MovieTag[]
+  section_movies SectionMovie[]
+  comments       Comment[]
 
   @@map("movies")
 }
 
 model MovieFile {
-  id        Int           @id @default(autoincrement())
-  movie_id  Int
-  upload_id Int
-  type      MovieFileType
-  movie     Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
-  upload    Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)
+  id               Int           @id @default(autoincrement())
+  movie_id         Int
+  upload_id        Int
+  type             MovieFileType
+  intro_start_time Int?
+  intro_duration   Int?
+  outro_duration   Int?
+  movie            Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  upload           Upload        @relation(fields: [upload_id], references: [id], onDelete: Cascade)
 
   @@map("movie_files")
 }
@@ -67,8 +89,6 @@ model MovieTranslation {
   title             String
   short_description String
   description       String
-  country           String
-  movie_language    String
   language          AppLanguage
   movie_id          Int
   movie             Movie       @relation(fields: [movie_id], references: [id], onDelete: Cascade)
@@ -76,16 +96,87 @@ model MovieTranslation {
   @@map("movie_translations")
 }
 
+model MovieLanguage {
+  id          Int      @id @default(autoincrement())
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  movie_id    Int
+  language_id Int
+  movie       Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  language    Language @relation(fields: [language_id], references: [id], onDelete: Cascade)
+
+  @@map("movie_languages")
+}
+
+model Country {
+  id              Int                  @id @default(autoincrement())
+  created_at      DateTime             @default(now())
+  updated_at      DateTime             @updatedAt
+  code            String               @unique
+  translations    CountryTranslation[]
+  movie_countries MovieCountry[]
+
+  @@map("countries")
+}
+
+model CountryTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  label      String
+  language   AppLanguage
+  country_id Int
+  country    Country     @relation(fields: [country_id], references: [id], onDelete: Cascade)
+
+  @@map("country_translations")
+}
+
+model MovieCountry {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  movie_id   Int
+  country_id Int
+  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  country    Country  @relation(fields: [country_id], references: [id], onDelete: Cascade)
+
+  @@map("movie_countries")
+}
+
+model Language {
+  id              Int                   @id @default(autoincrement())
+  created_at      DateTime              @default(now())
+  updated_at      DateTime              @updatedAt
+  code            String                @unique
+  translations    LanguageTranslation[]
+  movie_languages MovieLanguage[]
+
+  @@map("languages")
+}
+
+model LanguageTranslation {
+  id          Int         @id @default(autoincrement())
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  label       String
+  lang        AppLanguage
+  language_id Int
+  language    Language    @relation(fields: [language_id], references: [id], onDelete: Cascade)
+
+  @@map("language_translations")
+}
+
 model Season {
-  id            Int                 @id @default(autoincrement())
-  created_at    DateTime            @default(now())
-  updated_at    DateTime            @updatedAt
-  season_number Int
-  movie_id      Int
-  episodes      Episode[]
-  translations  SeasonTranslation[]
-  movie         Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)
-  season_files  SeasonFile[]
+  id           Int                 @id @default(autoincrement())
+  created_at   DateTime            @default(now())
+  updated_at   DateTime            @updatedAt
+  order        Int
+  slug         String              @unique
+  movie_id     Int
+  episodes     Episode[]
+  translations SeasonTranslation[]
+  movie        Movie               @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  files        SeasonFile[]
 
   @@map("seasons")
 }
@@ -117,36 +208,47 @@ model Episode {
   id             Int                  @id @default(autoincrement())
   created_at     DateTime             @default(now())
   updated_at     DateTime             @updatedAt
-  episode_number Int
+  order          Int
+  slug           String               @unique
   season_id      Int
   movie_id       Int
+  likes_count    Int                  @default(0)
+  dislikes_count Int                  @default(0)
+  watches_count  Int                  @default(0)
   translations   EpisodeTranslation[]
   movie          Movie                @relation(fields: [movie_id], references: [id], onDelete: Cascade)
   season         Season               @relation(fields: [season_id], references: [id], onDelete: Cascade)
-  episode_files  EpisodeFile[]
+  files          EpisodeFile[]
+  user_movies    UserMovie[]
+  comments       Comment[]
+  sectionMovies  SectionMovie[]
 
   @@map("episodes")
 }
 
 model EpisodeFile {
-  id         Int             @id @default(autoincrement())
-  episode_id Int
-  upload_id  Int
-  type       EpisodeFileType
-  upload     Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)
-  episode    Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  id               Int             @id @default(autoincrement())
+  episode_id       Int
+  upload_id        Int
+  type             EpisodeFileType
+  intro_start_time Int?
+  intro_duration   Int?
+  outro_duration   Int?
+  upload           Upload          @relation(fields: [upload_id], references: [id], onDelete: Cascade)
+  episode          Episode         @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@map("episode_files")
 }
 
 model EpisodeTranslation {
-  id         Int         @id @default(autoincrement())
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  title      String
-  episode_id Int
-  language   AppLanguage
-  episode    Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  id                Int         @id @default(autoincrement())
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+  title             String
+  short_description String
+  episode_id        Int
+  language          AppLanguage
+  episode           Episode     @relation(fields: [episode_id], references: [id], onDelete: Cascade)
 
   @@map("episode_translations")
 }
@@ -155,19 +257,36 @@ model Comment {
   id             Int               @id @default(autoincrement())
   created_at     DateTime          @default(now())
   updated_at     DateTime          @updatedAt
-  likes_count    Int
-  dislikes_count Int
+  likes_count    Int               @default(0)
+  dislikes_count Int               @default(0)
   status         CommentStatus     @default(PENDING)
-  parent_id      Int?
-  entity_id      Int
   entity_type    CommentEntityType
+  movie_id       Int
+  episode_id     Int?
   body           String
   user_id        Int
-  parent         Comment?          @relation("CommentToReplies", fields: [parent_id], references: [id])
-  replies        Comment[]         @relation("CommentToReplies")
+  // parent_id      Int?
+  // parent         Comment?          @relation("CommentToReplies", fields: [parent_id], references: [id])
+  // replies        Comment[]         @relation("CommentToReplies")
+  movie          Movie             @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  episode        Episode?          @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  votes          CommentVote[]
   user           User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("comments")
+}
+
+model CommentVote {
+  id          Int               @id @default(autoincrement())
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @updatedAt
+  comment_id  Int
+  user_id     Int
+  vote_status CommentVoteStatus
+  user        User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  comment     Comment           @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+
+  @@map("comment_votes")
 }
 
 model Factor {
@@ -176,7 +295,8 @@ model Factor {
   updated_at    DateTime            @updatedAt
   translations  FactorTranslation[]
   movie_factors MovieFactor[]
-  factor_files  FactorFile[]
+  slug          String              @unique
+  files         FactorFile[]
 
   @@map("factors")
 }
@@ -186,7 +306,7 @@ model FactorFile {
   factor_id Int
   upload_id Int
   type      FactorFileType
-  factor    Factor         @relation(fields: [factor_id], references: [id], onDelete: Cascade)
+  factor    Factor?        @relation(fields: [factor_id], references: [id], onDelete: Cascade)
   upload    Upload         @relation(fields: [upload_id], references: [id], onDelete: Cascade)
 
   @@map("factor_files")
@@ -206,17 +326,32 @@ model FactorTranslation {
 }
 
 model MovieFactor {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  movie_id   Int
-  factor_id  Int
-  role_id    Int
-  factor     Factor   @relation(fields: [factor_id], references: [id], onDelete: Cascade)
-  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
-  role       Role     @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  id           Int                      @id @default(autoincrement())
+  created_at   DateTime                 @default(now())
+  updated_at   DateTime                 @updatedAt
+  movie_id     Int
+  factor_id    Int
+  role_id      Int
+  order        Int
+  factor       Factor                   @relation(fields: [factor_id], references: [id], onDelete: Cascade)
+  movie        Movie                    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  role         Role                     @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  translations MovieFactorTranslation[]
 
+  @@unique([movie_id, order])
   @@map("movie_factors")
+}
+
+model MovieFactorTranslation {
+  id              Int         @id @default(autoincrement())
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+  role_name       String
+  movie_factor_id Int
+  language        AppLanguage
+  movie_factor    MovieFactor @relation(fields: [movie_factor_id], references: [id], onDelete: Cascade)
+
+  @@map("movie_factor_translations")
 }
 
 model Role {
@@ -278,15 +413,114 @@ model MovieGenre {
   @@map("movie_genres")
 }
 
-model UserMovie {
-  id         Int           @id @default(autoincrement())
-  created_at DateTime      @default(now())
-  updated_at DateTime      @updatedAt
-  type       UserMovieType
-  user_id    Int
+model Tag {
+  id           Int              @id @default(autoincrement())
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+  slug         String           @unique
+  translations TagTranslation[]
+  movie_tags   MovieTag[]
+
+  @@map("tags")
+}
+
+model TagTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  label      String
+  language   AppLanguage
+  tag_id     Int
+  tag        Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@map("tag_translations")
+}
+
+model MovieTag {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  tag_id     Int
   movie_id   Int
-  movie      Movie         @relation(fields: [movie_id], references: [id], onDelete: Cascade)
-  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  tag        Tag      @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+  movie      Movie    @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+
+  @@map("movie_tags")
+}
+
+model Section {
+  id              Int                  @id @default(autoincrement())
+  created_at      DateTime             @default(now())
+  updated_at      DateTime             @updatedAt
+  slug            String               @unique
+  order           Int                  @unique
+  view_mode       SectionViewMode
+  selection_mode  SectionSelectionMode
+  sort_mode       SectionSortMode?
+  period_base     SectionPeriodBase?
+  translations    SectionTranslation[]
+  section_movies  SectionMovie[]
+  section_filters SectionFilter[]
+
+  @@map("sections")
+}
+
+model SectionFilter {
+  id           Int              @id @default(autoincrement())
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+  section_id   Int
+  filter_key   SectionFilterKey
+  filter_value String
+  section      Section          @relation(fields: [section_id], references: [id], onDelete: Cascade)
+
+  @@map("section_filters")
+}
+
+model SectionTranslation {
+  id          Int         @id @default(autoincrement())
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  title       String
+  description String?
+  language    AppLanguage
+  section_id  Int
+  section     Section     @relation(fields: [section_id], references: [id], onDelete: Cascade)
+
+  @@map("section_translations")
+}
+
+model SectionMovie {
+  id          Int                   @id @default(autoincrement())
+  created_at  DateTime              @default(now())
+  updated_at  DateTime              @updatedAt
+  section_id  Int
+  entity_type CommentEntityType
+  movie_id    Int
+  episode_id  Int?
+  order       Int
+  view_mode   SectionMovieViewMode?
+  section     Section               @relation(fields: [section_id], references: [id], onDelete: Cascade)
+  movie       Movie                 @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  episode     Episode?              @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+
+  @@unique([section_id, movie_id, order])
+  @@map("section_movies")
+}
+
+model UserMovie {
+  id            Int               @id @default(autoincrement())
+  created_at    DateTime          @default(now())
+  updated_at    DateTime          @updatedAt
+  type          UserMovieType
+  progress_time Int?
+  user_id       Int
+  movie_id      Int?
+  episode_id    Int?
+  entity_type   CommentEntityType
+  movie         Movie?            @relation(fields: [movie_id], references: [id], onDelete: Cascade)
+  episode       Episode?          @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  user          User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("user_movies")
 }
@@ -312,25 +546,25 @@ model Upload {
   @@map("uploads")
 }
 
-model Ticket {
-  id         Int          @id @default(autoincrement())
-  created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
-  subject    String?
-  body       String
-  parent_id  Int?
-  status     TicketStatus @default(PENDING)
-  user_id    Int
-  user       User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+model Contact {
+  id              Int           @id @default(autoincrement())
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  user_email      String
+  message         String
+  is_registered   Boolean
+  status          ContactStatus @default(PENDING)
+  answer_message  String?
+  rejected_detail String?
 
-  @@map("tickets")
+  @@map("contacts")
 }
 
 model RefreshToken {
   id             Int      @id @default(autoincrement())
+  created_at     DateTime @default(now())
   user_id        Int
   hashed_refresh String
-  created_at     DateTime @default(now())
   expires_at     DateTime
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
@@ -339,10 +573,10 @@ model RefreshToken {
 
 model Otp {
   id           Int       @id @default(autoincrement())
+  created_at   DateTime  @default(now())
   user_id      Int?
   user_email   String?
   hashed_otp   String
-  created_at   DateTime  @default(now())
   used_at      DateTime?
   expires_at   DateTime
   otp_attempts Int       @default(0)
@@ -363,6 +597,46 @@ model LoginRequest {
   @@map("login_requests")
 }
 
+model HeaderMenu {
+  id           Int                     @id @default(autoincrement())
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+  menu_type    HeaderMenuType
+  href         String?
+  order        Int
+  parent_id    Int?
+  translations HeaderMenuTranslation[]
+  filters      HeaderMenuFilter[]
+  parent       HeaderMenu?             @relation("ParentMenu", fields: [parent_id], references: [id], onDelete: Cascade)
+  children     HeaderMenu[]            @relation("ParentMenu")
+
+  @@map("header_menus")
+}
+
+model HeaderMenuTranslation {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  language   AppLanguage
+  title      String
+  menu_id    Int
+  menu       HeaderMenu  @relation(fields: [menu_id], references: [id], onDelete: Cascade)
+
+  @@map("header_menu_translations")
+}
+
+model HeaderMenuFilter {
+  id           Int              @id @default(autoincrement())
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+  filter_key   SectionFilterKey
+  filter_value String
+  menu_id      Int
+  menu         HeaderMenu       @relation(fields: [menu_id], references: [id], onDelete: Cascade)
+
+  @@map("header_menu_filters")
+}
+
 enum UserRole {
   USER
   ADMIN
@@ -379,11 +653,6 @@ enum AppLanguage {
   AR
 }
 
-enum FilmType {
-  CINEMATIC
-  TRAILER
-}
-
 enum CommentStatus {
   APPROVED
   REJECTED
@@ -397,13 +666,17 @@ enum CommentEntityType {
 
 enum UserMovieType {
   BOOKMARK
+  NOTIFICATION
   LIKE
-  RECENT_WATCH
+  DISLIKE
+  WATCHING
+  WATCHED
 }
 
-enum TicketStatus {
+enum ContactStatus {
   PENDING
-  APPROVED
+  ANSWERED
+  REJECTED
 }
 
 enum MovieFileType {
@@ -415,13 +688,15 @@ enum MovieFileType {
 }
 
 enum SeasonFileType {
-  BANNER
+  POSTER
   TRAILER
 }
 
 enum EpisodeFileType {
-  BANNER
+  POSTER
   TRAILER
+  COVER
+  FILM
 }
 
 enum FactorFileType {
@@ -429,9 +704,9 @@ enum FactorFileType {
 }
 
 enum OtpType {
-  Login
-  Forget_Password
-  Signup
+  LOGIN
+  FORGET_PASSWORD
+  SIGNUP
 }
 
 enum SourceType {
@@ -442,4 +717,62 @@ enum SourceType {
 enum RoleType {
   CREATOR
   ACTOR
+}
+
+enum SectionSelectionMode {
+  AUTO
+  USER_MOVIE
+  SUGGESTION
+  MANUAL
+}
+
+enum SectionViewMode {
+  HERO
+  NORMAL_SLIDER
+  KIDS_SLIDER
+  HERO_LIKE_SLIDER
+  PUZZLE
+  ADVERTISEMENT
+}
+
+enum SectionSortMode {
+  NEWEST
+  OLDEST
+  MOST_VIEWED
+  TOP_RATED
+  TRENDING
+  RANDOM
+}
+
+enum SectionPeriodBase {
+  A_DAY_AGO
+  A_WEEK_AGO
+  A_MONTH_AGO
+}
+
+enum SectionMovieViewMode {
+  PUZZLE
+  SLIDER_ITEM
+}
+
+enum SectionFilterKey {
+  SEARCH
+  GENRES
+  AGE_LIMITS
+  COUNTRIES
+  TAGS
+  LANGUAGES
+  TYPE
+  RELEASED_YEAR_FROM
+  RELEASED_YEAR_TO
+}
+
+enum CommentVoteStatus {
+  LIKE
+  DISLIKE
+}
+
+enum HeaderMenuType {
+  PAGE
+  FILTER
 }

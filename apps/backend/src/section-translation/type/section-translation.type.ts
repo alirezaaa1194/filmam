@@ -1,4 +1,4 @@
-import { AppLanguage } from '@prisma/client';
+import { AppLanguage } from '../../generated/prisma';
 
 export type CreateSectionTranslationBodyType = {
   language: AppLanguage;
