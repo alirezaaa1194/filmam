@@ -30,7 +30,7 @@ import { MovieTagService } from '../movie-tag/movie-tag.service';
 import { prisma } from '../lib/prisma';
 import { SectionService } from '../section/section.service';
 import { TransactionType } from '../common/types/types';
-import * as natural from 'natural';
+import { TfIdf } from '../lib/tfidf';
 
 @Injectable()
 export class MovieService {
@@ -526,7 +526,7 @@ export class MovieService {
             ...updatedMovies,
           ].filter((movie) => movie !== null);
 
-          const tfidf = new natural.TfIdf();
+          const tfidf = new TfIdf();
 
           allMoviesWithCurrent.forEach((movie) => {
             tfidf.addDocument(movie.combined_tags);
@@ -613,7 +613,7 @@ export class MovieService {
         normalizeMovieDetail(movie),
       );
 
-      const tfidf = new natural.TfIdf();
+      const tfidf = new TfIdf();
 
       normalizedMovies.forEach((movie) => {
         tfidf.addDocument(movie.combined_tags);

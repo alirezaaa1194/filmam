@@ -32,7 +32,7 @@ import {
 } from '../lib/utils';
 import { UserMovieService } from '../user-movie/user-movie.service';
 import { SortType } from '../common/enums';
-import * as natural from 'natural';
+import { TfIdf } from '../lib/tfidf';
 import { TransactionType } from '../common/types/types';
 
 @Injectable()
@@ -677,7 +677,7 @@ export class SectionService {
             ...allMovies,
           ].filter((movie) => movie !== null);
 
-          const tfidf = new natural.TfIdf();
+          const tfidf = new TfIdf();
 
           allMoviesWithCurrent.forEach((movie) => {
             tfidf.addDocument(movie.combined_tags);
