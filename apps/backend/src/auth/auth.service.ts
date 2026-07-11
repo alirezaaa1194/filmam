@@ -248,75 +248,6 @@ export class AuthService {
     }
   }
 
-  // async login(loginDto: LoginDto) {
-  //   const { email, password } = loginDto;
-  //   const user = await this.userService.getUserByEmail(email);
-  //   if (user) {
-  //     if (
-  //       user.role !== UserRole.ADMIN &&
-  //       user.block_expires_at &&
-  //       new Date(user.block_expires_at) > new Date()
-  //     ) {
-  //       const userBlockedTime =
-  //         (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
-  //       throw new BadRequestException(
-  //         `Too many login attempts, try again after ${userBlockedTime} seconds`,
-  //       );
-  //     } else {
-  //       const getUserRecentLoggedInRequestsCounts =
-  //         await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
-  //           user.id,
-  //         );
-
-  //       if (
-  //         user.role !== UserRole.ADMIN &&
-  //         getUserRecentLoggedInRequestsCounts >= 5
-  //       ) {
-  //         const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
-  //         await this.userService.blockUser(user.id, oneHourNextTime);
-  //         const userBlockedTime =
-  //           (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
-  //           1000;
-  //         throw new BadRequestException(
-  //           `Too many login attempts, try again after ${userBlockedTime} seconds`,
-  //         );
-  //       }
-  //       if (user.password) {
-  //         const comparedPassword = await bcrypt.compare(
-  //           password,
-  //           user.password,
-  //         );
-  //         if (comparedPassword) {
-  //           return await this.sendOtpEmail({
-  //             userId: user.id,
-  //             otpType: OtpType.Login,
-  //           });
-  //         } else {
-  //           throw new UnauthorizedException('Invalid email or password');
-  //         }
-  //       } else {
-  //         throw new UnauthorizedException('Invalid email or password');
-  //       }
-  //     }
-  //   } else {
-  //     throw new NotFoundException('User not found');
-  //   }
-  // }
-
-  // async signup(signupDto: CreateUserDto) {
-  //   const { email } = signupDto;
-  //   const user = await this.userService.getUserByEmail(email);
-
-  //   if (user) {
-  //     throw new ConflictException('User with this email already exists');
-  //   } else {
-  //     return await this.sendOtpEmail({
-  //       userEmail: email,
-  //       otpType: OtpType.Signup,
-  //     });
-  //   }
-  // }
-
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.userService.getUserByEmail(email);
@@ -356,7 +287,10 @@ export class AuthService {
             user.password,
           );
           if (comparedPassword) {
-            return await this.jwtGenerator(user.id, user.email);
+            return await this.sendOtpEmail({
+              userId: user.id,
+              otpType: OtpType.LOGIN,
+            });
           } else {
             throw new UnauthorizedException('Invalid email or password');
           }
@@ -370,21 +304,87 @@ export class AuthService {
   }
 
   async signup(signupDto: CreateUserDto) {
-    const { email, password, username } = signupDto;
+    const { email } = signupDto;
     const user = await this.userService.getUserByEmail(email);
 
     if (user) {
       throw new ConflictException('User with this email already exists');
     } else {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const createdUser = await this.userService.signupUser({
-        username: username,
-        email,
-        password: hashedPassword,
+      return await this.sendOtpEmail({
+        userEmail: email,
+        otpType: OtpType.SIGNUP,
       });
-      return await this.jwtGenerator(createdUser.id, createdUser.email);
     }
   }
+
+  // async login(loginDto: LoginDto) {
+  //   const { email, password } = loginDto;
+  //   const user = await this.userService.getUserByEmail(email);
+  //   if (user) {
+  //     if (
+  //       user.role !== UserRole.ADMIN &&
+  //       user.block_expires_at &&
+  //       new Date(user.block_expires_at) > new Date()
+  //     ) {
+  //       const userBlockedTime =
+  //         (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
+  //       throw new BadRequestException(
+  //         `Too many login attempts, try again after ${userBlockedTime} seconds`,
+  //       );
+  //     } else {
+  //       const getUserRecentLoggedInRequestsCounts =
+  //         await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
+  //           user.id,
+  //         );
+
+  //       if (
+  //         user.role !== UserRole.ADMIN &&
+  //         getUserRecentLoggedInRequestsCounts >= 5
+  //       ) {
+  //         const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
+  //         await this.userService.blockUser(user.id, oneHourNextTime);
+  //         const userBlockedTime =
+  //           (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
+  //           1000;
+  //         throw new BadRequestException(
+  //           `Too many login attempts, try again after ${userBlockedTime} seconds`,
+  //         );
+  //       }
+  //       if (user.password) {
+  //         const comparedPassword = await bcrypt.compare(
+  //           password,
+  //           user.password,
+  //         );
+  //         if (comparedPassword) {
+  //           return await this.jwtGenerator(user.id, user.email);
+  //         } else {
+  //           throw new UnauthorizedException('Invalid email or password');
+  //         }
+  //       } else {
+  //         throw new UnauthorizedException('Invalid email or password');
+  //       }
+  //     }
+  //   } else {
+  //     throw new NotFoundException('User not found');
+  //   }
+  // }
+
+  // async signup(signupDto: CreateUserDto) {
+  //   const { email, password, username } = signupDto;
+  //   const user = await this.userService.getUserByEmail(email);
+
+  //   if (user) {
+  //     throw new ConflictException('User with this email already exists');
+  //   } else {
+  //     const hashedPassword = await bcrypt.hash(password, 10);
+  //     const createdUser = await this.userService.signupUser({
+  //       username: username,
+  //       email,
+  //       password: hashedPassword,
+  //     });
+  //     return await this.jwtGenerator(createdUser.id, createdUser.email);
+  //   }
+  // }
 
   async me(userInfo: { userId: number; email: string }) {
     const user = await this.userService.getUserById(userInfo.userId);
