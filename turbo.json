@@ -4,7 +4,20 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"],
-      "env": ["PORT", "DATABASE_URL", "JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET", "RESEND_API_KEY", "CRON_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"]
+      "env": [
+        "PORT",
+        "DATABASE_URL",
+        "DIRECT_DATABASE_URL",
+        "JWT_ACCESS_SECRET",
+        "JWT_REFRESH_SECRET",
+        "RESEND_API_Key",
+        "CRON_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "SUPABASE_URL",
+        "SUPABASE_KEY",
+        "SUPABASE_BUCKET"
+      ]
     },
     "dev": {
       "cache": false
