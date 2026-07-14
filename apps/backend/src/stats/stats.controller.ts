@@ -10,14 +10,14 @@ export class StatsController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('overview')
+  @Get('admin/overview')
   async getOverviewStats() {
     return await this.statsService.getOverviewStats();
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('analytics')
+  @Get('admin/analytics')
   async getAnalyticsStats() {
     return await this.statsService.getAnalyticsStats();
   }
