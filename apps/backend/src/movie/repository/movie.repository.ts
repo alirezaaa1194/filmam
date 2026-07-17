@@ -325,4 +325,14 @@ export class MovieRepository {
       where,
     });
   }
+
+  async countMoviesByType(type: MovieType) {
+    return prisma.movie.count({ where: { type } });
+  }
+
+  async countMoviesCreatedBetween(start: Date, end: Date) {
+    return prisma.movie.count({
+      where: { created_at: { gte: start, lt: end } },
+    });
+  }
 }

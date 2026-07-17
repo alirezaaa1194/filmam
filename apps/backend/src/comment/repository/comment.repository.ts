@@ -104,8 +104,8 @@ export class CommentRepository {
     });
   }
 
-  async getCommentDetailAdmin(commentId: number) {
-    return await prisma.comment.findUnique({ where: { id: commentId } });
+  async getCommentDetailAdmin(commentId: number, tx?:TransactionType) {
+    return await (tx || prisma).comment.findUnique({ where: { id: commentId } });
   }
 
   async getMovieOrEpisodeComments(

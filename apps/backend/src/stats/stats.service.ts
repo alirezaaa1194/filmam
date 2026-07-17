@@ -1,175 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { StatsRepository } from './repository/stats.repository';
-import { prisma } from '../lib/prisma';
-import { AppLanguage, MovieType, UserMovie, UserMovieType } from '../generated/prisma';
+import { MovieType, UserMovieType } from '../generated/prisma';
+import { GetAnalyticsStatsDto } from './dto/stats.dto';
+import { UserRepository } from '../user/repository/user.repository';
+import { MovieRepository } from '../movie/repository/movie.repository';
+import { UserMovieRepository } from '../user-movie/repository/user-movie.repository';
+import { MovieTranslationRepository } from '../movie-translation/repository/movie-translation.repository';
+import { MovieGenreRepository } from '../movie-genre/repository/movie-genre.repository';
+import { GenreTranslationRepository } from '../genre-translation/repository/genre-translation.repository';
 
 @Injectable()
 export class StatsService {
-  constructor(private readonly statsRepository: StatsRepository) {}
-
-  // async getOverviewStats() {
-  //   const result = await prisma.$transaction(async (tx) => {
-  //     // cards data
-  //     const totalViewsCount = await tx.userMovie.count({
-  //       where: {
-  //         type: {
-  //           in: [UserMovieType.WATCHED, UserMovieType.WATCHING],
-  //         },
-  //       },
-  //     });
-
-  //     const totalUsersCount = await tx.user.count();
-
-  //     const totalSeriesMoviesCount = await tx.movie.count({
-  //       where: { type: MovieType.SERIES },
-  //     });
-  //     const totalCinematicMoviesCount = await tx.movie.count({
-  //       where: { type: MovieType.CINEMATIC },
-  //     });
-
-  //     const totalWatchTimeSeconds = await tx.userMovie.findMany({
-  //       where: {
-  //         type: {
-  //           in: [UserMovieType.WATCHED, UserMovieType.WATCHING],
-  //         },
-  //       },
-  //     });
-
-  //     const sumTotalWatchTimeSeconds = totalWatchTimeSeconds.reduce(
-  //       (sum: number, current: UserMovie) => {
-  //         return sum + (current.progress_time ?? 0);
-  //       },
-  //       0,
-  //     );
-
-  //     // chart data
-  //     const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-  //     const totalWatchTimeSecondsForRecentAYear = await tx.userMovie.findMany({
-  //       where: {
-  //         updated_at: {
-  //           gte: startOfYear,
-  //         },
-  //         type: {
-  //           in: [UserMovieType.WATCHED, UserMovieType.WATCHING],
-  //         },
-  //       },
-  //     });
-
-  //     const watchYearMap = new Map();
-
-  //     totalWatchTimeSecondsForRecentAYear.forEach((data) => {
-  //       watchYearMap.set(
-  //         data.updated_at.getMonth(),
-  //         (watchYearMap.get(data.updated_at.getMonth()) ?? 0) +
-  //           (data.progress_time ?? 0),
-  //       );
-  //     });
-
-  //     const chartData = Array.from({ length: 12 }).map((_, i) => ({
-  //       month: i,
-  //       total: watchYearMap.get(i) ?? 0,
-  //     }));
-
-  //     // table data
-  //     const recentRegisteredUsers = await tx.user.findMany({
-  //       orderBy: {
-  //         created_at: 'desc',
-  //       },
-  //       take: 10,
-  //     });
-
-  //     return {
-  //       cards: {
-  //         total_views: totalViewsCount,
-  //         total_users: totalUsersCount,
-  //         total_series: totalSeriesMoviesCount,
-  //         total_cinematic: totalCinematicMoviesCount,
-  //         total_watch_time_seconds: sumTotalWatchTimeSeconds,
-  //       },
-  //       chart: chartData,
-  //       table: recentRegisteredUsers,
-  //     };
-  //   });
-  //   return result;
-  // }
-
-  // async getAnalyticsStats() {
-  //   const result = await prisma.$transaction(async (tx) => {
-  //     // chart data
-
-  //     const now = new Date();
-  //     const day = now.getDay();
-  //     const diff = (day + 1) % 7;
-  //     const startOfWeek = new Date(now);
-  //     startOfWeek.setDate(now.getDate() - diff);
-  //     startOfWeek.setHours(0, 0, 0, 0);
-
-  //     const totalLastWeekMoviesPlaysCount = await tx.userMovie.findMany({
-  //       where: {
-  //         type: { in: [UserMovieType.WATCHING, UserMovieType.WATCHED] },
-  //         updated_at: {
-  //           gte: startOfWeek,
-  //         },
-  //       },
-  //     });
-
-  //     const watchWeekMap = new Map();
-
-  //     totalLastWeekMoviesPlaysCount.forEach((data) => {
-  //       watchWeekMap.set(
-  //         data.updated_at.getDay(),
-  //         (watchWeekMap.get(data.updated_at.getDay()) ?? 0) + 1,
-  //       );
-  //     });
-
-  //     const chartData = Array.from({ length: 7 }).map((_, i) => ({
-  //       day: i,
-  //       total: watchWeekMap.get(i) ?? 0,
-  //     }));
-
-  //     console.log(chartData);
-
-  //     ////////
-  //     const totalLastWeekUsersPlaysCount = await tx.userMovie.groupBy({
-  //       by: ['user_id'],
-  //       where: {
-  //         type: { in: [UserMovieType.WATCHING, UserMovieType.WATCHED] },
-  //         updated_at: { gte: startOfWeek },
-  //       },
-  //       _count: { _all: true },
-  //       orderBy: {
-  //         _count: {
-  //           user_id: 'desc',
-  //         },
-  //       },
-  //       take: 5,
-  //     });
-  //     const recentUsersId = totalLastWeekUsersPlaysCount.map(
-  //       (user) => user.user_id,
-  //     );
-  //     const recentUsers = await tx.user.findMany({
-  //       where: {
-  //         id: { in: recentUsersId },
-  //       },
-  //     });
-  //     const recentUsersWithPlaysCount = recentUsers
-  //       .map((user) => {
-  //         const playsCount = totalLastWeekUsersPlaysCount.find(
-  //           (play) => play.user_id === user.id,
-  //         )?._count?._all;
-  //         return {
-  //           ...user,
-  //           plays_count: playsCount ?? 0,
-  //         };
-  //       })
-  //       .sort((a, b) => b.plays_count - a.plays_count);
-
-  //     // cards data
-  //     // tables data
-  //   });
-
-  //   return [];
-  // }
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly movieRepository: MovieRepository,
+    private readonly userMovieRepository: UserMovieRepository,
+    private readonly movieTranslationRepository: MovieTranslationRepository,
+    private readonly movieGenreRepository: MovieGenreRepository,
+    private readonly genreTranslationRepository: GenreTranslationRepository,
+  ) {}
 
   calcGrowthRate(current: number, previous: number) {
     if (previous === 0) {
@@ -194,8 +42,9 @@ export class StatsService {
     const lastDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
     const firstDayOfCurrentYear = new Date(now.getFullYear(), 0, 1);
 
+    const watchedTypes = [UserMovieType.WATCHED, UserMovieType.WATCHING];
+
     const [
-      // cards data
       totalViews,
       recentMonthTotalViews,
       lastMonthTotalViews,
@@ -209,92 +58,52 @@ export class StatsService {
       totalProgressTime,
       recentMonthTotalProgressTime,
       lastMonthTotalProgressTime,
-      // chart data
       currentYearWatches,
-      // recent users list
       recentUsers,
     ] = await Promise.all([
-      // views
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-        },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: firstDayOfCurrentMonth, lt: now },
-        },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: firstDayOfLastMonth, lt: lastDayOfLastMonth },
-        },
-      }),
-      // users
-      prisma.user.count(),
-      prisma.user.count({
-        where: { created_at: { gte: firstDayOfCurrentMonth, lt: now } },
-      }),
-      prisma.user.count({
-        where: {
-          created_at: { gte: firstDayOfLastMonth, lt: lastDayOfLastMonth },
-        },
-      }),
-      // content
-      prisma.movie.count({ where: { type: MovieType.SERIES } }),
-      prisma.movie.count({ where: { type: MovieType.CINEMATIC } }),
-      prisma.movie.count({
-        where: { created_at: { gte: firstDayOfCurrentMonth, lt: now } },
-      }),
-      prisma.movie.count({
-        where: {
-          created_at: { gte: firstDayOfLastMonth, lt: lastDayOfLastMonth },
-        },
-      }),
-      // watch time
-      prisma.userMovie.aggregate({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-        },
-        _sum: { progress_time: true },
-      }),
-      prisma.userMovie.aggregate({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: firstDayOfCurrentMonth, lt: now },
-        },
-        _sum: { progress_time: true },
-      }),
-      prisma.userMovie.aggregate({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: firstDayOfLastMonth, lt: lastDayOfLastMonth },
-        },
-        _sum: { progress_time: true },
-      }),
-      // chart: current year watches (only updated_at needed)
-      prisma.userMovie.findMany({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: firstDayOfCurrentYear },
-        },
-        select: { updated_at: true },
-      }),
-      // recent users
-      prisma.user.findMany({
-        orderBy: { created_at: 'desc' },
-        select: {
-          id: true,
-          created_at: true,
-          block_expires_at: true,
-          email: true,
-          username: true,
-          role: true,
-        },
-        take: 5,
-      }),
+      this.userMovieRepository.countViews(watchedTypes),
+      this.userMovieRepository.countViews(
+        watchedTypes,
+        firstDayOfCurrentMonth,
+        now,
+      ),
+      this.userMovieRepository.countViews(
+        watchedTypes,
+        firstDayOfLastMonth,
+        lastDayOfLastMonth,
+      ),
+      this.userRepository.getUsersCount(),
+      this.userRepository.getUsersCreatedBetween(firstDayOfCurrentMonth, now),
+      this.userRepository.getUsersCreatedBetween(
+        firstDayOfLastMonth,
+        lastDayOfLastMonth,
+      ),
+      this.movieRepository.countMoviesByType(MovieType.SERIES),
+      this.movieRepository.countMoviesByType(MovieType.CINEMATIC),
+      this.movieRepository.countMoviesCreatedBetween(
+        firstDayOfCurrentMonth,
+        now,
+      ),
+      this.movieRepository.countMoviesCreatedBetween(
+        firstDayOfLastMonth,
+        lastDayOfLastMonth,
+      ),
+      this.userMovieRepository.aggregateProgressSum(watchedTypes),
+      this.userMovieRepository.aggregateProgressSum(
+        watchedTypes,
+        firstDayOfCurrentMonth,
+        now,
+      ),
+      this.userMovieRepository.aggregateProgressSum(
+        watchedTypes,
+        firstDayOfLastMonth,
+        lastDayOfLastMonth,
+      ),
+      this.userMovieRepository.findCurrentYearWatches(
+        watchedTypes,
+        firstDayOfCurrentYear,
+      ),
+      this.userRepository.getRecentUsers(5),
     ]);
 
     // growth rates
@@ -351,7 +160,7 @@ export class StatsService {
     };
   }
 
-  async getAnalyticsStats() {
+  async getAnalyticsStats(query: GetAnalyticsStatsDto) {
     const now = new Date();
 
     const day = now.getDay();
@@ -367,6 +176,8 @@ export class StatsService {
     const endOfLastWeek = new Date(startOfCurrentWeek);
     endOfLastWeek.setMilliseconds(-1);
 
+    const watchedTypes = [UserMovieType.WATCHED, UserMovieType.WATCHING];
+
     const [
       recentWeekTotalViews,
       lastWeekTotalViews,
@@ -381,90 +192,62 @@ export class StatsService {
       currentWeekPlays,
       topMovieAggs,
     ] = await Promise.all([
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-        },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfLastWeek, lt: endOfLastWeek },
-        },
-      }),
-      prisma.userMovie.groupBy({
-        by: ['user_id'],
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-        },
-        _count: { user_id: true },
-      }),
-      prisma.userMovie.groupBy({
-        by: ['user_id'],
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfLastWeek, lt: endOfLastWeek },
-        },
-        _count: { user_id: true },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: UserMovieType.WATCHED,
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-        },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-        },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: UserMovieType.WATCHED,
-          updated_at: { gte: startOfLastWeek, lt: endOfLastWeek },
-        },
-      }),
-      prisma.userMovie.count({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfLastWeek, lt: endOfLastWeek },
-        },
-      }),
-      prisma.userMovie.aggregate({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-        },
-        _avg: { progress_time: true },
-      }),
-      prisma.userMovie.aggregate({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfLastWeek, lt: endOfLastWeek },
-        },
-        _avg: { progress_time: true },
-      }),
-      prisma.userMovie.findMany({
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-        },
-        select: { user_id: true, updated_at: true, movie_id: true },
-      }),
-      prisma.userMovie.groupBy({
-        by: ['movie_id'],
-        where: {
-          type: { in: [UserMovieType.WATCHED, UserMovieType.WATCHING] },
-          updated_at: { gte: startOfCurrentWeek, lt: now },
-          movie_id: { not: null },
-        },
-        _count: { movie_id: true },
-        orderBy: { _count: { movie_id: 'desc' } },
-        take: 5,
-      }),
+      this.userMovieRepository.countViews(
+        watchedTypes,
+        startOfCurrentWeek,
+        now,
+      ),
+      this.userMovieRepository.countViews(
+        watchedTypes,
+        startOfLastWeek,
+        endOfLastWeek,
+      ),
+      this.userMovieRepository.groupUniqueViewers(
+        watchedTypes,
+        startOfCurrentWeek,
+        now,
+      ),
+      this.userMovieRepository.groupUniqueViewers(
+        watchedTypes,
+        startOfLastWeek,
+        endOfLastWeek,
+      ),
+      this.userMovieRepository.countCompletedViews(startOfCurrentWeek, now),
+      this.userMovieRepository.countViews(
+        watchedTypes,
+        startOfCurrentWeek,
+        now,
+      ),
+      this.userMovieRepository.countCompletedViews(
+        startOfLastWeek,
+        endOfLastWeek,
+      ),
+      this.userMovieRepository.countViews(
+        watchedTypes,
+        startOfLastWeek,
+        endOfLastWeek,
+      ),
+      this.userMovieRepository.aggregateProgressAvg(
+        watchedTypes,
+        startOfCurrentWeek,
+        now,
+      ),
+      this.userMovieRepository.aggregateProgressAvg(
+        watchedTypes,
+        startOfLastWeek,
+        endOfLastWeek,
+      ),
+      this.userMovieRepository.findWeekPlays(
+        watchedTypes,
+        startOfCurrentWeek,
+        now,
+      ),
+      this.userMovieRepository.groupTopMovies(
+        watchedTypes,
+        startOfCurrentWeek,
+        now,
+        5,
+      ),
     ]);
 
     const viewsGrowthRate = this.calcGrowthRate(
@@ -525,38 +308,28 @@ export class StatsService {
       unique_viewers: dayMap.get(i)!.viewerSet.size,
     }));
 
-    const topMovieIds = topMovieAggs
-      .map((m) => m.movie_id!)
-      .filter(Boolean);
+    const topMovieIds = topMovieAggs.map((m) => m.movie_id!).filter(Boolean);
     const topMoviePlaysMap = new Map(
       topMovieAggs.map((m) => [m.movie_id!, m._count.movie_id]),
     );
 
     const allPlayedMovieIds = [
       ...new Set(
-        currentWeekPlays
-          .filter((p) => p.movie_id)
-          .map((p) => p.movie_id!),
+        currentWeekPlays.filter((p) => p.movie_id).map((p) => p.movie_id!),
       ),
     ];
 
     const movieTranslations: { movie_id: number; title: string }[] =
       topMovieIds.length > 0
-        ? await prisma.movieTranslation.findMany({
-            where: {
-              movie_id: { in: topMovieIds },
-              language: AppLanguage.EN,
-            },
-            select: { movie_id: true, title: true },
-          })
+        ? await this.movieTranslationRepository.findByMovieIds(
+            topMovieIds,
+            query.lang,
+          )
         : [];
 
     const movieGenres: { genre_id: number; movie_id: number }[] =
       allPlayedMovieIds.length > 0
-        ? await prisma.movieGenre.findMany({
-            where: { movie_id: { in: allPlayedMovieIds } },
-            select: { genre_id: true, movie_id: true },
-          })
+        ? await this.movieGenreRepository.findByMovieIds(allPlayedMovieIds)
         : [];
 
     const moviePlayCountMap = new Map<number, number>();
@@ -585,13 +358,10 @@ export class StatsService {
 
     const genreTranslations: { genre_id: number; name: string }[] =
       topGenreIds.length > 0
-        ? await prisma.genreTranslation.findMany({
-            where: {
-              genre_id: { in: topGenreIds },
-              language: AppLanguage.EN,
-            },
-            select: { genre_id: true, name: true },
-          })
+        ? await this.genreTranslationRepository.findByGenreIds(
+            topGenreIds,
+            query.lang,
+          )
         : [];
 
     const topMovies = topMovieIds.map((id) => ({

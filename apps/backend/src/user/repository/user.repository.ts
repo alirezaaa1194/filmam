@@ -142,4 +142,25 @@ export class UserRepository {
       },
     });
   }
+
+  async getUsersCreatedBetween(start: Date, end: Date) {
+    return prisma.user.count({
+      where: { created_at: { gte: start, lt: end } },
+    });
+  }
+
+  async getRecentUsers(limit: number) {
+    return prisma.user.findMany({
+      orderBy: { created_at: 'desc' },
+      select: {
+        id: true,
+        created_at: true,
+        block_expires_at: true,
+        email: true,
+        username: true,
+        role: true,
+      },
+      take: limit,
+    });
+  }
 }

@@ -26,7 +26,7 @@ export class UploadController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('file'))
-  @Post('from-file')
+  @Post('admin/from-file')
   async uploadFromFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -41,14 +41,14 @@ export class UploadController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Post('from-url')
+  @Post('admin/from-url')
   async uploadFromUrl(@Body() body: UploadFromUrlDto) {
     return await this.uploadService.uploadFromUrl(body);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Delete()
+  @Delete('admin')
   async deleteUploads(@Body() body: DeleteUploadDto) {
     return await this.uploadService.deleteUploads(body.upload_ids);
   }

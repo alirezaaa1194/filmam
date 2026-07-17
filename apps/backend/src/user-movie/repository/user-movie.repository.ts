@@ -189,4 +189,91 @@ export class UserMovieRepository {
       },
     });
   }
+
+  async countViews(types: UserMovieType[], start?: Date, end?: Date) {
+    const where: any = { type: { in: types } };
+    if (start !== undefined || end !== undefined) {
+      where.updated_at = {};
+      if (start !== undefined) where.updated_at.gte = start;
+      if (end !== undefined) where.updated_at.lt = end;
+    }
+    return prisma.userMovie.count({ where });
+  }
+
+  async countCompletedViews(start: Date, end: Date) {
+    return prisma.userMovie.count({
+      where: {
+        type: UserMovieType.WATCHED,
+        updated_at: { gte: start, lt: end },
+      },
+    });
+  }
+
+  async groupUniqueViewers(types: UserMovieType[], start: Date, end: Date) {
+    return prisma.userMovie.groupBy({
+      by: ['user_id'],
+      where: {
+        type: { in: types },
+        updated_at: { gte: start, lt: end },
+      },
+      _count: { user_id: true },
+    });
+  }
+
+  async aggregateProgressSum(types: UserMovieType[], start?: Date, end?: Date) {
+    const where: any = { type: { in: types } };
+    if (start !== undefined || end !== undefined) {
+      where.updated_at = {};
+      if (start !== undefined) where.updated_at.gte = start;
+      if (end !== undefined) where.updated_at.lt = end;
+    }
+    return prisma.userMovie.aggregate({
+      where,
+      _sum: { progress_time: true },
+    });
+  }
+
+  async aggregateProgressAvg(types: UserMovieType[], start: Date, end: Date) {
+    return prisma.userMovie.aggregate({
+      where: {
+        type: { in: types },
+        updated_at: { gte: start, lt: end },
+      },
+      _avg: { progress_time: true },
+    });
+  }
+
+  async findCurrentYearWatches(types: UserMovieType[], startOfYear: Date) {
+    return prisma.userMovie.findMany({
+      where: {
+        type: { in: types },
+        updated_at: { gte: startOfYear },
+      },
+      select: { updated_at: true },
+    });
+  }
+
+  async findWeekPlays(types: UserMovieType[], start: Date, end: Date) {
+    return prisma.userMovie.findMany({
+      where: {
+        type: { in: types },
+        updated_at: { gte: start, lt: end },
+      },
+      select: { user_id: true, updated_at: true, movie_id: true },
+    });
+  }
+
+  async groupTopMovies(types: UserMovieType[], start: Date, end: Date, take: number) {
+    return prisma.userMovie.groupBy({
+      by: ['movie_id'],
+      where: {
+        type: { in: types },
+        updated_at: { gte: start, lt: end },
+        movie_id: { not: null },
+      },
+      _count: { movie_id: true },
+      orderBy: { _count: { movie_id: 'desc' } },
+      take,
+    });
+  }
 }

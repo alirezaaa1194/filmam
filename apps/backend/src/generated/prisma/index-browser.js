@@ -541,6 +541,15 @@ exports.Prisma.HeaderMenuFilterScalarFieldEnum = {
   menu_id: 'menu_id'
 };
 
+exports.Prisma.PushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  created_at: 'created_at',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  user_id: 'user_id'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -739,7 +748,8 @@ exports.Prisma.ModelName = {
   LoginRequest: 'LoginRequest',
   HeaderMenu: 'HeaderMenu',
   HeaderMenuTranslation: 'HeaderMenuTranslation',
-  HeaderMenuFilter: 'HeaderMenuFilter'
+  HeaderMenuFilter: 'HeaderMenuFilter',
+  PushSubscription: 'PushSubscription'
 };
 
 /**

@@ -1,13 +1,16 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AppLanguage } from '../../generated/prisma';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { defaultLang } from '../../lib/utils';
 
-export class GetStatsDto {
+export class GetAnalyticsStatsDto {
   @ApiPropertyOptional({
     name: 'lang',
+    enum: AppLanguage,
+    default: defaultLang,
     required: false,
   })
-  @IsString()
+  @IsEnum(AppLanguage)
   @IsNotEmpty()
   lang!: AppLanguage;
 }

@@ -17,4 +17,11 @@ export class MovieGenreRepository {
       },
     });
   }
+
+  async findByMovieIds(movieIds: number[]) {
+    return prisma.movieGenre.findMany({
+      where: { movie_id: { in: movieIds } },
+      select: { genre_id: true, movie_id: true },
+    });
+  }
 }

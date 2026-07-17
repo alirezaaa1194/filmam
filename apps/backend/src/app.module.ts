@@ -21,6 +21,8 @@ import { TagModule } from './tag/tag.module';
 import { SectionModule } from './section/section.module';
 import { HeaderMenuModule } from './header-menu/header-menu.module';
 import { StatsModule } from './stats/stats.module';
+import { AdminSummaryModule } from './admin-summary/admin-summary.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { StatsModule } from './stats/stats.module';
     SectionModule,
     HeaderMenuModule,
     StatsModule,
+    NotificationModule,
+    AdminSummaryModule,
   ],
   controllers: [],
   providers: [],

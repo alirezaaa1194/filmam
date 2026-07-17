@@ -1,4 +1,8 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import {
   CommentVoteDto,
   CreateCommentDto,
@@ -13,6 +17,7 @@ import { prisma } from '../lib/prisma';
 import {
   Comment,
   CommentEntityType,
+  CommentStatus,
   CommentVoteStatus,
   UserRole,
 } from '../generated/prisma';
@@ -245,6 +250,15 @@ export class CommentService {
 
   async commentVote(commentId: number, userId: number, body: CommentVoteDto) {
     const result = await prisma.$transaction(async (tx) => {
+      const comment = await this.commentRepository.getCommentDetailAdmin(
+        commentId,
+        tx,
+      );
+
+      if (comment?.status !== CommentStatus.APPROVED) {
+        throw new BadRequestException('You cannot vote on this comment');
+      }
+
       const hasUserDidVote = await this.commentRepository.getCommentVote(
         commentId,
         userId,

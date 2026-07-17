@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { AppLanguage } from '../../generated/prisma';
+import { prisma } from '../../lib/prisma';
 import { CreateGenreTranslationDto } from '../dto/genre-translation.dto';
 import { TransactionType } from '../../common/types/types';
 
@@ -39,6 +41,16 @@ export class GenreTranslationRepository {
 
     return await tx.genreTranslation.createMany({
       data: genreTranslationData,
+    });
+  }
+
+  async findByGenreIds(genreIds: number[], lang: AppLanguage) {
+    return prisma.genreTranslation.findMany({
+      where: {
+        genre_id: { in: genreIds },
+        language: lang,
+      },
+      select: { genre_id: true, name: true },
     });
   }
 }

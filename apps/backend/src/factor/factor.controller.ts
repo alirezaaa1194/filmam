@@ -26,14 +26,14 @@ import { GetFactorMoviesDto } from '../movie-factor/dto/movie-factor.dto';
 export class FactorController {
   constructor(private factorService: FactorService) {}
   @ApiBearerAuth()
-  @Post()
+  @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createFactor(@Body() body: CreateFactorDto) {
     return await this.factorService.createFactor(body);
   }
 
   @ApiBearerAuth()
-  @Delete()
+  @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteFactors(@Body() body: DeleteFactorsDto) {
     return await this.factorService.deleteFactors(body);
