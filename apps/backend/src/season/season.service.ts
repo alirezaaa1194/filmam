@@ -13,6 +13,13 @@ import { defaultLang, paginationCalculator } from '../lib/utils';
 import { SortType } from '../common/enums';
 import { CommonQueryParamsDto } from '../common/dto/query-param.dto';
 import { UserMovieService } from '../user-movie/user-movie.service';
+import { NotificationService } from '../notification/notification.service';
+import {
+  AppLanguage,
+  SeasonFileType,
+  UserMovieType,
+} from '../generated/prisma';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class SeasonService {
@@ -22,7 +29,70 @@ export class SeasonService {
     private readonly seasonFileService: SeasonFileService,
     private readonly movieService: MovieService,
     private readonly userMovieService: UserMovieService,
+    private readonly notificationService: NotificationService,
+    private readonly uploadService: UploadService,
   ) {}
+
+  async handleSendNotification(body: CreateSeasonDto) {
+    const usersNotificationMovies = await prisma.userMovie.findMany({
+      where: {
+        type: UserMovieType.NOTIFICATION,
+        movie_id: body.movie_id,
+      },
+    });
+
+    const usersId = usersNotificationMovies.map(
+      (usersNotificationMovie) => usersNotificationMovie.user_id,
+    );
+
+    const { translations, files } = body;
+
+    let imagePath: null | string = null;
+
+    const posterFile = files.find((f) => f.type === SeasonFileType.POSTER);
+
+    if (posterFile) {
+      const posterFileUploadData = await this.uploadService.getUploads([
+        posterFile.upload_id,
+      ]);
+      imagePath = posterFileUploadData.map((posterFile) => posterFile.path)[0];
+    }
+
+    const movie = await this.movieService.getMovieDetailAdmin(body.movie_id);
+
+    const notificationContentsData = translations.map((tr) => {
+      let title = '';
+      const words = tr.short_description.trim().split(/\s+/);
+      const movieTranslations = movie?.translations.find(
+        (mtr) => mtr.language === tr.language,
+      );
+      const description =
+        words.length > 10
+          ? `${words.slice(0, 10).join(' ')}...`
+          : words.join(' ');
+
+      if (tr.language === AppLanguage.FA) {
+        title = `🎬 ${movieTranslations?.title} - فصل ${body.order} منتشر شد!`;
+      } else if (tr.language === AppLanguage.EN) {
+        title = `🎬 ${movieTranslations?.title} - Season ${body.order} is released!`;
+      } else if (tr.language === AppLanguage.AR) {
+        title = `🎬 ${movieTranslations?.title} - تم إطلاق الموسم ${body.order}!`;
+      }
+
+      return {
+        title,
+        description,
+        lang: tr.language,
+        image: imagePath,
+      };
+    });
+
+    return await this.notificationService.sendNotification(
+      usersId,
+      notificationContentsData,
+    );
+  }
+
   async createSeason(body: CreateSeasonDto) {
     const result = await prisma.$transaction(async (tx) => {
       const movie = await this.movieService.getMovieDetailAdmin(
@@ -59,6 +129,9 @@ export class SeasonService {
 
       return createdSeason;
     });
+
+    await this.handleSendNotification(body);
+
     return result;
   }
 

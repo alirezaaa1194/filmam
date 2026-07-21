@@ -12,8 +12,8 @@ import {
   IsOptional,
   IsString,
   MinLength,
-  Validate,
 } from 'class-validator';
+import { defaultLang } from '../../lib/utils';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -41,6 +41,15 @@ export class CreateUserDto {
   @IsString()
   @MinLength(8)
   password!: string;
+
+  @ApiProperty({
+    enum: AppLanguage,
+    default: defaultLang,
+    required: true,
+  })
+  @IsEnum(AppLanguage)
+  @IsNotEmpty()
+  preferred_language!: AppLanguage;
 }
 
 export class GetAllUsersDto {
@@ -134,6 +143,15 @@ export class UpdateUserInfoDto {
   @IsString()
   @MinLength(3)
   username!: string;
+
+  @ApiProperty({
+    enum: AppLanguage,
+    default: defaultLang,
+    required: true,
+  })
+  @IsEnum(AppLanguage)
+  @IsNotEmpty()
+  preferred_language!: AppLanguage;
 }
 
 export class GetAllUserMovieDto {
@@ -169,6 +187,7 @@ export class GetAllUserMovieDto {
   @ApiPropertyOptional({
     name: 'lang',
     required: false,
+    enum: AppLanguage,
   })
   @IsEnum(AppLanguage)
   @IsOptional()

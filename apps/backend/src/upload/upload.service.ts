@@ -66,4 +66,8 @@ export class UploadService {
       message: 'Uploads deleted successfully',
     };
   }
+
+  async getUploads(uploadIds: number[]) {
+    return await this.uploadRepository.getUploads(uploadIds);
+  }
 }

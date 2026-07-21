@@ -3,6 +3,8 @@ import { CreateNotificationDto } from './dto/notification.dto';
 import { NotificationRepository } from './repository/notification.repository';
 import { prisma } from '../lib/prisma';
 import webpush from './webpush/web-push.config';
+import { AppLanguage } from '../generated/prisma';
+import { defaultLang } from '../lib/utils';
 
 @Injectable()
 export class NotificationService {
@@ -15,32 +17,40 @@ export class NotificationService {
 
   async sendNotification(
     userIds: number[],
-    title: string,
-    description: string,
-    image: string,
+    notificationContent: {
+      title: string;
+      description: string;
+      image: string | null;
+      lang: AppLanguage;
+    }[],
   ) {
     const usersSubscriptions = await prisma.pushSubscription.findMany({
       where: {
         user_id: { in: userIds },
       },
+      include: { user: true },
     });
 
     if (!usersSubscriptions.length) {
       return;
     }
 
-    const payload = {
-      title,
-      body: description,
-      image,
-      icon: 'https://mfrqeblkyvwzbfjvbcto.supabase.co/storage/v1/object/public/filmam-app/assets/IMG_20260220_234248_518.jpg',
-      badge:
-        'https://mfrqeblkyvwzbfjvbcto.supabase.co/storage/v1/object/public/filmam-app/assets/IMG_20260220_234248_518.jpg',
-    };
-
-    const data = JSON.stringify(payload);
-
     for (const subscription of usersSubscriptions) {
+      const userPreferredContent = notificationContent.find(
+        (nc) => nc.lang === subscription.user.preferred_language,
+      );
+
+      const payload = {
+        title: userPreferredContent?.title,
+        body: userPreferredContent?.description,
+        image: userPreferredContent?.image,
+        icon: 'https://mfrqeblkyvwzbfjvbcto.supabase.co/storage/v1/object/public/filmam-app/assets/IMG_20260220_234248_518.jpg',
+        badge:
+          'https://mfrqeblkyvwzbfjvbcto.supabase.co/storage/v1/object/public/filmam-app/assets/IMG_20260220_234248_518.jpg',
+      };
+
+      const data = JSON.stringify(payload);
+
       const pushSubscription = {
         endpoint: subscription.endpoint,
         keys: {

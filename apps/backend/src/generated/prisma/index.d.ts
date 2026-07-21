@@ -5991,6 +5991,7 @@ export namespace Prisma {
     block_expires_at: Date | null
     google_id: string | null
     role: $Enums.UserRole | null
+    preferred_language: $Enums.AppLanguage | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -6003,6 +6004,7 @@ export namespace Prisma {
     block_expires_at: Date | null
     google_id: string | null
     role: $Enums.UserRole | null
+    preferred_language: $Enums.AppLanguage | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -6015,6 +6017,7 @@ export namespace Prisma {
     block_expires_at: number
     google_id: number
     role: number
+    preferred_language: number
     _all: number
   }
 
@@ -6037,6 +6040,7 @@ export namespace Prisma {
     block_expires_at?: true
     google_id?: true
     role?: true
+    preferred_language?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -6049,6 +6053,7 @@ export namespace Prisma {
     block_expires_at?: true
     google_id?: true
     role?: true
+    preferred_language?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -6061,6 +6066,7 @@ export namespace Prisma {
     block_expires_at?: true
     google_id?: true
     role?: true
+    preferred_language?: true
     _all?: true
   }
 
@@ -6160,6 +6166,7 @@ export namespace Prisma {
     block_expires_at: Date | null
     google_id: string | null
     role: $Enums.UserRole
+    preferred_language: $Enums.AppLanguage
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -6191,6 +6198,7 @@ export namespace Prisma {
     block_expires_at?: boolean
     google_id?: boolean
     role?: boolean
+    preferred_language?: boolean
     refresh_tokens?: boolean | User$refresh_tokensArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
     user_movies?: boolean | User$user_moviesArgs<ExtArgs>
@@ -6211,6 +6219,7 @@ export namespace Prisma {
     block_expires_at?: boolean
     google_id?: boolean
     role?: boolean
+    preferred_language?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6223,6 +6232,7 @@ export namespace Prisma {
     block_expires_at?: boolean
     google_id?: boolean
     role?: boolean
+    preferred_language?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -6235,9 +6245,10 @@ export namespace Prisma {
     block_expires_at?: boolean
     google_id?: boolean
     role?: boolean
+    preferred_language?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "created_at" | "updated_at" | "username" | "email" | "password" | "block_expires_at" | "google_id" | "role", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "created_at" | "updated_at" | "username" | "email" | "password" | "block_expires_at" | "google_id" | "role" | "preferred_language", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     refresh_tokens?: boolean | User$refresh_tokensArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
@@ -6272,6 +6283,7 @@ export namespace Prisma {
       block_expires_at: Date | null
       google_id: string | null
       role: $Enums.UserRole
+      preferred_language: $Enums.AppLanguage
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -6711,6 +6723,7 @@ export namespace Prisma {
     readonly block_expires_at: FieldRef<"User", 'DateTime'>
     readonly google_id: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
+    readonly preferred_language: FieldRef<"User", 'AppLanguage'>
   }
     
 
@@ -20069,6 +20082,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     title: string | null
+    short_description: string | null
     season_id: number | null
     language: $Enums.AppLanguage | null
   }
@@ -20078,6 +20092,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     title: string | null
+    short_description: string | null
     season_id: number | null
     language: $Enums.AppLanguage | null
   }
@@ -20087,6 +20102,7 @@ export namespace Prisma {
     created_at: number
     updated_at: number
     title: number
+    short_description: number
     season_id: number
     language: number
     _all: number
@@ -20108,6 +20124,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     title?: true
+    short_description?: true
     season_id?: true
     language?: true
   }
@@ -20117,6 +20134,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     title?: true
+    short_description?: true
     season_id?: true
     language?: true
   }
@@ -20126,6 +20144,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     title?: true
+    short_description?: true
     season_id?: true
     language?: true
     _all?: true
@@ -20222,6 +20241,7 @@ export namespace Prisma {
     created_at: Date
     updated_at: Date
     title: string
+    short_description: string
     season_id: number
     language: $Enums.AppLanguage
     _count: SeasonTranslationCountAggregateOutputType | null
@@ -20250,6 +20270,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     title?: boolean
+    short_description?: boolean
     season_id?: boolean
     language?: boolean
     season?: boolean | SeasonDefaultArgs<ExtArgs>
@@ -20260,6 +20281,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     title?: boolean
+    short_description?: boolean
     season_id?: boolean
     language?: boolean
     season?: boolean | SeasonDefaultArgs<ExtArgs>
@@ -20270,6 +20292,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     title?: boolean
+    short_description?: boolean
     season_id?: boolean
     language?: boolean
     season?: boolean | SeasonDefaultArgs<ExtArgs>
@@ -20280,11 +20303,12 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     title?: boolean
+    short_description?: boolean
     season_id?: boolean
     language?: boolean
   }
 
-  export type SeasonTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "created_at" | "updated_at" | "title" | "season_id" | "language", ExtArgs["result"]["seasonTranslation"]>
+  export type SeasonTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "created_at" | "updated_at" | "title" | "short_description" | "season_id" | "language", ExtArgs["result"]["seasonTranslation"]>
   export type SeasonTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     season?: boolean | SeasonDefaultArgs<ExtArgs>
   }
@@ -20305,6 +20329,7 @@ export namespace Prisma {
       created_at: Date
       updated_at: Date
       title: string
+      short_description: string
       season_id: number
       language: $Enums.AppLanguage
     }, ExtArgs["result"]["seasonTranslation"]>
@@ -20735,6 +20760,7 @@ export namespace Prisma {
     readonly created_at: FieldRef<"SeasonTranslation", 'DateTime'>
     readonly updated_at: FieldRef<"SeasonTranslation", 'DateTime'>
     readonly title: FieldRef<"SeasonTranslation", 'String'>
+    readonly short_description: FieldRef<"SeasonTranslation", 'String'>
     readonly season_id: FieldRef<"SeasonTranslation", 'Int'>
     readonly language: FieldRef<"SeasonTranslation", 'AppLanguage'>
   }
@@ -57849,7 +57875,8 @@ export namespace Prisma {
     password: 'password',
     block_expires_at: 'block_expires_at',
     google_id: 'google_id',
-    role: 'role'
+    role: 'role',
+    preferred_language: 'preferred_language'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -57992,6 +58019,7 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     title: 'title',
+    short_description: 'short_description',
     season_id: 'season_id',
     language: 'language'
   };
@@ -58490,6 +58518,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AppLanguage'
+   */
+  export type EnumAppLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppLanguage'>
+    
+
+
+  /**
+   * Reference to a field of type 'AppLanguage[]'
+   */
+  export type ListEnumAppLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppLanguage[]'>
+    
+
+
+  /**
    * Reference to a field of type 'MovieType'
    */
   export type EnumMovieTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovieType'>
@@ -58514,20 +58556,6 @@ export namespace Prisma {
    * Reference to a field of type 'MovieFileType[]'
    */
   export type ListEnumMovieFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovieFileType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'AppLanguage'
-   */
-  export type EnumAppLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppLanguage'>
-    
-
-
-  /**
-   * Reference to a field of type 'AppLanguage[]'
-   */
-  export type ListEnumAppLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppLanguage[]'>
     
 
 
@@ -58820,6 +58848,7 @@ export namespace Prisma {
     block_expires_at?: DateTimeNullableFilter<"User"> | Date | string | null
     google_id?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFilter<"User"> | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenListRelationFilter
     comments?: CommentListRelationFilter
     user_movies?: UserMovieListRelationFilter
@@ -58839,6 +58868,7 @@ export namespace Prisma {
     block_expires_at?: SortOrderInput | SortOrder
     google_id?: SortOrderInput | SortOrder
     role?: SortOrder
+    preferred_language?: SortOrder
     refresh_tokens?: RefreshTokenOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
     user_movies?: UserMovieOrderByRelationAggregateInput
@@ -58861,6 +58891,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     block_expires_at?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFilter<"User"> | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenListRelationFilter
     comments?: CommentListRelationFilter
     user_movies?: UserMovieListRelationFilter
@@ -58880,6 +58911,7 @@ export namespace Prisma {
     block_expires_at?: SortOrderInput | SortOrder
     google_id?: SortOrderInput | SortOrder
     role?: SortOrder
+    preferred_language?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -58900,6 +58932,7 @@ export namespace Prisma {
     block_expires_at?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     google_id?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    preferred_language?: EnumAppLanguageWithAggregatesFilter<"User"> | $Enums.AppLanguage
   }
 
   export type MovieWhereInput = {
@@ -59652,6 +59685,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"SeasonTranslation"> | Date | string
     updated_at?: DateTimeFilter<"SeasonTranslation"> | Date | string
     title?: StringFilter<"SeasonTranslation"> | string
+    short_description?: StringFilter<"SeasonTranslation"> | string
     season_id?: IntFilter<"SeasonTranslation"> | number
     language?: EnumAppLanguageFilter<"SeasonTranslation"> | $Enums.AppLanguage
     season?: XOR<SeasonScalarRelationFilter, SeasonWhereInput>
@@ -59662,6 +59696,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     title?: SortOrder
+    short_description?: SortOrder
     season_id?: SortOrder
     language?: SortOrder
     season?: SeasonOrderByWithRelationInput
@@ -59675,6 +59710,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"SeasonTranslation"> | Date | string
     updated_at?: DateTimeFilter<"SeasonTranslation"> | Date | string
     title?: StringFilter<"SeasonTranslation"> | string
+    short_description?: StringFilter<"SeasonTranslation"> | string
     season_id?: IntFilter<"SeasonTranslation"> | number
     language?: EnumAppLanguageFilter<"SeasonTranslation"> | $Enums.AppLanguage
     season?: XOR<SeasonScalarRelationFilter, SeasonWhereInput>
@@ -59685,6 +59721,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     title?: SortOrder
+    short_description?: SortOrder
     season_id?: SortOrder
     language?: SortOrder
     _count?: SeasonTranslationCountOrderByAggregateInput
@@ -59702,6 +59739,7 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"SeasonTranslation"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"SeasonTranslation"> | Date | string
     title?: StringWithAggregatesFilter<"SeasonTranslation"> | string
+    short_description?: StringWithAggregatesFilter<"SeasonTranslation"> | string
     season_id?: IntWithAggregatesFilter<"SeasonTranslation"> | number
     language?: EnumAppLanguageWithAggregatesFilter<"SeasonTranslation"> | $Enums.AppLanguage
   }
@@ -61905,6 +61943,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
@@ -61924,6 +61963,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
@@ -61942,6 +61982,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
@@ -61961,6 +62002,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
@@ -61980,6 +62022,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
   }
 
   export type UserUpdateManyMutationInput = {
@@ -61991,6 +62034,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -62003,6 +62047,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
 
   export type MovieCreateInput = {
@@ -62733,6 +62778,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     title: string
+    short_description: string
     language: $Enums.AppLanguage
     season: SeasonCreateNestedOneWithoutTranslationsInput
   }
@@ -62742,6 +62788,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     title: string
+    short_description: string
     season_id: number
     language: $Enums.AppLanguage
   }
@@ -62750,6 +62797,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     season?: SeasonUpdateOneRequiredWithoutTranslationsNestedInput
   }
@@ -62759,6 +62807,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     season_id?: IntFieldUpdateOperationsInput | number
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
@@ -62768,6 +62817,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     title: string
+    short_description: string
     season_id: number
     language: $Enums.AppLanguage
   }
@@ -62776,6 +62826,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
 
@@ -62784,6 +62835,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     season_id?: IntFieldUpdateOperationsInput | number
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
@@ -64990,6 +65042,13 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type EnumAppLanguageFilter<$PrismaModel = never> = {
+    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumAppLanguageFilter<$PrismaModel> | $Enums.AppLanguage
+  }
+
   export type RefreshTokenListRelationFilter = {
     every?: RefreshTokenWhereInput
     some?: RefreshTokenWhereInput
@@ -65075,6 +65134,7 @@ export namespace Prisma {
     block_expires_at?: SortOrder
     google_id?: SortOrder
     role?: SortOrder
+    preferred_language?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -65091,6 +65151,7 @@ export namespace Prisma {
     block_expires_at?: SortOrder
     google_id?: SortOrder
     role?: SortOrder
+    preferred_language?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -65103,6 +65164,7 @@ export namespace Prisma {
     block_expires_at?: SortOrder
     google_id?: SortOrder
     role?: SortOrder
+    preferred_language?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -65197,6 +65259,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type EnumAppLanguageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumAppLanguageWithAggregatesFilter<$PrismaModel> | $Enums.AppLanguage
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAppLanguageFilter<$PrismaModel>
+    _max?: NestedEnumAppLanguageFilter<$PrismaModel>
   }
 
   export type EnumMovieTypeFilter<$PrismaModel = never> = {
@@ -65478,13 +65550,6 @@ export namespace Prisma {
     _max?: NestedEnumMovieFileTypeFilter<$PrismaModel>
   }
 
-  export type EnumAppLanguageFilter<$PrismaModel = never> = {
-    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumAppLanguageFilter<$PrismaModel> | $Enums.AppLanguage
-  }
-
   export type MovieTranslationCountOrderByAggregateInput = {
     id?: SortOrder
     created_at?: SortOrder
@@ -65526,16 +65591,6 @@ export namespace Prisma {
   export type MovieTranslationSumOrderByAggregateInput = {
     id?: SortOrder
     movie_id?: SortOrder
-  }
-
-  export type EnumAppLanguageWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumAppLanguageWithAggregatesFilter<$PrismaModel> | $Enums.AppLanguage
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAppLanguageFilter<$PrismaModel>
-    _max?: NestedEnumAppLanguageFilter<$PrismaModel>
   }
 
   export type LanguageScalarRelationFilter = {
@@ -65891,6 +65946,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     title?: SortOrder
+    short_description?: SortOrder
     season_id?: SortOrder
     language?: SortOrder
   }
@@ -65905,6 +65961,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     title?: SortOrder
+    short_description?: SortOrder
     season_id?: SortOrder
     language?: SortOrder
   }
@@ -65914,6 +65971,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     title?: SortOrder
+    short_description?: SortOrder
     season_id?: SortOrder
     language?: SortOrder
   }
@@ -67852,6 +67910,10 @@ export namespace Prisma {
     set?: $Enums.UserRole
   }
 
+  export type EnumAppLanguageFieldUpdateOperationsInput = {
+    set?: $Enums.AppLanguage
+  }
+
   export type RefreshTokenUpdateManyWithoutUserNestedInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -68608,10 +68670,6 @@ export namespace Prisma {
     create?: XOR<MovieCreateWithoutTranslationsInput, MovieUncheckedCreateWithoutTranslationsInput>
     connectOrCreate?: MovieCreateOrConnectWithoutTranslationsInput
     connect?: MovieWhereUniqueInput
-  }
-
-  export type EnumAppLanguageFieldUpdateOperationsInput = {
-    set?: $Enums.AppLanguage
   }
 
   export type MovieUpdateOneRequiredWithoutTranslationsNestedInput = {
@@ -70852,6 +70910,13 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type NestedEnumAppLanguageFilter<$PrismaModel = never> = {
+    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumAppLanguageFilter<$PrismaModel> | $Enums.AppLanguage
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -70962,6 +71027,16 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
+  export type NestedEnumAppLanguageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumAppLanguageWithAggregatesFilter<$PrismaModel> | $Enums.AppLanguage
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAppLanguageFilter<$PrismaModel>
+    _max?: NestedEnumAppLanguageFilter<$PrismaModel>
+  }
+
   export type NestedEnumMovieTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.MovieType | EnumMovieTypeFieldRefInput<$PrismaModel>
     in?: $Enums.MovieType[] | ListEnumMovieTypeFieldRefInput<$PrismaModel>
@@ -71021,23 +71096,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMovieFileTypeFilter<$PrismaModel>
     _max?: NestedEnumMovieFileTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumAppLanguageFilter<$PrismaModel = never> = {
-    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumAppLanguageFilter<$PrismaModel> | $Enums.AppLanguage
-  }
-
-  export type NestedEnumAppLanguageWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AppLanguage | EnumAppLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AppLanguage[] | ListEnumAppLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumAppLanguageWithAggregatesFilter<$PrismaModel> | $Enums.AppLanguage
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAppLanguageFilter<$PrismaModel>
-    _max?: NestedEnumAppLanguageFilter<$PrismaModel>
   }
 
   export type NestedEnumSeasonFileTypeFilter<$PrismaModel = never> = {
@@ -73379,6 +73437,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     title: string
+    short_description: string
     language: $Enums.AppLanguage
   }
 
@@ -73387,6 +73446,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     title: string
+    short_description: string
     language: $Enums.AppLanguage
   }
 
@@ -73515,6 +73575,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"SeasonTranslation"> | Date | string
     updated_at?: DateTimeFilter<"SeasonTranslation"> | Date | string
     title?: StringFilter<"SeasonTranslation"> | string
+    short_description?: StringFilter<"SeasonTranslation"> | string
     season_id?: IntFilter<"SeasonTranslation"> | number
     language?: EnumAppLanguageFilter<"SeasonTranslation"> | $Enums.AppLanguage
   }
@@ -74614,6 +74675,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
     otps?: OtpCreateNestedManyWithoutUserInput
@@ -74632,6 +74694,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
     otps?: OtpUncheckedCreateNestedManyWithoutUserInput
@@ -74785,6 +74848,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
     otps?: OtpUpdateManyWithoutUserNestedInput
@@ -74803,6 +74867,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
     otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
@@ -74820,6 +74885,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
@@ -74838,6 +74904,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
@@ -74903,6 +74970,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
@@ -74921,6 +74989,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
@@ -77029,6 +77098,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     otps?: OtpCreateNestedManyWithoutUserInput
@@ -77047,6 +77117,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     otps?: OtpUncheckedCreateNestedManyWithoutUserInput
@@ -77184,6 +77255,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     otps?: OtpUpdateManyWithoutUserNestedInput
@@ -77202,6 +77274,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
@@ -77379,6 +77452,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     comments?: CommentCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
     otps?: OtpCreateNestedManyWithoutUserInput
@@ -77397,6 +77471,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
     otps?: OtpUncheckedCreateNestedManyWithoutUserInput
@@ -77430,6 +77505,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     comments?: CommentUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
     otps?: OtpUpdateManyWithoutUserNestedInput
@@ -77448,6 +77524,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
     otps?: OtpUncheckedUpdateManyWithoutUserNestedInput
@@ -77465,6 +77542,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
@@ -77483,6 +77561,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
@@ -77516,6 +77595,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
@@ -77534,6 +77614,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
@@ -77551,6 +77632,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
@@ -77569,6 +77651,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
@@ -77602,6 +77685,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
@@ -77620,6 +77704,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
@@ -77991,6 +78076,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenCreateNestedManyWithoutUserInput
     comments?: CommentCreateNestedManyWithoutUserInput
     user_movies?: UserMovieCreateNestedManyWithoutUserInput
@@ -78009,6 +78095,7 @@ export namespace Prisma {
     block_expires_at?: Date | string | null
     google_id?: string | null
     role?: $Enums.UserRole
+    preferred_language?: $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     user_movies?: UserMovieUncheckedCreateNestedManyWithoutUserInput
@@ -78042,6 +78129,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUpdateManyWithoutUserNestedInput
@@ -78060,6 +78148,7 @@ export namespace Prisma {
     block_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     google_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    preferred_language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
     refresh_tokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     user_movies?: UserMovieUncheckedUpdateManyWithoutUserNestedInput
@@ -78900,6 +78989,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     title: string
+    short_description: string
     language: $Enums.AppLanguage
   }
 
@@ -78958,6 +79048,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
 
@@ -78966,6 +79057,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
 
@@ -78974,6 +79066,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    short_description?: StringFieldUpdateOperationsInput | string
     language?: EnumAppLanguageFieldUpdateOperationsInput | $Enums.AppLanguage
   }
 

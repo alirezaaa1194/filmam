@@ -6,6 +6,7 @@ import {
   CreateNotificationDto,
   SendNotificationDto,
 } from './dto/notification.dto';
+import { defaultLang } from '../lib/utils';
 
 @Controller('notification')
 export class NotificationController {
@@ -25,15 +26,17 @@ export class NotificationController {
   @Post('send')
   @UseGuards(JwtAuthGuard)
   async testNotification(@Req() req, @Body() body: SendNotificationDto) {
-    await this.notificationService.sendNotification(
+    return await this.notificationService.sendNotification(
       [req.user.userId],
-      body.title,
-      body.description,
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpzt95j-gQy0i3tz2b3MCxW1297o5lEt70nKrUtVJJiA&s',
+      [
+        {
+          title: body.title,
+          description: body.description,
+          image:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpzt95j-gQy0i3tz2b3MCxW1297o5lEt70nKrUtVJJiA&s',
+          lang: defaultLang,
+        },
+      ],
     );
-
-    return {
-      success: true,
-    };
   }
 }

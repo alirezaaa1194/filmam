@@ -12,22 +12,23 @@ datasource db {
 }
 
 model User {
-  id                Int                @id @default(autoincrement())
-  created_at        DateTime           @default(now())
-  updated_at        DateTime           @updatedAt
-  username          String
-  email             String             @unique
-  password          String?
-  block_expires_at  DateTime?
-  google_id         String?            @unique
-  role              UserRole           @default(USER)
-  refresh_tokens    RefreshToken[]
-  comments          Comment[]
-  user_movies       UserMovie[]
-  otps              Otp[]
-  login_requests    LoginRequest[]
-  commentVotes      CommentVote[]
-  pushSubscriptions PushSubscription[]
+  id                 Int                @id @default(autoincrement())
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
+  username           String
+  email              String             @unique
+  password           String?
+  block_expires_at   DateTime?
+  google_id          String?            @unique
+  role               UserRole           @default(USER)
+  preferred_language AppLanguage        @default(EN)
+  refresh_tokens     RefreshToken[]
+  comments           Comment[]
+  user_movies        UserMovie[]
+  otps               Otp[]
+  login_requests     LoginRequest[]
+  commentVotes       CommentVote[]
+  pushSubscriptions  PushSubscription[]
 
   @@map("users")
 }
@@ -185,13 +186,14 @@ model SeasonFile {
 }
 
 model SeasonTranslation {
-  id         Int         @id @default(autoincrement())
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  title      String
-  season_id  Int
-  language   AppLanguage
-  season     Season      @relation(fields: [season_id], references: [id], onDelete: Cascade)
+  id                Int         @id @default(autoincrement())
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+  title             String
+  short_description String
+  season_id         Int
+  language          AppLanguage
+  season            Season      @relation(fields: [season_id], references: [id], onDelete: Cascade)
 
   @@map("season_translation")
 }
@@ -640,7 +642,6 @@ model PushSubscription {
 
   @@unique([endpoint])
   @@map("push_subscriptions")
-
 }
 
 enum UserRole {

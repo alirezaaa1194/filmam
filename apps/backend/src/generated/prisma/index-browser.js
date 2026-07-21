@@ -130,7 +130,8 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   block_expires_at: 'block_expires_at',
   google_id: 'google_id',
-  role: 'role'
+  role: 'role',
+  preferred_language: 'preferred_language'
 };
 
 exports.Prisma.MovieScalarFieldEnum = {
@@ -237,6 +238,7 @@ exports.Prisma.SeasonTranslationScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   title: 'title',
+  short_description: 'short_description',
   season_id: 'season_id',
   language: 'language'
 };
@@ -569,6 +571,12 @@ exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN'
 };
 
+exports.AppLanguage = exports.$Enums.AppLanguage = {
+  FA: 'FA',
+  EN: 'EN',
+  AR: 'AR'
+};
+
 exports.MovieType = exports.$Enums.MovieType = {
   CINEMATIC: 'CINEMATIC',
   SERIES: 'SERIES'
@@ -580,12 +588,6 @@ exports.MovieFileType = exports.$Enums.MovieFileType = {
   THUMBNAIL: 'THUMBNAIL',
   TRAILER: 'TRAILER',
   FILM: 'FILM'
-};
-
-exports.AppLanguage = exports.$Enums.AppLanguage = {
-  FA: 'FA',
-  EN: 'EN',
-  AR: 'AR'
 };
 
 exports.SeasonFileType = exports.$Enums.SeasonFileType = {

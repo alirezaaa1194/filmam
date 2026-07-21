@@ -236,6 +236,7 @@ export class AuthService {
           username: otpDto.username,
           email,
           password: hashedPassword,
+          preferred_language: otpDto.preferred_language,
         });
       } else if (!user && otpType === OtpType.LOGIN) {
         throw new NotFoundException('User not found');

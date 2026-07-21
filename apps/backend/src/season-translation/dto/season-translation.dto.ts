@@ -9,6 +9,11 @@ export class CreateSeasonTranslationDto {
   @IsNotEmpty()
   title: string;
 
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  short_description: string;
+
   @ApiProperty({ example: defaultLang, required: true })
   @IsEnum(AppLanguage)
   @IsNotEmpty()

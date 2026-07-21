@@ -7,6 +7,8 @@ import { SeasonRepository } from './repository/season.repository';
 import { UserModule } from '../user/user.module';
 import { MovieModule } from '../movie/movie.module';
 import { UserMovieModule } from '../user-movie/user-movie.module';
+import { NotificationModule } from '../notification/notification.module';
+import { UploadModule } from '../upload/upload.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { UserMovieModule } from '../user-movie/user-movie.module';
     SeasonFileModule,
     MovieModule,
     UserMovieModule,
+    NotificationModule,
+    UploadModule
   ],
   controllers: [SeasonController],
   providers: [SeasonRepository, SeasonService],

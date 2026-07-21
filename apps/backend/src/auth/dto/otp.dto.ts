@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
+import { AppLanguage } from '../../generated/prisma';
+import { defaultLang } from '../../lib/utils';
 
 export class LoginOtpDto {
   @ApiProperty({
@@ -45,6 +47,15 @@ export class SignupOtpDto {
   })
   @MinLength(8)
   password: string;
+
+  @ApiProperty({
+    enum: AppLanguage,
+    default: defaultLang,
+    required: true,
+  })
+  @IsEnum(AppLanguage)
+  @IsNotEmpty()
+  preferred_language!: AppLanguage;
 
   @ApiProperty({
     example: '12345',
