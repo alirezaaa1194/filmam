@@ -1,6 +1,5 @@
 import {
   registerDecorator,
-  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -27,8 +26,9 @@ export class RequiredTranslationsConstraint implements ValidatorConstraintInterf
     return missingLanguages.length === 0;
   }
 
-  defaultMessage(args: ValidationArguments) {
-    return 'Translations must contain FA, EN and AR.';
+  defaultMessage() {
+    const appLanguagesLabel = appLanguages.map((l) => l.language).join(', ');
+    return `Translations must contain ${appLanguagesLabel}.`;
   }
 }
 

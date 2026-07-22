@@ -10,7 +10,7 @@ export class CreateHeaderMenuTranslationDto {
   })
   @IsEnum(AppLanguage)
   @IsNotEmpty()
-  language: AppLanguage;
+  language!: AppLanguage;
 
   @ApiProperty({
     type: 'string',
@@ -18,5 +18,7 @@ export class CreateHeaderMenuTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 }
+
+

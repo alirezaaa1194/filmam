@@ -24,6 +24,7 @@ export class LanguageTranslationRepository {
   async updateLanguageTranslation(
     languageId: number,
     body: CreateLanguageTranslationDto[],
+    tx?: TransactionType,
   ) {
     const languageTranslationData = body.map((languageTranslation) => ({
       language_id: languageId,
@@ -31,13 +32,13 @@ export class LanguageTranslationRepository {
       label: languageTranslation.label,
     }));
 
-    await prisma.languageTranslation.deleteMany({
+    await (tx || prisma).languageTranslation.deleteMany({
       where: {
         language_id: languageId,
       },
     });
 
-    return await prisma.languageTranslation.createMany({
+    return await (tx || prisma).languageTranslation.createMany({
       data: languageTranslationData,
     });
   }

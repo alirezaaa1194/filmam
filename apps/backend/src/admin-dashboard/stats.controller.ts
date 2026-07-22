@@ -2,8 +2,13 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { StatsService } from './stats.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { GetAnalyticsStatsDto } from './dto/stats.dto';
+import {
+  OverviewStatsDto,
+  AnalyticsStatsDto,
+  SummaryStatsDto,
+} from './dto/stats.response.dto';
 
 @Controller('admin')
 export class StatsController {
@@ -11,6 +16,7 @@ export class StatsController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOkResponse({ type: OverviewStatsDto })
   @Get('stats/overview')
   async getOverviewStats() {
     return await this.statsService.getOverviewStats();
@@ -18,6 +24,7 @@ export class StatsController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOkResponse({ type: AnalyticsStatsDto })
   @Get('stats/analytics')
   async getAnalyticsStats(@Query() query: GetAnalyticsStatsDto) {
     return await this.statsService.getAnalyticsStats(query);
@@ -25,6 +32,7 @@ export class StatsController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOkResponse({ type: SummaryStatsDto })
   @Get('summary')
   async getSummary() {
     return await this.statsService.getSummary();

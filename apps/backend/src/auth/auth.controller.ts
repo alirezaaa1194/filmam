@@ -23,88 +23,44 @@ import {
 } from './dto/password.dto';
 import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { MeResponseDto } from './dto/me.dto';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { MeResponseDto } from './dto/auth.response.dto';
 import { CreateUserDto } from '../user/dto/user.dto';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { TokenResponseDto } from '../common/dto/response.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        message: { type: 'string' },
-      },
-    },
-  })
+  @ApiOkResponse({ type: MessageResponseDto })
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.login(loginDto);
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
-        accessTokenExpiresIn: {
-          type: 'string',
-          example: new Date().toISOString(),
-        },
-        refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
-        refreshTokenExpiresIn: {
-          type: 'string',
-          example: new Date().toISOString(),
-        },
-      },
-    },
-  })
+  @ApiOkResponse({ type: TokenResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('login-verify')
   async verify(@Body() otpDto: LoginOtpDto) {
     return await this.authService.verifyOtp(otpDto);
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        message: { type: 'string' },
-      },
-    },
-  })
+  @ApiOkResponse({ type: MessageResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('signup')
   async signup(@Body() signupDto: CreateUserDto) {
     return await this.authService.signup(signupDto);
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
-        accessTokenExpiresIn: {
-          type: 'string',
-          example: new Date().toISOString(),
-        },
-        refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
-        refreshTokenExpiresIn: {
-          type: 'string',
-          example: new Date().toISOString(),
-        },
-      },
-    },
-  })
+  @ApiOkResponse({ type: TokenResponseDto })
   @Post('signup-verify')
   async signupVerify(@Body() signupOtpDto: SignupOtpDto) {
     return await this.authService.verifyOtp(signupOtpDto);
   }
 
-  @ApiResponse({ type: MeResponseDto })
+  @ApiOkResponse({ type: MeResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
@@ -112,14 +68,7 @@ export class AuthController {
     return await this.authService.me(req.user);
   }
 
-  @ApiResponse({
-    status: 204,
-    schema: {
-      properties: {
-        message: { type: 'string' },
-      },
-    },
-  })
+  @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put('change-password')
@@ -134,50 +83,20 @@ export class AuthController {
     );
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        message: { type: 'string' },
-      },
-    },
-  })
+  @ApiOkResponse({ type: MessageResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('forget-password')
   async forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {
     return await this.authService.forgetPassword(forgetPasswordDto.email);
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        message: { type: 'string' },
-      },
-    },
-  })
+  @ApiOkResponse({ type: MessageResponseDto })
   @Put('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return await this.authService.resetPassword(resetPasswordDto);
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        access_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
-        accessTokenExpiresIn: {
-          type: 'string',
-          example: new Date().toISOString(),
-        },
-        refresh_token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIs...' },
-        refreshTokenExpiresIn: {
-          type: 'string',
-          example: new Date().toISOString(),
-        },
-      },
-    },
-  })
+  @ApiOkResponse({ type: TokenResponseDto })
   @ApiBearerAuth()
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
@@ -186,14 +105,7 @@ export class AuthController {
     return this.authService.refresh(req.user.userId, refreshToken);
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: {
-      properties: {
-        message: { type: 'string' },
-      },
-    },
-  })
+  @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Post('logout')
@@ -203,6 +115,7 @@ export class AuthController {
     return this.authService.logout(req.user.userId, refreshToken);
   }
 
+  @ApiOkResponse({ type: MessageResponseDto })
   @Post('internal/cleanup-otp')
   @HttpCode(HttpStatus.OK)
   async cleanupOtp(@Headers('x-cron-secret') secret: string) {

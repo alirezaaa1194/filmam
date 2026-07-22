@@ -11,6 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CreateLanguageTranslationDto } from '../../language-translation/dto/language-translation.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateLanguageDto {
   @ApiProperty({
@@ -19,7 +20,7 @@ export class CreateLanguageDto {
   })
   @IsNotEmpty()
   @IsString()
-  code: string;
+  code!: string;
 
   @ApiProperty({
     type: [CreateLanguageTranslationDto],
@@ -30,7 +31,8 @@ export class CreateLanguageDto {
   @ValidateNested({ each: true })
   @Type(() => CreateLanguageTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateLanguageTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateLanguageTranslationDto[];
 }
 export class DeleteLanguagesDto {
   @ApiProperty({
@@ -39,7 +41,9 @@ export class DeleteLanguagesDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  language_ids: number[];
+  language_ids!: number[];
 }
 
 export class GetAllLanguagesDto extends CommonQueryParamsDto {}
+
+

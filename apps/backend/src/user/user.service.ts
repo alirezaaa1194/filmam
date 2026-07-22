@@ -23,21 +23,11 @@ export class UserService {
   constructor(private userRepository: UserRepository) {}
 
   async getUserByEmail(userEmail: string) {
-    const user = await this.userRepository.getUserByEmail(userEmail);
-    return user;
-    // if (user) {
-    // } else {
-    //   throw new NotFoundException('User not found');
-    // }
+    return await this.userRepository.getUserByEmail(userEmail);
   }
 
   async getUserById(userId: number) {
-    const user = await this.userRepository.getUserById(userId);
-    return user;
-    // if (user) {
-    // } else {
-    //   throw new NotFoundException('User not found');
-    // }
+    return await this.userRepository.getUserById(userId);
   }
 
   async signupUser(userInfo: CreateUserDto | GoogleAuthDto) {
@@ -85,7 +75,7 @@ export class UserService {
       body.users_ids,
     );
     if (deletedUsers.count === 0) {
-      throw new NotFoundException('user not found');
+      throw new NotFoundException('User not found');
     }
   }
 
@@ -126,8 +116,4 @@ export class UserService {
   async updateUserInfo(userId: number, newInfo: UpdateUserInfoDto) {
     return await this.userRepository.updateUserInfo(userId, newInfo);
   }
-
-  // async getAllUserMovies(userId: number, query: GetAllUserMovieDto) {
-  //   return await this.userMovieService.getAllUserMovies(userId, query);
-  // }
 }

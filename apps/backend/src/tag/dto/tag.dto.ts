@@ -11,6 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CreateTagTranslationDto } from '../../tag-translation/dto/tag-translation.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateTagDto {
   @ApiProperty({
@@ -19,7 +20,7 @@ export class CreateTagDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: [CreateTagTranslationDto],
@@ -30,7 +31,8 @@ export class CreateTagDto {
   @ValidateNested({ each: true })
   @Type(() => CreateTagTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateTagTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateTagTranslationDto[];
 }
 
 export class DeleteTagsDto {
@@ -40,7 +42,9 @@ export class DeleteTagsDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  tag_ids: number[];
+  tag_ids!: number[];
 }
 
 export class GetAllTagsDto extends CommonQueryParamsDto {}
+
+

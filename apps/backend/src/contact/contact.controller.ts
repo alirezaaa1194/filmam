@@ -17,20 +17,24 @@ import {
   GetAllContactsDto,
   RejectContactDto,
 } from './dto/contact.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { ContactResponseDto, PaginatedContactsDto } from './dto/contact.response.dto';
 
 @Controller('contact')
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
+  @ApiCreatedResponse({ type: ContactResponseDto })
   @Post()
   async createContact(@Body() body: CreateContactDto) {
     return await this.contactService.createContact(body);
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin')
   async deleteContacts(@Body() body: DeleteContactsDto) {
@@ -38,6 +42,7 @@ export class ContactController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: ContactResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/answer/:contactId')
   async answerContact(
@@ -48,6 +53,7 @@ export class ContactController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: ContactResponseDto })
   @Put('admin/reject/:contactId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async rejectContact(
@@ -58,6 +64,7 @@ export class ContactController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedContactsDto })
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getAllContacts(@Query() query: GetAllContactsDto) {
@@ -65,6 +72,7 @@ export class ContactController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: ContactResponseDto })
   @Get('admin/:contactId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getCommentDetailAdmin(@Param('contactId') contactId: number) {

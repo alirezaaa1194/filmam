@@ -12,17 +12,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Filmam Api')
     .setVersion('1.0')
-    .addBearerAuth
-    // {
-    //   type: 'http',
-    //   scheme: 'bearer',
-    //   bearerFormat: 'JWT',
-    //   name: 'JWT',
-    //   description: 'Enter JWT token',
-    //   in: 'header',
-    // },
-    // 'JWT-auth', // This name here is important for matching up with @ApiBearerAuth() in your controller!
-    ()
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document, {
@@ -37,10 +27,10 @@ async function bootstrap() {
       }
     `,
     customCssUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.1/swagger-ui.min.css',
+      'https://cdn.jsdelivr.net/npm/swagger-ui@5.32.11/dist/swagger-ui.min.css',
     customJs: [
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.1/swagger-ui-bundle.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.1/swagger-ui-standalone-preset.min.js',
+      'https://cdn.jsdelivr.net/npm/swagger-ui@5.32.11/dist/swagger-ui-bundle.min.js',
+      'https://cdn.jsdelivr.net/npm/swagger-ui@5.32.11/dist/swagger-ui-standalone-preset.min.js',
     ],
   });
   app.useGlobalPipes(
@@ -49,21 +39,16 @@ async function bootstrap() {
     }),
   );
 
-  // app.enableCors({
-  //   origin: [
-  //     'https://filmamapp.ir',
-  //     'http://localhost:3000',
-  //     // 'http://localhost:4000',
-  //     'http://localhost:7700',
-  //   ],
-  //   credentials: true,
-  // });
-
   app.enableCors({
-    origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: [
+      'https://filmamapp.ir',
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://localhost:7700',
+    ],
     credentials: true,
   });
+
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
   await app.listen(process.env.PORT ?? 4000);

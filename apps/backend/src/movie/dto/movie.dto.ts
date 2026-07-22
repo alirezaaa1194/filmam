@@ -16,6 +16,7 @@ import { Transform, Type } from 'class-transformer';
 import { CreateMovieFilesDto } from '../../movie-file/dto/movie-file.dto';
 import { CreateMovieFactorsDto } from '../../movie-factor/dto/movie-factor.dto';
 import { appLanguages, defaultLang } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 import { SortByType, SortType } from '../../common/enums';
 
 export class CreateMovieDto {
@@ -25,7 +26,7 @@ export class CreateMovieDto {
   })
   @IsNotEmpty()
   @IsEnum(MovieType)
-  type: MovieType;
+  type!: MovieType;
 
   @ApiProperty({
     type: 'number',
@@ -35,7 +36,7 @@ export class CreateMovieDto {
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  released_year: number;
+  released_year!: number;
 
   @ApiProperty({
     type: 'number',
@@ -53,7 +54,7 @@ export class CreateMovieDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: 'string',
@@ -61,7 +62,7 @@ export class CreateMovieDto {
   })
   @IsNotEmpty()
   @IsString()
-  combined_tags: string;
+  combined_tags!: string;
 
   @ApiProperty({
     example: [1, 2, 3],
@@ -70,7 +71,7 @@ export class CreateMovieDto {
   @IsNotEmpty()
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  genres: number[];
+  genres!: number[];
 
   @ApiProperty({
     example: [1, 2, 3],
@@ -79,17 +80,7 @@ export class CreateMovieDto {
   @IsNotEmpty()
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  tags: number[];
-
-  @ApiProperty({
-    example: [1, 2, 3],
-    required: true,
-  })
-  @IsNotEmpty()
-  @IsArray()
-  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  @ArrayMinSize(1)
-  countries: number[];
+  tags!: number[];
 
   @ApiProperty({
     example: [1, 2, 3],
@@ -99,7 +90,17 @@ export class CreateMovieDto {
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
   @ArrayMinSize(1)
-  languages: number[];
+  countries!: number[];
+
+  @ApiProperty({
+    example: [1, 2, 3],
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
+  @ArrayMinSize(1)
+  languages!: number[];
 
   @ApiProperty({
     type: [CreateMovieFactorsDto],
@@ -109,8 +110,7 @@ export class CreateMovieDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateMovieFactorsDto)
-  // @ArrayMinSize(8)
-  factors: CreateMovieFactorsDto[];
+  factors!: CreateMovieFactorsDto[];
 
   @ApiProperty({
     type: [CreateMovieTranslationDto],
@@ -121,7 +121,8 @@ export class CreateMovieDto {
   @ValidateNested({ each: true })
   @Type(() => CreateMovieTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateMovieTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateMovieTranslationDto[];
 
   @ApiProperty({
     type: [CreateMovieFilesDto],
@@ -131,7 +132,7 @@ export class CreateMovieDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateMovieFilesDto)
-  files: CreateMovieFilesDto[];
+  files!: CreateMovieFilesDto[];
 }
 
 export class DeleteMoviesDto {
@@ -142,7 +143,7 @@ export class DeleteMoviesDto {
   @IsNotEmpty()
   @IsArray()
   @IsNumber({ allowNaN: false }, { each: true })
-  movie_ids: number[];
+  movie_ids!: number[];
 }
 
 export class GetMovieDetailPublicDto {
@@ -292,3 +293,5 @@ export class GetAllMoviesPublicDto {
   @IsOptional()
   type?: MovieType;
 }
+
+

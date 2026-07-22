@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import {
   CreateEpisodeDto,
   DeleteEpisodesDto,
@@ -20,12 +20,19 @@ import {
   GetEpisodeDetailPublicDto,
 } from './dto/episode.dto';
 import { EpisodeService } from './episode.service';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import {
+  EpisodeDetailAdminResponseDto,
+  EpisodeDetailPublicResponseDto,
+  PaginatedEpisodesDto,
+} from './dto/episode.response.dto';
 
 @Controller('episode')
 export class EpisodeController {
   constructor(private readonly episodeService: EpisodeService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: EpisodeDetailAdminResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('admin')
   async createEpisode(@Body() body: CreateEpisodeDto) {
@@ -33,6 +40,7 @@ export class EpisodeController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: EpisodeDetailAdminResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/:episodeId')
   async updateEpisode(
@@ -43,6 +51,7 @@ export class EpisodeController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin')
   async deleteEpisodes(@Body() body: DeleteEpisodesDto) {
@@ -50,6 +59,7 @@ export class EpisodeController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedEpisodesDto })
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getAllEpisodes(@Query() query: GetAllEpisodesDto) {
@@ -57,6 +67,7 @@ export class EpisodeController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: EpisodeDetailAdminResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('admin/:episodeId')
   async getEpisodeDetailAdmin(
@@ -65,8 +76,7 @@ export class EpisodeController {
     return await this.episodeService.getEpisodeDetailAdmin(episodeId);
   }
 
-  // @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOkResponse({ type: EpisodeDetailPublicResponseDto })
   @Get('/:episodeSlug')
   async getEpisodeDetailPublic(
     @Param('episodeSlug') episodeSlug: string,

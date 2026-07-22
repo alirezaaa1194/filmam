@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import {
   CreateSeasonDto,
   DeleteSeasonsDto,
@@ -22,12 +22,16 @@ import {
 } from './dto/season.dto';
 import { SeasonService } from './season.service';
 import { Public } from '../common/decorators/public.decorator';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { SeasonResponseDto, PaginatedSeasonsDto } from './dto/season.response.dto';
+import { PaginatedEpisodesDto } from '../episode/dto/episode.response.dto';
 
 @Controller('season')
 export class SeasonController {
   constructor(private readonly seasonService: SeasonService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: SeasonResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('admin')
   async createSeason(@Body() body: CreateSeasonDto) {
@@ -35,6 +39,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: SeasonResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/:seasonId')
   async updateSeason(
@@ -45,6 +50,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin')
   async deleteSeasons(@Body() body: DeleteSeasonsDto) {
@@ -52,6 +58,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedSeasonsDto })
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getAllSeasons(@Query() query: GetAllSeasonsDto) {
@@ -59,6 +66,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: SeasonResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('admin/:seasonId')
   async getSeasonDetail(@Param('seasonId') seasonId: number) {
@@ -66,6 +74,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedEpisodesDto })
   @Get('/:seasonSlug/episodes')
   @Public()
   @UseGuards(JwtAuthGuard)

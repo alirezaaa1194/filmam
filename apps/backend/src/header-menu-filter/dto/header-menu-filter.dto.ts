@@ -9,7 +9,7 @@ export class HeaderMenuFilter {
   })
   @IsNotEmpty()
   @IsEnum(SectionFilterKey)
-  filter_key: SectionFilterKey;
+  filter_key!: SectionFilterKey;
 
   @ApiProperty({
     type: 'string',
@@ -17,5 +17,7 @@ export class HeaderMenuFilter {
   })
   @IsString()
   @IsNotEmpty()
-  filter_value: string;
+  filter_value!: string;
 }
+
+

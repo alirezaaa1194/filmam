@@ -14,6 +14,7 @@ import { CreateRoleTranslationDto } from '../../role-translation/dto/role-transl
 import { ApiProperty } from '@nestjs/swagger';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateRoleDto {
   @ApiProperty({
@@ -22,7 +23,7 @@ export class CreateRoleDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     example: RoleType.CREATOR,
@@ -30,7 +31,7 @@ export class CreateRoleDto {
   })
   @IsNotEmpty()
   @IsEnum(RoleType)
-  type: string;
+  type!: string;
 
   @ApiProperty({
     type: [CreateRoleTranslationDto],
@@ -41,7 +42,8 @@ export class CreateRoleDto {
   @ValidateNested({ each: true })
   @Type(() => CreateRoleTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateRoleTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateRoleTranslationDto[];
 }
 
 export class GetAllRolesDto extends CommonQueryParamsDto {}
@@ -53,5 +55,6 @@ export class DeleteRoleDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  role_ids: number[];
+  role_ids!: number[];
 }
+

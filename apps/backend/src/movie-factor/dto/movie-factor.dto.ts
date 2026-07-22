@@ -11,6 +11,7 @@ import {
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
 import { AppLanguage } from '../../generated/prisma';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateMovieFactorTranslationDto {
   @ApiProperty({
@@ -19,12 +20,12 @@ export class CreateMovieFactorTranslationDto {
   })
   @IsNotEmpty()
   @IsString()
-  role_name: string;
+  role_name!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  lang: AppLanguage;
+  lang!: AppLanguage;
 }
 
 export class CreateMovieFactorsDto {
@@ -36,7 +37,7 @@ export class CreateMovieFactorsDto {
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  factor_id: number;
+  factor_id!: number;
 
   @ApiProperty({
     example: 1,
@@ -46,7 +47,7 @@ export class CreateMovieFactorsDto {
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  role_id: number;
+  role_id!: number;
 
   @ApiProperty({
     example: 1,
@@ -56,7 +57,7 @@ export class CreateMovieFactorsDto {
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  order: number;
+  order!: number;
 
   @ApiProperty({
     type: [CreateMovieFactorTranslationDto],
@@ -67,7 +68,10 @@ export class CreateMovieFactorsDto {
   @ValidateNested({ each: true })
   @Type(() => CreateMovieFactorTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateMovieFactorTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateMovieFactorTranslationDto[];
 }
 
 export class GetFactorMoviesDto extends CommonQueryParamsDto {}
+
+

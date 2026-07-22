@@ -18,16 +18,19 @@ import {
   GetSectionDetailDto,
 } from './dto/section.dto';
 import { SectionService } from './section.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Public } from '../common/decorators/public.decorator';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { SectionDetailResponseDto, PaginatedSectionsDto } from './dto/section.response.dto';
 
 @Controller('section')
 export class SectionController {
   constructor(private sectionService: SectionService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: SectionDetailResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createSectionAdmin(@Body() body: CreateSectionDto) {
@@ -35,6 +38,7 @@ export class SectionController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: SectionDetailResponseDto })
   @Get('admin/:sectionId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getSectionDetailAdmin(
@@ -47,6 +51,7 @@ export class SectionController {
     );
   }
 
+  @ApiOkResponse({ type: PaginatedSectionsDto })
   @Get('public/all')
   @ApiBearerAuth()
   @Public()
@@ -56,6 +61,7 @@ export class SectionController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: SectionDetailResponseDto })
   @Put('admin/:sectionId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateSectionAdmin(
@@ -66,6 +72,7 @@ export class SectionController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   async deleteSectionsAdmin(@Body() body: DeleteSectionsDto) {
     return await this.sectionService.deleteSectionsAdmin(body);

@@ -26,7 +26,6 @@ import { EpisodeService } from '../episode/episode.service';
 import { paginationCalculator } from '../lib/utils';
 import { TransactionType } from '../common/types/types';
 import { UserService } from '../user/user.service';
-// import { ForbiddenError } from '@nestjs/apollo';
 
 @Injectable()
 export class CommentService {
@@ -67,7 +66,7 @@ export class CommentService {
           tx,
         );
         if (!commentMovie) {
-          throw new BadRequestException('Movie was not found');
+          throw new BadRequestException('Movie not found');
         } else {
           movieId = commentMovie.id;
         }
@@ -80,7 +79,7 @@ export class CommentService {
           tx,
         );
         if (!commentEpisode) {
-          throw new BadRequestException('Episode was not found');
+          throw new BadRequestException('Episode not found');
         } else {
           movieId = commentEpisode.movie_id;
         }
@@ -115,7 +114,7 @@ export class CommentService {
       query.page_size || 10,
     );
 
-    const result = prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const comments = await this.commentRepository.getAllComments(
         {
           ...query,

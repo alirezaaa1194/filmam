@@ -2,11 +2,13 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class GoogleAuthDto {
   @IsNotEmpty()
-  username: string;
+  username!: string;
 
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 
-  google_id: string;
+  google_id!: string;
 }
+
+

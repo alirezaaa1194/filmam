@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from '../../lib/prisma';
 import { CreateRoleTranslationDto } from '../dto/role-translation.dto';
 import { TransactionType } from '../../common/types/types';
 

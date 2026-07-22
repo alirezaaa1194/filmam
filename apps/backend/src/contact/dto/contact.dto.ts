@@ -2,10 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ContactStatus } from '../../generated/prisma';
 import {
   IsArray,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
 } from 'class-validator';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
@@ -15,12 +13,12 @@ export class CreateContactDto {
   @ApiProperty({ type: 'string', example: 'example@gmail.com', required: true })
   @IsNotEmpty()
   @IsString()
-  user_email: string;
+  user_email!: string;
 
   @ApiProperty({ type: 'string', required: true })
   @IsNotEmpty()
   @IsString()
-  message: string;
+  message!: string;
 }
 
 export class DeleteContactsDto {
@@ -32,30 +30,21 @@ export class DeleteContactsDto {
   @IsNotEmpty()
   @IsArray()
   @IsNumber({ allowNaN: false }, { each: true })
-  contact_ids: number[];
+  contact_ids!: number[];
 }
 
 export class AnswerContactDto {
   @ApiProperty({ type: 'string', required: true })
   @IsNotEmpty()
   @IsString()
-  answer_message: string;
+  answer_message!: string;
 }
 
 export class RejectContactDto {
-  // @ApiProperty({
-  //   enum: ContactStatus,
-  //   example: ContactStatus.REJECTED,
-  //   required: true,
-  // })
-  // @IsNotEmpty()
-  // @IsEnum(ContactStatus)
-  // status: ContactStatus;
-
   @ApiProperty({ type: 'string', required: false })
   @IsNotEmpty()
   @IsString()
-  rejected_detail: string;
+  rejected_detail!: string;
 }
 
 export class GetAllContactsDto extends CommonQueryParamsDto {
@@ -69,3 +58,5 @@ export class GetAllContactsDto extends CommonQueryParamsDto {
   )
   status?: ContactStatus[];
 }
+
+

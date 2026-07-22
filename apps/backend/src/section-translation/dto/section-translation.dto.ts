@@ -10,7 +10,7 @@ export class CreateSectionTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @ApiProperty({
     type: 'string',
@@ -26,5 +26,7 @@ export class CreateSectionTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  lang: AppLanguage;
+  lang!: AppLanguage;
 }
+
+

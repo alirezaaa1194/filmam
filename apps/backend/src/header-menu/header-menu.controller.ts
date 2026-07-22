@@ -9,7 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import {
@@ -19,12 +19,15 @@ import {
   GetAllHeaderMenusPublicDto,
 } from './dto/header-menu.dto';
 import { HeaderMenuService } from './header-menu.service';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { HeaderMenuResponseDto, PaginatedHeaderMenusDto } from './dto/header-menu.response.dto';
 
 @Controller('header-menu')
 export class HeaderMenuController {
   constructor(private readonly headerMenuService: HeaderMenuService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: MessageResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createHeaderMenu(@Body() body: CreateHeaderMenuDto) {
@@ -32,6 +35,7 @@ export class HeaderMenuController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Put('admin/:menuId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateHeaderMenu(
@@ -42,6 +46,7 @@ export class HeaderMenuController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteHeaderMenus(@Body() body: DeleteHeaderMenuDto) {
@@ -49,18 +54,21 @@ export class HeaderMenuController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedHeaderMenusDto })
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getAllHeaderMenusAdmin(@Query() query: GetAllHeaderMenusAdminDto) {
     return await this.headerMenuService.getAllHeaderMenusAdmin(query);
   }
 
+  @ApiOkResponse({ type: [HeaderMenuResponseDto] })
   @Get('public/all')
   async getAllHeaderMenusPublic(@Query() query: GetAllHeaderMenusPublicDto) {
     return await this.headerMenuService.getAllHeaderMenusPublic(query);
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: HeaderMenuResponseDto })
   @Get('admin/:menuId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getHeaderMenuDetail(@Param('menuId') menuId: number) {

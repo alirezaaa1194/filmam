@@ -33,7 +33,7 @@ export class ContactRepository {
   async rejectContact(contactId: number, body: RejectContactDto) {
     return await prisma.contact.update({
       where: { id: contactId },
-      data: body,
+      data: { ...body, status: ContactStatus.REJECTED },
     });
   }
 

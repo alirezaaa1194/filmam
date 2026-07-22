@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { TransactionType } from '../../common/types/types';
 import {
   CreateHeaderMenuDto,
-  GetAllHeaderMenusAdminDto,
 } from '../dto/header-menu.dto';
 import { prisma } from '../../lib/prisma';
 import { AppLanguage } from '../../generated/prisma';

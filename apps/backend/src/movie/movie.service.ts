@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateMovieDto, DeleteMoviesDto } from './dto/movie.dto';
 import { MovieRepository } from './repository/movie.repository';
@@ -596,13 +595,8 @@ export class MovieService {
         return [];
       }
 
-      const allMovies = await prisma.movie.findMany({
-        where: { slug: { not: movieSlug } },
-        include: {
-          translations: { where: { language: lang } },
-          files: { include: { upload: true } },
-        },
-      });
+      const allMovies =
+        await this.movieRepository.findMoviesForRecommendation(movieSlug, lang);
 
       if (allMovies.length === 0) return [];
 

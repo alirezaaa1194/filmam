@@ -13,6 +13,7 @@ import { AppLanguage } from '../../generated/prisma';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateGenreDto {
   @ApiProperty({
@@ -21,7 +22,7 @@ export class CreateGenreDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: [CreateGenreTranslationDto],
@@ -32,7 +33,8 @@ export class CreateGenreDto {
   @ValidateNested({ each: true })
   @Type(() => CreateGenreTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateGenreTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateGenreTranslationDto[];
 }
 
 export class DeleteGenresDto {
@@ -42,7 +44,7 @@ export class DeleteGenresDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  genre_ids: number[];
+  genre_ids!: number[];
 }
 
 export class GetAllGenresDto extends CommonQueryParamsDto {}
@@ -54,5 +56,7 @@ export class GetGenreDto {
   })
   @IsOptional()
   @IsString()
-  lang: AppLanguage;
+  lang!: AppLanguage;
 }
+
+

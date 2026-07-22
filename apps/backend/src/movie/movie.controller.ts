@@ -20,20 +20,22 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { MovieService } from './movie.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { AppLanguage } from '../common/enums';
-import {
-  GetUserMovieActionsDto,
-  UpdateUserMoviesDto,
-} from '../user-movie/dto/user-movie.dto';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { MovieFilterInput } from './entity/movie.entity';
 import { Public } from '../common/decorators/public.decorator';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import {
+  MovieDetailAdminResponseDto,
+  MovieDetailPublicResponseDto,
+  PaginatedMoviesDto,
+} from './dto/movie.response.dto';
 
 @Controller('movie')
 export class MovieController {
   constructor(private movieService: MovieService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: MovieDetailAdminResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createMovieAdmin(@Body() body: CreateMovieDto) {
@@ -41,6 +43,7 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteMoviesAdmin(@Body() body: DeleteMoviesDto) {
@@ -48,6 +51,7 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MovieDetailAdminResponseDto })
   @Put('admin/:movieId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateMoviesAdmin(
@@ -58,14 +62,15 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MovieDetailAdminResponseDto })
   @Get('admin/:movieId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getMovieDetailAdmin(@Param('movieId', ParseIntPipe) movieId: number) {
     return this.movieService.getMovieDetailAdmin(movieId);
   }
 
-  //graphql
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedMoviesDto })
   @Get('all')
   @Public()
   @UseGuards(JwtAuthGuard)
@@ -76,6 +81,7 @@ export class MovieController {
     );
   }
 
+  @ApiOkResponse({ type: [MovieDetailPublicResponseDto] })
   @Get('recommended/:slug')
   async getRecommendedMovies(
     @Param('slug') slug: string,
@@ -85,6 +91,7 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MovieDetailPublicResponseDto })
   @Get('/:slug')
   async getMovieDetailPublic(
     @Param('slug') slug: string,

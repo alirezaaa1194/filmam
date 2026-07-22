@@ -33,19 +33,19 @@ export class CreateCommentDto {
   })
   @IsNotEmpty()
   @IsEnum(CommentEntityType)
-  entity_type: CommentEntityType;
+  entity_type!: CommentEntityType;
 
   @ApiProperty({ type: 'string', required: true })
   @IsNotEmpty()
   @IsString()
-  body: string;
+  body!: string;
 }
 
 export class UpdateCommentDto {
   @ApiProperty({ type: 'string', required: true })
   @IsNotEmpty()
   @IsString()
-  body: string;
+  body!: string;
 }
 
 export class UpdateCommentStatusDto {
@@ -56,7 +56,7 @@ export class UpdateCommentStatusDto {
   })
   @IsNotEmpty()
   @IsEnum(CommentStatus)
-  status: CommentStatus;
+  status!: CommentStatus;
 }
 
 export class DeleteCommentsDto {
@@ -64,7 +64,7 @@ export class DeleteCommentsDto {
   @IsNotEmpty()
   @IsNumber({ allowNaN: false }, { each: true })
   @IsArray()
-  comment_ids: number[];
+  comment_ids!: number[];
 }
 
 export class GetAllCommentsDto extends CommonQueryParamsDto {
@@ -87,7 +87,7 @@ export class CommentVoteDto {
   })
   @IsNotEmpty()
   @IsEnum(CommentVoteStatus)
-  vote_status: CommentVoteStatus;
+  vote_status!: CommentVoteStatus;
 }
 
 export class GetEntityCommentsDto {
@@ -109,3 +109,5 @@ export class GetEntityCommentsDto {
   @Type(() => Number)
   page_size?: number;
 }
+
+

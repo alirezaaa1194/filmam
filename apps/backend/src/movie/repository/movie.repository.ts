@@ -326,6 +326,16 @@ export class MovieRepository {
     });
   }
 
+  async findMoviesForRecommendation(slug: string, lang: AppLanguage) {
+    return await prisma.movie.findMany({
+      where: { slug: { not: slug } },
+      include: {
+        translations: { where: { language: lang } },
+        files: { include: { upload: true } },
+      },
+    });
+  }
+
   async countMoviesByType(type: MovieType) {
     return prisma.movie.count({ where: { type } });
   }

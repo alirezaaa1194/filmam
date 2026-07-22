@@ -12,23 +12,28 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { LanguageService } from './language.service';
 import {
   CreateLanguageDto,
   DeleteLanguagesDto,
   GetAllLanguagesDto,
 } from './dto/language.dto';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { LanguageResponseDto, PaginatedLanguagesDto } from './dto/language.response.dto';
 
 @Controller('language')
 export class LanguageController {
   constructor(private readonly languageService: LanguageService) {}
+
+  @ApiOkResponse({ type: PaginatedLanguagesDto })
   @Get('all')
   async getAllLanguages(@Query() query: GetAllLanguagesDto) {
     return await this.languageService.getAllLanguages(query);
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: LanguageResponseDto })
   @Get('admin/:languageId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getLanguageDetailAdmin(@Param('languageId', ParseIntPipe) languageId: number) {
@@ -36,6 +41,7 @@ export class LanguageController {
   }
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: MessageResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createLanguage(@Body() body: CreateLanguageDto) {
@@ -43,6 +49,7 @@ export class LanguageController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteLanguages(@Body() body: DeleteLanguagesDto) {
@@ -50,6 +57,7 @@ export class LanguageController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Put('admin/:languageId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateLanguage(

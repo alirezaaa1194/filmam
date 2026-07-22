@@ -84,8 +84,8 @@ export class GenreRepository {
     });
   }
 
-  async updateGenre(genreId: number, body: CreateGenreDto) {
-    return await prisma.genre.update({
+  async updateGenre(genreId: number, body: CreateGenreDto, tx?: TransactionType) {
+    return await (tx || prisma).genre.update({
       data: {
         slug: body.slug,
       },

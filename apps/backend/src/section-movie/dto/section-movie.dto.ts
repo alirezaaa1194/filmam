@@ -7,7 +7,7 @@ export class CreateSectionMovieDto {
   @ApiProperty({ type: 'number', required: true })
   @IsNumber()
   @IsNotEmpty()
-  movie_id: number;
+  movie_id!: number;
 
   @ApiProperty({ example: SectionMovieViewMode.SLIDER_ITEM, required: false })
   @IsOptional()
@@ -17,7 +17,7 @@ export class CreateSectionMovieDto {
   @ApiProperty({ type: 'number', required: false })
   @IsNumber()
   @IsNotEmpty()
-  order: number;
+  order!: number;
 
   @ApiProperty({
     type: 'string',
@@ -26,7 +26,7 @@ export class CreateSectionMovieDto {
   })
   @IsNotEmpty()
   @IsEnum(CommentEntityType)
-  entity_type: CommentEntityType;
+  entity_type!: CommentEntityType;
   
   @ApiProperty({
     type: 'number',
@@ -37,3 +37,5 @@ export class CreateSectionMovieDto {
   @Type(() => Number)
   episode_id?: number;
 }
+
+

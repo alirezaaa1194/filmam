@@ -15,7 +15,6 @@ import { prisma } from '../lib/prisma';
 import { UpdateUserMoviesDto } from './dto/user-movie.dto';
 import { EpisodeService } from '../episode/episode.service';
 import { TransactionType } from '../common/types/types';
-// import { ForbiddenError } from '@nestjs/apollo';
 import { UserService } from '../user/user.service';
 
 @Injectable()

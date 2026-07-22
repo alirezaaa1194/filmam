@@ -74,10 +74,14 @@ export class LanguageService {
   }
 
   async updateLanguage(languageId: number, body: CreateLanguageDto) {
-    await this.languageRepository.updateLanguage(languageId, body);
-    return await this.languageTranslationService.updateLanguageTranslation(
-      languageId,
-      body.translations,
-    );
+    const result = await prisma.$transaction(async (tx) => {
+      await this.languageRepository.updateLanguage(languageId, body, tx);
+      return await this.languageTranslationService.updateLanguageTranslation(
+        languageId,
+        body.translations,
+        tx,
+      );
+    });
+    return result;
   }
 }

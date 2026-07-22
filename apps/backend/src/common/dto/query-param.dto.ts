@@ -52,3 +52,4 @@ export class CommonQueryParamsDto {
   @IsOptional()
   sort?: SortType;
 }
+

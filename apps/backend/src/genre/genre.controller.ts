@@ -18,17 +18,22 @@ import {
   DeleteGenresDto,
   GetAllGenresDto,
 } from './dto/genre.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { GenreResponseDto, PaginatedGenresDto } from './dto/genre.response.dto';
 
 @Controller('genre')
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
+
+  @ApiOkResponse({ type: PaginatedGenresDto })
   @Get('all')
   async getAllGenres(@Query() query: GetAllGenresDto) {
     return await this.genreService.getAllGenres(query);
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: GenreResponseDto })
   @Get('admin/:genreId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getGenreDetailAdmin(@Param('genreId', ParseIntPipe) genreId: number) {
@@ -36,6 +41,7 @@ export class GenreController {
   }
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: MessageResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createGenre(@Body() body: CreateGenreDto) {
@@ -43,6 +49,7 @@ export class GenreController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteGenres(@Body() body: DeleteGenresDto) {
@@ -50,6 +57,7 @@ export class GenreController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Put('admin/:genreId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateGenre(

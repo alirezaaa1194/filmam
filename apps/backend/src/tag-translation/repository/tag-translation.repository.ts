@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from '../../lib/prisma';
 import { CreateTagTranslationDto } from '../dto/tag-translation.dto';
 import { TransactionType } from '../../common/types/types';
 

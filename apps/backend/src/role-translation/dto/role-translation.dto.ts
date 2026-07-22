@@ -7,10 +7,12 @@ export class CreateRoleTranslationDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @ApiProperty({ example: defaultLang, required: true })
   @IsEnum(AppLanguage)
   @IsNotEmpty()
-  lang: AppLanguage;
+  lang!: AppLanguage;
 }
+
+

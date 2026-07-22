@@ -22,7 +22,7 @@ export class UploadService {
         contentType: file.mimetype,
         upsert: false,
       });
-    if (error) throw new ForbiddenException();
+    if (error) throw new ForbiddenException('Upload failed');
     const { data: publicUrlData } = this.supabase.storage
       .from(bucket)
       .getPublicUrl(filePath);

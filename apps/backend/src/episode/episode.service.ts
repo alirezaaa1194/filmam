@@ -102,7 +102,7 @@ export class EpisodeService {
         tx,
       );
       if (!season) {
-        throw new BadRequestException('season was not found');
+        throw new BadRequestException('Season not found');
       }
       if (season.movie.type !== MovieType.SERIES) {
         throw new BadRequestException('Movie type must be SERIES');
@@ -171,7 +171,7 @@ export class EpisodeService {
         tx,
       );
       if (!season) {
-        throw new BadRequestException('season was not found');
+        throw new BadRequestException('Season not found');
       }
 
       const { translations, files, ...otherBodyData } = body;
@@ -236,7 +236,7 @@ export class EpisodeService {
       });
       return { ...otherEpisodeData, files: episodeFiles };
     } else {
-      throw new NotFoundException('episode was not found');
+      throw new NotFoundException('Episode not found');
     }
   }
 
@@ -289,7 +289,7 @@ export class EpisodeService {
           next_episode: nextEpisode,
         };
       } else {
-        throw new NotFoundException('episode was not found');
+        throw new NotFoundException('Episode not found');
       }
     });
 

@@ -7,15 +7,17 @@ export class CreateEpisodeTranslationDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  short_description: string;
+  short_description!: string;
 
   @ApiProperty({ example: defaultLang, required: true })
   @IsEnum(AppLanguage)
   @IsNotEmpty()
-  language: AppLanguage;
+  language!: AppLanguage;
 }
+
+

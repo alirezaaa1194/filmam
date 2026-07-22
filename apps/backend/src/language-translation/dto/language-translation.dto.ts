@@ -6,10 +6,12 @@ export class CreateLanguageTranslationDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  label: string;
+  label!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  lang: AppLanguage;
+  lang!: AppLanguage;
 }
+
+

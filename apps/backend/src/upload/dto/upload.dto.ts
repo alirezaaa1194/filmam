@@ -81,7 +81,7 @@ export class UploadFromUrlDto {
   })
   @IsString()
   @IsNotEmpty()
-  mime_type: string;
+  mime_type!: string;
 
   @ApiProperty({
     type: 'string',
@@ -89,7 +89,7 @@ export class UploadFromUrlDto {
   })
   @IsString()
   @IsNotEmpty()
-  path: string;
+  path!: string;
 }
 
 export class DeleteUploadDto {
@@ -100,5 +100,7 @@ export class DeleteUploadDto {
   @IsArray()
   @ArrayNotEmpty()
   @IsInt({ each: true })
-  upload_ids: number[];
+  upload_ids!: number[];
 }
+
+

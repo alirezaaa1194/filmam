@@ -6,7 +6,6 @@ import { MovieTranslationModule } from '../movie-translation/movie-translation.m
 import { MovieFileModule } from '../movie-file/movie-file.module';
 import { MovieFactorModule } from '../movie-factor/movie-factor.module';
 import { MovieGenreModule } from '../movie-genre/movie-genre.module';
-// import { MovieResolver } from './movie.resolver';
 import { MovieCountryModule } from '../movie-country/movie-country.module';
 import { MovieLanguageModule } from '../movie-language/movie-language.module';
 import { MovieTagModule } from '../movie-tag/movie-tag.module';

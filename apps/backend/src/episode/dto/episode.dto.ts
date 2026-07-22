@@ -24,7 +24,7 @@ export class CreateEpisodeDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  order: number;
+  order!: number;
 
   @ApiProperty({
     type: 'string',
@@ -32,7 +32,7 @@ export class CreateEpisodeDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: 'number',
@@ -40,7 +40,7 @@ export class CreateEpisodeDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  season_id: number;
+  season_id!: number;
 
   @ApiProperty({
     type: [CreateEpisodeTranslationDto],
@@ -52,7 +52,7 @@ export class CreateEpisodeDto {
   @Type(() => CreateEpisodeTranslationDto)
   @ArrayMinSize(appLanguages.length)
   @RequiredTranslations()
-  translations: CreateEpisodeTranslationDto[];
+  translations!: CreateEpisodeTranslationDto[];
 
   @ApiProperty({
     type: [CreateEpisodeFileDto],
@@ -62,7 +62,7 @@ export class CreateEpisodeDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateEpisodeFileDto)
-  files: CreateEpisodeFileDto[];
+  files!: CreateEpisodeFileDto[];
 }
 
 export class DeleteEpisodesDto {
@@ -74,7 +74,7 @@ export class DeleteEpisodesDto {
   @IsNotEmpty()
   @IsArray()
   @IsNumber({ allowNaN: false }, { each: true })
-  episode_ids: number[];
+  episode_ids!: number[];
 }
 
 export class GetAllEpisodesDto extends CommonQueryParamsDto {}
@@ -89,3 +89,5 @@ export class GetEpisodeDetailPublicDto {
   @IsOptional()
   lang?: AppLanguage;
 }
+
+

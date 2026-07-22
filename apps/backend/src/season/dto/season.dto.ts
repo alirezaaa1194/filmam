@@ -12,6 +12,7 @@ import { appLanguages } from '../../lib/utils';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateSeasonFileDto } from '../../season-file/dto/season-file.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateSeasonDto {
   @ApiProperty({
@@ -20,7 +21,7 @@ export class CreateSeasonDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  order: number;
+  order!: number;
 
   @ApiProperty({
     type: 'string',
@@ -28,7 +29,7 @@ export class CreateSeasonDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: 'number',
@@ -36,7 +37,7 @@ export class CreateSeasonDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  movie_id: number;
+  movie_id!: number;
 
   @ApiProperty({
     type: [CreateSeasonTranslationDto],
@@ -47,7 +48,8 @@ export class CreateSeasonDto {
   @ValidateNested({ each: true })
   @Type(() => CreateSeasonTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateSeasonTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateSeasonTranslationDto[];
 
   @ApiProperty({
     type: [CreateSeasonFileDto],
@@ -57,7 +59,7 @@ export class CreateSeasonDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateSeasonFileDto)
-  files: CreateSeasonFileDto[];
+  files!: CreateSeasonFileDto[];
 }
 
 export class DeleteSeasonsDto {
@@ -69,9 +71,11 @@ export class DeleteSeasonsDto {
   @IsNotEmpty()
   @IsArray()
   @IsNumber({ allowNaN: false }, { each: true })
-  season_ids: number[];
+  season_ids!: number[];
 }
 
 export class GetAllSeasonsDto extends CommonQueryParamsDto {}
 
 export class GetSeasonEpisodesDto extends CommonQueryParamsDto {}
+
+

@@ -19,17 +19,19 @@ import {
   ChangeUserPasswordAdminDto,
   CreateUserDto,
   DeleteUsersDto,
-  GetAllUserMovieDto,
   GetAllUsersDto,
   UpdateUserInfoDto,
 } from './dto/user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import { UserResponseDto, PaginatedUsersDto } from './dto/user.response.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('admin/create-user')
   async createUserAdmin(@Body() body: CreateUserDto) {
@@ -37,6 +39,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedUsersDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('admin/all')
   async getAllUsersAdmin(@Query() query: GetAllUsersDto) {
@@ -44,6 +47,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('admin/:userId')
   async getUserAdmin(@Param('userId', ParseIntPipe) userId: number) {
@@ -51,6 +55,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/ban/:userId')
   async banUserAdmin(
@@ -61,6 +66,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin/delete-users')
   async deleteUserAdmin(@Body() body: DeleteUsersDto) {
@@ -68,6 +74,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard)
   @Delete('delete-account')
   async deleteUserAccount(@Req() req) {
@@ -75,6 +82,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/change-role/:userId')
   async changeUserRoleAdmin(@Param('userId', ParseIntPipe) userId: number) {
@@ -82,6 +90,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/change-password/:userId')
   async changeUserPasswordAdmin(
@@ -92,6 +101,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/:userId')
   async updateUserInfoAdmin(
@@ -102,16 +112,10 @@ export class UserController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard)
   @Put('update-info')
   async updateUserInfo(@Req() req, @Body() body: UpdateUserInfoDto) {
     return await this.userService.updateUserInfo(req.user.userId, body);
   }
-
-  // @ApiBearerAuth()
-  // @Get('movies')
-  // @UseGuards(JwtAuthGuard)
-  // async getAllUserMovies(@Req() req, @Query() query: GetAllUserMovieDto) {
-  //   return await this.userService.getAllUserMovies(req.user.userId, query);
-  // }
 }

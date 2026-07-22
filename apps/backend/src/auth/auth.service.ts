@@ -13,7 +13,6 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { UserType } from './types/auth.type';
 import { createHash, randomUUID, randomInt } from 'crypto';
-import { Resend } from 'resend';
 import { OtpService } from '../otp/otp.service';
 import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { ResetPasswordDto } from './dto/password.dto';
@@ -98,7 +97,6 @@ export class AuthService {
       otpType: otpType,
     });
     if (!recentOtp) {
-      const resend = new Resend(process.env.RESEND_API_Key);
       const otp = randomInt(10000, 99999);
       await this.otpService.deleteUserValidOTPs({
         userId: user?.id,
@@ -111,50 +109,6 @@ export class AuthService {
       if (user) {
         await this.loginRequestService.createLoginRequest(user.id);
       }
-      // const { error } = await resend.emails.send({
-      //   from: 'Filmam <noreply@filmamapp.ir>',
-      //   to: user?.email || userEmail || '',
-      //   subject: 'Hello World',
-      //   html: `<strong>${otp}</strong>`,
-      // });
-
-      //     const { error } = await resend.emails.send({
-      //       from: 'Filmam <noreply@filmamapp.ir>',
-      //       to: user?.email || userEmail || '',
-      //       subject:
-      //         otpType === OtpType.LOGIN
-      //           ? 'کد ورود به فیلمام'
-      //           : 'کد فعال‌سازی فیلمام',
-      //       headers: {
-      //         'Reply-To': 'filmamapp@gmail.com',
-      //         'X-Google-Original-From': 'filmamapp@gmail.com',
-      //       },
-      //       html: `
-      //   <div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
-      //     <div style="text-align: center; margin-bottom: 30px;">
-      //       <h1 style="color: #00925d; margin: 0;">فیلمام</h1>
-      //       <p style="color: #999;">فیلم و سریال</p>
-      //     </div>
-
-      //     <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
-      //       <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
-      //         ${otpType === OtpType.LOGIN ? 'کد ورود شما:' : 'کد فعال‌سازی شما:'}
-      //       </p>
-      //       <div style="background: #00925d; padding: 20px; border-radius: 8px; display: inline-block;">
-      //         <span style="font-size: 40px; font-weight: bold; color: white; letter-spacing: 5px; direction: ltr;">${otp}</span>
-      //       </div>
-      //       <p style="color: #999; margin-top: 20px; font-size: 12px;">این کد تا 5 دقیقه معتبر است</p>
-      //     </div>
-
-      //     <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-
-      //     <p style="color: #999; font-size: 11px; text-align: center;">
-      //       اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.<br>
-      //       © 2026 فیلمام
-      //     </p>
-      //   </div>
-      // `,
-      //     });
 
       const lang = user?.preferred_language ?? AppLanguage.FA;
       const { subject, html } = this.getEmailContent(otpType, otp, lang);
@@ -166,10 +120,10 @@ export class AuthService {
       );
 
       if (error) {
-        return console.error({ error });
+        throw new InternalServerErrorException('Failed to send email');
       }
 
-      return { message: 'otp sent successfully' };
+      return { message: 'OTP sent successfully' };
     } else {
       const remainingSeconds = Math.ceil(
         (recentOtp.created_at.getTime() + 2 * 60 * 1000 - Date.now()) / 1000,
@@ -367,75 +321,6 @@ export class AuthService {
     }
   }
 
-  // async login(loginDto: LoginDto) {
-  //   const { email, password } = loginDto;
-  //   const user = await this.userService.getUserByEmail(email);
-  //   if (user) {
-  //     if (
-  //       user.role !== UserRole.ADMIN &&
-  //       user.block_expires_at &&
-  //       new Date(user.block_expires_at) > new Date()
-  //     ) {
-  //       const userBlockedTime =
-  //         (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
-  //       throw new BadRequestException(
-  //         `Too many login attempts, try again after ${userBlockedTime} seconds`,
-  //       );
-  //     } else {
-  //       const getUserRecentLoggedInRequestsCounts =
-  //         await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
-  //           user.id,
-  //         );
-
-  //       if (
-  //         user.role !== UserRole.ADMIN &&
-  //         getUserRecentLoggedInRequestsCounts >= 5
-  //       ) {
-  //         const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
-  //         await this.userService.blockUser(user.id, oneHourNextTime);
-  //         const userBlockedTime =
-  //           (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
-  //           1000;
-  //         throw new BadRequestException(
-  //           `Too many login attempts, try again after ${userBlockedTime} seconds`,
-  //         );
-  //       }
-  //       if (user.password) {
-  //         const comparedPassword = await bcrypt.compare(
-  //           password,
-  //           user.password,
-  //         );
-  //         if (comparedPassword) {
-  //           return await this.jwtGenerator(user.id, user.email);
-  //         } else {
-  //           throw new UnauthorizedException('Invalid email or password');
-  //         }
-  //       } else {
-  //         throw new UnauthorizedException('Invalid email or password');
-  //       }
-  //     }
-  //   } else {
-  //     throw new NotFoundException('User not found');
-  //   }
-  // }
-
-  // async signup(signupDto: CreateUserDto) {
-  //   const { email, password, username } = signupDto;
-  //   const user = await this.userService.getUserByEmail(email);
-
-  //   if (user) {
-  //     throw new ConflictException('User with this email already exists');
-  //   } else {
-  //     const hashedPassword = await bcrypt.hash(password, 10);
-  //     const createdUser = await this.userService.signupUser({
-  //       username: username,
-  //       email,
-  //       password: hashedPassword,
-  //     });
-  //     return await this.jwtGenerator(createdUser.id, createdUser.email);
-  //   }
-  // }
-
   async me(userInfo: { userId: number; email: string }) {
     const user = await this.userService.getUserById(userInfo.userId);
     if (user) {
@@ -612,7 +497,7 @@ export class AuthService {
       );
       if (mainToken) {
         await this.refreshTokenService.deleteCurrentToken(mainToken.id);
-        return { message: 'logged out successfully' };
+        return { message: 'Logged out successfully' };
       } else {
         throw new UnauthorizedException('Invalid token');
       }
@@ -628,6 +513,6 @@ export class AuthService {
     await this.otpService.deleteExpiredOTPs();
     await this.loginRequestService.deleteExpiredLoginRequests();
     await this.refreshTokenService.deleteExpiredTokens();
-    return { message: 'Expired data deleted' };
+    return { message: 'Expired data cleaned up' };
   }
 }

@@ -40,9 +40,9 @@ export class ContactService {
     const contact = await this.contactRepository.getContactDetail(contactId);
     if (contact) {
       if (contact.status === ContactStatus.ANSWERED) {
-        throw new BadRequestException('contact has already been answered');
+        throw new BadRequestException('Contact has already been answered');
       } else if (contact.status === ContactStatus.REJECTED) {
-        throw new BadRequestException('contact rejected previously');
+        throw new BadRequestException('Contact was rejected previously');
       }
 
       await this.mailService.sendEmail(
@@ -73,7 +73,7 @@ export class ContactService {
 
       return await this.contactRepository.answerContact(contactId, body);
     } else {
-      throw new NotFoundException('contact was not found');
+      throw new NotFoundException('Contact not found');
     }
   }
 
@@ -82,7 +82,7 @@ export class ContactService {
 
     if (contact) {
       if (contact.status !== ContactStatus.PENDING) {
-        throw new BadRequestException('Can not change closed contact');
+        throw new BadRequestException('Cannot change a closed contact');
       }
 
       await this.mailService.sendEmail(
@@ -112,7 +112,7 @@ export class ContactService {
       );
       return await this.contactRepository.rejectContact(contactId, body);
     } else {
-      throw new NotFoundException('contact was not found');
+      throw new NotFoundException('Contact not found');
     }
   }
 
@@ -121,7 +121,7 @@ export class ContactService {
     if (contact) {
       return contact;
     } else {
-      throw new NotFoundException('contact was not found');
+      throw new NotFoundException('Contact not found');
     }
   }
 
@@ -131,7 +131,7 @@ export class ContactService {
       query.page_size || 10,
     );
 
-    const result = prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const contacts = await this.contactRepository.getAllContacts(
         {
           ...query,

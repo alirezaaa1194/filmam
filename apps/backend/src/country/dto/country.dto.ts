@@ -4,15 +4,14 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { AppLanguage } from '../../generated/prisma';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { CreateCountryTranslationDto } from '../../country-translation/dto/country-translation.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateCountryDto {
   @ApiProperty({
@@ -21,7 +20,7 @@ export class CreateCountryDto {
   })
   @IsNotEmpty()
   @IsString()
-  code: string;
+  code!: string;
 
   @ApiProperty({
     type: [CreateCountryTranslationDto],
@@ -32,7 +31,8 @@ export class CreateCountryDto {
   @ValidateNested({ each: true })
   @Type(() => CreateCountryTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateCountryTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateCountryTranslationDto[];
 }
 
 export class DeleteCountriesDto {
@@ -42,7 +42,8 @@ export class DeleteCountriesDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  country_ids: number[];
+  country_ids!: number[];
 }
 
 export class GetAllCountriesDto extends CommonQueryParamsDto {}
+

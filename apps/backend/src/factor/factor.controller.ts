@@ -19,13 +19,26 @@ import {
   GetAllFactorsDto,
   GetFactorDetailPublicQueryDto,
 } from './dto/factor.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { GetFactorMoviesDto } from '../movie-factor/dto/movie-factor.dto';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import {
+  FactorResponseDto,
+  FactorDetailDto,
+  PaginatedFactorsDto,
+} from './dto/factor.response.dto';
+import { PaginatedMoviesDto } from '../movie/dto/movie.response.dto';
 
 @Controller('factor')
 export class FactorController {
   constructor(private factorService: FactorService) {}
+
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: MessageResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createFactor(@Body() body: CreateFactorDto) {
@@ -33,17 +46,20 @@ export class FactorController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteFactors(@Body() body: DeleteFactorsDto) {
     return await this.factorService.deleteFactors(body);
   }
 
+  @ApiOkResponse({ type: PaginatedFactorsDto })
   @Get('all')
   async getAllFactors(@Query() query: GetAllFactorsDto) {
     return await this.factorService.getAllFactors(query);
   }
 
+  @ApiOkResponse({ type: FactorDetailDto })
   @Get('public/:factorSlug')
   async getFactorDetailPublic(
     @Param('factorSlug') factorSlug: string,
@@ -56,6 +72,7 @@ export class FactorController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: FactorResponseDto })
   @Get('admin/:factorId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getFactorDetailAdmin(
@@ -65,6 +82,7 @@ export class FactorController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Put('admin/:factorId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateFactor(
@@ -74,6 +92,7 @@ export class FactorController {
     return await this.factorService.updateFactor(factorId, body);
   }
 
+  @ApiOkResponse({ type: PaginatedMoviesDto })
   @Get('/:factorSlug/movies')
   async getFactorMovies(
     @Param('factorSlug') factorSlug: string,

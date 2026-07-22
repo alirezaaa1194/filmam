@@ -11,7 +11,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import {
   CommentVoteDto,
@@ -25,12 +25,19 @@ import { CommentService } from './comment.service';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CommentEntityType } from '../generated/prisma';
 import { Public } from '../common/decorators/public.decorator';
+import { MessageResponseDto } from '../common/dto/response.dto';
+import {
+  CommentResponseDto,
+  PaginatedCommentsDto,
+  CommentVoteResponseDto,
+} from './dto/comment.response.dto';
 
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: CommentResponseDto })
   @Post()
   @UseGuards(JwtAuthGuard)
   async createComment(@Req() req, @Body() body: CreateCommentDto) {
@@ -38,6 +45,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: CommentResponseDto })
   @Put('admin/:commentId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateComment(
@@ -48,6 +56,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: CommentResponseDto })
   @Put('admin/status/:commentId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateCommentStatus(
@@ -58,6 +67,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteComments(@Body() body: DeleteCommentsDto) {
@@ -65,6 +75,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedCommentsDto })
   @Get('admin/all')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getAllComments(@Query() query: GetAllCommentsDto) {
@@ -72,6 +83,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: CommentResponseDto })
   @Get('admin/:commentId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getCommentDetailAdmin(@Param('commentId') commentId: number) {
@@ -79,6 +91,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedCommentsDto })
   @Get('movie/:movieSlug')
   @Public()
   @UseGuards(JwtAuthGuard)
@@ -96,6 +109,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedCommentsDto })
   @Get('episode/:episodeSlug')
   @Public()
   @UseGuards(JwtAuthGuard)
@@ -113,6 +127,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiCreatedResponse({ type: CommentVoteResponseDto })
   @Post('vote/:commentId')
   @UseGuards(JwtAuthGuard)
   async commentVote(

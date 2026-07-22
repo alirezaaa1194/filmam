@@ -22,19 +22,20 @@ import { CreateSectionTranslationDto } from '../../section-translation/dto/secti
 import { CreateSectionMovieDto } from '../../section-movie/dto/section-movie.dto';
 import { Type } from 'class-transformer';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 import { appLanguages } from '../../lib/utils';
 
 export class CreateSectionDto {
   @ApiProperty({ type: 'string', required: true })
   @IsString()
   @IsNotEmpty()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({ type: 'number', example: 1, required: true })
   @IsNumber()
   @IsNotEmpty()
   @Min(1)
-  order: number;
+  order!: number;
 
   @ApiProperty({
     example: SectionViewMode.NORMAL_SLIDER,
@@ -42,7 +43,7 @@ export class CreateSectionDto {
   })
   @IsEnum(SectionViewMode)
   @IsNotEmpty()
-  view_mode: SectionViewMode;
+  view_mode!: SectionViewMode;
 
   @ApiProperty({
     example: SectionSelectionMode.AUTO,
@@ -50,7 +51,7 @@ export class CreateSectionDto {
   })
   @IsNotEmpty()
   @IsEnum(SectionSelectionMode)
-  selection_mode: SectionSelectionMode;
+  selection_mode!: SectionSelectionMode;
 
   @ApiProperty({
     example: SectionSortMode.NEWEST,
@@ -76,7 +77,8 @@ export class CreateSectionDto {
   @IsArray()
   @ValidateNested({ each: true })
   @ArrayMinSize(appLanguages.length)
-  translations: CreateSectionTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateSectionTranslationDto[];
 
   @ApiProperty({
     type: [CreateSectionMovieDto],
@@ -94,7 +96,7 @@ export class CreateSectionDto {
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
-  filters: SectionMovieFilter[];
+  filters!: SectionMovieFilter[];
 }
 
 export class SectionMovieFilter {
@@ -104,7 +106,7 @@ export class SectionMovieFilter {
   })
   @IsNotEmpty()
   @IsEnum(SectionFilterKey)
-  filter_key: SectionFilterKey;
+  filter_key!: SectionFilterKey;
 
   @ApiProperty({
     type: 'string',
@@ -112,14 +114,14 @@ export class SectionMovieFilter {
   })
   @IsString()
   @IsNotEmpty()
-  filter_value: string;
+  filter_value!: string;
 }
 
 export class DeleteSectionsDto {
   @ApiProperty({ example: [1, 2, 3], required: true })
   @IsNotEmpty()
   @IsNumber({ allowNaN: false }, { each: true })
-  sections_ids: number[];
+  sections_ids!: number[];
 }
 
 export class GetAllSectionsDto extends CommonQueryParamsDto {
@@ -142,3 +144,5 @@ export class GetSectionDetailDto {
   @IsOptional()
   lang?: AppLanguage;
 }
+
+

@@ -11,7 +11,7 @@ export class LoginOtpDto {
   })
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     example: '12345',
@@ -20,7 +20,7 @@ export class LoginOtpDto {
   })
   @IsNotEmpty()
   @MinLength(5)
-  otp: string;
+  otp!: string;
 }
 
 export class SignupOtpDto {
@@ -29,7 +29,7 @@ export class SignupOtpDto {
     required: true,
   })
   @IsNotEmpty()
-  username: string;
+  username!: string;
 
   @ApiProperty({
     example: 'user@example.com',
@@ -38,7 +38,7 @@ export class SignupOtpDto {
   })
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     example: '12345678',
@@ -46,7 +46,7 @@ export class SignupOtpDto {
     required: true,
   })
   @MinLength(8)
-  password: string;
+  password!: string;
 
   @ApiProperty({
     enum: AppLanguage,
@@ -64,5 +64,7 @@ export class SignupOtpDto {
   })
   @IsNotEmpty()
   @MinLength(5)
-  otp: string;
+  otp!: string;
 }
+
+

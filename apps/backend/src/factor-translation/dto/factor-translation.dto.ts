@@ -7,15 +7,17 @@ export class CreateFactorTranslationDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  first_name: string;
+  first_name!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  last_name: string;
+  last_name!: string;
 
   @ApiProperty({ example: defaultLang, required: true })
   @IsEnum(AppLanguage)
   @IsNotEmpty()
-  lang: AppLanguage;
+  lang!: AppLanguage;
 }
+
+

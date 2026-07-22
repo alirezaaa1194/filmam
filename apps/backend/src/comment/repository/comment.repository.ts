@@ -15,26 +15,26 @@ import { CreateCommentRepositoryBodyType } from '../type/comment.type';
 
 @Injectable()
 export class CommentRepository {
-  async createComment(userId: number, body: CreateCommentRepositoryBodyType) {
-    return await prisma.comment.create({ data: { ...body, user_id: userId } });
+  async createComment(userId: number, body: CreateCommentRepositoryBodyType, tx?: TransactionType) {
+    return await (tx || prisma).comment.create({ data: { ...body, user_id: userId } });
   }
 
-  async updateComment(commentId: number, body: UpdateCommentDto) {
-    return await prisma.comment.update({
+  async updateComment(commentId: number, body: UpdateCommentDto, tx?: TransactionType) {
+    return await (tx || prisma).comment.update({
       where: { id: commentId },
       data: { ...body },
     });
   }
 
-  async updateCommentStatus(commentId: number, body: UpdateCommentStatusDto) {
-    return await prisma.comment.update({
+  async updateCommentStatus(commentId: number, body: UpdateCommentStatusDto, tx?: TransactionType) {
+    return await (tx || prisma).comment.update({
       where: { id: commentId },
       data: { ...body },
     });
   }
 
-  async deleteComments(body: DeleteCommentsDto) {
-    return await prisma.comment.deleteMany({
+  async deleteComments(body: DeleteCommentsDto, tx?: TransactionType) {
+    return await (tx || prisma).comment.deleteMany({
       where: { id: { in: body.comment_ids } },
     });
   }
@@ -172,7 +172,7 @@ export class CommentRepository {
   }
 
   async deleteCommentVote(voteId: number, tx: TransactionType) {
-    return await prisma.commentVote.delete({
+    return await tx.commentVote.delete({
       where: { id: voteId },
     });
   }

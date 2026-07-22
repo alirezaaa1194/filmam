@@ -192,7 +192,7 @@ export class SeasonService {
         files: seasonFiles,
       };
     } else {
-      throw new NotFoundException('season was not found');
+      throw new NotFoundException('Season not found');
     }
   }
 

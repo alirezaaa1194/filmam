@@ -80,8 +80,8 @@ export class LanguageRepository {
     });
   }
 
-  async updateLanguage(languageIds: number, body: CreateLanguageDto) {
-    return await prisma.language.update({
+  async updateLanguage(languageIds: number, body: CreateLanguageDto, tx?: TransactionType) {
+    return await (tx || prisma).language.update({
       data: {
         code: body.code,
       },

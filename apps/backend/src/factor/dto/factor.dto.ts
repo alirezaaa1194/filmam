@@ -14,6 +14,7 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { appLanguages } from '../../lib/utils';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateFactorUploadDto {
   @ApiProperty({
@@ -21,7 +22,7 @@ export class CreateFactorUploadDto {
     required: true,
   })
   @IsNotEmpty()
-  upload_id: number;
+  upload_id!: number;
 
   @ApiProperty({
     example: FactorFileType.PROFILE,
@@ -29,7 +30,7 @@ export class CreateFactorUploadDto {
   })
   @IsNotEmpty()
   @IsEnum(FactorFileType)
-  upload_type: FactorFileType;
+  upload_type!: FactorFileType;
 }
 
 export class CreateFactorDto {
@@ -40,7 +41,7 @@ export class CreateFactorDto {
   })
   @IsNotEmpty()
   @IsString()
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: CreateFactorUploadDto,
@@ -59,7 +60,8 @@ export class CreateFactorDto {
   @ValidateNested({ each: true })
   @Type(() => CreateFactorTranslationDto)
   @ArrayMinSize(appLanguages.length)
-  translations: CreateFactorTranslationDto[];
+  @RequiredTranslations()
+  translations!: CreateFactorTranslationDto[];
 }
 
 export class DeleteFactorsDto {
@@ -69,7 +71,7 @@ export class DeleteFactorsDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  factor_ids: number[];
+  factor_ids!: number[];
 }
 
 export class GetFactorDetailPublicQueryDto {
@@ -83,3 +85,5 @@ export class GetFactorDetailPublicQueryDto {
 }
 
 export class GetAllFactorsDto extends CommonQueryParamsDto {}
+
+

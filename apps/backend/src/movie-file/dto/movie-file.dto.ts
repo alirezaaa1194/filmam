@@ -26,10 +26,12 @@ export class CreateMovieFilesDto {
   })
   @IsNotEmpty()
   @Type(() => Number)
-  upload_id: number;
+  upload_id!: number;
 
   @ApiProperty({ type: 'string', example: 'POSTER', required: true })
   @IsString()
   @IsNotEmpty()
-  upload_type: MovieFileType;
+  upload_type!: MovieFileType;
 }
+
+

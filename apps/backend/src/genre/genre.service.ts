@@ -71,7 +71,7 @@ export class GenreService {
 
   async updateGenre(genreId: number, body: CreateGenreDto) {
     const result = await prisma.$transaction(async (tx) => {
-      await this.genreRepository.updateGenre(genreId, body);
+      await this.genreRepository.updateGenre(genreId, body, tx);
       return await this.genreTranslationService.updateGenreTranslation(
         genreId,
         body.translations,

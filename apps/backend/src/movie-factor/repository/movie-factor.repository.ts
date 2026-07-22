@@ -33,7 +33,6 @@ export class MovieFactorRepository {
       });
     });
     return await Promise.all(createdMovieFactors);
-    // return await tx.movieFactor.createMany({ data: body });
   }
 
   async deleteMovieFactors(movieId: number, tx: TransactionType) {

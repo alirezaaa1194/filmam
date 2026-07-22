@@ -3,12 +3,14 @@ import { FactorFileType } from '../../generated/prisma';
 
 export class CreateFactorFileDto {
   @IsNotEmpty()
-  factor_id: number;
+  factor_id!: number;
 
   @IsNotEmpty()
-  upload_id: number;
+  upload_id!: number;
 
   @IsString()
   @IsNotEmpty()
-  upload_type: FactorFileType;
+  upload_type!: FactorFileType;
 }
+
+

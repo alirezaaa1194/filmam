@@ -24,10 +24,12 @@ export class LanguageTranslationService {
   async updateLanguageTranslation(
     genreId: number,
     body: CreateLanguageTranslationDto[],
+    tx?: TransactionType,
   ) {
     return await this.genreTranslationRepository.updateLanguageTranslation(
       genreId,
       body,
+      tx,
     );
   }
 }

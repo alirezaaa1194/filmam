@@ -6,10 +6,12 @@ export class CreateSeasonFileDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  upload_id: number;
+  upload_id!: number;
 
   @ApiProperty({ example: SeasonFileType.POSTER, required: true })
   @IsEnum(SeasonFileType)
   @IsNotEmpty()
-  type: SeasonFileType;
+  type!: SeasonFileType;
 }
+
+

@@ -1,4 +1,4 @@
-import { AppLanguage, HeaderMenuType, SectionFilterKey } from '../../generated/prisma';
+import { AppLanguage, HeaderMenuType } from '../../generated/prisma';
 import { CreateHeaderMenuTranslationDto } from '../../header-menu-translation/dto/header-menu-translation.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
@@ -15,6 +15,7 @@ import {
 import { appLanguages, defaultLang } from '../../lib/utils';
 import { HeaderMenuFilter } from '../../header-menu-filter/dto/header-menu-filter.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateHeaderMenuDto {
   @ApiProperty({
@@ -23,7 +24,7 @@ export class CreateHeaderMenuDto {
   })
   @IsEnum(HeaderMenuType)
   @IsNotEmpty()
-  menu_type: HeaderMenuType;
+  menu_type!: HeaderMenuType;
 
   @ApiProperty({
     type: 'string',
@@ -37,7 +38,7 @@ export class CreateHeaderMenuDto {
   @IsNumber()
   @IsNotEmpty()
   @Min(1)
-  order: number;
+  order!: number;
 
   @ApiProperty({ type: 'number', example: 1, required: false })
   @IsNumber()
@@ -52,15 +53,8 @@ export class CreateHeaderMenuDto {
   @IsArray()
   @ValidateNested({ each: true })
   @ArrayMinSize(appLanguages.length)
-  translations: CreateHeaderMenuTranslationDto[];
-
-  //   @ApiProperty({
-  //     required: true,
-  //     isArray: true,
-  //   })
-  //   @IsNotEmpty()
-  //   @IsArray()
-  //   @ValidateNested({ each: true })
+  @RequiredTranslations()
+  translations!: CreateHeaderMenuTranslationDto[];
 
   @ApiProperty({
     required: false,
@@ -79,7 +73,7 @@ export class DeleteHeaderMenuDto {
   })
   @IsArray()
   @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
-  menu_ids: number[];
+  menu_ids!: number[];
 }
 
 export class GetAllHeaderMenusAdminDto extends CommonQueryParamsDto {}
@@ -95,3 +89,5 @@ export class GetAllHeaderMenusPublicDto {
   @IsOptional()
   lang?: AppLanguage;
 }
+
+

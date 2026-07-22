@@ -41,12 +41,6 @@ export class Movie {
   @Field(() => Int)
   watches_counts: number;
 
-  // @Field(() => [])
-  // seasons: [];
-
-  // @Field(() => [])
-  // episodes: [];
-
   @Field(() => String)
   title: string;
 

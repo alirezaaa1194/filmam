@@ -9,7 +9,7 @@ export class CreateMovieTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @ApiProperty({
     type: 'string',
@@ -17,7 +17,7 @@ export class CreateMovieTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  short_description: string;
+  short_description!: string;
 
   @ApiProperty({
     type: 'string',
@@ -25,7 +25,7 @@ export class CreateMovieTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description!: string;
 
   @ApiProperty({
     example: 'FA',
@@ -33,5 +33,7 @@ export class CreateMovieTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  language: AppLanguage;
+  language!: AppLanguage;
 }
+
+
