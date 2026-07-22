@@ -504,6 +504,10 @@ export class UserMovieService {
     }
   }
 
+  async getUserMoviesByMovieAndType(movieId: number, type: UserMovieType) {
+    return await this.userMovieRepository.findUserMoviesByMovieAndType(movieId, type);
+  }
+
   async getUserWatchEpisodes(userId: number) {
     return await this.userMovieRepository.getUserWatchEpisodes(userId);
   }

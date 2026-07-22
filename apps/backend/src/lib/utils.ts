@@ -100,7 +100,7 @@ export const appLanguages = [
   {
     language: AppLanguage.EN,
   },
-  // {
-  //   language: AppLanguage.AR,
-  // },
+  {
+    language: AppLanguage.AR,
+  },
 ];

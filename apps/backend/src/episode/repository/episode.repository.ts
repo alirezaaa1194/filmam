@@ -5,11 +5,31 @@ import {
 } from '../../common/types/types';
 import { CreateEpisodeRepositoryProps } from '../type/episode.type';
 import { prisma } from '../../lib/prisma';
-import { AppLanguage } from '../../generated/prisma';
+import { AppLanguage, UserMovieType } from '../../generated/prisma';
 import { defaultLang } from '../../lib/utils';
 
 @Injectable()
 export class EpisodeRepository {
+  async findSeasonWithMovie(seasonId: number, tx?: TransactionType) {
+    return await (tx ? tx : prisma).season.findUnique({
+      where: { id: seasonId },
+      include: {
+        movie: {
+          include: { translations: true },
+        },
+      },
+    });
+  }
+
+  async findNotificationUserMovies(movieId: number) {
+    return await prisma.userMovie.findMany({
+      where: {
+        type: UserMovieType.NOTIFICATION,
+        movie_id: movieId,
+      },
+    });
+  }
+
   async createEpisode(body: CreateEpisodeRepositoryProps, tx: TransactionType) {
     return await tx.episode.create({
       data: body,

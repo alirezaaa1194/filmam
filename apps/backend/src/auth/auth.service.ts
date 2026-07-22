@@ -18,9 +18,9 @@ import { OtpService } from '../otp/otp.service';
 import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { ResetPasswordDto } from './dto/password.dto';
 import { LoginRequestService } from '../login-request/login-request.service';
-import { accessTokenExpTime } from '../lib/utils';
+import { accessTokenExpTime, defaultLang } from '../lib/utils';
 import { CreateUserDto } from '../user/dto/user.dto';
-import { OtpType, UserRole } from '../generated/prisma';
+import { OtpType, UserRole, AppLanguage } from '../generated/prisma';
 import { MailService } from '../mail/mail.service';
 
 @Injectable()
@@ -156,34 +156,13 @@ export class AuthService {
       // `,
       //     });
 
+      const lang = user?.preferred_language ?? AppLanguage.FA;
+      const { subject, html } = this.getEmailContent(otpType, otp, lang);
+
       const { error } = await this.mailService.sendEmail(
         user?.email || userEmail,
-        otpType === OtpType.LOGIN ? 'کد ورود به فیلمام' : 'کد فعال‌سازی فیلمام',
-        `
-    <div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #00925d; margin: 0;">فیلمام</h1>
-        <p style="color: #999;">فیلم و سریال</p>
-      </div>
-      
-      <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
-        <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
-          ${otpType === OtpType.LOGIN ? 'کد ورود شما:' : 'کد فعال‌سازی شما:'}
-        </p>
-        <div style="background: #00925d; padding: 20px; border-radius: 8px; display: inline-block;">
-          <span style="font-size: 40px; font-weight: bold; color: white; letter-spacing: 5px; direction: ltr;">${otp}</span>
-        </div>
-        <p style="color: #999; margin-top: 20px; font-size: 12px;">این کد تا 5 دقیقه معتبر است</p>
-      </div>
-      
-      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-      
-      <p style="color: #999; font-size: 11px; text-align: center;">
-        اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.<br>
-        © 2026 فیلمام
-      </p>
-    </div>
-  `,
+        subject,
+        html,
       );
 
       if (error) {
@@ -199,6 +178,76 @@ export class AuthService {
         `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
       );
     }
+  }
+
+  private getEmailContent(otpType: OtpType, otp: number, lang: AppLanguage): { subject: string; html: string } {
+    const content = {
+      [AppLanguage.FA]: {
+        brand: 'فیلمام',
+        tagline: 'فیلم و سریال',
+        loginSubject: 'کد ورود به فیلمام',
+        signupSubject: 'کد فعال‌سازی فیلمام',
+        loginBody: 'کد ورود شما:',
+        signupBody: 'کد فعال‌سازی شما:',
+        expiry: 'این کد تا ۵ دقیقه معتبر است',
+        footer: 'اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.',
+        copyright: '© ۲۰۲۶ فیلمام',
+      },
+      [AppLanguage.EN]: {
+        brand: 'Filmam',
+        tagline: 'Movies & Series',
+        loginSubject: 'Login Code for Filmam',
+        signupSubject: 'Verification Code for Filmam',
+        loginBody: 'Your login code:',
+        signupBody: 'Your verification code:',
+        expiry: 'This code is valid for 5 minutes',
+        footer: 'If you did not request this email, please ignore it.',
+        copyright: '© 2026 Filmam',
+      },
+      [AppLanguage.AR]: {
+        brand: 'فيلمام',
+        tagline: 'أفلام ومسلسلات',
+        loginSubject: 'رمز تسجيل الدخول إلى فيلمام',
+        signupSubject: 'رمز التفعيل فيلمام',
+        loginBody: 'رمز تسجيل الدخول الخاص بك:',
+        signupBody: 'رمز التفعيل الخاص بك:',
+        expiry: 'هذا الرمز صالح لمدة ۵ دقائق',
+        footer: 'إذا لم تطلب هذا البريد الإلكتروني، يرجى تجاهله.',
+        copyright: '© ۲۰۲٦ فيلمام',
+      },
+    };
+
+    const c = content[lang] || content[defaultLang];
+    const isLogin = otpType === OtpType.LOGIN;
+
+    return {
+      subject: isLogin ? c.loginSubject : c.signupSubject,
+      html: `
+    <div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #00925d; margin: 0;">${c.brand}</h1>
+        <p style="color: #999;">${c.tagline}</p>
+      </div>
+      
+      <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
+        <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
+          ${isLogin ? c.loginBody : c.signupBody}
+        </p>
+        <div style="background: #00925d; padding: 20px; border-radius: 8px; display: inline-block;">
+          <span style="font-size: 40px; font-weight: bold; color: white; letter-spacing: 5px; direction: ltr;">${otp}</span>
+        </div>
+        <p style="color: #999; margin-top: 20px; font-size: 12px;">${c.expiry}</p>
+      </div>
+      
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+      
+      <p style="color: #999; font-size: 11px; text-align: center;">
+        ${c.footer}<br>
+        ${c.copyright}
+      </p>
+    </div>
+  `,
+    };
   }
 
   async verifyOtp(otpDto: LoginOtpDto | SignupOtpDto) {

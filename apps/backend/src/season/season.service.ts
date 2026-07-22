@@ -34,12 +34,11 @@ export class SeasonService {
   ) {}
 
   async handleSendNotification(body: CreateSeasonDto) {
-    const usersNotificationMovies = await prisma.userMovie.findMany({
-      where: {
-        type: UserMovieType.NOTIFICATION,
-        movie_id: body.movie_id,
-      },
-    });
+    const usersNotificationMovies =
+      await this.userMovieService.getUserMoviesByMovieAndType(
+        body.movie_id,
+        UserMovieType.NOTIFICATION,
+      );
 
     const usersId = usersNotificationMovies.map(
       (usersNotificationMovie) => usersNotificationMovie.user_id,

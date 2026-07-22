@@ -20,8 +20,7 @@ import { LanguageModule } from './language/language.module';
 import { TagModule } from './tag/tag.module';
 import { SectionModule } from './section/section.module';
 import { HeaderMenuModule } from './header-menu/header-menu.module';
-import { StatsModule } from './stats/stats.module';
-import { AdminSummaryModule } from './admin-summary/admin-summary.module';
+import { StatsModule } from './admin-dashboard/stats.module';
 import { NotificationModule } from './notification/notification.module';
 
 @Module({
@@ -53,7 +52,6 @@ import { NotificationModule } from './notification/notification.module';
     HeaderMenuModule,
     StatsModule,
     NotificationModule,
-    AdminSummaryModule,
   ],
   controllers: [],
   providers: [],

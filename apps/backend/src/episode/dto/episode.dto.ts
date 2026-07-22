@@ -15,6 +15,7 @@ import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { CreateEpisodeTranslationDto } from '../../episode-translation/dto/episode-translation.dto';
 import { CreateEpisodeFileDto } from '../../episode-file/dto/episode-file.dto';
 import { AppLanguage } from '../../generated/prisma';
+import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
 
 export class CreateEpisodeDto {
   @ApiProperty({
@@ -50,6 +51,7 @@ export class CreateEpisodeDto {
   @ValidateNested({ each: true })
   @Type(() => CreateEpisodeTranslationDto)
   @ArrayMinSize(appLanguages.length)
+  @RequiredTranslations()
   translations: CreateEpisodeTranslationDto[];
 
   @ApiProperty({

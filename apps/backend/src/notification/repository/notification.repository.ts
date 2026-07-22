@@ -12,4 +12,13 @@ export class NotificationRepository {
       },
     });
   }
+
+  async getPushSubscriptionsByUserIds(userIds: number[]) {
+    return await prisma.pushSubscription.findMany({
+      where: {
+        user_id: { in: userIds },
+      },
+      include: { user: true },
+    });
+  }
 }

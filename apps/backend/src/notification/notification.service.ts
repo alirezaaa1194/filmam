@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNotificationDto } from './dto/notification.dto';
 import { NotificationRepository } from './repository/notification.repository';
-import { prisma } from '../lib/prisma';
 import webpush from './webpush/web-push.config';
 import { AppLanguage } from '../generated/prisma';
-import { defaultLang } from '../lib/utils';
 
 @Injectable()
 export class NotificationService {
@@ -24,12 +22,8 @@ export class NotificationService {
       lang: AppLanguage;
     }[],
   ) {
-    const usersSubscriptions = await prisma.pushSubscription.findMany({
-      where: {
-        user_id: { in: userIds },
-      },
-      include: { user: true },
-    });
+    const usersSubscriptions =
+      await this.notificationRepository.getPushSubscriptionsByUserIds(userIds);
 
     if (!usersSubscriptions.length) {
       return;

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MovieType, UserMovieType } from '../generated/prisma';
+import { CommentStatus, ContactStatus, MovieType, UserMovieType } from '../generated/prisma';
 import { GetAnalyticsStatsDto } from './dto/stats.dto';
 import { UserRepository } from '../user/repository/user.repository';
 import { MovieRepository } from '../movie/repository/movie.repository';
@@ -7,6 +7,7 @@ import { UserMovieRepository } from '../user-movie/repository/user-movie.reposit
 import { MovieTranslationRepository } from '../movie-translation/repository/movie-translation.repository';
 import { MovieGenreRepository } from '../movie-genre/repository/movie-genre.repository';
 import { GenreTranslationRepository } from '../genre-translation/repository/genre-translation.repository';
+import { prisma } from '../lib/prisma';
 
 @Injectable()
 export class StatsService {
@@ -391,5 +392,22 @@ export class StatsService {
       top_movies: topMovies,
       top_genres: topGenres,
     };
+  }
+
+  async getSummary() {
+    const result = await prisma.$transaction(async (tx) => {
+      const pendingCommentsCount = await tx.comment.count({
+        where: { status: CommentStatus.PENDING },
+      });
+      const pendingContactsCount = await tx.contact.count({
+        where: { status: ContactStatus.PENDING },
+      });
+
+      return {
+        comments: pendingCommentsCount,
+        contacts: pendingContactsCount,
+      };
+    });
+    return result;
   }
 }

@@ -5,21 +5,28 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { GetAnalyticsStatsDto } from './dto/stats.dto';
 
-@Controller('stats')
+@Controller('admin')
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('admin/overview')
+  @Get('stats/overview')
   async getOverviewStats() {
     return await this.statsService.getOverviewStats();
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('admin/analytics')
+  @Get('stats/analytics')
   async getAnalyticsStats(@Query() query: GetAnalyticsStatsDto) {
     return await this.statsService.getAnalyticsStats(query);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Get('summary')
+  async getSummary() {
+    return await this.statsService.getSummary();
   }
 }

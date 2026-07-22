@@ -180,6 +180,15 @@ export class UserMovieRepository {
     });
   }
 
+  async findUserMoviesByMovieAndType(movieId: number, type: UserMovieType) {
+    return await prisma.userMovie.findMany({
+      where: {
+        type,
+        movie_id: movieId,
+      },
+    });
+  }
+
   async getUserWatchEpisodes(userId: number) {
     return await prisma.userMovie.findMany({
       where: {

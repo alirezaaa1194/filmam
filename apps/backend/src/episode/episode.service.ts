@@ -18,8 +18,10 @@ import {
   paginationCalculator,
 } from '../lib/utils';
 import { SortType } from '../common/enums';
-import { AppLanguage, EpisodeFileType } from '../generated/prisma';
+import { AppLanguage, EpisodeFileType, MovieType } from '../generated/prisma';
 import { TransactionType } from '../common/types/types';
+import { UploadService } from '../upload/upload.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class EpisodeService {
@@ -27,17 +29,82 @@ export class EpisodeService {
     private readonly episodeRepository: EpisodeRepository,
     private readonly episodeTranslationService: EpisodeTranslationService,
     private readonly episodeFileService: EpisodeFileService,
+    private readonly uploadService: UploadService,
+    private readonly notificationService: NotificationService,
   ) {}
+
+  async handleSendNotification(body: CreateEpisodeDto) {
+    const season = await this.episodeRepository.findSeasonWithMovie(
+      body.season_id,
+    );
+
+    if (!season || !season.movie_id) {
+      return;
+    }
+
+    const usersNotificationMovies =
+      await this.episodeRepository.findNotificationUserMovies(season.movie_id);
+
+    const usersId = usersNotificationMovies.map(
+      (usersNotificationMovie) => usersNotificationMovie.user_id,
+    );
+
+    const { translations, files } = body;
+
+    let imagePath: null | string = null;
+
+    const posterFile = files.find((f) => f.type === EpisodeFileType.POSTER);
+
+    if (posterFile) {
+      const posterFileUploadData = await this.uploadService.getUploads([
+        posterFile.upload_id,
+      ]);
+      imagePath = posterFileUploadData.map((posterFile) => posterFile.path)[0];
+    }
+
+    const notificationContentsData = translations.map((tr) => {
+      let title = '';
+      const words = tr.short_description.trim().split(/\s+/);
+      const movieTranslations = season.movie?.translations.find(
+        (mtr) => mtr.language === tr.language,
+      );
+      const description =
+        words.length > 10
+          ? `${words.slice(0, 10).join(' ')}...`
+          : words.join(' ');
+
+      if (tr.language === AppLanguage.FA) {
+        title = `🎬 ${movieTranslations?.title} - فصل ${season.order}، قسمت ${body.order} منتشر شد!`;
+      } else if (tr.language === AppLanguage.EN) {
+        title = `🎬 ${movieTranslations?.title} - Season ${season.order}, Episode ${body.order} is released!`;
+      } else if (tr.language === AppLanguage.AR) {
+        title = `🎬 ${movieTranslations?.title} - تم إطلاق الموسم ${season.order}، الحلقة ${body.order}!`;
+      }
+
+      return {
+        title,
+        description,
+        lang: tr.language,
+        image: imagePath,
+      };
+    });
+
+    return await this.notificationService.sendNotification(
+      usersId,
+      notificationContentsData,
+    );
+  }
+
   async createEpisode(body: CreateEpisodeDto) {
     const result = await prisma.$transaction(async (tx) => {
-      const season = await tx.season.findUnique({
-        where: { id: body.season_id },
-        include: { movie: true },
-      });
+      const season = await this.episodeRepository.findSeasonWithMovie(
+        body.season_id,
+        tx,
+      );
       if (!season) {
         throw new BadRequestException('season was not found');
       }
-      if (season.movie.type !== 'SERIES') {
+      if (season.movie.type !== MovieType.SERIES) {
         throw new BadRequestException('Movie type must be SERIES');
       }
 
@@ -91,15 +158,18 @@ export class EpisodeService {
 
       return createdEpisode;
     });
+
+    await this.handleSendNotification(body);
+
     return result;
   }
 
   async updateEpisode(episode_id: number, body: CreateEpisodeDto) {
     const result = await prisma.$transaction(async (tx) => {
-      const season = await tx.season.findUnique({
-        where: { id: body.season_id },
-        include: { movie: true },
-      });
+      const season = await this.episodeRepository.findSeasonWithMovie(
+        body.season_id,
+        tx,
+      );
       if (!season) {
         throw new BadRequestException('season was not found');
       }

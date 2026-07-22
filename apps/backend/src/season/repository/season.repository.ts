@@ -8,6 +8,17 @@ import { prisma } from '../../lib/prisma';
 
 @Injectable()
 export class SeasonRepository {
+  async findSeasonWithMovie(seasonId: number, tx?: TransactionType) {
+    return await (tx ? tx : prisma).season.findUnique({
+      where: { id: seasonId },
+      include: {
+        movie: {
+          include: { translations: true },
+        },
+      },
+    });
+  }
+
   async createSeason(body: CreateSeasonRepositoryProps, tx: TransactionType) {
     return await tx.season.create({
       data: body,

@@ -5,9 +5,11 @@ import { EpisodeRepository } from './repository/episode.repository';
 import { EpisodeTranslationModule } from '../episode-translation/episode-translation.module';
 import { EpisodeFileModule } from '../episode-file/episode-file.module';
 import { UserModule } from '../user/user.module';
+import { UploadModule } from '../upload/upload.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [EpisodeTranslationModule, EpisodeFileModule, forwardRef(() => UserModule)],
+  imports: [EpisodeTranslationModule, EpisodeFileModule, forwardRef(() => UserModule), UploadModule, NotificationModule],
   controllers: [EpisodeController],
   providers: [EpisodeService, EpisodeRepository],
   exports: [EpisodeService, EpisodeRepository],
