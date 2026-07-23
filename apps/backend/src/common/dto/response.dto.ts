@@ -6,8 +6,8 @@ export class CountResponseDto {
 }
 
 export class MessageResponseDto {
-  @ApiProperty({ example: 0 })
-  count!: number;
+  @ApiProperty({ example: 'Operation completed successfully' })
+  message!: string;
 }
 
 export class TokenResponseDto {

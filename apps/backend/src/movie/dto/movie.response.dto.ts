@@ -205,6 +205,29 @@ export class MovieAdminFactorProfileDto {
   type!: FactorFileType;
 }
 
+export class MovieAdminFactorTranslationDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  factor_id!: number;
+
+  @ApiProperty()
+  first_name!: string;
+
+  @ApiProperty()
+  last_name!: string;
+
+  @ApiProperty({ enum: AppLanguage })
+  language!: AppLanguage;
+}
+
 export class MovieAdminFactorDto {
   @ApiProperty()
   id!: number;
@@ -223,6 +246,9 @@ export class MovieAdminFactorDto {
 
   @ApiProperty({ type: MovieAdminFactorProfileDto })
   profile!: MovieAdminFactorProfileDto;
+
+  @ApiProperty({ type: [MovieAdminFactorTranslationDto] })
+  translations!: MovieAdminFactorTranslationDto[];
 }
 
 export class MovieAdminGenreTranslationDto {

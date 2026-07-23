@@ -15,7 +15,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { TagService } from './tag.service';
 import { CreateTagDto, DeleteTagsDto, GetAllTagsDto } from './dto/tag.dto';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { TagResponseDto, PaginatedTagsDto } from './dto/tag.response.dto';
 
 @Controller('tag')
@@ -37,7 +37,7 @@ export class TagController {
   }
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: CountResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createTag(@Body() body: CreateTagDto) {
@@ -45,7 +45,7 @@ export class TagController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteTags(@Body() body: DeleteTagsDto) {
@@ -53,7 +53,7 @@ export class TagController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Put('admin/:tagId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateTag(

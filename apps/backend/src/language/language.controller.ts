@@ -19,7 +19,7 @@ import {
   DeleteLanguagesDto,
   GetAllLanguagesDto,
 } from './dto/language.dto';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { LanguageResponseDto, PaginatedLanguagesDto } from './dto/language.response.dto';
 
 @Controller('language')
@@ -41,7 +41,7 @@ export class LanguageController {
   }
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: CountResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createLanguage(@Body() body: CreateLanguageDto) {
@@ -49,7 +49,7 @@ export class LanguageController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteLanguages(@Body() body: DeleteLanguagesDto) {
@@ -57,7 +57,7 @@ export class LanguageController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Put('admin/:languageId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateLanguage(

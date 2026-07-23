@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AppLanguage, EpisodeFileType, SourceType } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
+import { MovieDetailPublicResponseDto } from '../../movie/dto/movie.response.dto';
 
 export class EpisodeFileResponseDto {
   @ApiProperty()
@@ -113,6 +114,61 @@ export class EpisodeDetailAdminResponseDto {
   translations?: EpisodeTranslationDto[];
 }
 
+export class EpisodeDetailSeasonDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  movie_id!: number;
+
+  @ApiProperty()
+  title!: string;
+}
+
+export class EpisodeDetailNextEpisodeDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  season_id!: number;
+
+  @ApiProperty()
+  movie_id!: number;
+
+  @ApiProperty()
+  likes_count!: number;
+
+  @ApiProperty()
+  dislikes_count!: number;
+
+  @ApiProperty()
+  watches_count!: number;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  season_title!: string;
+}
+
 export class EpisodeDetailPublicResponseDto {
   @ApiProperty()
   id!: number;
@@ -152,6 +208,15 @@ export class EpisodeDetailPublicResponseDto {
 
   @ApiProperty({ type: [EpisodeFileResponseDto] })
   files!: EpisodeFileResponseDto[];
+
+  @ApiProperty({ type: MovieDetailPublicResponseDto })
+  movie!: MovieDetailPublicResponseDto;
+
+  @ApiProperty({ type: EpisodeDetailSeasonDto })
+  season!: EpisodeDetailSeasonDto;
+
+  @ApiPropertyOptional({ type: EpisodeDetailNextEpisodeDto })
+  next_episode?: EpisodeDetailNextEpisodeDto;
 }
 
 export class EpisodeListItemDto {

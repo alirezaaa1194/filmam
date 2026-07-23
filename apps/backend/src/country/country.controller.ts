@@ -19,7 +19,7 @@ import {
   DeleteCountriesDto,
   GetAllCountriesDto,
 } from './dto/country.dto';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { CountryResponseDto, CreateCountryResponseDto, PaginatedCountriesDto } from './dto/country.response.dto';
 
 @Controller('country')
@@ -49,7 +49,7 @@ export class CountryController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteCountries(@Body() body: DeleteCountriesDto) {

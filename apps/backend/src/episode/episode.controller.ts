@@ -20,7 +20,7 @@ import {
   GetEpisodeDetailPublicDto,
 } from './dto/episode.dto';
 import { EpisodeService } from './episode.service';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import {
   EpisodeDetailAdminResponseDto,
   EpisodeDetailPublicResponseDto,
@@ -51,7 +51,7 @@ export class EpisodeController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin')
   async deleteEpisodes(@Body() body: DeleteEpisodesDto) {

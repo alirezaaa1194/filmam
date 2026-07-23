@@ -19,7 +19,7 @@ import {
   GetAllGenresDto,
 } from './dto/genre.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { GenreResponseDto, PaginatedGenresDto } from './dto/genre.response.dto';
 
 @Controller('genre')
@@ -41,7 +41,7 @@ export class GenreController {
   }
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: CountResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createGenre(@Body() body: CreateGenreDto) {
@@ -49,7 +49,7 @@ export class GenreController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteGenres(@Body() body: DeleteGenresDto) {
@@ -57,7 +57,7 @@ export class GenreController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Put('admin/:genreId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateGenre(

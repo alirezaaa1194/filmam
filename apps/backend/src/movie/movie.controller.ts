@@ -23,7 +23,7 @@ import { MovieService } from './movie.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { MovieFilterInput } from './entity/movie.entity';
 import { Public } from '../common/decorators/public.decorator';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import {
   MovieAdminDetailResponseDto,
   MovieDetailPublicResponseDto,
@@ -44,7 +44,7 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteMoviesAdmin(@Body() body: DeleteMoviesDto) {

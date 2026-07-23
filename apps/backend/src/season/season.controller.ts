@@ -22,7 +22,7 @@ import {
 } from './dto/season.dto';
 import { SeasonService } from './season.service';
 import { Public } from '../common/decorators/public.decorator';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { SeasonDetailResponseDto, PaginatedSeasonsDto, PaginatedSeasonEpisodesDto } from './dto/season.response.dto';
 
 @Controller('season')
@@ -49,7 +49,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin')
   async deleteSeasons(@Body() body: DeleteSeasonsDto) {

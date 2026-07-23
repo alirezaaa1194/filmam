@@ -19,7 +19,7 @@ import {
   GetAllHeaderMenusPublicDto,
 } from './dto/header-menu.dto';
 import { HeaderMenuService } from './header-menu.service';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { HeaderMenuResponseDto, PaginatedHeaderMenusDto } from './dto/header-menu.response.dto';
 
 @Controller('header-menu')
@@ -27,7 +27,7 @@ export class HeaderMenuController {
   constructor(private readonly headerMenuService: HeaderMenuService) {}
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: CountResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createHeaderMenu(@Body() body: CreateHeaderMenuDto) {
@@ -35,7 +35,7 @@ export class HeaderMenuController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Put('admin/:menuId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateHeaderMenu(
@@ -46,7 +46,7 @@ export class HeaderMenuController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteHeaderMenus(@Body() body: DeleteHeaderMenuDto) {

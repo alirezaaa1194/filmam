@@ -74,7 +74,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard)
   @Delete('delete-account')
   async deleteUserAccount(@Req() req) {
@@ -90,7 +90,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/change-password/:userId')
   async changeUserPasswordAdmin(

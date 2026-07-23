@@ -15,7 +15,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { CreateRoleDto, DeleteRoleDto, GetAllRolesDto } from './dto/role.dto';
 import { RoleService } from './role.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import { RoleResponseDto, PaginatedRolesDto } from './dto/role.response.dto';
 
 @Controller('role')
@@ -39,7 +39,7 @@ export class RoleController {
   }
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: CountResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createRole(@Body() body: CreateRoleDto) {
@@ -47,7 +47,7 @@ export class RoleController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteRoles(@Body() body: DeleteRoleDto) {
@@ -55,7 +55,7 @@ export class RoleController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Put('admin/:roleId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateRole(

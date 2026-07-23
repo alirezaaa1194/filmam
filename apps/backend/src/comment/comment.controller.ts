@@ -31,7 +31,7 @@ import { CommentService } from './comment.service';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CommentEntityType } from '../generated/prisma';
 import { Public } from '../common/decorators/public.decorator';
-import { CountResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto, MessageResponseDto } from '../common/dto/response.dto';
 import {
   CommentResponseDto,
   PaginatedCommentsDto,
@@ -133,7 +133,7 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse()
+  @ApiOkResponse({ type: MessageResponseDto })
   @Post('vote/:commentId')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)

@@ -77,6 +77,7 @@ export class UserService {
     if (deletedUsers.count === 0) {
       throw new NotFoundException('User not found');
     }
+    return { message: 'Users deleted successfully' };
   }
 
   async deleteUserAccount(userId: number) {

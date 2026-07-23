@@ -25,7 +25,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { GetFactorMoviesDto } from '../movie-factor/dto/movie-factor.dto';
-import { MessageResponseDto } from '../common/dto/response.dto';
+import { CountResponseDto } from '../common/dto/response.dto';
 import {
   FactorResponseDto,
   FactorDetailDto,
@@ -46,7 +46,7 @@ export class FactorController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CountResponseDto })
   @Delete('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async deleteFactors(@Body() body: DeleteFactorsDto) {
