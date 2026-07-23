@@ -25,8 +25,9 @@ import { MovieFilterInput } from './entity/movie.entity';
 import { Public } from '../common/decorators/public.decorator';
 import { MessageResponseDto } from '../common/dto/response.dto';
 import {
-  MovieDetailAdminResponseDto,
+  MovieAdminDetailResponseDto,
   MovieDetailPublicResponseDto,
+  MovieRecommendedResponseDto,
   PaginatedMoviesDto,
 } from './dto/movie.response.dto';
 
@@ -35,7 +36,7 @@ export class MovieController {
   constructor(private movieService: MovieService) {}
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MovieDetailAdminResponseDto })
+  @ApiCreatedResponse({ type: MovieAdminDetailResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createMovieAdmin(@Body() body: CreateMovieDto) {
@@ -51,7 +52,7 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MovieDetailAdminResponseDto })
+  @ApiOkResponse({ type: MovieAdminDetailResponseDto })
   @Put('admin/:movieId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateMoviesAdmin(
@@ -62,7 +63,7 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MovieDetailAdminResponseDto })
+  @ApiOkResponse({ type: MovieAdminDetailResponseDto })
   @Get('admin/:movieId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getMovieDetailAdmin(@Param('movieId', ParseIntPipe) movieId: number) {
@@ -81,7 +82,7 @@ export class MovieController {
     );
   }
 
-  @ApiOkResponse({ type: [MovieDetailPublicResponseDto] })
+  @ApiOkResponse({ type: [MovieRecommendedResponseDto] })
   @Get('recommended/:slug')
   async getRecommendedMovies(
     @Param('slug') slug: string,

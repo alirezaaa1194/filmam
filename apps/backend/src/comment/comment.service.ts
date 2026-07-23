@@ -85,12 +85,12 @@ export class CommentService {
         }
       }
       if (movieId) {
-        await this.commentRepository.createComment(userId, {
+        return await this.commentRepository.createComment(userId, {
           ...body,
           movie_id: movieId,
         });
       } else {
-        throw new BadRequestException('Movie was not found');
+        throw new BadRequestException('Movie not found');
       }
     });
     return result;

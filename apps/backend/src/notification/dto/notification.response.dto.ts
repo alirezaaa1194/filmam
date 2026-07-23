@@ -10,3 +10,8 @@ export class PushSubscriptionResponseDto {
   @ApiProperty()
   created_at!: Date;
 }
+
+export class SendNotificationResponseDto {
+  @ApiProperty({ example: 'Notification sent successfully' })
+  message!: string;
+}

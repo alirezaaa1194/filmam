@@ -18,8 +18,7 @@ import {
   UploadFromUrlDto,
 } from './dto/upload.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { MessageResponseDto } from '../common/dto/response.dto';
-import { UploadResponseDto } from './dto/upload.response.dto';
+import { UploadResponseDto, DeleteUploadsResponseDto } from './dto/upload.response.dto';
 
 @Controller('upload')
 export class UploadController {
@@ -52,7 +51,7 @@ export class UploadController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: DeleteUploadsResponseDto })
   @Delete('admin')
   async deleteUploads(@Body() body: DeleteUploadDto) {
     return await this.uploadService.deleteUploads(body.upload_ids);

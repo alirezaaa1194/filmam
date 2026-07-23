@@ -124,11 +124,12 @@ export class MovieService {
         tx,
       );
       await this.movieTagService.createMovieTags(tags, createdMovie.id, tx);
-      return await this.movieFileService.createMovieFiles(
+      await this.movieFileService.createMovieFiles(
         files,
         createdMovie.id,
         tx,
       );
+      return await this.getMovieDetailAdmin(createdMovie.id, tx);
     });
 
     return result;
@@ -197,7 +198,8 @@ export class MovieService {
         tx,
       );
       await this.movieTagService.updateMovieTags(tags, movieId, tx);
-      return await this.movieFileService.updateMovieFiles(files, movieId, tx);
+      await this.movieFileService.updateMovieFiles(files, movieId, tx);
+      return await this.getMovieDetailAdmin(movieId, tx);
     });
     return result;
   }

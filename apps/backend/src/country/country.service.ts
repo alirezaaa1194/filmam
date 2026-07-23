@@ -59,11 +59,13 @@ export class CountryService {
         body.code,
         tx,
       );
-      return await this.countryTranslationService.createCountryTranslation(
+      await this.countryTranslationService.createCountryTranslation(
         body.translations,
         createdCountry.id,
         tx,
       );
+
+      return createdCountry;
     });
 
     return result;
@@ -75,12 +77,12 @@ export class CountryService {
 
   async updateCountry(countryId: number, body: CreateCountryDto) {
     const result = await prisma.$transaction(async (tx) => {
-      await this.countryRepository.updateCountry(countryId, body, tx);
-      return await this.countryTranslationService.updateCountryTranslation(
+      await this.countryTranslationService.updateCountryTranslation(
         countryId,
         body.translations,
         tx,
       );
+      return this.countryRepository.updateCountry(countryId, body, tx);
     });
     return result;
   }

@@ -1,10 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { EpisodeFileType, SourceType } from '../../generated/prisma';
+import { AppLanguage, EpisodeFileType, SourceType } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 
 export class EpisodeFileResponseDto {
   @ApiProperty()
   id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
 
   @ApiProperty()
   path!: string;
@@ -46,6 +52,29 @@ export class EpisodeFileResponseDto {
   outro_duration?: number;
 }
 
+export class EpisodeTranslationDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  short_description!: string;
+
+  @ApiProperty()
+  episode_id!: number;
+
+  @ApiProperty({ enum: AppLanguage })
+  language!: AppLanguage;
+}
+
 export class EpisodeDetailAdminResponseDto {
   @ApiProperty()
   id!: number;
@@ -77,8 +106,11 @@ export class EpisodeDetailAdminResponseDto {
   @ApiProperty()
   watches_count!: number;
 
-  @ApiProperty({ type: [EpisodeFileResponseDto] })
-  files!: EpisodeFileResponseDto[];
+  @ApiPropertyOptional({ type: [EpisodeFileResponseDto] })
+  files?: EpisodeFileResponseDto[];
+
+  @ApiPropertyOptional({ type: [EpisodeTranslationDto] })
+  translations?: EpisodeTranslationDto[];
 }
 
 export class EpisodeDetailPublicResponseDto {
@@ -127,16 +159,43 @@ export class EpisodeListItemDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
   order!: number;
 
   @ApiProperty()
   slug!: string;
 
   @ApiProperty()
+  season_id!: number;
+
+  @ApiProperty()
+  movie_id!: number;
+
+  @ApiProperty()
+  likes_count!: number;
+
+  @ApiProperty()
+  dislikes_count!: number;
+
+  @ApiProperty()
+  watches_count!: number;
+
+  @ApiProperty()
   title!: string;
 
-  @ApiPropertyOptional()
-  short_description?: string;
+  @ApiProperty()
+  movie_title!: string;
+
+  @ApiProperty()
+  season_title!: string;
+
+  @ApiProperty()
+  movie_season_count!: number;
 
   @ApiProperty({ type: [EpisodeFileResponseDto] })
   files!: EpisodeFileResponseDto[];

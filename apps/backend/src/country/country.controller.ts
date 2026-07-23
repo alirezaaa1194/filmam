@@ -20,7 +20,7 @@ import {
   GetAllCountriesDto,
 } from './dto/country.dto';
 import { MessageResponseDto } from '../common/dto/response.dto';
-import { CountryResponseDto, PaginatedCountriesDto } from './dto/country.response.dto';
+import { CountryResponseDto, CreateCountryResponseDto, PaginatedCountriesDto } from './dto/country.response.dto';
 
 @Controller('country')
 export class CountryController {
@@ -41,7 +41,7 @@ export class CountryController {
   }
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: CreateCountryResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createCountry(@Body() body: CreateCountryDto) {
@@ -57,7 +57,7 @@ export class CountryController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: CreateCountryResponseDto })
   @Put('admin/:countryId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateCountry(

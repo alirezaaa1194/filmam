@@ -7,6 +7,15 @@ export class GenreTranslationDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  genre_id!: number;
+
+  @ApiProperty()
   name!: string;
 
   @ApiProperty({ enum: AppLanguage })

@@ -7,6 +7,15 @@ export class TagTranslationDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  tag_id!: number;
+
+  @ApiProperty()
   label!: string;
 
   @ApiProperty({ enum: AppLanguage })

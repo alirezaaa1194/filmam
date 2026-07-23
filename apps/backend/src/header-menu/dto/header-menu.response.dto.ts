@@ -11,10 +11,19 @@ export class HeaderMenuTranslationDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
   title!: string;
 
   @ApiProperty({ enum: AppLanguage })
   language!: AppLanguage;
+
+  @ApiProperty()
+  menu_id!: number;
 }
 
 export class HeaderMenuFilterDto {

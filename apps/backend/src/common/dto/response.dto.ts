@@ -1,8 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class CountResponseDto {
+  @ApiProperty({ example: 0 })
+  count!: number;
+}
+
 export class MessageResponseDto {
-  @ApiProperty({ example: 'Operation completed successfully' })
-  message!: string;
+  @ApiProperty({ example: 0 })
+  count!: number;
 }
 
 export class TokenResponseDto {

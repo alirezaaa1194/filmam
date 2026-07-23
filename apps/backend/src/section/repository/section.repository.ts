@@ -122,8 +122,12 @@ export class SectionRepository {
     });
   }
 
-  async getSectionDetailAdmin(sectionId: number, lang: AppLanguage) {
-    return await prisma.section.findUnique({
+  async getSectionDetailAdmin(
+    sectionId: number,
+    lang: AppLanguage,
+    tx?: TransactionType,
+  ) {
+    return await (tx ? tx : prisma).section.findUnique({
       where: { id: sectionId },
       include: {
         translations: true,

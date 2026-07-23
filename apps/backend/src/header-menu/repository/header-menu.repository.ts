@@ -55,6 +55,7 @@ export class HeaderMenuRepository {
       take: query.page_size,
       include: {
         translations: { where: { language: query.lang } },
+        filters: true,
       },
       where: {
         translations: {
@@ -114,6 +115,7 @@ export class HeaderMenuRepository {
       where: { id: menuId },
       include: {
         translations: true,
+        filters: true,
         parent: {
           include: { translations: true },
         },

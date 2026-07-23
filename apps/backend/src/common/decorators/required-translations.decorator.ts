@@ -17,7 +17,7 @@ export class RequiredTranslationsConstraint implements ValidatorConstraintInterf
       return false;
     }
 
-    const languages = translations.map((t) => t.language);
+    const languages = translations.map((t) => t.language || t.lang);
 
     const missingLanguages = appLanguages.filter(
       (f) => !languages.includes(f.language),

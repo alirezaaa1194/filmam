@@ -26,7 +26,7 @@ export class NotificationService {
       await this.notificationRepository.getPushSubscriptionsByUserIds(userIds);
 
     if (!usersSubscriptions.length) {
-      return;
+      return { message: 'No subscriptions found' };
     }
 
     for (const subscription of usersSubscriptions) {
@@ -59,5 +59,6 @@ export class NotificationService {
         console.log(error);
       }
     }
+    return { message: 'Notification sent successfully' };
   }
 }

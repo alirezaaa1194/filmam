@@ -1,9 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  CommentStatus,
-  CommentEntityType,
-  CommentVoteStatus,
-} from '../../generated/prisma';
+import { CommentStatus, CommentEntityType } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 
 export class CommentUserDto {
@@ -55,15 +51,31 @@ export class CommentResponseDto {
   user!: CommentUserDto;
 }
 
-export class PaginatedCommentsDto extends PaginationMetaDto {
-  @ApiProperty({ type: [CommentResponseDto] })
-  data!: CommentResponseDto[];
+export class AllCommentsResponseDto extends CommentResponseDto {
+  @ApiProperty()
+  movie_title!: string;
+
+  @ApiPropertyOptional()
+  season_title?: string;
+
+  @ApiPropertyOptional()
+  episode_title?: string;
 }
 
-export class CommentVoteResponseDto {
-  @ApiProperty()
-  id!: number;
+export class PaginatedCommentsDto extends PaginationMetaDto {
+  @ApiProperty({ type: [AllCommentsResponseDto] })
+  data!: AllCommentsResponseDto[];
+}
 
-  @ApiProperty({ enum: CommentVoteStatus })
-  vote_status!: CommentVoteStatus;
+export class EntityCommentDto extends CommentResponseDto {
+  @ApiProperty()
+  did_user_liked!: boolean;
+
+  @ApiProperty()
+  did_user_disliked!: boolean;
+}
+
+export class PaginatedEntityCommentDto extends PaginationMetaDto {
+  @ApiProperty({ type: [EntityCommentDto] })
+  data!: EntityCommentDto[];
 }

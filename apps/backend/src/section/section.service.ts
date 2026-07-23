@@ -121,7 +121,7 @@ export class SectionService {
       }
     }
 
-    const result = await prisma.$transaction(async (tx) => {
+    const section = await prisma.$transaction(async (tx) => {
       const createdSection = await this.sectionRepository.createSectionAdmin(
         body,
         tx,
@@ -147,9 +147,27 @@ export class SectionService {
 
         await this.sectionRepository.createSectionFilters(sectionFilters, tx);
       }
+
+      return await this.sectionRepository.getSectionDetailAdmin(
+        createdSection.id,
+        defaultLang,
+        tx,
+      );
     });
 
-    return result;
+    if (!section) {
+      throw new BadRequestException('Section not found');
+    }
+    const { section_movies, ...otherSectionData } = section;
+    const normalizedSectionMovies = section_movies.map((sectionMovie) => {
+      const { movie } = sectionMovie;
+      return normalizeMovieDetail(movie);
+    });
+
+    return {
+      ...otherSectionData,
+      movies: normalizedSectionMovies,
+    };
   }
 
   async updateSectionAdmin(sectionId: number, body: CreateSectionDto) {
@@ -226,7 +244,7 @@ export class SectionService {
       }
     }
 
-    const result = await prisma.$transaction(async (tx) => {
+    const section = await prisma.$transaction(async (tx) => {
       await this.sectionRepository.updateSection(body, sectionId, tx);
 
       await this.sectionTranslationService.deleteSectionTranslations(
@@ -256,9 +274,27 @@ export class SectionService {
 
         await this.sectionRepository.createSectionFilters(sectionFilters, tx);
       }
+
+      return await this.sectionRepository.getSectionDetailAdmin(
+        sectionId,
+        defaultLang,
+        tx,
+      );
     });
 
-    return result;
+    if (!section) {
+      throw new BadRequestException('Section not found');
+    }
+    const { section_movies, ...otherSectionData } = section;
+    const normalizedSectionMovies = section_movies.map((sectionMovie) => {
+      const { movie } = sectionMovie;
+      return normalizeMovieDetail(movie);
+    });
+
+    return {
+      ...otherSectionData,
+      movies: normalizedSectionMovies,
+    };
   }
 
   async getAllSections(query: GetAllSectionsDto, userId?: number) {

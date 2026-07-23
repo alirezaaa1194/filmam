@@ -14,6 +14,7 @@ import { MovieFactorService } from '../movie-factor/movie-factor.service';
 import { GetFactorMoviesDto } from '../movie-factor/dto/movie-factor.dto';
 import { SortType } from '../common/enums';
 import { prisma } from '../lib/prisma';
+import { TransactionType } from '../common/types/types';
 
 @Injectable()
 export class FactorService {
@@ -48,7 +49,7 @@ export class FactorService {
         );
       }
 
-      return createdFactor;
+      return await this.getFactorDetailAdmin(createdFactor.id, tx);
     });
 
     return result;
@@ -126,8 +127,11 @@ export class FactorService {
     }
   }
 
-  async getFactorDetailAdmin(factorId: number) {
-    const factor = await this.factorRepository.getFactorDetailAdmin(factorId);
+  async getFactorDetailAdmin(factorId: number, tx?: TransactionType) {
+    const factor = await this.factorRepository.getFactorDetailAdmin(
+      factorId,
+      tx,
+    );
     if (factor) {
       const factorFile = factor.files[0];
       const { files, ...otherFactorData } = factor;
@@ -159,7 +163,7 @@ export class FactorService {
           tx,
         );
       }
-      return updatedFactor;
+      return await this.getFactorDetailAdmin(updatedFactor.id, tx);
     });
     return result;
   }

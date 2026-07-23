@@ -46,8 +46,8 @@ export class SeasonRepository {
     });
   }
 
-  async getSeasonDetail(seasonId: number) {
-    return await prisma.season.findUnique({
+  async getSeasonDetail(seasonId: number, tx?: TransactionType) {
+    return await (tx ? tx : prisma).season.findUnique({
       where: { id: seasonId },
       include: {
         translations: true,

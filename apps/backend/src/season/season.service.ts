@@ -12,6 +12,7 @@ import { MovieService } from '../movie/movie.service';
 import { defaultLang, paginationCalculator } from '../lib/utils';
 import { SortType } from '../common/enums';
 import { CommonQueryParamsDto } from '../common/dto/query-param.dto';
+import { TransactionType } from '../common/types/types';
 import { UserMovieService } from '../user-movie/user-movie.service';
 import { NotificationService } from '../notification/notification.service';
 import {
@@ -126,7 +127,7 @@ export class SeasonService {
       );
       await this.seasonFileService.createSeasonFiles(seasonFilesData, tx);
 
-      return createdSeason;
+      return await this.getSeasonDetail(createdSeason.id, tx);
     });
 
     await this.handleSendNotification(body);
@@ -165,7 +166,7 @@ export class SeasonService {
         tx,
       );
 
-      return updatedSeason;
+      return await this.getSeasonDetail(updatedSeason.id, tx);
     });
     return result;
   }
@@ -177,8 +178,8 @@ export class SeasonService {
     return result;
   }
 
-  async getSeasonDetail(seasonId: number) {
-    const season = await this.seasonRepository.getSeasonDetail(seasonId);
+  async getSeasonDetail(seasonId: number, tx?: TransactionType) {
+    const season = await this.seasonRepository.getSeasonDetail(seasonId, tx);
 
     if (season) {
       const { files, _count, movie, ...otherSeasonData } = season;

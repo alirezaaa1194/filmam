@@ -156,7 +156,7 @@ export class EpisodeService {
       );
       await this.episodeFileService.createEpisodeFiles(episodeFilesData, tx);
 
-      return createdEpisode;
+      return await this.getEpisodeDetailAdmin(createdEpisode.id, tx);
     });
 
     await this.handleSendNotification(body);
@@ -211,7 +211,7 @@ export class EpisodeService {
         tx,
       );
 
-      return updatedEpisode;
+      return await this.getEpisodeDetailAdmin(updatedEpisode.id, tx);
     });
     return result;
   }

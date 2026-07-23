@@ -32,3 +32,8 @@ export class UploadResponseDto {
   @ApiPropertyOptional()
   duration?: string;
 }
+
+export class DeleteUploadsResponseDto {
+  @ApiProperty({ example: 'Uploads deleted successfully' })
+  message!: string;
+}

@@ -7,8 +7,10 @@ import {
   SendNotificationDto,
 } from './dto/notification.dto';
 import { defaultLang } from '../lib/utils';
-import { MessageResponseDto } from '../common/dto/response.dto';
-import { PushSubscriptionResponseDto } from './dto/notification.response.dto';
+import {
+  PushSubscriptionResponseDto,
+  SendNotificationResponseDto,
+} from './dto/notification.response.dto';
 
 @Controller('notification')
 export class NotificationController {
@@ -26,7 +28,7 @@ export class NotificationController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: SendNotificationResponseDto })
   @Post('send')
   @UseGuards(JwtAuthGuard)
   async testNotification(@Req() req, @Body() body: SendNotificationDto) {

@@ -7,6 +7,15 @@ export class CountryTranslationDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  country_id!: number;
+
+  @ApiProperty()
   label!: string;
 
   @ApiProperty({ enum: AppLanguage })
@@ -50,4 +59,18 @@ export class CountryListDto {
 export class PaginatedCountriesDto extends PaginationMetaDto {
   @ApiProperty({ type: [CountryListDto] })
   data!: CountryListDto[];
+}
+
+export class CreateCountryResponseDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  code!: string;
 }

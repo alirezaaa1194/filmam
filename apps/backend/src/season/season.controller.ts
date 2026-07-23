@@ -23,15 +23,14 @@ import {
 import { SeasonService } from './season.service';
 import { Public } from '../common/decorators/public.decorator';
 import { MessageResponseDto } from '../common/dto/response.dto';
-import { SeasonResponseDto, PaginatedSeasonsDto } from './dto/season.response.dto';
-import { PaginatedEpisodesDto } from '../episode/dto/episode.response.dto';
+import { SeasonDetailResponseDto, PaginatedSeasonsDto, PaginatedSeasonEpisodesDto } from './dto/season.response.dto';
 
 @Controller('season')
 export class SeasonController {
   constructor(private readonly seasonService: SeasonService) {}
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: SeasonResponseDto })
+  @ApiCreatedResponse({ type: SeasonDetailResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('admin')
   async createSeason(@Body() body: CreateSeasonDto) {
@@ -39,7 +38,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: SeasonResponseDto })
+  @ApiOkResponse({ type: SeasonDetailResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/:seasonId')
   async updateSeason(
@@ -66,7 +65,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: SeasonResponseDto })
+  @ApiOkResponse({ type: SeasonDetailResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('admin/:seasonId')
   async getSeasonDetail(@Param('seasonId') seasonId: number) {
@@ -74,7 +73,7 @@ export class SeasonController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: PaginatedEpisodesDto })
+  @ApiOkResponse({ type: PaginatedSeasonEpisodesDto })
   @Get('/:seasonSlug/episodes')
   @Public()
   @UseGuards(JwtAuthGuard)

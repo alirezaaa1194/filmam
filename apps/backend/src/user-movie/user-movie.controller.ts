@@ -19,10 +19,8 @@ import {
   UpdateUserMoviesDto,
 } from './dto/user-movie.dto';
 import { UserMovieService } from './user-movie.service';
-import { MessageResponseDto } from '../common/dto/response.dto';
 import {
   PaginatedUserMoviesDto,
-  UserMovieActionsDto,
   UserMovieActionResponseDto,
 } from './dto/user-movie.response.dto';
 
@@ -47,7 +45,7 @@ export class UserMovieController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: UserMovieActionResponseDto })
   @Delete('/:actionId')
   @UseGuards(JwtAuthGuard)
   async deleteUserMovieAction(
@@ -57,7 +55,7 @@ export class UserMovieController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: UserMovieActionsDto })
+  @ApiOkResponse({ type: [UserMovieActionResponseDto] })
   @Get('movie_actions/:entityId')
   @UseGuards(JwtAuthGuard)
   async getUserMovieActions(

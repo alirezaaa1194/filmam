@@ -1,10 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AppLanguage, FactorFileType } from '../../generated/prisma';
+import { AppLanguage, FactorFileType, MovieType, SourceType } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
+import { MovieFileResponseDto } from '../../movie/dto/movie.response.dto';
 
 export class FactorTranslationDto {
   @ApiProperty()
   id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
 
   @ApiProperty()
   first_name!: string;
@@ -12,8 +19,49 @@ export class FactorTranslationDto {
   @ApiProperty()
   last_name!: string;
 
+  @ApiProperty()
+  factor_id!: number;
+
   @ApiProperty({ enum: AppLanguage })
   language!: AppLanguage;
+}
+
+export class FactorUploadDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  path!: string;
+
+  @ApiProperty()
+  mime_type!: string;
+
+  @ApiPropertyOptional()
+  file_name?: string;
+
+  @ApiProperty({ enum: SourceType })
+  source_type!: SourceType;
+
+  @ApiPropertyOptional()
+  alt_text?: string;
+
+  @ApiPropertyOptional()
+  size?: number;
+
+  @ApiPropertyOptional()
+  width?: string;
+
+  @ApiPropertyOptional()
+  height?: string;
+
+  @ApiPropertyOptional()
+  duration?: string;
 }
 
 export class FactorFileDto {
@@ -66,8 +114,8 @@ export class FactorResponseDto {
   @ApiProperty({ type: [FactorTranslationDto] })
   translations!: FactorTranslationDto[];
 
-  @ApiPropertyOptional({ type: FactorProfileDto })
-  profile?: FactorProfileDto;
+  @ApiPropertyOptional({ type: FactorUploadDto })
+  profile?: FactorUploadDto;
 }
 
 export class FactorDetailDto {
@@ -83,8 +131,8 @@ export class FactorDetailDto {
   @ApiProperty()
   last_name!: string;
 
-  @ApiPropertyOptional({ type: FactorFileDto })
-  profile?: FactorFileDto;
+  @ApiPropertyOptional({ type: FactorUploadDto })
+  profile?: FactorUploadDto;
 
   @ApiProperty({ type: [FactorTranslationDto] })
   translations!: FactorTranslationDto[];
@@ -116,4 +164,50 @@ export class FactorListDto {
 export class PaginatedFactorsDto extends PaginationMetaDto {
   @ApiProperty({ type: [FactorListDto] })
   data!: FactorListDto[];
+}
+
+export class FactorMovieListItemDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty({ enum: MovieType })
+  type!: MovieType;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiPropertyOptional()
+  age_limit?: number;
+
+  @ApiProperty()
+  released_year!: number;
+
+  @ApiProperty()
+  likes_count!: number;
+
+  @ApiProperty()
+  dislikes_count!: number;
+
+  @ApiProperty()
+  watches_count!: number;
+
+  @ApiProperty()
+  combined_tags!: string;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty({ type: [MovieFileResponseDto] })
+  files!: MovieFileResponseDto[];
+}
+
+export class PaginatedFactorMoviesDto extends PaginationMetaDto {
+  @ApiProperty({ type: [FactorMovieListItemDto] })
+  data!: FactorMovieListItemDto[];
 }

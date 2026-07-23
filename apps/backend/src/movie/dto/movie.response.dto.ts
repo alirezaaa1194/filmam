@@ -4,6 +4,8 @@ import {
   MovieFileType,
   SourceType,
   RoleType,
+  FactorFileType,
+  AppLanguage,
 } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 
@@ -70,6 +72,15 @@ export class MovieFactorResponseDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
   first_name!: string;
 
   @ApiProperty()
@@ -87,6 +98,12 @@ export class MovieGenreResponseDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
   slug!: string;
 
   @ApiProperty()
@@ -98,6 +115,12 @@ export class MovieCountryResponseDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
   code!: string;
 
   @ApiProperty()
@@ -107,6 +130,12 @@ export class MovieCountryResponseDto {
 export class MovieLanguageResponseDto {
   @ApiProperty()
   id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
 
   @ApiProperty()
   code!: string;
@@ -126,13 +155,192 @@ export class MovieSeasonResponseDto {
   slug!: string;
 
   @ApiProperty()
+  movie_id!: number;
+
+  @ApiProperty()
   title!: string;
 
   @ApiProperty({ type: [MovieFileResponseDto] })
   files!: MovieFileResponseDto[];
 }
 
-export class MovieDetailAdminResponseDto {
+export class MovieAdminFactorProfileDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  path!: string;
+
+  @ApiProperty()
+  mime_type!: string;
+
+  @ApiPropertyOptional()
+  file_name?: string;
+
+  @ApiProperty({ enum: SourceType })
+  source_type!: SourceType;
+
+  @ApiPropertyOptional()
+  alt_text?: string;
+
+  @ApiPropertyOptional()
+  size?: number;
+
+  @ApiPropertyOptional()
+  width?: string;
+
+  @ApiPropertyOptional()
+  height?: string;
+
+  @ApiPropertyOptional()
+  duration?: string;
+
+  @ApiProperty({ enum: FactorFileType })
+  type!: FactorFileType;
+}
+
+export class MovieAdminFactorDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty({ enum: RoleType })
+  type!: RoleType;
+
+  @ApiProperty({ type: MovieAdminFactorProfileDto })
+  profile!: MovieAdminFactorProfileDto;
+}
+
+export class MovieAdminGenreTranslationDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  name!: string;
+
+  @ApiProperty()
+  genre_id!: number;
+
+  @ApiProperty({ enum: AppLanguage })
+  language!: AppLanguage;
+}
+
+export class MovieAdminGenreDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty({ type: [MovieAdminGenreTranslationDto] })
+  translations!: MovieAdminGenreTranslationDto[];
+}
+
+export class MovieAdminSeasonDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  movie_id!: number;
+}
+
+export class MovieAdminEpisodeDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  season_id!: number;
+
+  @ApiProperty()
+  movie_id!: number;
+
+  @ApiProperty()
+  likes_count!: number;
+
+  @ApiProperty()
+  dislikes_count!: number;
+
+  @ApiProperty()
+  watches_count!: number;
+}
+
+export class MovieAdminTranslationDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  short_description!: string;
+
+  @ApiProperty()
+  description!: string;
+
+  @ApiProperty({ enum: AppLanguage })
+  language!: AppLanguage;
+
+  @ApiProperty()
+  movie_id!: number;
+}
+
+export class MovieAdminDetailResponseDto {
   @ApiProperty()
   id!: number;
 
@@ -166,14 +374,26 @@ export class MovieDetailAdminResponseDto {
   @ApiProperty()
   combined_tags!: string;
 
-  @ApiProperty({ type: [MovieFactorResponseDto] })
-  factors!: MovieFactorResponseDto[];
+  @ApiProperty({ type: [MovieAdminFactorDto] })
+  factors!: MovieAdminFactorDto[];
 
-  @ApiProperty({ type: [MovieGenreResponseDto] })
-  genres!: MovieGenreResponseDto[];
+  @ApiProperty({ type: [MovieAdminGenreDto] })
+  genres!: MovieAdminGenreDto[];
 
   @ApiProperty({ type: [MovieFileResponseDto] })
   files!: MovieFileResponseDto[];
+
+  @ApiProperty({ type: [MovieAdminSeasonDto] })
+  seasons!: MovieAdminSeasonDto[];
+
+  @ApiProperty({ type: [MovieAdminEpisodeDto] })
+  episodes!: MovieAdminEpisodeDto[];
+
+  @ApiProperty({ type: [MovieAdminTranslationDto] })
+  translations!: MovieAdminTranslationDto[];
+
+  @ApiProperty()
+  _count!: { seasons: number; episodes: number };
 }
 
 export class MovieDetailPublicResponseDto {
@@ -225,23 +445,70 @@ export class MovieDetailPublicResponseDto {
   @ApiPropertyOptional()
   episodes_count?: number;
 
-  @ApiProperty({ type: [MovieFactorResponseDto] })
-  factors!: MovieFactorResponseDto[];
+  @ApiPropertyOptional({ type: [MovieFactorResponseDto] })
+  factors?: MovieFactorResponseDto[];
 
-  @ApiProperty({ type: [MovieGenreResponseDto] })
-  genres!: MovieGenreResponseDto[];
+  @ApiPropertyOptional({ type: [MovieGenreResponseDto] })
+  genres?: MovieGenreResponseDto[];
 
-  @ApiProperty({ type: [MovieCountryResponseDto] })
-  countries!: MovieCountryResponseDto[];
+  @ApiPropertyOptional({ type: [MovieCountryResponseDto] })
+  countries?: MovieCountryResponseDto[];
 
-  @ApiProperty({ type: [MovieLanguageResponseDto] })
-  languages!: MovieLanguageResponseDto[];
+  @ApiPropertyOptional({ type: [MovieLanguageResponseDto] })
+  languages?: MovieLanguageResponseDto[];
 
   @ApiProperty({ type: [MovieFileResponseDto] })
   files!: MovieFileResponseDto[];
 
-  @ApiProperty({ type: [MovieSeasonResponseDto] })
-  seasons!: MovieSeasonResponseDto[];
+  @ApiPropertyOptional({ type: [MovieSeasonResponseDto] })
+  seasons?: MovieSeasonResponseDto[];
+}
+
+export class MovieRecommendedResponseDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty({ enum: MovieType })
+  type!: MovieType;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiPropertyOptional()
+  age_limit?: number;
+
+  @ApiProperty()
+  released_year!: number;
+
+  @ApiProperty()
+  likes_count!: number;
+
+  @ApiProperty()
+  dislikes_count!: number;
+
+  @ApiProperty()
+  watches_count!: number;
+
+  @ApiProperty()
+  combined_tags!: string;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  short_description!: string;
+
+  @ApiProperty()
+  description!: string;
+
+  @ApiProperty({ type: [MovieFileResponseDto] })
+  files!: MovieFileResponseDto[];
 }
 
 export class MovieListItemDto {
@@ -287,11 +554,11 @@ export class MovieListItemDto {
   @ApiPropertyOptional()
   episodes_count?: number;
 
-  @ApiProperty({ type: [MovieFactorResponseDto] })
-  factors!: MovieFactorResponseDto[];
+  @ApiPropertyOptional({ type: [MovieFactorResponseDto] })
+  factors?: MovieFactorResponseDto[];
 
-  @ApiProperty({ type: [MovieGenreResponseDto] })
-  genres!: MovieGenreResponseDto[];
+  @ApiPropertyOptional({ type: [MovieGenreResponseDto] })
+  genres?: MovieGenreResponseDto[];
 
   @ApiProperty({ type: [MovieFileResponseDto] })
   files!: MovieFileResponseDto[];

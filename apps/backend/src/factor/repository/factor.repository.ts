@@ -80,8 +80,8 @@ export class FactorRepository {
     });
   }
 
-  async getFactorDetailAdmin(factorId: number) {
-    return await prisma.factor.findUnique({
+  async getFactorDetailAdmin(factorId: number, tx?: TransactionType) {
+    return await (tx ? tx : prisma).factor.findUnique({
       where: {
         id: factorId,
       },

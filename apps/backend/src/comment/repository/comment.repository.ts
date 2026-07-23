@@ -15,21 +15,62 @@ import { CreateCommentRepositoryBodyType } from '../type/comment.type';
 
 @Injectable()
 export class CommentRepository {
-  async createComment(userId: number, body: CreateCommentRepositoryBodyType, tx?: TransactionType) {
-    return await (tx || prisma).comment.create({ data: { ...body, user_id: userId } });
-  }
-
-  async updateComment(commentId: number, body: UpdateCommentDto, tx?: TransactionType) {
-    return await (tx || prisma).comment.update({
-      where: { id: commentId },
-      data: { ...body },
+  async createComment(
+    userId: number,
+    body: CreateCommentRepositoryBodyType,
+    tx?: TransactionType,
+  ) {
+    return await (tx || prisma).comment.create({
+      data: { ...body, user_id: userId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
     });
   }
 
-  async updateCommentStatus(commentId: number, body: UpdateCommentStatusDto, tx?: TransactionType) {
+  async updateComment(
+    commentId: number,
+    body: UpdateCommentDto,
+    tx?: TransactionType,
+  ) {
     return await (tx || prisma).comment.update({
       where: { id: commentId },
       data: { ...body },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  async updateCommentStatus(
+    commentId: number,
+    body: UpdateCommentStatusDto,
+    tx?: TransactionType,
+  ) {
+    return await (tx || prisma).comment.update({
+      where: { id: commentId },
+      data: { ...body },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
     });
   }
 
@@ -74,6 +115,13 @@ export class CommentRepository {
             },
           },
         },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
       },
       take: query.page_size,
       skip: query.page,
@@ -104,8 +152,19 @@ export class CommentRepository {
     });
   }
 
-  async getCommentDetailAdmin(commentId: number, tx?:TransactionType) {
-    return await (tx || prisma).comment.findUnique({ where: { id: commentId } });
+  async getCommentDetailAdmin(commentId: number, tx?: TransactionType) {
+    return await (tx || prisma).comment.findUnique({
+      where: { id: commentId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
   }
 
   async getMovieOrEpisodeComments(
@@ -129,6 +188,15 @@ export class CommentRepository {
                 slug: entitySlug,
               },
             }),
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
       },
       skip: query.page,
       take: query.page_size,

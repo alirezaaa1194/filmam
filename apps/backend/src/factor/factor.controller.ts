@@ -30,15 +30,15 @@ import {
   FactorResponseDto,
   FactorDetailDto,
   PaginatedFactorsDto,
+  PaginatedFactorMoviesDto,
 } from './dto/factor.response.dto';
-import { PaginatedMoviesDto } from '../movie/dto/movie.response.dto';
 
 @Controller('factor')
 export class FactorController {
   constructor(private factorService: FactorService) {}
 
   @ApiBearerAuth()
-  @ApiCreatedResponse({ type: MessageResponseDto })
+  @ApiCreatedResponse({ type: FactorResponseDto })
   @Post('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async createFactor(@Body() body: CreateFactorDto) {
@@ -82,7 +82,7 @@ export class FactorController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: MessageResponseDto })
+  @ApiOkResponse({ type: FactorResponseDto })
   @Put('admin/:factorId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async updateFactor(
@@ -92,7 +92,7 @@ export class FactorController {
     return await this.factorService.updateFactor(factorId, body);
   }
 
-  @ApiOkResponse({ type: PaginatedMoviesDto })
+  @ApiOkResponse({ type: PaginatedFactorMoviesDto })
   @Get('/:factorSlug/movies')
   async getFactorMovies(
     @Param('factorSlug') factorSlug: string,
