@@ -6,8 +6,9 @@ import {
   SectionPeriodBase,
   SectionFilterKey,
   AppLanguage,
+  MovieType,
 } from '../../generated/prisma';
-import { MovieListItemDto } from '../../movie/dto/movie.response.dto';
+import { MovieFileResponseDto, MovieListItemDto } from '../../movie/dto/movie.response.dto';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 
 export class SectionFilterDto {
@@ -111,6 +112,53 @@ export class SectionDetailResponseDto {
   section_movies!: MovieListItemDto[];
 }
 
+export class SectionMovieListItemDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty({ enum: MovieType })
+  type!: MovieType;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiPropertyOptional()
+  age_limit?: number;
+
+  @ApiProperty()
+  released_year!: number;
+
+  @ApiProperty()
+  likes_count!: number;
+
+  @ApiProperty()
+  dislikes_count!: number;
+
+  @ApiProperty()
+  watches_count!: number;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  short_description!: string;
+
+  @ApiPropertyOptional()
+  seasons_count?: number;
+
+  @ApiPropertyOptional()
+  episodes_count?: number;
+
+  @ApiProperty({ type: [MovieFileResponseDto] })
+  files!: MovieFileResponseDto[];
+}
+
 export class SectionListItemDto {
   @ApiProperty()
   id!: number;
@@ -151,8 +199,8 @@ export class SectionListItemDto {
   @ApiProperty({ type: [SectionFilterDto] })
   section_filters!: SectionFilterDto[];
 
-  @ApiProperty({ type: [MovieListItemDto] })
-  movies!: MovieListItemDto[];
+  @ApiProperty({ type: [SectionMovieListItemDto] })
+  movies!: SectionMovieListItemDto[];
 }
 
 export class PaginatedSectionsDto extends PaginationMetaDto {

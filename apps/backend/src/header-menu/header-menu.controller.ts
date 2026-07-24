@@ -20,7 +20,7 @@ import {
 } from './dto/header-menu.dto';
 import { HeaderMenuService } from './header-menu.service';
 import { CountResponseDto } from '../common/dto/response.dto';
-import { HeaderMenuResponseDto, PaginatedHeaderMenusDto } from './dto/header-menu.response.dto';
+import { HeaderMenuDetailResponseDto, HeaderMenuPublicResponseDto, PaginatedHeaderMenusDto } from './dto/header-menu.response.dto';
 
 @Controller('header-menu')
 export class HeaderMenuController {
@@ -61,14 +61,14 @@ export class HeaderMenuController {
     return await this.headerMenuService.getAllHeaderMenusAdmin(query);
   }
 
-  @ApiOkResponse({ type: [HeaderMenuResponseDto] })
+  @ApiOkResponse({ type: [HeaderMenuPublicResponseDto] })
   @Get('public/all')
   async getAllHeaderMenusPublic(@Query() query: GetAllHeaderMenusPublicDto) {
     return await this.headerMenuService.getAllHeaderMenusPublic(query);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: HeaderMenuResponseDto })
+  @ApiOkResponse({ type: HeaderMenuDetailResponseDto })
   @Get('admin/:menuId')
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getHeaderMenuDetail(@Param('menuId') menuId: number) {

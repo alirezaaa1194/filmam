@@ -13,13 +13,10 @@ export class LanguageTranslationDto {
   updated_at!: Date;
 
   @ApiProperty()
-  language_id!: number;
-
-  @ApiProperty()
   label!: string;
 
   @ApiProperty({ enum: AppLanguage })
-  language!: AppLanguage;
+  lang!: AppLanguage;
 }
 
 export class LanguageResponseDto {

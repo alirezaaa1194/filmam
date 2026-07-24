@@ -78,6 +78,17 @@ export class UserRepository {
           ...(query.blocked ? { block_expires_at: { gt: new Date() } } : {}),
         },
       },
+      select: {
+        id: true,
+        created_at: true,
+        updated_at: true,
+        username: true,
+        email: true,
+        google_id: true,
+        role: true,
+        block_expires_at: true,
+        preferred_language: true,
+      },
       orderBy: {
         created_at: query.sort,
       },

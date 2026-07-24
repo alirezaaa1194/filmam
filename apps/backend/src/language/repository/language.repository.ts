@@ -51,10 +51,10 @@ export class LanguageRepository {
     });
   }
 
-  async getLanguageDetailAdmin(languageIds: number) {
+  async getLanguageDetailAdmin(languageId: number) {
     return await prisma.language.findUnique({
       where: {
-        id: languageIds,
+        id: languageId,
       },
       include: {
         translations: {
@@ -63,7 +63,7 @@ export class LanguageRepository {
             created_at: true,
             updated_at: true,
             label: true,
-            language: true,
+            lang: true,
           },
         },
       },

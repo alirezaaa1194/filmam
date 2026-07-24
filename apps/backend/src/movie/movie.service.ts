@@ -1,7 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMovieDto, DeleteMoviesDto } from './dto/movie.dto';
 import { MovieRepository } from './repository/movie.repository';
 import { MovieFileService } from '../movie-file/movie-file.service';
@@ -124,11 +121,7 @@ export class MovieService {
         tx,
       );
       await this.movieTagService.createMovieTags(tags, createdMovie.id, tx);
-      await this.movieFileService.createMovieFiles(
-        files,
-        createdMovie.id,
-        tx,
-      );
+      await this.movieFileService.createMovieFiles(files, createdMovie.id, tx);
       return await this.getMovieDetailAdmin(createdMovie.id, tx);
     });
 
@@ -207,7 +200,7 @@ export class MovieService {
   async getMovieDetailAdmin(movieId: number, tx?: TransactionType) {
     const movie = await this.movieRepository.getMovieDetailAdmin(movieId, tx);
     if (movie) {
-      const { factors, genres, files, ...otherMovieData } = movie;
+      const { factors, genres, files, _count, ...otherMovieData } = movie;
 
       const movieFactors = factors.map((movieFactor) => {
         const { factor, role } = movieFactor;
@@ -239,6 +232,8 @@ export class MovieService {
         factors: movieFactors,
         genres: movieGenres,
         files: movieFiles,
+        seasons_count: _count.seasons,
+        episodes_count: _count.episodes,
       };
     }
   }
@@ -597,8 +592,10 @@ export class MovieService {
         return [];
       }
 
-      const allMovies =
-        await this.movieRepository.findMoviesForRecommendation(movieSlug, lang);
+      const allMovies = await this.movieRepository.findMoviesForRecommendation(
+        movieSlug,
+        lang,
+      );
 
       if (allMovies.length === 0) return [];
 

@@ -1,5 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AppLanguage, FactorFileType, MovieType, SourceType } from '../../generated/prisma';
+import {
+  AppLanguage,
+  FactorFileType,
+  MovieType,
+  SourceType,
+} from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 import { MovieFileResponseDto } from '../../movie/dto/movie.response.dto';
 
@@ -121,6 +126,12 @@ export class FactorResponseDto {
 export class FactorDetailDto {
   @ApiProperty()
   id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
 
   @ApiProperty()
   slug!: string;

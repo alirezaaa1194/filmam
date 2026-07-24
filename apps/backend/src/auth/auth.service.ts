@@ -21,11 +21,13 @@ import { accessTokenExpTime, defaultLang } from '../lib/utils';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { OtpType, UserRole, AppLanguage } from '../generated/prisma';
 import { MailService } from '../mail/mail.service';
+import { UserRepository } from '../user/repository/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
+    private userRepository: UserRepository,
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
     private otpService: OtpService,
@@ -83,7 +85,7 @@ export class AuthService {
   }) {
     let user: UserType | null = null;
     if (userId) {
-      user = await this.userService.getUserById(userId);
+      user = await this.userRepository.getUserById(userId);
     } else if (userEmail) {
       user = await this.userService.getUserByEmail(userEmail);
     }
@@ -134,7 +136,11 @@ export class AuthService {
     }
   }
 
-  private getEmailContent(otpType: OtpType, otp: number, lang: AppLanguage): { subject: string; html: string } {
+  private getEmailContent(
+    otpType: OtpType,
+    otp: number,
+    lang: AppLanguage,
+  ): { subject: string; html: string } {
     const content = {
       [AppLanguage.FA]: {
         brand: 'فیلمام',
@@ -322,7 +328,7 @@ export class AuthService {
   }
 
   async me(userInfo: { userId: number; email: string }) {
-    const user = await this.userService.getUserById(userInfo.userId);
+    const user = await this.userRepository.getUserById(userInfo.userId);
     if (user) {
       const { password, ...result } = user;
       return result;
@@ -461,7 +467,7 @@ export class AuthService {
   }
 
   async refresh(userId: number, userToken: string) {
-    const user = await this.userService.getUserById(userId);
+    const user = await this.userRepository.getUserById(userId);
     if (user) {
       const userRefreshTokens = await this.refreshTokenService.getValidTokens(
         user.id,
@@ -484,7 +490,7 @@ export class AuthService {
   }
 
   async logout(userId: number, refreshToken: string) {
-    const user = await this.userService.getUserById(userId);
+    const user = await this.userRepository.getUserById(userId);
     if (user) {
       const userRefreshTokens = await this.refreshTokenService.getValidTokens(
         user.id,

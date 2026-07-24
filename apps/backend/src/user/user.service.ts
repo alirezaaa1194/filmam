@@ -27,7 +27,13 @@ export class UserService {
   }
 
   async getUserById(userId: number) {
-    return await this.userRepository.getUserById(userId);
+    const user = await this.userRepository.getUserById(userId);
+    if (user) {
+      const { password, ...otherUserData } = user;
+      return otherUserData;
+    } else {
+      throw new NotFoundException('user not found');
+    }
   }
 
   async signupUser(userInfo: CreateUserDto | GoogleAuthDto) {

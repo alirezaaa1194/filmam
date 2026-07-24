@@ -46,7 +46,7 @@ export class CreateMovieDto {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  age_limit: number | null;
+  age_limit?: number | null;
 
   @ApiProperty({
     type: 'string',

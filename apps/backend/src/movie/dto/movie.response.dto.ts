@@ -14,6 +14,12 @@ export class MovieFileResponseDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
   path!: string;
 
   @ApiProperty()
@@ -56,6 +62,12 @@ export class MovieFileResponseDto {
 export class MovieRoleResponseDto {
   @ApiProperty()
   id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
 
   @ApiProperty()
   slug!: string;
@@ -418,8 +430,11 @@ export class MovieAdminDetailResponseDto {
   @ApiProperty({ type: [MovieAdminTranslationDto] })
   translations!: MovieAdminTranslationDto[];
 
-  @ApiProperty()
-  _count!: { seasons: number; episodes: number };
+  @ApiPropertyOptional()
+  seasons_count?: number;
+
+  @ApiPropertyOptional()
+  episodes_count?: number;
 }
 
 export class MovieDetailPublicResponseDto {

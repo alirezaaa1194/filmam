@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserMovieType, CommentEntityType } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
+import { MovieFileResponseDto } from '../../movie/dto/movie.response.dto';
 
 export class UserMovieActionResponseDto {
   @ApiProperty()
@@ -48,9 +49,6 @@ class MovieBriefDto {
   release_date?: Date;
 
   @ApiPropertyOptional()
-  imdb_id?: string;
-
-  @ApiPropertyOptional()
   type?: string;
 
   @ApiPropertyOptional()
@@ -76,6 +74,9 @@ class MovieBriefDto {
 
   @ApiPropertyOptional()
   watches_count?: number;
+
+  @ApiProperty({ type: [MovieFileResponseDto] })
+  files!: MovieFileResponseDto[];
 }
 
 class EpisodeBriefDto {
@@ -83,19 +84,25 @@ class EpisodeBriefDto {
   id!: number;
 
   @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
   title!: string;
 
-  @ApiPropertyOptional()
-  episode_number?: number;
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty()
+  slug!: string;
 
   @ApiPropertyOptional()
-  season_number?: number;
+  season_id?: number;
 
-  @ApiPropertyOptional()
-  poster_url?: string;
-
-  @ApiPropertyOptional()
-  rating?: number;
+  @ApiProperty()
+  movie_id!: number;
 
   @ApiPropertyOptional()
   likes_count?: number;
@@ -105,6 +112,9 @@ class EpisodeBriefDto {
 
   @ApiPropertyOptional()
   watches_count?: number;
+
+  @ApiProperty({ type: [MovieFileResponseDto] })
+  files!: MovieFileResponseDto[];
 }
 
 export class UserMovieListItemDto {
