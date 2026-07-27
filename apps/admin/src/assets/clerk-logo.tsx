@@ -1,5 +1,5 @@
 import { type SVGProps } from 'react'
-import { cn } from '@/lib/utils'
+import { Cn } from '@/scripts'
 
 export function ClerkLogo({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -10,7 +10,7 @@ export function ClerkLogo({ className, ...props }: SVGProps<SVGSVGElement>) {
       id='clerk'
       height='24'
       width='24'
-      className={cn('[&>path]:fill-foreground', className)}
+      className={Cn('[&>path]:fill-foreground', className)}
       {...props}
     >
       <title>Clerk</title>

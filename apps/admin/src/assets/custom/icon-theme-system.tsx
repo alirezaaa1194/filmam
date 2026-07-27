@@ -1,5 +1,5 @@
 import { type SVGProps } from 'react'
-import { cn } from '@/lib/utils'
+import { Cn } from '@/scripts'
 
 export function IconThemeSystem({
   className,
@@ -10,7 +10,7 @@ export function IconThemeSystem({
       data-name='icon-theme-system'
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 79.86 51.14'
-      className={cn(
+      className={Cn(
         'overflow-hidden rounded-[6px]',
         'fill-primary stroke-primary group-data-[state=unchecked]:fill-muted-foreground group-data-[state=unchecked]:stroke-muted-foreground',
         className

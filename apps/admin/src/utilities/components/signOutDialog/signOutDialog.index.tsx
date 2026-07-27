@@ -1,0 +1,39 @@
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useLocation } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores'
+import { ConfirmDialog } from '@/utilities/components'
+interface SignOutDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { auth } = useAuthStore()
+
+  const handleSignOut = () => {
+    auth.reset()
+    // Preserve current location for redirect after sign-in
+    const currentPath = location.href
+    navigate({
+      to: '/sign-in',
+      search: { redirect: currentPath },
+      replace: true,
+    })
+  }
+
+  return (
+    <ConfirmDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('profile.sign_out_title')}
+      desc={t('profile.sign_out_desc')}
+      confirmText={t('profile.sign_out_title')}
+      destructive
+      handleConfirm={handleSignOut}
+      className='sm:max-w-sm'
+    />
+  )
+}

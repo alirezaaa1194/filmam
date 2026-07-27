@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SignIn } from '@clerk/react'
-import { Skeleton } from '@/components/ui/skeleton'
-
+import { Skeleton } from '@/utilities/components'
 export const Route = createFileRoute('/clerk/(auth)/sign-in')({
   component: () => (
     <SignIn

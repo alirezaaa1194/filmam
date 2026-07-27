@@ -12,8 +12,8 @@
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss"
   ],
-  "tailwindFunctions": ["cn", "clsx"],
-  "tailwindStylesheet": "./src/styles/index.css",
+  "tailwindFunctions": ["Cn", "clsx"],
+  "tailwindStylesheet": "./src/utilities/styles/index.css",
   "importOrder": [
     "^path$",
     "^vite$",
@@ -35,17 +35,15 @@
     "<THIRD_PARTY_MODULES>",
     "^@/assets/(.*)",
     "^@/api/(.*)$",
-    "^@/stores/(.*)$",
-    "^@/lib/(.*)$",
-    "^@/utils/(.*)$",
-    "^@/constants/(.*)$",
-    "^@/context/(.*)$",
-    "^@/hooks/(.*)$",
-    "^@/components/layouts/(.*)$",
-    "^@/components/ui/(.*)$",
-    "^@/components/errors/(.*)$",
-    "^@/components/(.*)$",
-    "^@/features/(.*)$",
+    "^@/data$",
+    "^@/scripts$",
+    "^@/types$",
+    "^@/context$",
+    "^@/hooks$",
+    "^@/stores$",
+    "^@/utilities/components/ui/(.*)$",
+    "^@/utilities/components/(.*)$",
+    "^@/filmam/(.*)$",
     "^[./]"
   ]
 }

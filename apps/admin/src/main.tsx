@@ -8,14 +8,12 @@ import {
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store'
-import { handleServerError } from '@/lib/handle-server-error'
-import { DirectionProvider } from './context/direction-provider'
-import { FontProvider } from './context/font-provider'
-import { ThemeProvider } from './context/theme-provider'
+import { useAuthStore } from '@/stores'
+import { HandleServerError } from '@/scripts'
 import { routeTree } from './routeTree.gen'
-import './styles/index.css'
-import i18n from "@/i18n";
+import './utilities/styles/index.css'
+import i18n from '@/i18n'
+import { DirectionProvider, FontProvider, ThemeProvider } from './context'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,7 +35,7 @@ const queryClient = new QueryClient({
     },
     mutations: {
       onError: (error) => {
-        handleServerError(error)
+        HandleServerError(error)
 
         if (error instanceof AxiosError) {
           if (error.response?.status === 304) {
@@ -63,7 +61,6 @@ const queryClient = new QueryClient({
             router.navigate({ to: '/500' })
           }
         }
-
       }
     },
   }),

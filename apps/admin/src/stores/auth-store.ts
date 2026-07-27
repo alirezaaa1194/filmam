@@ -1,28 +1,11 @@
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import { GetCookie, SetCookie, RemoveCookie } from '@/scripts'
+import type { AuthState } from '@/types'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
 
-interface AuthUser {
-  accountNo: string
-  email: string
-  role: string[]
-  exp: number
-}
-
-interface AuthState {
-  auth: {
-    user: AuthUser | null
-    setUser: (user: AuthUser | null) => void
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
-    reset: () => void
-  }
-}
-
-export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
+export const __useAuthStore = create<AuthState>()((set) => {
+  const cookieState = GetCookie(ACCESS_TOKEN)
   const initToken = cookieState ? JSON.parse(cookieState) : ''
   return {
     auth: {
@@ -32,17 +15,17 @@ export const useAuthStore = create<AuthState>()((set) => {
       accessToken: initToken,
       setAccessToken: (accessToken) =>
         set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
+          SetCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
           return { ...state, auth: { ...state.auth, accessToken } }
         }),
       resetAccessToken: () =>
         set((state) => {
-          removeCookie(ACCESS_TOKEN)
+          RemoveCookie(ACCESS_TOKEN)
           return { ...state, auth: { ...state.auth, accessToken: '' } }
         }),
       reset: () =>
         set((state) => {
-          removeCookie(ACCESS_TOKEN)
+          RemoveCookie(ACCESS_TOKEN)
           return {
             ...state,
             auth: { ...state.auth, user: null, accessToken: '' },

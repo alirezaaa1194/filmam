@@ -1,5 +1,5 @@
 import { type SVGProps } from 'react'
-import { cn } from '@/lib/utils'
+import { Cn } from '@/scripts'
 
 export function Logo({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -14,7 +14,7 @@ export function Logo({ className, ...props }: SVGProps<SVGSVGElement>) {
       strokeWidth='2'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className={cn('size-6', className)}
+      className={Cn('size-6', className)}
       {...props}
     >
       <title>Shadcn-Admin</title>

@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from 'react'
-import { getCookie, setCookie } from '@/lib/cookies'
-
-export type Collapsible = 'offcanvas' | 'icon' | 'none'
+import { GetCookie, SetCookie } from '@/scripts'
+import type { Collapsible } from '@/types'
 type Variant = 'inset' | 'sidebar' | 'floating'
 
 // Cookie constants following the pattern from sidebar.tsx
@@ -30,20 +29,20 @@ type LayoutProviderProps = {
   children: React.ReactNode
 }
 
-export function LayoutProvider({ children }: LayoutProviderProps) {
+export function __LayoutProvider({ children }: LayoutProviderProps) {
   const [collapsible, _setCollapsible] = useState<Collapsible>(() => {
-    const saved = getCookie(LAYOUT_COLLAPSIBLE_COOKIE_NAME)
+    const saved = GetCookie(LAYOUT_COLLAPSIBLE_COOKIE_NAME)
     return (saved as Collapsible) || DEFAULT_COLLAPSIBLE
   })
 
   const [variant, _setVariant] = useState<Variant>(() => {
-    const saved = getCookie(LAYOUT_VARIANT_COOKIE_NAME)
+    const saved = GetCookie(LAYOUT_VARIANT_COOKIE_NAME)
     return (saved as Variant) || DEFAULT_VARIANT
   })
 
   const setCollapsible = (newCollapsible: Collapsible) => {
     _setCollapsible(newCollapsible)
-    setCookie(
+    SetCookie(
       LAYOUT_COLLAPSIBLE_COOKIE_NAME,
       newCollapsible,
       LAYOUT_COOKIE_MAX_AGE
@@ -52,7 +51,7 @@ export function LayoutProvider({ children }: LayoutProviderProps) {
 
   const setVariant = (newVariant: Variant) => {
     _setVariant(newVariant)
-    setCookie(LAYOUT_VARIANT_COOKIE_NAME, newVariant, LAYOUT_COOKIE_MAX_AGE)
+    SetCookie(LAYOUT_VARIANT_COOKIE_NAME, newVariant, LAYOUT_COOKIE_MAX_AGE)
   }
 
   const resetLayout = () => {
@@ -74,7 +73,7 @@ export function LayoutProvider({ children }: LayoutProviderProps) {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export function useLayout() {
+export function __useLayout() {
   const context = useContext(LayoutContext)
   if (!context) {
     throw new Error('useLayout must be used within a LayoutProvider')

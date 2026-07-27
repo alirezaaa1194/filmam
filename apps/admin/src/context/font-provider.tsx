@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { fonts } from '@/config/fonts'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import { fonts } from '@/utilities/config/fonts'
+import { GetCookie, SetCookie, RemoveCookie } from '@/scripts'
 
 type Font = (typeof fonts)[number]
 
@@ -15,9 +15,9 @@ type FontContextType = {
 
 const FontContext = createContext<FontContextType | null>(null)
 
-export function FontProvider({ children }: { children: React.ReactNode }) {
+export function __FontProvider({ children }: { children: React.ReactNode }) {
   const [font, _setFont] = useState<Font>(() => {
-    const savedFont = getCookie(FONT_COOKIE_NAME)
+    const savedFont = GetCookie(FONT_COOKIE_NAME)
     return fonts.includes(savedFont as Font) ? (savedFont as Font) : fonts[0]
   })
 
@@ -34,12 +34,12 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
   }, [font])
 
   const setFont = (font: Font) => {
-    setCookie(FONT_COOKIE_NAME, font, FONT_COOKIE_MAX_AGE)
+    SetCookie(FONT_COOKIE_NAME, font, FONT_COOKIE_MAX_AGE)
     _setFont(font)
   }
 
   const resetFont = () => {
-    removeCookie(FONT_COOKIE_NAME)
+    RemoveCookie(FONT_COOKIE_NAME)
     _setFont(fonts[0])
   }
 
@@ -49,7 +49,7 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useFont = () => {
+export const __useFont = () => {
   const context = useContext(FontContext)
   if (!context) {
     throw new Error('useFont must be used within a FontProvider')

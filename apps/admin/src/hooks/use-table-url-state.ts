@@ -4,16 +4,9 @@ import type {
   OnChangeFn,
   PaginationState,
 } from '@tanstack/react-table'
+import type { NavigateFn } from '@/types'
 
 type SearchRecord = Record<string, unknown>
-
-export type NavigateFn = (opts: {
-  search:
-    | true
-    | SearchRecord
-    | ((prev: SearchRecord) => Partial<SearchRecord> | SearchRecord)
-  replace?: boolean
-}) => void
 
 type UseTableUrlStateParams = {
   search: SearchRecord
@@ -60,7 +53,7 @@ type UseTableUrlStateReturn = {
   ) => void
 }
 
-export function useTableUrlState(
+export function __useTableUrlState(
   params: UseTableUrlStateParams
 ): UseTableUrlStateReturn {
   const {
