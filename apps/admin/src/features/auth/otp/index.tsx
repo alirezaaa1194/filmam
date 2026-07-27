@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
   Card,
@@ -11,12 +12,13 @@ import { AuthLayout } from '../auth-layout'
 import { OtpForm } from './components/otp-form'
 
 export function Otp() {
+  const { t } = useTranslation()
   return (
     <AuthLayout>
       <Card className='max-w-md gap-4'>
         <CardHeader>
           <CardTitle className='text-base tracking-tight'>
-            Two-factor Authentication
+            {t('auth.two_factor')}
           </CardTitle>
           <CardDescription>
             Please enter the authentication code. <br /> We have sent the
@@ -33,7 +35,7 @@ export function Otp() {
               to='/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Resend a new code.
+              {t('auth.resend_code')}
             </Link>
             .
           </p>

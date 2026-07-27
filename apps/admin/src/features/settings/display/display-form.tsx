@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,33 +15,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-const items = [
-  {
-    id: 'recents',
-    label: 'Recents',
-  },
-  {
-    id: 'home',
-    label: 'Home',
-  },
-  {
-    id: 'applications',
-    label: 'Applications',
-  },
-  {
-    id: 'desktop',
-    label: 'Desktop',
-  },
-  {
-    id: 'downloads',
-    label: 'Downloads',
-  },
-  {
-    id: 'documents',
-    label: 'Documents',
-  },
-] as const
-
 const displayFormSchema = z.object({
   items: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: 'You have to select at least one item.',
@@ -55,6 +29,16 @@ const defaultValues: Partial<DisplayFormValues> = {
 }
 
 export function DisplayForm() {
+  const { t } = useTranslation()
+  const itemsLocal = [
+    { id: 'recents', label: t('settings_display_items.recents') },
+    { id: 'home', label: t('settings_display_items.home') },
+    { id: 'applications', label: t('settings_display_items.applications') },
+    { id: 'desktop', label: t('settings_display_items.desktop') },
+    { id: 'downloads', label: t('settings_display_items.downloads') },
+    { id: 'documents', label: t('settings_display_items.documents') },
+  ] as const
+
   const form = useForm<DisplayFormValues>({
     resolver: zodResolver(displayFormSchema),
     defaultValues,
@@ -72,12 +56,12 @@ export function DisplayForm() {
           render={() => (
             <FormItem>
               <div className='mb-4'>
-                <FormLabel className='text-base'>Sidebar</FormLabel>
+                <FormLabel className='text-base'>{t('settings.sidebar')}</FormLabel>
                 <FormDescription>
-                  Select the items you want to display in the sidebar.
+                  {t('settings.sidebar_desc')}
                 </FormDescription>
               </div>
-              {items.map((item) => (
+              {itemsLocal.map((item) => (
                 <FormField
                   key={item.id}
                   control={form.control}
@@ -114,7 +98,7 @@ export function DisplayForm() {
             </FormItem>
           )}
         />
-        <Button type='submit'>Update display</Button>
+        <Button type='submit'>{t('settings.update_display')}</Button>
       </form>
     </Form>
   )

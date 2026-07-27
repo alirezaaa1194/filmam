@@ -6,12 +6,16 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { useTranslation } from 'react-i18next'
 
 export function Settings() {
+  const { t } = useTranslation()
   return (
     <>
       <Header>
         <Search className='me-auto' />
+        <LanguageSwitcher />
         <ThemeSwitch />
         <ConfigDrawer />
         <ProfileDropdown />
@@ -20,10 +24,10 @@ export function Settings() {
       <Main fixed>
         <div className='space-y-0.5'>
           <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Settings
+            {t('settings.title')}
           </h1>
           <p className='text-muted-foreground'>
-            Manage your account settings and set e-mail preferences.
+            {t('settings.description')}
           </p>
         </div>
         <Separator className='my-4 lg:my-6' />

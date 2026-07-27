@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
@@ -30,18 +31,6 @@ import {
 } from '@/components/ui/popover'
 import { DatePicker } from '@/components/date-picker'
 
-const languages = [
-  { label: 'English', value: 'en' },
-  { label: 'French', value: 'fr' },
-  { label: 'German', value: 'de' },
-  { label: 'Spanish', value: 'es' },
-  { label: 'Portuguese', value: 'pt' },
-  { label: 'Russian', value: 'ru' },
-  { label: 'Japanese', value: 'ja' },
-  { label: 'Korean', value: 'ko' },
-  { label: 'Chinese', value: 'zh' },
-] as const
-
 const accountFormSchema = z.object({
   name: z
     .string()
@@ -60,6 +49,19 @@ const defaultValues: Partial<AccountFormValues> = {
 }
 
 export function AccountForm() {
+  const { t } = useTranslation()
+  const languages = [
+    { label: t('settings_languages.english'), value: 'en' },
+    { label: t('settings_languages.french'), value: 'fr' },
+    { label: t('settings_languages.german'), value: 'de' },
+    { label: t('settings_languages.spanish'), value: 'es' },
+    { label: t('settings_languages.portuguese'), value: 'pt' },
+    { label: t('settings_languages.russian'), value: 'ru' },
+    { label: t('settings_languages.japanese'), value: 'ja' },
+    { label: t('settings_languages.korean'), value: 'ko' },
+    { label: t('settings_languages.chinese'), value: 'zh' },
+  ] as const
+
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues,
@@ -77,9 +79,9 @@ export function AccountForm() {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{t('settings.name')}</FormLabel>
               <FormControl>
-                <Input placeholder='Your name' {...field} />
+                <Input placeholder={t('settings.name_placeholder')} {...field} />
               </FormControl>
               <FormDescription>
                 This is the name that will be displayed on your profile and in
@@ -94,7 +96,7 @@ export function AccountForm() {
           name='dob'
           render={({ field }) => (
             <FormItem className='flex flex-col'>
-              <FormLabel>Date of birth</FormLabel>
+              <FormLabel>{t('settings.date_of_birth')}</FormLabel>
               <DatePicker selected={field.value} onSelect={field.onChange} />
               <FormDescription>
                 Your date of birth is used to calculate your age.
@@ -108,7 +110,7 @@ export function AccountForm() {
           name='language'
           render={({ field }) => (
             <FormItem className='flex flex-col'>
-              <FormLabel>Language</FormLabel>
+              <FormLabel>{t('settings.language')}</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -124,15 +126,15 @@ export function AccountForm() {
                         ? languages.find(
                             (language) => language.value === field.value
                           )?.label
-                        : 'Select language'}
+                        : t('settings.language_placeholder')}
                       <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className='w-50 p-0'>
                   <Command>
-                    <CommandInput placeholder='Search language...' />
-                    <CommandEmpty>No language found.</CommandEmpty>
+                    <CommandInput placeholder={t('settings.search_language')} />
+                    <CommandEmpty>{t('settings.no_language')}</CommandEmpty>
                     <CommandGroup>
                       <CommandList>
                         {languages.map((language) => (
@@ -166,7 +168,7 @@ export function AccountForm() {
             </FormItem>
           )}
         />
-        <Button type='submit'>Update account</Button>
+        <Button type='submit'>{t('settings.update_account')}</Button>
       </form>
     </Form>
   )

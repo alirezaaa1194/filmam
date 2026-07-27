@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -15,6 +16,7 @@ import {
 import { SignOutDialog } from '@/components/sign-out-dialog'
 
 export function ProfileDropdown() {
+  const { t } = useTranslation()
   const [open, setOpen] = useDialogState()
 
   return (
@@ -41,27 +43,27 @@ export function ProfileDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Profile
+                {t('nav.profile')}
                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Billing
+                {t('nav.billing')}
                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Settings
+                {t('nav.settings')}
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>New Team</DropdownMenuItem>
+            <DropdownMenuItem>{t('common.new_team')}</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
-            Sign out
+            {t('common.sign_out')}
             <DropdownMenuShortcut className='text-current'>
               ⇧⌘Q
             </DropdownMenuShortcut>

@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import {
   ArrowDown,
   ArrowRight,
@@ -13,41 +14,41 @@ import {
 export const labels = [
   {
     value: 'bug',
-    label: 'Bug',
+    label: i18n.t('tasks_data.bug'),
   },
   {
     value: 'feature',
-    label: 'Feature',
+    label: i18n.t('tasks_data.feature'),
   },
   {
     value: 'documentation',
-    label: 'Documentation',
+    label: i18n.t('tasks_data.documentation'),
   },
 ]
 
 export const statuses = [
   {
-    label: 'Backlog',
+    label: i18n.t('tasks_data.backlog'),
     value: 'backlog' as const,
     icon: HelpCircle,
   },
   {
-    label: 'Todo',
+    label: i18n.t('tasks_data.todo'),
     value: 'todo' as const,
     icon: Circle,
   },
   {
-    label: 'In Progress',
+    label: i18n.t('tasks_data.in_progress'),
     value: 'in progress' as const,
     icon: Timer,
   },
   {
-    label: 'Done',
+    label: i18n.t('tasks_data.done'),
     value: 'done' as const,
     icon: CheckCircle,
   },
   {
-    label: 'Canceled',
+    label: i18n.t('tasks_data.canceled'),
     value: 'canceled' as const,
     icon: CircleOff,
   },
@@ -55,22 +56,22 @@ export const statuses = [
 
 export const priorities = [
   {
-    label: 'Low',
+    label: i18n.t('tasks_data.low'),
     value: 'low' as const,
     icon: ArrowDown,
   },
   {
-    label: 'Medium',
+    label: i18n.t('tasks_data.medium'),
     value: 'medium' as const,
     icon: ArrowRight,
   },
   {
-    label: 'High',
+    label: i18n.t('tasks_data.high'),
     value: 'high' as const,
     icon: ArrowUp,
   },
   {
-    label: 'Critical',
+    label: i18n.t('tasks_data.critical'),
     value: 'critical' as const,
     icon: AlertCircle,
   },

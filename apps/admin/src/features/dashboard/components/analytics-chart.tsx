@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 const data = [
@@ -39,9 +40,14 @@ const data = [
 ]
 
 export function AnalyticsChart() {
+  const { t } = useTranslation()
+  const translatedData = data.map((d) => ({
+    ...d,
+    name: t(`analytics_chart.${d.name.toLowerCase()}`),
+  }))
   return (
     <ResponsiveContainer width='100%' height={300}>
-      <AreaChart data={data}>
+      <AreaChart data={translatedData}>
         <XAxis
           dataKey='name'
           stroke='#888888'

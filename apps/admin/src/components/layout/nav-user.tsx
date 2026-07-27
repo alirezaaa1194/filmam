@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
   BadgeCheck,
@@ -35,6 +36,7 @@ type NavUserProps = {
 }
 
 export function NavUser({ user }: NavUserProps) {
+  const { t } = useTranslation()
   const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
 
@@ -81,7 +83,7 @@ export function NavUser({ user }: NavUserProps) {
               <DropdownMenuGroup>
                 <DropdownMenuItem>
                   <Sparkles />
-                  Upgrade to Pro
+                  {t('common.upgrade_to_pro')}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
@@ -89,19 +91,19 @@ export function NavUser({ user }: NavUserProps) {
                 <DropdownMenuItem asChild>
                   <Link to='/settings/account'>
                     <BadgeCheck />
-                    Account
+                    {t('nav.account')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings'>
                     <CreditCard />
-                    Billing
+                    {t('nav.billing')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to='/settings/notifications'>
                     <Bell />
-                    Notifications
+                    {t('nav.notifications')}
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -111,7 +113,7 @@ export function NavUser({ user }: NavUserProps) {
                 onClick={() => setOpen(true)}
               >
                 <LogOut />
-                Sign out
+                {t('common.sign_out')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import {
   LayoutDashboard,
   Monitor,
@@ -39,54 +40,54 @@ export const sidebarData: SidebarData = {
   ],
   navGroups: [
     {
-      title: 'General',
+      title: i18n.t('nav.general'),
       items: [
         {
-          title: 'Dashboard',
+          title: i18n.t('nav.dashboard'),
           url: '/',
           icon: LayoutDashboard,
         },
         {
-          title: 'Tasks',
+          title: i18n.t('nav.tasks'),
           url: '/tasks',
           icon: ListTodo,
         },
         {
-          title: 'Users',
+          title: i18n.t('nav.users'),
           url: '/users',
           icon: Users,
         },
       ],
     },
     {
-      title: 'Other',
+      title: i18n.t('nav.other'),
       items: [
         {
-          title: 'Settings',
+          title: i18n.t('nav.settings'),
           icon: Settings,
           items: [
             {
-              title: 'Profile',
+              title: i18n.t('nav.profile'),
               url: '/settings',
               icon: UserCog,
             },
             {
-              title: 'Account',
+              title: i18n.t('nav.account'),
               url: '/settings/account',
               icon: Wrench,
             },
             {
-              title: 'Appearance',
+              title: i18n.t('nav.appearance'),
               url: '/settings/appearance',
               icon: Palette,
             },
             {
-              title: 'Notifications',
+              title: i18n.t('nav.notifications'),
               url: '/settings/notifications',
               icon: Bell,
             },
             {
-              title: 'Display',
+              title: i18n.t('nav.display'),
               url: '/settings/display',
               icon: Monitor,
             },

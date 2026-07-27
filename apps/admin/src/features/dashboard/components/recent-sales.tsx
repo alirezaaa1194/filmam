@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function RecentSales() {
+  const { t } = useTranslation()
   return (
     <div className='space-y-8'>
       <div className='flex items-center gap-4'>
@@ -10,9 +12,9 @@ export function RecentSales() {
         </Avatar>
         <div className='flex flex-1 flex-wrap items-center justify-between'>
           <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Olivia Martin</p>
+            <p className='text-sm leading-none font-medium'>{t('dashboard_names.olivia_martin')}</p>
             <p className='text-sm text-muted-foreground'>
-              olivia.martin@email.com
+              {t('dashboard_names.olivia_email')}
             </p>
           </div>
           <div className='font-medium'>+$1,999.00</div>
@@ -25,9 +27,9 @@ export function RecentSales() {
         </Avatar>
         <div className='flex flex-1 flex-wrap items-center justify-between'>
           <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Jackson Lee</p>
+            <p className='text-sm leading-none font-medium'>{t('dashboard_names.jackson_lee')}</p>
             <p className='text-sm text-muted-foreground'>
-              jackson.lee@email.com
+              {t('dashboard_names.jackson_email')}
             </p>
           </div>
           <div className='font-medium'>+$39.00</div>
@@ -40,9 +42,9 @@ export function RecentSales() {
         </Avatar>
         <div className='flex flex-1 flex-wrap items-center justify-between'>
           <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Isabella Nguyen</p>
+            <p className='text-sm leading-none font-medium'>{t('dashboard_names.isabella_nguyen')}</p>
             <p className='text-sm text-muted-foreground'>
-              isabella.nguyen@email.com
+              {t('dashboard_names.isabella_email')}
             </p>
           </div>
           <div className='font-medium'>+$299.00</div>
@@ -56,8 +58,8 @@ export function RecentSales() {
         </Avatar>
         <div className='flex flex-1 flex-wrap items-center justify-between'>
           <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>William Kim</p>
-            <p className='text-sm text-muted-foreground'>will@email.com</p>
+            <p className='text-sm leading-none font-medium'>{t('dashboard_names.william_kim')}</p>
+            <p className='text-sm text-muted-foreground'>{t('dashboard_names.william_email')}</p>
           </div>
           <div className='font-medium'>+$99.00</div>
         </div>
@@ -70,9 +72,9 @@ export function RecentSales() {
         </Avatar>
         <div className='flex flex-1 flex-wrap items-center justify-between'>
           <div className='space-y-1'>
-            <p className='text-sm leading-none font-medium'>Sofia Davis</p>
+            <p className='text-sm leading-none font-medium'>{t('dashboard_names.sofia_davis')}</p>
             <p className='text-sm text-muted-foreground'>
-              sofia.davis@email.com
+              {t('dashboard_names.sofia_email')}
             </p>
           </div>
           <div className='font-medium'>+$39.00</div>

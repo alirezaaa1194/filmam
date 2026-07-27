@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
   Card,
@@ -11,12 +12,13 @@ import { AuthLayout } from '../auth-layout'
 import { ForgotPasswordForm } from './components/forgot-password-form'
 
 export function ForgotPassword() {
+  const { t } = useTranslation()
   return (
     <AuthLayout>
       <Card className='max-w-sm gap-4 sm:min-w-sm'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Forgot Password
+            {t('auth.forgot_password')}
           </CardTitle>
           <CardDescription>
             Enter your registered email and <br /> we will send you a link to
@@ -33,7 +35,7 @@ export function ForgotPassword() {
               to='/sign-up'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Sign up
+              {t('auth.sign_up')}
             </Link>
             .
           </p>

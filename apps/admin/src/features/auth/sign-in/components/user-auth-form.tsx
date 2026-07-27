@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -39,6 +40,7 @@ export function UserAuthForm({
   redirectTo,
   ...props
 }: UserAuthFormProps) {
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { auth } = useAuthStore()
@@ -55,7 +57,7 @@ export function UserAuthForm({
     setIsLoading(true)
 
     toast.promise(sleep(2000), {
-      loading: 'Signing in...',
+      loading: t('auth.signing_in'),
       success: () => {
         setIsLoading(false)
 
@@ -77,7 +79,7 @@ export function UserAuthForm({
 
         return `Welcome back, ${data.email}!`
       },
-      error: 'Error',
+      error: t('common.error'),
     })
   }
 
@@ -93,9 +95,9 @@ export function UserAuthForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('auth.email')}</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder={t('auth.email_placeholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -106,23 +108,23 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('auth.password')}</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput placeholder={t('auth.password_placeholder')} {...field} />
               </FormControl>
               <FormMessage />
               <Link
                 to='/forgot-password'
                 className='absolute inset-e-0 -top-0.5 text-sm font-medium text-muted-foreground hover:opacity-75'
               >
-                Forgot password?
+                {t('auth.forgot_password_link')}
               </Link>
             </FormItem>
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          Sign in
+          {t('auth.sign_in')}
         </Button>
 
         <div className='relative my-2'>
@@ -131,17 +133,17 @@ export function UserAuthForm({
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
             <span className='bg-background px-2 text-muted-foreground'>
-              Or continue with
+              {t('auth.or_continue_with')}
             </span>
           </div>
         </div>
 
         <div className='grid grid-cols-2 gap-2'>
           <Button variant='outline' type='button' disabled={isLoading}>
-            <IconGithub className='h-4 w-4' /> GitHub
+            <IconGithub className='h-4 w-4' /> {t('auth_providers.github')}
           </Button>
           <Button variant='outline' type='button' disabled={isLoading}>
-            <IconFacebook className='h-4 w-4' /> Facebook
+            <IconFacebook className='h-4 w-4' /> {t('auth_providers.facebook')}
           </Button>
         </div>
       </form>

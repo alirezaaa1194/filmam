@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
   Card,
@@ -11,12 +12,13 @@ import { AuthLayout } from '../auth-layout'
 import { SignUpForm } from './components/sign-up-form'
 
 export function SignUp() {
+  const { t } = useTranslation()
   return (
     <AuthLayout>
       <Card className='max-w-sm gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Create an account
+            {t('auth.create_account')}
           </CardTitle>
           <CardDescription>
             Enter your email and password to create an account. <br />
@@ -25,7 +27,7 @@ export function SignUp() {
               to='/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Sign In
+              {t('auth.sign_in')}
             </Link>
           </CardDescription>
         </CardHeader>
@@ -34,19 +36,19 @@ export function SignUp() {
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>
-            By creating an account, you agree to our{' '}
+            <span>{t('auth.sign_in_agree')}</span>{' '}
             <a
               href='/terms'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Terms of Service
+              {t('auth.terms_of_service')}
             </a>{' '}
             and{' '}
             <a
               href='/privacy'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Privacy Policy
+              {t('auth.privacy_policy')}
             </a>
             .
           </p>

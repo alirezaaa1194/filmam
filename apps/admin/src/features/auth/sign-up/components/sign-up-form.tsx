@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -39,6 +40,7 @@ export function SignUpForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,12 +56,12 @@ export function SignUpForm({
     setIsLoading(true)
 
     toast.promise(sleep(2000), {
-      loading: 'Creating account...',
+      loading: t('auth.creating_account'),
       success: () => {
         setIsLoading(false)
         return `Account created for ${data.email}.`
       },
-      error: 'Error',
+      error: t('common.error'),
     })
   }
 
@@ -75,7 +77,7 @@ export function SignUpForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('auth.email')}</FormLabel>
               <FormControl>
                 <Input placeholder='name@example.com' {...field} />
               </FormControl>
@@ -88,7 +90,7 @@ export function SignUpForm({
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('auth.password')}</FormLabel>
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
@@ -101,7 +103,7 @@ export function SignUpForm({
           name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>{t('auth.confirm_password')}</FormLabel>
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
@@ -111,7 +113,7 @@ export function SignUpForm({
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <UserPlus />}
-          Create Account
+          {t('auth.create_account')}
         </Button>
 
         <div className='relative my-2'>
@@ -120,7 +122,7 @@ export function SignUpForm({
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
             <span className='bg-background px-2 text-muted-foreground'>
-              Or continue with
+              {t('auth.or_continue_with')}
             </span>
           </div>
         </div>
@@ -132,7 +134,7 @@ export function SignUpForm({
             type='button'
             disabled={isLoading}
           >
-            <IconGithub className='h-4 w-4' /> GitHub
+            <IconGithub className='h-4 w-4' /> {t('auth_providers.github')}
           </Button>
           <Button
             variant='outline'
@@ -140,7 +142,7 @@ export function SignUpForm({
             type='button'
             disabled={isLoading}
           >
-            <IconFacebook className='h-4 w-4' /> Facebook
+            <IconFacebook className='h-4 w-4' /> {t('auth_providers.facebook')}
           </Button>
         </div>
       </form>

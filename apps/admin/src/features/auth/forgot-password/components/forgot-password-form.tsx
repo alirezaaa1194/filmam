@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,6 +28,7 @@ export function ForgotPasswordForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -39,14 +41,14 @@ export function ForgotPasswordForm({
     setIsLoading(true)
 
     toast.promise(sleep(2000), {
-      loading: 'Sending email...',
+      loading: t('auth.sending_email'),
       success: () => {
         setIsLoading(false)
         form.reset()
         navigate({ to: '/otp' })
         return `Email sent to ${data.email}`
       },
-      error: 'Error',
+      error: t('common.error'),
     })
   }
 
@@ -62,7 +64,7 @@ export function ForgotPasswordForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('auth.email')}</FormLabel>
               <FormControl>
                 <Input placeholder='name@example.com' {...field} />
               </FormControl>
@@ -71,7 +73,7 @@ export function ForgotPasswordForm({
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          Continue
+          {t('common.continue')}
           {isLoading ? <Loader2 className='animate-spin' /> : <ArrowRight />}
         </Button>
       </form>

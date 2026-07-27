@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import { Shield, UserCheck, Users, CreditCard } from 'lucide-react'
 import { type UserStatus } from './schema'
 
@@ -13,22 +14,22 @@ export const callTypes = new Map<UserStatus, string>([
 
 export const roles = [
   {
-    label: 'Superadmin',
+    label: i18n.t('users_data.superadmin'),
     value: 'superadmin',
     icon: Shield,
   },
   {
-    label: 'Admin',
+    label: i18n.t('users_data.admin'),
     value: 'admin',
     icon: UserCheck,
   },
   {
-    label: 'Manager',
+    label: i18n.t('users_data.manager'),
     value: 'manager',
     icon: Users,
   },
   {
-    label: 'Cashier',
+    label: i18n.t('users_data.cashier'),
     value: 'cashier',
     icon: CreditCard,
   },

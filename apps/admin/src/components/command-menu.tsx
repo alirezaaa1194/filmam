@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from 'lucide-react'
 import { useSearch } from '@/context/search-provider'
@@ -16,6 +17,7 @@ import { sidebarData } from './layout/data/sidebar-data'
 import { ScrollArea } from './ui/scroll-area'
 
 export function CommandMenu() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { setTheme } = useTheme()
   const { open, setOpen } = useSearch()
@@ -30,10 +32,10 @@ export function CommandMenu() {
 
   return (
     <CommandDialog modal open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder='Type a command or search...' />
+      <CommandInput placeholder={t('common.search')} />
       <CommandList>
         <ScrollArea type='hover' className='h-72 pe-1'>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{t('common.no_results')}</CommandEmpty>
           {sidebarData.navGroups.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((navItem, i) => {
@@ -71,17 +73,17 @@ export function CommandMenu() {
             </CommandGroup>
           ))}
           <CommandSeparator />
-          <CommandGroup heading='Theme'>
+          <CommandGroup heading={t('theme.title')}>
             <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
-              <Sun /> <span>Light</span>
+              <Sun /> <span>{t('theme.light')}</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => setTheme('dark'))}>
               <Moon className='scale-90' />
-              <span>Dark</span>
+              <span>{t('theme.dark')}</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => setTheme('system'))}>
               <Laptop />
-              <span>System</span>
+              <span>{t('theme.system')}</span>
             </CommandItem>
           </CommandGroup>
         </ScrollArea>

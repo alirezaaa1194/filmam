@@ -15,6 +15,7 @@ import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
 import { routeTree } from './routeTree.gen'
 import './styles/index.css'
+import i18n from "@/i18n";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,7 +41,7 @@ const queryClient = new QueryClient({
 
         if (error instanceof AxiosError) {
           if (error.response?.status === 304) {
-            toast.error('Content not modified!')
+            toast.error(i18n.t('notifications.content_not_modified'))
           }
         }
       },
@@ -50,20 +51,19 @@ const queryClient = new QueryClient({
     onError: (error) => {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
-          toast.error('Session expired!')
+          toast.error(i18n.t('notifications.session_expired'))
           useAuthStore.getState().auth.reset()
           const redirect = `${router.history.location.href}`
           router.navigate({ to: '/sign-in', search: { redirect } })
         }
         if (error.response?.status === 500) {
-          toast.error('Internal Server Error!')
+          toast.error(i18n.t('notifications.internal_server_error'))
           // Only navigate to error page in production to avoid disrupting HMR in development
           if (import.meta.env.PROD) {
             router.navigate({ to: '/500' })
           }
         }
-          if (error.response?.status === 403) {
-          }
+
       }
     },
   }),

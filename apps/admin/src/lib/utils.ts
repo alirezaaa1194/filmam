@@ -73,3 +73,6 @@ export function getDisplayNameInitials(displayName: string): string {
   const last = parts[parts.length - 1]?.[0] ?? ''
   return (first + last).toUpperCase()
 }
+
+
+export const appLanguages=["FA", "EN", "AR"]
