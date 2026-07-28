@@ -12,7 +12,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import * as passport from 'passport';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -124,10 +123,12 @@ export class AuthController {
   }
 
   @Get('google')
-  async googleAuth(@Req() req, @Res() res) {
-    const state = (req.query.state as string) || '';
-    passport.authenticate('google', { state, session: false })(req, res);
-  }
+  @UseGuards(new (AuthGuard('google'))({ state: 'admin', session: false }))
+  async googleAuth() {}
+
+  @Get('google/frontend')
+  @UseGuards(new (AuthGuard('google'))({ state: 'frontend', session: false }))
+  async googleAuthFrontend() {}
 
   @ApiBearerAuth()
   @Get('google/callback')

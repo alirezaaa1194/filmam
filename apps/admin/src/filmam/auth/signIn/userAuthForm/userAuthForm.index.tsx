@@ -167,7 +167,7 @@ export function UserAuthForm({
                 className='w-full'
                 onClick={() => {
                   const popup = window.open(
-                    `${AppApis.auth.google}?state=admin`,
+                    AppApis.auth.google,
                     'google-oauth',
                     'width=500,height=600'
                   )
