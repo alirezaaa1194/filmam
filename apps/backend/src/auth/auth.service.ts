@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -130,8 +132,13 @@ export class AuthService {
       const remainingSeconds = Math.ceil(
         (recentOtp.created_at.getTime() + 2 * 60 * 1000 - Date.now()) / 1000,
       );
-      throw new BadRequestException(
+      // throw new BadRequestException(
+      //   `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
+      // );
+
+      throw new HttpException(
         `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
+        HttpStatus.TOO_MANY_REQUESTS,
       );
     }
   }
