@@ -6,6 +6,8 @@ import type {
   __PaginationType,
   __JWTTokenType,
   __MessageType,
+  __ApiErrorItemType,
+  __ApiErrorType,
   __CardsDataType,
   __MonthlyWatchDataType,
   __RecentUserType,
@@ -109,6 +111,8 @@ export type { __Collapsible as Collapsible }
 export type { __PaginationType as PaginationType }
 export type { __JWTTokenType as JWTTokenType }
 export type { __MessageType as MessageType }
+export type { __ApiErrorItemType as ApiErrorItemType }
+export type { __ApiErrorType as ApiErrorType }
 export type { __CardsDataType as CardsDataType }
 export type { __MonthlyWatchDataType as MonthlyWatchDataType }
 export type { __RecentUserType as RecentUserType }

@@ -12,6 +12,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import * as passport from 'passport';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -122,10 +123,11 @@ export class AuthController {
     return await this.authService.cleanupOtp(secret);
   }
 
-  @ApiBearerAuth()
   @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth() {}
+  async googleAuth(@Req() req, @Res() res) {
+    const state = (req.query.state as string) || '';
+    passport.authenticate('google', { state, session: false })(req, res);
+  }
 
   @ApiBearerAuth()
   @Get('google/callback')
@@ -133,6 +135,12 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res) {
     const user = req.user;
     const tokens = await this.authService.jwtGenerator(user.id, user.email);
+    const state = (req.query.state as string) || '';
+    const frontendUrls: Record<string, string> = {
+      admin: process.env.FRONTEND_URL || 'http://localhost:5173',
+      frontend: process.env.FILMAM_URL || 'http://localhost:3000',
+    };
+    const frontendUrl = frontendUrls[state] || frontendUrls.admin;
     const html = `
     <html>
       <body>
@@ -140,9 +148,11 @@ export class AuthController {
           window.opener.postMessage(
             {
               accessToken: "${tokens.accessToken}",
-              refreshToken: "${tokens.refreshToken}"
+              accessTokenExpiresIn: ${tokens.accessTokenExpiresIn},
+              refreshToken: "${tokens.refreshToken}",
+              refreshTokenExpiresIn: ${tokens.refreshTokenExpiresIn}
             },
-            "http://localhost:3000"
+            "${frontendUrl}"
           );
           window.close();
         </script>

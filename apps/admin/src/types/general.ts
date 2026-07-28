@@ -1021,6 +1021,16 @@ export type __UserMovieActionsType = {
   actions: string[]
 }
 
+export type __ApiErrorItemType = {
+  status: number
+  detail: string
+}
+
+export type __ApiErrorType = {
+  success: boolean
+  errors: __ApiErrorItemType[]
+}
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {

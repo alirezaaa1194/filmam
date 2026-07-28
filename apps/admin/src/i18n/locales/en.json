@@ -256,6 +256,7 @@
   },
   "auth": {
     "sign_in": "Sign in",
+    "otp_title": "OTP Verification",
     "sign_up": "Sign Up",
     "signing_in": "Signing in...",
     "create_account": "Create an account",
@@ -275,7 +276,21 @@
     "two_factor": "Two-factor Authentication",
     "one_time_password": "One-Time Password",
     "verify": "Verify",
-    "resend_code": "Resend a new code."
+    "resend_code": "Resend a new code.",
+    "description": "Enter your email and password below to log into your account.",
+    "otp_description": "Enter the verification code sent to your email.",
+    "edit_credential": "Edit Credential",
+    "resend_timer": "Resend after: {{timer}}",
+    "resend": "Resend",
+    "sending": "Sending...",
+    "login_successful": "Login successful",
+    "otp_sent": "OTP sent successfully",
+    "otp_resent": "OTP resent successfully",
+    "email_required": "Please enter your email.",
+    "password_required": "Please enter your password.",
+    "password_min_length": "Password must be at least 7 characters long.",
+    "otp_required": "Please enter the verification code.",
+    "otp_length": "The code must be 5 digits."
   },
   "auth_providers": {
     "github": "GitHub",
@@ -303,7 +318,7 @@
     "sign_out_desc": "Are you sure you want to sign out? You will need to sign in again to access your account."
   },
   "app_title": {
-    "title": "Shadcn Admin",
+    "title": "Filmam Admin",
     "subtitle": "Vite + ShadcnUI"
   },
   "notifications": {

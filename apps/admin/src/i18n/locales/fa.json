@@ -256,6 +256,7 @@
   },
   "auth": {
     "sign_in": "ورود",
+    "otp_title": "تأیید OTP",
     "sign_up": "ثبت‌نام",
     "signing_in": "در حال ورود...",
     "create_account": "ایجاد حساب",
@@ -275,7 +276,21 @@
     "two_factor": "احراز هویت دو مرحله‌ای",
     "one_time_password": "رمز یکبار مصرف",
     "verify": "تأیید",
-    "resend_code": "ارسال مجدد کد."
+    "resend_code": "ارسال مجدد کد.",
+    "description": "ایمیل و رمز عبور خود را وارد کنید تا وارد حساب خود شوید.",
+    "otp_description": "کد تأیید ارسال شده به ایمیل خود را وارد کنید.",
+    "edit_credential": "ویرایش اطلاعات",
+    "resend_timer": "ارسال مجدد پس از: {{timer}}",
+    "resend": "ارسال مجدد",
+    "sending": "در حال ارسال...",
+    "login_successful": "ورود موفق",
+    "otp_sent": "کد با موفقیت ارسال شد",
+    "otp_resent": "کد مجدداً با موفقیت ارسال شد",
+    "email_required": "لطفاً ایمیل خود را وارد کنید.",
+    "password_required": "لطفاً رمز عبور خود را وارد کنید.",
+    "password_min_length": "رمز عبور باید حداقل ۷ کاراکتر باشد.",
+    "otp_required": "لطفاً کد تأیید را وارد کنید.",
+    "otp_length": "کد باید ۵ رقمی باشد."
   },
   "auth_providers": {
     "github": "گیت‌هاب",
@@ -303,7 +318,7 @@
     "sign_out_desc": "آیا مطمئن هستید که می‌خواهید خارج شوید؟ برای دسترسی به حساب خود باید دوباره وارد شوید."
   },
   "app_title": {
-    "title": "مدیریت شادکن",
+    "title": "مدیریت فیلمام",
     "subtitle": "Vite + ShadcnUI"
   },
   "notifications": {

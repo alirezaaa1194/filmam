@@ -19,7 +19,7 @@ export function Otp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <OtpForm />
+          {/* <OtpForm /> */}
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>

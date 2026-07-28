@@ -1,53 +1,37 @@
 import { useTranslation } from 'react-i18next'
-import { Link, useSearch } from '@tanstack/react-router'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/utilities/components'
+import { Card } from '@/utilities/components'
 import { AuthLayout } from '../authLayout/authLayout.index'
 import { UserAuthForm } from './userAuthForm/userAuthForm.index'
+import { useState } from 'react'
+import { OtpForm } from '../otp/otpForm/otpForm.index'
+import { useTimer } from '../../../hooks'
 
 export function SignIn() {
-  const { t } = useTranslation()
-  const { redirect } = useSearch({ from: '/(auth)/sign-in' })
+  const [step, setStep] = useState<'Login' | 'Otp'>('Login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { timer, start, stop, reset } = useTimer(120)
 
   return (
     <AuthLayout>
-      <Card className='max-w-sm gap-4'>
-        <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>{t('auth.sign_in')}</CardTitle>
-          <CardDescription>
-            Enter your email and password below to log into{' '}
-            <br className='max-sm:hidden' /> your account. Don't have an
-            account?{' '}
-            <Link
-              to='/sign-up'
-              className='text-nowrap underline underline-offset-4 hover:text-primary'
-            >
-              {t('auth.sign_up')}
-            </Link>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <UserAuthForm redirectTo={redirect} />
-        </CardContent>
-        <CardFooter>
-          <p className='px-8 text-center text-sm text-muted-foreground'>
-            <span>{t('auth.sign_in_agree')}</span>{' '}
-            <a
-              href='/terms'
-              className='underline underline-offset-4 hover:text-primary'
-            >
-              {t('auth.terms_of_service')}
-            </a>{' '}
-            and{' '}
-            <a
-              href='/privacy'
-              className='underline underline-offset-4 hover:text-primary'
-            >
-              {t('auth.privacy_policy')}
-            </a>
-            .
-          </p>
-        </CardFooter>
-      </Card>
+      {step === 'Login' ? (
+        <UserAuthForm
+          setStep={setStep}
+          setEmail={setEmail}
+          setPassword={setPassword}
+          start={start}
+          />
+        ) : (
+          <OtpForm
+          setStep={setStep}
+          email={email}
+          password={password}
+          start={start}
+          stop={stop}
+          reset={reset}
+          timer={timer}
+        />
+      )}
     </AuthLayout>
   )
 }
