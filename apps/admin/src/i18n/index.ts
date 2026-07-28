@@ -8,13 +8,13 @@ import ar from './locales/ar.json'
 import { AppLanguages } from '../scripts'
 
 const resources = {
-  en: {
+  EN: {
     translation: en,
   },
-  fa: {
+  FA: {
     translation: fa,
   },
-  ar: {
+  AR: {
     translation: ar,
   },
 }
@@ -23,8 +23,8 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    supportedLngs: AppLanguages.map((l) => l.toLowerCase()),
-    fallbackLng: 'en',
+    supportedLngs: AppLanguages,
+    fallbackLng: 'EN',
     resources,
     detection: {
       order: ['cookie', 'navigator'],

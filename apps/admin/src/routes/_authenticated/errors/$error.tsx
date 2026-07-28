@@ -4,11 +4,11 @@ import { ConfigDrawer, Header, ProfileDropdown, Search, ThemeSwitch } from '@/ut
 
 
 
-import { ForbiddenError } from '@/filmam/errors/forbidden'
-import { GeneralError } from '@/filmam/errors/general-error'
-import { MaintenanceError } from '@/filmam/errors/maintenance-error'
-import { NotFoundError } from '@/filmam/errors/not-found-error'
-import { UnauthorisedError } from '@/filmam/errors/unauthorized-error'
+import { ForbiddenError } from '@/filmam/errors/forbidden/forbidden.index'
+import { GeneralError } from '@/filmam/errors/generalError/generalError.index'
+import { MaintenanceError } from '@/filmam/errors/maintenanceError/maintenanceError.index'
+import { NotFoundError } from '@/filmam/errors/notFoundError/notFoundError.index'
+import { UnauthorisedError } from '@/filmam/errors/unauthorizedError/unauthorizedError.index'
 
 export const Route = createFileRoute('/_authenticated/errors/$error')({
   component: RouteComponent,

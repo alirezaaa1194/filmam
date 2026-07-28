@@ -16,11 +16,11 @@ import { Button, ConfigDrawer, Header, LearnMore, Main, Search, ThemeSwitch } fr
 
 
 
-import { UsersDialogs } from '@/filmam/users/components/users-dialogs'
-import { UsersPrimaryButtons } from '@/filmam/users/components/users-primary-buttons'
-import { UsersProvider } from '@/filmam/users/components/users-provider'
-import { UsersTable } from '@/filmam/users/components/users-table'
-import { users } from '@/filmam/users/data'
+import { UsersDialogs } from '@/filmam/users/usersDialogs/usersDialogs.index'
+import { UsersPrimaryButtons } from '@/filmam/users/usersPrimaryButtons/usersPrimaryButtons.index'
+import { UsersProvider } from '@/filmam/users/usersProvider/usersProvider.index'
+import { UsersTable } from '@/filmam/users/usersTable/usersTable.index'
+import { users } from '@/filmam/users/users.data'
 
 export const Route = createFileRoute('/clerk/_authenticated/user-management')({
   component: UserManagement,

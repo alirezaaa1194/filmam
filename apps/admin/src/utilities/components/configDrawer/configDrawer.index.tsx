@@ -16,7 +16,16 @@ import { Cn } from '@/scripts'
 import { useDirection } from '@/context'
 import { useLayout } from '@/context'
 import { useTheme } from '@/context'
-import { Button, Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/utilities/components'
+import {
+  Button,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/utilities/components'
 
 import { useSidebar } from '../ui/sidebar/sidebar.index'
 import { Collapsible } from '../../../types'
@@ -37,7 +46,7 @@ export function ConfigDrawer() {
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className='hidden lg:flex'>
         <Button
           size='icon'
           variant='ghost'
@@ -50,9 +59,7 @@ export function ConfigDrawer() {
       <SheetContent className='flex flex-col'>
         <SheetHeader className='pb-0 text-start'>
           <SheetTitle>{t('theme.settings')}</SheetTitle>
-          <SheetDescription>
-            {t('theme.settings_desc')}
-          </SheetDescription>
+          <SheetDescription>{t('theme.settings_desc')}</SheetDescription>
         </SheetHeader>
         <div className='space-y-6 overflow-y-auto px-4'>
           <ThemeConfig />

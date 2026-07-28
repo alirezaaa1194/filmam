@@ -7,8 +7,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { NavigationProgress, Toaster } from '@/utilities/components'
 
-import { GeneralError } from '@/filmam/errors/general-error'
-import { NotFoundError } from '@/filmam/errors/not-found-error'
+import { GeneralError } from '@/filmam/errors/generalError/generalError.index'
+import { NotFoundError } from '@/filmam/errors/notFoundError/notFoundError.index'
 import { __AppApis } from '../data/api'
 
 export const Route = createRootRouteWithContext<{

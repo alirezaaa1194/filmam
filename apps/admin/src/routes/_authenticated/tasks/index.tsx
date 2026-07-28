@@ -1,7 +1,7 @@
 import z from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
-import { Tasks } from '@/filmam/tasks'
-import { priorities, statuses } from '@/filmam/tasks/data'
+import { Tasks } from '@/filmam/tasks/tasks.index'
+import { priorities, statuses } from '@/filmam/tasks/tasks.data'
 
 const taskSearchSchema = z.object({
   page: z.number().optional().catch(1),
