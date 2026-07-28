@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/utilities/components'
 import { AuthLayout } from '../authLayout/authLayout.index'
-import { OtpForm } from './otpForm/otpForm.index'
 
 export function Otp() {
   const { t } = useTranslation()

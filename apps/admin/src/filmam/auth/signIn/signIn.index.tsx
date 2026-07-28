@@ -1,5 +1,3 @@
-import { useTranslation } from 'react-i18next'
-import { Card } from '@/utilities/components'
 import { AuthLayout } from '../authLayout/authLayout.index'
 import { UserAuthForm } from './userAuthForm/userAuthForm.index'
 import { useState } from 'react'

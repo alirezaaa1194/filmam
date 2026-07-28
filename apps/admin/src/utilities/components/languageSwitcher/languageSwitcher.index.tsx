@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Check, Languages } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { Cn } from '@/scripts'
 import { useDirection } from '@/context'
 import {
@@ -19,32 +19,6 @@ const languages = [
   { code: AppLanguagesEnum.FA, label: 'فارسی', dir: 'rtl' as const },
   { code: AppLanguagesEnum.AR, label: 'العربی', dir: 'rtl' as const },
 ]
-
-function Flag({ code }: { code: string }) {
-  if (code === 'fa') {
-    return (
-      <svg viewBox='0 0 3 3' className='size-full'>
-        <rect width='3' height='1' fill='#239f40' />
-        <rect y='1' width='3' height='1' fill='#fff' />
-        <rect y='2' width='3' height='1' fill='#da0000' />
-      </svg>
-    )
-  }
-  if (code === 'ar') {
-    return (
-      <svg viewBox='0 0 3 3' className='size-full'>
-        <rect width='3' height='3' fill='#006C35' />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox='0 0 3 3' className='size-full'>
-      <rect width='3' height='3' fill='#012169' />
-      <rect y='1' width='3' height='1' fill='#fff' />
-      <rect x='1' width='1' height='3' fill='#fff' />
-    </svg>
-  )
-}
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation()

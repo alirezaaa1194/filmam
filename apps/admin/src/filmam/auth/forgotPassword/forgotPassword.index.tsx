@@ -25,10 +25,10 @@ export function ForgotPassword() {
           <p className='mx-auto px-8 text-center text-sm text-balance text-muted-foreground'>
             Don't have an account?{' '}
             <Link
-              to='/sign-up'
+              to='/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
-              {t('auth.sign_up')}
+              {t('auth.sign_in')}
             </Link>
             .
           </p>
