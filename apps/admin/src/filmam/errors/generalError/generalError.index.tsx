@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { Cn } from '@/scripts'
-import { Button } from '@/utilities/components'
+import { Button, PageTitle } from '@/utilities/components'
 type GeneralErrorProps = React.HTMLAttributes<HTMLDivElement> & {
   minimal?: boolean
 }
@@ -14,7 +14,9 @@ export function GeneralError({
   const navigate = useNavigate()
   const { history } = useRouter()
   return (
-    <div className={Cn('h-svh w-full', className)}>
+    <>
+      <PageTitle titleKey='server_error' />
+      <div className={Cn('h-svh w-full', className)}>
       <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
         {!minimal && (
           <h1 className='text-[7rem] leading-tight font-bold'>{t('errors.500_title')}</h1>
@@ -33,5 +35,6 @@ export function GeneralError({
         )}
       </div>
     </div>
+    </>
   )
 }

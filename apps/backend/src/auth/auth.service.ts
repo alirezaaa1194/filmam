@@ -96,51 +96,53 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    const recentOtp = await this.otpService.getUserRecentOtp({
+    // const recentOtp = await this.otpService.getUserRecentOtp({
+    //   userId: user?.id,
+    //   otpType: otpType,
+    // });
+
+    // if (!recentOtp) {
+    const otp = randomInt(10000, 99999);
+    await this.otpService.deleteUserValidOTPs({
       userId: user?.id,
       otpType: otpType,
     });
-    if (!recentOtp) {
-      const otp = randomInt(10000, 99999);
-      await this.otpService.deleteUserValidOTPs({
-        userId: user?.id,
-        otpType: otpType,
-      });
-      await this.otpService.createOtp({
-        otp,
-        userId: user?.id,
-      });
-      if (user) {
-        await this.loginRequestService.createLoginRequest(user.id);
-      }
+    await this.otpService.createOtp({
+      otp,
+      otpType,
+      userId: user?.id,
+      userEmail: user.email,
+    });
 
-      const lang = user?.preferred_language ?? AppLanguage.FA;
-      const { subject, html } = this.getEmailContent(otpType, otp, lang);
-
-      const { error } = await this.mailService.sendEmail(
-        user?.email || userEmail,
-        subject,
-        html,
-      );
-
-      if (error) {
-        throw new InternalServerErrorException('Failed to send email');
-      }
-
-      return { message: 'OTP sent successfully' };
-    } else {
-      const remainingSeconds = Math.ceil(
-        (recentOtp.created_at.getTime() + 2 * 60 * 1000 - Date.now()) / 1000,
-      );
-      // throw new BadRequestException(
-      //   `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
-      // );
-
-      throw new HttpException(
-        `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
-        HttpStatus.TOO_MANY_REQUESTS,
-      );
+    if (user) {
+      await this.loginRequestService.createLoginRequest(user.id);
     }
+
+    const lang = user?.preferred_language ?? AppLanguage.FA;
+    const { subject, html } = this.getEmailContent(otpType, otp, lang);
+
+    const { error } = await this.mailService.sendEmail(
+      user?.email || userEmail,
+      subject,
+      html,
+    );
+
+    if (error) {
+      throw new InternalServerErrorException('Failed to send email');
+    }
+
+    return { message: 'OTP sent successfully' };
+    // }
+    // else {
+    //   const remainingSeconds = Math.ceil(
+    //     (recentOtp.created_at.getTime() + 2 * 60 * 1000 - Date.now()) / 1000,
+    //   );
+
+    //   throw new HttpException(
+    //     `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
+    //     HttpStatus.TOO_MANY_REQUESTS,
+    //   );
+    // }
   }
 
   private getEmailContent(
@@ -285,8 +287,9 @@ export class AuthService {
       ) {
         const userBlockedTime =
           (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
-        throw new BadRequestException(
+        throw new HttpException(
           `Too many login attempts, try again after ${userBlockedTime} seconds`,
+          HttpStatus.TOO_MANY_REQUESTS,
         );
       } else {
         const getUserRecentLoggedInRequestsCounts =
@@ -303,8 +306,9 @@ export class AuthService {
           const userBlockedTime =
             (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
             1000;
-          throw new BadRequestException(
+          throw new HttpException(
             `Too many login attempts, try again after ${userBlockedTime} seconds`,
+            HttpStatus.TOO_MANY_REQUESTS,
           );
         }
         if (user.password) {
@@ -411,8 +415,9 @@ export class AuthService {
       ) {
         const userBlockedTime =
           (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
-        throw new BadRequestException(
+        throw new HttpException(
           `Too many login attempts, try again after ${userBlockedTime} seconds`,
+          HttpStatus.TOO_MANY_REQUESTS,
         );
       } else {
         const getUserRecentLoggedInRequestsCounts =
@@ -429,8 +434,9 @@ export class AuthService {
           const userBlockedTime =
             (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
             1000;
-          throw new BadRequestException(
+          throw new HttpException(
             `Too many login attempts, try again after ${userBlockedTime} seconds`,
+            HttpStatus.TOO_MANY_REQUESTS,
           );
         } else {
           await this.loginRequestService.createLoginRequest(user.id);
@@ -457,6 +463,7 @@ export class AuthService {
       const otpInfo = await this.otpService.getUserValidOtp({
         userEmail: email,
       });
+
       if (!otpInfo) {
         throw new UnauthorizedException('OTP not found or expired');
       }
@@ -504,6 +511,7 @@ export class AuthService {
       const mainToken = userRefreshTokens.find(
         (token) => token.hashed_refresh === hashedUserToken,
       );
+
       if (mainToken) {
         await this.refreshTokenService.deleteCurrentToken(mainToken.id);
         return await this.jwtGenerator(user.id, user.email);

@@ -9,8 +9,8 @@ type AuthLayoutProps = {
 export function AuthLayout({ children }: AuthLayoutProps) {
   const { t } = useTranslation()
   return (
-    <div className='container flex h-svh w-full max-w-none flex-col items-center justify-center p-0 px-8 lg:w-1/3 lg:px-0'>
-      <div className='fixed inset-e-4 top-4 z-50'>
+    <div className='container flex h-svh w-full max-w-none flex-col items-center justify-center p-0 px-4 lg:w-1/3 lg:px-0'>
+      <div className='fixed inset-s-4 top-4 z-50'>
         <LanguageSwitcher />
       </div>
       <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:p-8'>

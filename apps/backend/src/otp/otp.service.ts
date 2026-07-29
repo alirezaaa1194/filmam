@@ -8,11 +8,13 @@ export class OtpService {
   constructor(private otpRepository: OtpRepository) {}
   async createOtp({
     otp,
+    otpType,
     userId,
     userEmail,
   }: {
     otp: number;
     userId?: number;
+    otpType: OtpType;
     userEmail?: string;
   }) {
     const hashedOtp = await bcrypt.hash(otp.toString(), 10);
@@ -20,6 +22,7 @@ export class OtpService {
 
     return await this.otpRepository.createOtp({
       userId,
+      otpType,
       userEmail,
       hashedOtp,
       expiresAt,

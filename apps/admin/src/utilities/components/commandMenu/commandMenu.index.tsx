@@ -5,7 +5,7 @@ import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from 'lucide-react'
 import { useSearch } from '@/context'
 import { useTheme } from '@/context'
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/utilities/components'
-import { sidebarData } from '../appSidebar/appSidebar.data'
+import { getSidebarData } from '../appSidebar/appSidebar.data'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
 
 
@@ -29,7 +29,7 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>{t('common.no_results')}</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
+          {getSidebarData(t).navGroups.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((navItem, i) => {
                 if (navItem.url)

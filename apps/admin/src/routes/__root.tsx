@@ -43,14 +43,17 @@ export const Route = createRootRouteWithContext<{
 
       if (
         location.pathname === '/sign-in' ||
-        location.pathname === '/forget-password'
+        location.pathname === '/forgot-password'
       ) {
         return redirect({
           to: '/',
         })
       }
     } catch (err) {
-      if (location.pathname !== '/sign-in') {
+      if (
+        location.pathname !== '/sign-in' &&
+        location.pathname !== '/forgot-password'
+      ) {
         throw redirect({
           to: '/sign-in',
         })

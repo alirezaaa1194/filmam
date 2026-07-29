@@ -1,5 +1,7 @@
-import { GetCookie } from '@/scripts'
+import { GetCookie, LogOut, SetCookie } from '@/scripts'
 import { AppApis } from '../data'
+import i18n from '../i18n'
+import { JWTTokenType } from '../types'
 
 export const __Api = async <T>(
   url: string,
@@ -9,7 +11,9 @@ export const __Api = async <T>(
   const accessToken = GetCookie('accessToken')
   const refreshToken = GetCookie('refreshToken')
 
-  const response = await fetch(url, {
+  const currentLanguage = i18n.resolvedLanguage
+
+  const response = await fetch(`${url}?lang=${currentLanguage}`, {
     ...options,
     body: options.body ? JSON.stringify(options.body) : undefined,
     headers: {
@@ -28,9 +32,21 @@ export const __Api = async <T>(
     })
 
     if (refreshResponse.ok) {
-      // save new token
+      const refreshResponseData: JWTTokenType = await refreshResponse.json()
+      SetCookie(
+        'accessToken',
+        refreshResponseData.accessToken,
+        refreshResponseData.accessTokenExpiresIn
+      )
+      SetCookie(
+        'refreshToken',
+        refreshResponseData.refreshToken,
+        refreshResponseData.refreshTokenExpiresIn
+      )
       return __Api<T>(url, options, false)
     }
+
+    LogOut()
 
     const error = await refreshResponse.json()
     throw error

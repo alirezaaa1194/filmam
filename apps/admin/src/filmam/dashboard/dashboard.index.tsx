@@ -22,6 +22,7 @@ import { Overview } from './overview/overview.index'
 import { RecentSales } from './recentSales/recentSales.index'
 import { useTranslation } from 'react-i18next'
 import { useUserStore } from '../../stores'
+import { PageTitle } from '@/utilities/components'
 
 export function Dashboard() {
   const { t } = useTranslation()
@@ -30,6 +31,7 @@ export function Dashboard() {
   
   return (
     <>
+      <PageTitle titleKey='dashboard' />
       <Header>
         <Search />
         <LanguageSwitcher />

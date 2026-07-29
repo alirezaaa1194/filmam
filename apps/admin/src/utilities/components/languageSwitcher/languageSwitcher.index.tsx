@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Check } from 'lucide-react'
-import { Cn } from '@/scripts'
+import { Api, Cn } from '@/scripts'
 import { useDirection } from '@/context'
 import {
   Button,
@@ -13,6 +13,9 @@ import fa from '@/assets/flags/fa.svg'
 import en from '@/assets/flags/en.svg'
 import ar from '@/assets/flags/ar.svg'
 import { AppLanguagesEnum } from '../../../types'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AppApis } from '../../../data'
+import { useUserStore } from '../../../stores'
 
 const languages = [
   { code: AppLanguagesEnum.EN, label: 'English', dir: 'ltr' as const },
@@ -23,6 +26,19 @@ const languages = [
 export function LanguageSwitcher() {
   const { i18n } = useTranslation()
   const { setDir } = useDirection()
+  const { user } = useUserStore()
+  const queryClient = useQueryClient()
+
+  const { mutate } = useMutation({
+    mutationFn: (langCode: AppLanguagesEnum) =>
+      Api(AppApis.user.updateInfo, {
+        method: 'PUT',
+        body: { ...user, preferred_language: langCode },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries()
+    },
+  })
 
   return (
     <DropdownMenu modal={false}>
@@ -55,6 +71,10 @@ export function LanguageSwitcher() {
             onClick={() => {
               i18n.changeLanguage(lang.code)
               setDir(lang.dir)
+
+              if (user) {
+                mutate(lang.code)
+              }
             }}
           >
             <span className='flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full'>

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ConfigDrawer, Header, LanguageSwitcher, Main, ProfileDropdown, Search, ThemeSwitch } from '@/utilities/components'
+import { ConfigDrawer, Header, LanguageSwitcher, Main, PageTitle, ProfileDropdown, Search, ThemeSwitch } from '@/utilities/components'
 
 import { TasksDialogs } from './tasksDialogs/tasksDialogs.index'
 import { TasksPrimaryButtons } from './tasksPrimaryButtons/tasksPrimaryButtons.index'
@@ -11,7 +11,8 @@ export function Tasks() {
   const { t } = useTranslation()
 
   return (
-    <TasksProvider>
+      <TasksProvider>
+        <PageTitle titleKey='tasks' />
       <Header fixed>
         <Search />
         <LanguageSwitcher />

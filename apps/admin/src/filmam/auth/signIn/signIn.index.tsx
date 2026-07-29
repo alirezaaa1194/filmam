@@ -1,6 +1,7 @@
 import { AuthLayout } from '../authLayout/authLayout.index'
 import { useState } from 'react'
 import { useTimer } from '../../../hooks'
+import { PageTitle } from '@/utilities/components'
 import { SignInForm } from './signInForm/signInForm.index'
 import { OtpForm } from './otpForm/otpForm.index'
 
@@ -12,15 +13,16 @@ export function SignIn() {
 
   return (
     <AuthLayout>
+      <PageTitle titleKey='sign_in' />
       {step === 'Login' ? (
         <SignInForm
           setStep={setStep}
           setEmail={setEmail}
           setPassword={setPassword}
           start={start}
-          />
-        ) : (
-          <OtpForm
+        />
+      ) : (
+        <OtpForm
           setStep={setStep}
           email={email}
           password={password}

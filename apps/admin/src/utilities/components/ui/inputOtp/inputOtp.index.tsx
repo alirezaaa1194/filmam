@@ -3,25 +3,24 @@ import { OTPInput, OTPInputContext } from 'input-otp'
 import { MinusIcon } from 'lucide-react'
 import { Cn } from '@/scripts'
 
-function InputOTP({
-  className,
-  containerClassName,
-  ...props
-}: React.ComponentProps<typeof OTPInput> & {
-  containerClassName?: string
-}) {
-  return (
-    <OTPInput
-      data-slot='input-otp'
-      containerClassName={Cn(
-        'flex items-center gap-2 has-disabled:opacity-50',
-        containerClassName
-      )}
-      className={Cn('disabled:cursor-not-allowed', className)}
-      {...props}
-    />
-  )
-}
+const InputOTP = React.forwardRef<
+  HTMLInputElement,
+  Omit<React.ComponentProps<typeof OTPInput>, 'ref'> & {
+    containerClassName?: string
+  }
+>(({ className, containerClassName, ...props }, ref) => (
+  <OTPInput
+    ref={ref}
+    data-slot='input-otp'
+    containerClassName={Cn(
+      'flex items-center gap-2 has-disabled:opacity-50',
+      containerClassName
+    )}
+    className={Cn('disabled:cursor-not-allowed', className)}
+    {...props}
+  />
+))
+InputOTP.displayName = 'InputOTP'
 
 function InputOTPGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (

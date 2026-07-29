@@ -6,7 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LogIn } from 'lucide-react'
 import { toast } from 'sonner'
-import { Cn, Api, SetCookie } from '@/scripts'
+import { Cn, Api, SetCookie, TranslateServerError } from '@/scripts'
+import { useDirection } from '@/context'
 import {
   Button,
   Card,
@@ -47,6 +48,7 @@ export function SignInForm({
   ...props
 }: UserAuthFormProps) {
   const { t } = useTranslation()
+  const { dir } = useDirection()
   const navigate = useNavigate()
 
   const formSchema = z.object({
@@ -86,7 +88,7 @@ export function SignInForm({
       toast.success(t('auth.otp_sent'))
     },
     onError: (response: ApiErrorType) => {
-      toast.error(response.errors[0].detail)
+      toast.error(t(TranslateServerError(response.errors[0].status)))
     },
   })
 
@@ -147,9 +149,9 @@ export function SignInForm({
                 </FormItem>
               )}
             />
-            <Button className='mt-2' disabled={isPending}>
-              {isPending ? <Spinner /> : <LogIn />}
+            <Button className='mt-2' disabled={isPending || isGoogleLoading}>
               {t('auth.sign_in')}
+              {isPending ? <Spinner /> : dir === 'rtl' ? <LogIn className='scale-x-[-1]' /> : <LogIn />}
             </Button>
 
             <div className='relative my-2'>
@@ -177,9 +179,7 @@ export function SignInForm({
                   )
                   if (!popup) {
                     setIsGoogleLoading(false)
-                    toast.error(
-                      'Popup blocked. Please allow popups for this site.'
-                    )
+                    toast.error(t('auth.popup_blocked'))
                     return
                   }
                   const handleMessage = (event: MessageEvent) => {
@@ -190,7 +190,14 @@ export function SignInForm({
                       accessTokenExpiresIn,
                       refreshToken,
                       refreshTokenExpiresIn,
+                      error,
                     } = event.data
+                    if (error) {
+                      setIsGoogleLoading(false)
+                      toast.error(t('errors.forbidden'))
+                      window.removeEventListener('message', handleMessage)
+                      return
+                    }
                     if (!accessToken || !refreshToken) {
                       setIsGoogleLoading(false)
                       return

@@ -28,6 +28,7 @@ import { MeResponseDto } from './dto/auth.response.dto';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { MessageResponseDto } from '../common/dto/response.dto';
 import { TokenResponseDto } from '../common/dto/response.dto';
+import { UserRole } from '../generated/prisma';
 
 @Controller('auth')
 export class AuthController {
@@ -157,6 +158,10 @@ export class AuthController {
   @UseGuards(new (AuthGuard('google'))({ state: 'frontend', session: false }))
   async googleAuthFrontend() {}
 
+  @Get('google/admin')
+  @UseGuards(new (AuthGuard('google-admin'))({ session: false }))
+  async googleAdminAuth() {}
+
   @ApiBearerAuth()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
@@ -169,6 +174,55 @@ export class AuthController {
       frontend: process.env.FILMAM_URL || 'http://localhost:3000',
     };
     const frontendUrl = frontendUrls[state] || frontendUrls.admin;
+    const html = `
+    <html>
+      <body>
+        <script>
+          window.opener.postMessage(
+            {
+              accessToken: "${tokens.accessToken}",
+              accessTokenExpiresIn: ${tokens.accessTokenExpiresIn},
+              refreshToken: "${tokens.refreshToken}",
+              refreshTokenExpiresIn: ${tokens.refreshTokenExpiresIn}
+            },
+            "${frontendUrl}"
+          );
+          window.close();
+        </script>
+      </body>
+    </html>
+  `;
+
+    res.setHeader('Content-Type', 'text/html');
+    res.send(html);
+  }
+
+  @Get('google/admin/callback')
+  @UseGuards(AuthGuard('google-admin'))
+  async googleAdminAuthRedirect(@Req() req, @Res() res) {
+    const user = req.user;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+    if (user.role !== UserRole.ADMIN) {
+      const html = `
+    <html>
+      <body>
+        <script>
+          window.opener.postMessage(
+            { error: "Only admin users can access the admin panel" },
+            "${frontendUrl}"
+          );
+          window.close();
+        </script>
+      </body>
+    </html>
+    `;
+      res.setHeader('Content-Type', 'text/html');
+      res.send(html);
+      return;
+    }
+
+    const tokens = await this.authService.jwtGenerator(user.id, user.email);
     const html = `
     <html>
       <body>

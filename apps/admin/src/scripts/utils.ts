@@ -1,6 +1,9 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { AppLanguagesEnum } from '../types'
+import { AppLanguagesEnum, MessageType } from '../types'
+import { Api, RemoveCookie } from '.'
+import { AppApis } from '../data'
+import { useUserStore } from '../stores'
 
 export function __Cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -54,7 +57,13 @@ export function __GetDisplayNameInitials(displayName: string): string {
   return (first + last).toUpperCase()
 }
 
-export function __LogOut(){}
+export async function __LogOut() {
+  await Api<MessageType>(AppApis.auth.logout, { method: 'POST' })
+  useUserStore.getState().setUser(null)
+
+  RemoveCookie('accessToken')
+  RemoveCookie('refreshToken')
+}
 
 export const __DefaultLanguage = AppLanguagesEnum.EN
 export const __AppLanguages = ['FA', 'EN', 'AR']

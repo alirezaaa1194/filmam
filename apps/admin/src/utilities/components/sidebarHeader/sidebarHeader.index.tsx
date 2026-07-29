@@ -6,13 +6,16 @@ import {
   SidebarMenuItem,
 } from '@/utilities/components'
 
-export function TeamSwitcher() {
+export function SidebarHeaderBlock() {
   const { t } = useTranslation()
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton size='lg' className='gap-3'>
+        <SidebarMenuButton
+          size='lg'
+          className='gap-3 hover:bg-transparent hover:text-sidebar-foreground active:bg-transparent active:text-sidebar-foreground data-[active=true]:bg-transparent data-[active=true]:text-sidebar-foreground data-[state=open]:hover:bg-transparent data-[state=open]:hover:text-sidebar-foreground'
+        >
           <div className='size-8'>
             <Logo className='size-8' />
           </div>

@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/utilities/components'
+import { Button, PageTitle } from '@/utilities/components'
 export function MaintenanceError() {
   const { t } = useTranslation()
   return (
-    <div className='h-svh'>
+    <>
+      <PageTitle titleKey='maintenance' />
+      <div className='h-svh'>
       <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
         <h1 className='text-[7rem] leading-tight font-bold'>{t('errors.503_title')}</h1>
         <span className='font-medium'>{t('errors.503_desc')}</span>
@@ -16,5 +18,6 @@ export function MaintenanceError() {
         </div>
       </div>
     </div>
+    </>
   )
 }

@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import { fonts } from '@/utilities/config/fonts'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { fonts, languageFontMap } from '@/utilities/config/fonts'
 import { GetCookie, SetCookie, RemoveCookie } from '@/scripts'
 
 type Font = (typeof fonts)[number]
@@ -15,10 +16,20 @@ type FontContextType = {
 
 const FontContext = createContext<FontContextType | null>(null)
 
+function getLanguageDefaultFont(language: string): Font {
+  return languageFontMap[language] || fonts[0]
+}
+
 export function __FontProvider({ children }: { children: React.ReactNode }) {
+  const { i18n } = useTranslation()
+  const currentLanguage = i18n.resolvedLanguage || 'EN'
+
   const [font, _setFont] = useState<Font>(() => {
     const savedFont = GetCookie(FONT_COOKIE_NAME)
-    return fonts.includes(savedFont as Font) ? (savedFont as Font) : fonts[0]
+    if (savedFont && fonts.includes(savedFont as Font)) {
+      return savedFont as Font
+    }
+    return getLanguageDefaultFont(currentLanguage)
   })
 
   useEffect(() => {
@@ -33,6 +44,21 @@ export function __FontProvider({ children }: { children: React.ReactNode }) {
     applyFont(font)
   }, [font])
 
+  const onLanguageChanged = useCallback((lng: string) => {
+    const defaultFont = getLanguageDefaultFont(lng)
+    const savedFont = GetCookie(FONT_COOKIE_NAME)
+    if (!savedFont || !fonts.includes(savedFont as Font)) {
+      _setFont(defaultFont)
+    }
+  }, [])
+
+  useEffect(() => {
+    i18n.on('languageChanged', onLanguageChanged)
+    return () => {
+      i18n.off('languageChanged', onLanguageChanged)
+    }
+  }, [i18n, onLanguageChanged])
+
   const setFont = (font: Font) => {
     SetCookie(FONT_COOKIE_NAME, font, FONT_COOKIE_MAX_AGE)
     _setFont(font)
@@ -40,7 +66,8 @@ export function __FontProvider({ children }: { children: React.ReactNode }) {
 
   const resetFont = () => {
     RemoveCookie(FONT_COOKIE_NAME)
-    _setFont(fonts[0])
+    const defaultFont = getLanguageDefaultFont(currentLanguage)
+    _setFont(defaultFont)
   }
 
   return (

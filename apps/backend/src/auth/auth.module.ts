@@ -9,6 +9,7 @@ import { JwtStrategy as RefreshJwtStrategy } from './strategies/refresh-token.st
 import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
 import { OtpModule } from '../otp/otp.module';
 import { AuthStrategy } from './strategies/google.strategy';
+import { AuthAdminStrategy } from './strategies/google-admin.strategy';
 import { LoginRequestModule } from '../login-request/login-request.module';
 import { MailModule } from '../mail/mail.module';
 
@@ -27,7 +28,7 @@ import { MailModule } from '../mail/mail.module';
       },
     }),
   ],
-  providers: [AuthService, RefreshJwtStrategy, JwtStrategy, AuthStrategy],
+  providers: [AuthService, RefreshJwtStrategy, JwtStrategy, AuthStrategy, AuthAdminStrategy],
   controllers: [AuthController],
   exports: [UserModule],
 })

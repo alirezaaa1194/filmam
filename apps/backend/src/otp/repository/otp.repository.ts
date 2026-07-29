@@ -7,11 +7,13 @@ export class OtpRepository {
   async createOtp({
     userId,
     userEmail,
+    otpType,
     hashedOtp,
     expiresAt,
   }: {
     userId?: number;
     userEmail?: string;
+    otpType: OtpType;
     hashedOtp: string;
     expiresAt: Date;
   }) {
@@ -19,7 +21,7 @@ export class OtpRepository {
       data: {
         user_id: userId,
         user_email: userEmail,
-        type: OtpType.LOGIN,
+        type: otpType,
         hashed_otp: hashedOtp,
         expires_at: expiresAt,
       },

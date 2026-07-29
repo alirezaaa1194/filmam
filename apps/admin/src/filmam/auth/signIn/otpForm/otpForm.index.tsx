@@ -4,8 +4,13 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Api, SetCookie } from '@/scripts'
-import { Cn } from '@/scripts'
+import {
+  Api,
+  SetCookie,
+  TranslateServerError,
+  TimerParser,
+  Cn,
+} from '@/scripts'
 import {
   Button,
   Card,
@@ -27,7 +32,6 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '../../../../data'
 import { toast } from 'sonner'
-import { timerParser } from './otpForm.script'
 import { ApiErrorType, JWTTokenType } from '../../../../types'
 
 type OtpFormProps = {
@@ -85,7 +89,7 @@ export function OtpForm({
       navigate({ to: '/' })
     },
     onError: (response: ApiErrorType) => {
-      toast.error(response.errors[0].detail)
+      toast.error(t(TranslateServerError(response.errors[0].status)))
     },
   })
 
@@ -101,6 +105,7 @@ export function OtpForm({
     onSuccess: () => {
       start()
       toast.success(t('auth.otp_resent'))
+      form.resetField('otp')
     },
     onError: (response: ApiErrorType) => {
       toast.error(response.errors[0].detail)
@@ -143,7 +148,7 @@ export function OtpForm({
             </Button>
             {timer > 0 ? (
               <p className='text-sm text-muted-foreground'>
-                {t('auth.resend_timer', { timer: timerParser(timer) })}
+                {t('auth.resend_timer', { timer: TimerParser(timer) })}
               </p>
             ) : (
               <Button
@@ -178,18 +183,16 @@ export function OtpForm({
               name='otp'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='sr-only'>
-                    {t('auth.one_time_password')}
-                  </FormLabel>
+                  <FormLabel>{t('auth.one_time_password')}</FormLabel>
                   <FormControl>
                     <div dir='ltr' style={{ direction: 'ltr' }}>
                       <InputOTP
                         maxLength={5}
                         autoFocus={true}
                         {...field}
-                        containerClassName='w-full justify-center [&>[data-slot="input-otp-group"]>div]:w-12 [&>[data-slot="input-otp-group"]>div]:h-12 [&>[data-slot="input-otp-group"]>div]:text-lg'
+                        containerClassName='w-full [&>[data-slot="input-otp-group"]]:w-full [&>[data-slot="input-otp-group"]>div]:flex-1 [&>[data-slot="input-otp-group"]>div]:h-12 [&>[data-slot="input-otp-group"]>div]:text-lg'
                       >
-                        <InputOTPGroup>
+                        <InputOTPGroup className='w-full'>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
                           <InputOTPSlot index={2} />

@@ -1,39 +1,33 @@
-import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/utilities/components'
 import { AuthLayout } from '../authLayout/authLayout.index'
 import { ForgotPasswordForm } from './forgotPasswordForm/forgotPasswordForm.index'
+import { useState } from 'react'
+import { useTimer } from '../../../hooks'
+import { PageTitle } from '@/utilities/components'
+import { OtpForm } from './otpForm/otpForm.index'
 
 export function ForgotPassword() {
-  const { t } = useTranslation()
+  const [step, setStep] = useState<'Email' | 'Otp'>('Email')
+  const [email, setEmail] = useState('')
+  const { timer, start, stop, reset } = useTimer(120)
   return (
     <AuthLayout>
-      <Card className='max-w-sm gap-4 sm:min-w-sm'>
-        <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>
-            {t('auth.forgot_password')}
-          </CardTitle>
-          <CardDescription>
-            Enter your registered email and <br /> we will send you a link to
-            reset your password.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ForgotPasswordForm />
-        </CardContent>
-        <CardFooter>
-          <p className='mx-auto px-8 text-center text-sm text-balance text-muted-foreground'>
-            Don't have an account?{' '}
-            <Link
-              to='/sign-in'
-              className='underline underline-offset-4 hover:text-primary'
-            >
-              {t('auth.sign_in')}
-            </Link>
-            .
-          </p>
-        </CardFooter>
-      </Card>
+      <PageTitle titleKey='forgot_password' />
+      {step === 'Email' ? (
+        <ForgotPasswordForm
+          setStep={setStep}
+          setEmail={setEmail}
+          start={start}
+        />
+      ) : (
+        <OtpForm
+          setStep={setStep}
+          email={email}
+          start={start}
+          stop={stop}
+          reset={reset}
+          timer={timer}
+        />
+      )}
     </AuthLayout>
   )
 }

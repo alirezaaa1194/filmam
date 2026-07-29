@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { PageTitle } from '@/utilities/components'
 import {
   ConfigDrawer,
   Header,
@@ -25,6 +26,7 @@ export function Users() {
 
   return (
     <UsersProvider>
+      <PageTitle titleKey='users' />
       <Header fixed>
         <Search />
         <LanguageSwitcher />
