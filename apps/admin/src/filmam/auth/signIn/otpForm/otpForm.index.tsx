@@ -22,10 +22,13 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
+  Spinner,
 } from '@/utilities/components'
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '../../../../data'
 import { toast } from 'sonner'
+import { timerParser } from './otpForm.script'
+import { ApiErrorType } from '../../../../types'
 
 type OtpFormProps = {
   email: string
@@ -53,10 +56,7 @@ export function OtpForm({
   const navigate = useNavigate()
 
   const formSchema = z.object({
-    otp: z
-      .string()
-      .min(5, t('auth.otp_required'))
-      .max(5, t('auth.otp_length')),
+    otp: z.string().min(5, t('auth.otp_required')).max(5, t('auth.otp_length')),
   })
 
   const { mutate, isPending } = useMutation({
@@ -78,20 +78,32 @@ export function OtpForm({
         },
       }),
     onSuccess: (data) => {
-      // if (!data.ok) {
-      //   throw data
-      // }
-      console.log(data)
-
       SetCookie('accessToken', data.accessToken, data.accessTokenExpiresIn)
       SetCookie('refreshToken', data.refreshToken, data.refreshTokenExpiresIn)
 
-      // setStep('Otp')
       toast.success(t('auth.login_successful'))
       navigate({ to: '/' })
     },
-    onError: (data) => {
-      toast.error(data.message)
+    onError: (response: ApiErrorType) => {
+      toast.error(response.errors[0].detail)
+    },
+  })
+
+  const { mutate: loginMutate, isPending: loginIsPending } = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      Api(AppApis.auth.login, {
+        method: 'POST',
+        body: {
+          email,
+          password,
+        },
+      }),
+    onSuccess: () => {
+      start()
+      toast.success(t('auth.otp_resent'))
+    },
+    onError: (response: ApiErrorType) => {
+      toast.error(response.errors[0].detail)
     },
   })
 
@@ -111,24 +123,6 @@ export function OtpForm({
     setStep('Login')
   }
 
-  const { mutate: loginMutate, isPending: loginIsPending } = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      Api(AppApis.auth.login, {
-        method: 'POST',
-        body: {
-          email,
-          password,
-        },
-      }),
-    onSuccess: () => {
-      start()
-      toast.success(t('auth.otp_resent'))
-    },
-    onError: (data) => {
-      toast.error(data.message)
-    },
-  })
-
   return (
     <Card className='w-full gap-4'>
       <CardHeader>
@@ -136,14 +130,20 @@ export function OtpForm({
           {t('auth.otp_title')}
         </CardTitle>
         <CardDescription>
-          {t('auth.otp_description')}
+          {t('auth.otp_description').split('--')[0]} {email}{' '}
+          {t('auth.otp_description').split('--')[1]}
           <div className='my-4 flex w-full items-center justify-between'>
-            <Button variant='ghost' size='sm' type='button' onClick={editCredential}>
+            <Button
+              variant='ghost'
+              size='sm'
+              type='button'
+              onClick={editCredential}
+            >
               {t('auth.edit_credential')}
             </Button>
             {timer > 0 ? (
               <p className='text-sm text-muted-foreground'>
-                {t('auth.resend_timer', { timer })}
+                {t('auth.resend_timer', { timer: timerParser(timer) })}
               </p>
             ) : (
               <Button
@@ -153,7 +153,14 @@ export function OtpForm({
                 onClick={() => loginMutate({ email, password })}
                 disabled={loginIsPending}
               >
-                {loginIsPending ? t('auth.sending') : t('auth.resend')}
+                {loginIsPending ? (
+                  <>
+                    <Spinner />
+                    {t('auth.sending')}
+                  </>
+                ) : (
+                  t('auth.resend')
+                )}
               </Button>
             )}
           </div>
@@ -175,25 +182,29 @@ export function OtpForm({
                     {t('auth.one_time_password')}
                   </FormLabel>
                   <FormControl>
-                    <InputOTP
-                      maxLength={5}
-                      {...field}
-                      containerClassName='w-full justify-center [&>[data-slot="input-otp-group"]>div]:w-12 [&>[data-slot="input-otp-group"]>div]:h-12 [&>[data-slot="input-otp-group"]>div]:text-lg'
-                    >
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                      </InputOTPGroup>
-                    </InputOTP>
+                    <div dir='ltr' style={{ direction: 'ltr' }}>
+                      <InputOTP
+                        maxLength={5}
+                        autoFocus={true}
+                        {...field}
+                        containerClassName='w-full justify-center [&>[data-slot="input-otp-group"]>div]:w-12 [&>[data-slot="input-otp-group"]>div]:h-12 [&>[data-slot="input-otp-group"]>div]:text-lg'
+                      >
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button className='mt-2' disabled={otp.length < 5 || isPending}>
+              {isPending ? <Spinner /> : null}
               {t('auth.verify')}
             </Button>
           </form>

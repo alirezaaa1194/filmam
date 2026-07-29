@@ -6,6 +6,7 @@ export default function __UseTimer(time: number) {
 
   function start() {
     stop()
+    setTimer(time)
     timerRef.current = setInterval(() => {
       setTimer((prev) => prev - 1)
     }, 1000)

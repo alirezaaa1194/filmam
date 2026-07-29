@@ -40,11 +40,25 @@ export class AuthController {
     return await this.authService.login(loginDto);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: MessageResponseDto })
+  @Post('admin/login')
+  async adminLogin(@Body() loginDto: LoginDto) {
+    return await this.authService.login(loginDto, true);
+  }
+
   @ApiOkResponse({ type: TokenResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('login-verify')
-  async verify(@Body() otpDto: LoginOtpDto) {
+  async loginVerify(@Body() otpDto: LoginOtpDto) {
     return await this.authService.verifyOtp(otpDto);
+  }
+
+  @ApiOkResponse({ type: TokenResponseDto })
+  @HttpCode(HttpStatus.OK)
+  @Post('admin/login-verify')
+  async adminLoginVerify(@Body() otpDto: LoginOtpDto) {
+    return await this.authService.verifyOtp(otpDto, true);
   }
 
   @ApiOkResponse({ type: MessageResponseDto })
@@ -91,9 +105,22 @@ export class AuthController {
   }
 
   @ApiOkResponse({ type: MessageResponseDto })
+  @HttpCode(HttpStatus.OK)
+  @Post('admin/forget-password')
+  async adminForgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {
+    return await this.authService.forgetPassword(forgetPasswordDto.email, true);
+  }
+
+  @ApiOkResponse({ type: MessageResponseDto })
   @Put('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return await this.authService.resetPassword(resetPasswordDto);
+  }
+
+  @ApiOkResponse({ type: MessageResponseDto })
+  @Put('admin/reset-password')
+  async adminResetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return await this.authService.resetPassword(resetPasswordDto, true);
   }
 
   @ApiOkResponse({ type: TokenResponseDto })

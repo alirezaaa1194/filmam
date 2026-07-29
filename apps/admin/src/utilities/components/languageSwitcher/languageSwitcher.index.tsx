@@ -23,9 +23,6 @@ const languages = [
 export function LanguageSwitcher() {
   const { i18n } = useTranslation()
   const { setDir } = useDirection()
-  
-  console.log(i18n.resolvedLanguage);
-  
 
   return (
     <DropdownMenu modal={false}>
@@ -35,18 +32,15 @@ export function LanguageSwitcher() {
           size='icon'
           className='scale-95 overflow-hidden rounded-full'
         >
-          {/* <Languages className='size-[1.2rem]' />
-          <span className='sr-only'>Select language</span> */}
-
           <img
             src={
-              i18n.resolvedLanguage?.toUpperCase() === AppLanguagesEnum.FA
+              i18n.resolvedLanguage === AppLanguagesEnum.FA
                 ? fa
-                : i18n.resolvedLanguage?.toUpperCase() === AppLanguagesEnum.EN
+                : i18n.resolvedLanguage === AppLanguagesEnum.EN
                   ? en
-                  : i18n.resolvedLanguage?.toUpperCase() === AppLanguagesEnum.AR
+                  : i18n.resolvedLanguage === AppLanguagesEnum.AR
                     ? ar
-                    : fa
+                    : ''
             }
             className='size-full rounded-full object-cover'
             alt={`${i18n.language}-flag`}
@@ -64,7 +58,6 @@ export function LanguageSwitcher() {
             }}
           >
             <span className='flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full'>
-              {/* <Flag code={lang.code} /> */}
               <img
                 src={
                   lang.code === AppLanguagesEnum.FA
@@ -73,7 +66,7 @@ export function LanguageSwitcher() {
                       ? en
                       : lang.code === AppLanguagesEnum.AR
                         ? ar
-                        : fa
+                        : ''
                 }
                 className='size-5 rounded-full object-cover'
                 alt={`${lang.code}-flag`}

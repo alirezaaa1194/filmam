@@ -1,12 +1,33 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, ConfigDrawer, Header, LanguageSwitcher, Main, ProfileDropdown, Search, Tabs, TabsContent, TabsList, TabsTrigger, ThemeSwitch } from '@/utilities/components'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  ConfigDrawer,
+  Header,
+  LanguageSwitcher,
+  Main,
+  ProfileDropdown,
+  Search,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  ThemeSwitch,
+} from '@/utilities/components'
 
 import { Analytics } from './analytics/analytics.index'
 import { Overview } from './overview/overview.index'
 import { RecentSales } from './recentSales/recentSales.index'
 import { useTranslation } from 'react-i18next'
+import { useUserStore } from '../../stores'
 
 export function Dashboard() {
   const { t } = useTranslation()
+  const user = useUserStore((s) => s.user)
+  console.log(user);
+  
   return (
     <>
       <Header>
@@ -19,7 +40,9 @@ export function Dashboard() {
 
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>{t('dashboard.title')}</h1>
+          <h1 className='text-2xl font-bold tracking-tight'>
+            {t('dashboard.title')}
+          </h1>
         </div>
         <Tabs
           orientation='vertical'
@@ -28,8 +51,12 @@ export function Dashboard() {
         >
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
-              <TabsTrigger value='overview'>{t('dashboard.overview')}</TabsTrigger>
-              <TabsTrigger value='analytics'>{t('dashboard.analytics')}</TabsTrigger>
+              <TabsTrigger value='overview'>
+                {t('dashboard.overview')}
+              </TabsTrigger>
+              <TabsTrigger value='analytics'>
+                {t('dashboard.analytics')}
+              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -53,7 +80,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>{t('dashboard.revenue_amount')}</div>
+                  <div className='text-2xl font-bold'>
+                    {t('dashboard.revenue_amount')}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
                     {t('dashboard.revenue_change')}
                   </p>
@@ -80,7 +109,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>{t('dashboard.subscriptions_count')}</div>
+                  <div className='text-2xl font-bold'>
+                    {t('dashboard.subscriptions_count')}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
                     {t('dashboard.subscriptions_change')}
                   </p>
@@ -88,7 +119,9 @@ export function Dashboard() {
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>{t('dashboard.sales')}</CardTitle>
+                  <CardTitle className='text-sm font-medium'>
+                    {t('dashboard.sales')}
+                  </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'
@@ -104,7 +137,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>{t('dashboard.sales_count')}</div>
+                  <div className='text-2xl font-bold'>
+                    {t('dashboard.sales_count')}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
                     {t('dashboard.sales_change')}
                   </p>
@@ -129,7 +164,9 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>{t('dashboard.active_count')}</div>
+                  <div className='text-2xl font-bold'>
+                    {t('dashboard.active_count')}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
                     {t('dashboard.active_change')}
                   </p>

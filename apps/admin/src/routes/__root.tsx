@@ -13,6 +13,8 @@ import { NotFoundError } from '@/filmam/errors/notFoundError/notFoundError.index
 import { __AppApis } from '../data/api'
 import { Api } from '../scripts'
 import { UserType } from '../types'
+import { useUserStore } from '../stores'
+import { changeLanguage } from 'i18next'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -34,7 +36,19 @@ export const Route = createRootRouteWithContext<{
   },
   beforeLoad: async ({ location }) => {
     try {
-      await Api<UserType>(__AppApis.auth.me, { method: 'GET' })
+      const user = await Api<UserType>(__AppApis.auth.me, { method: 'GET' })
+      useUserStore.getState().setUser(user)
+
+      changeLanguage(user.preferred_language)
+
+      if (
+        location.pathname === '/sign-in' ||
+        location.pathname === '/forget-password'
+      ) {
+        return redirect({
+          to: '/',
+        })
+      }
     } catch (err) {
       if (location.pathname !== '/sign-in') {
         throw redirect({

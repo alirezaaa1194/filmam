@@ -1,7 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useLocation } from '@tanstack/react-router'
-import { useAuthStore } from '@/stores'
+import { useNavigate } from '@tanstack/react-router'
+import { useUserStore } from '@/stores'
 import { ConfirmDialog } from '@/utilities/components'
+import { useMutation } from '@tanstack/react-query'
+import { AppApis } from '@/data'
+import { Api, RemoveCookie } from '@/scripts'
+import { ApiErrorType, MessageType } from '@/types'
+import { toast } from 'sonner'
 interface SignOutDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -10,19 +15,27 @@ interface SignOutDialogProps {
 export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const location = useLocation()
-  const { auth } = useAuthStore()
+  const { setUser } = useUserStore()
 
-  const handleSignOut = () => {
-    auth.reset()
-    // Preserve current location for redirect after sign-in
-    const currentPath = location.href
-    navigate({
-      to: '/sign-in',
-      search: { redirect: currentPath },
-      replace: true,
-    })
-  }
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => Api<MessageType>(AppApis.auth.logout, { method: 'POST' }),
+    onSuccess: (response) => {
+      setUser(null)
+
+      RemoveCookie('accessToken')
+      RemoveCookie('refreshToken')
+
+      toast.error(response.message)
+
+      navigate({
+        to: '/sign-in',
+        replace: true,
+      })
+    },
+    onError: (response: ApiErrorType) => {
+      toast.error(response.errors[0].detail)
+    },
+  })
 
   return (
     <ConfirmDialog
@@ -32,8 +45,9 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
       desc={t('profile.sign_out_desc')}
       confirmText={t('profile.sign_out_title')}
       destructive
-      handleConfirm={handleSignOut}
+      handleConfirm={mutate}
       className='sm:max-w-sm'
+      isLoading={isPending}
     />
   )
 }

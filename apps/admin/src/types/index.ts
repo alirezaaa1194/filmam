@@ -1,6 +1,6 @@
 import type { __NavigateFn } from './navigate'
 import type { __Direction } from './direction'
-import type { __AuthUser, __AuthState } from './auth'
+import type { __AuthUser, __UserState } from './auth'
 import type { __Collapsible } from './layout'
 import type {
   __PaginationType,
@@ -102,11 +102,11 @@ import type {
   __UserMovieListItemType,
   __UserMovieActionsType,
 } from './general'
-import { __AppLanguagesEnum } from './general'
+import { __AppLanguagesEnum, __UserRoleEnum } from './general'
 
 export type { __NavigateFn as NavigateFn }
 export type { __Direction as Direction }
-export type { __AuthUser as AuthUser, __AuthState as AuthState }
+export type { __AuthUser as AuthUser, __UserState as UserState }
 export type { __Collapsible as Collapsible }
 export type { __PaginationType as PaginationType }
 export type { __JWTTokenType as JWTTokenType }
@@ -207,3 +207,4 @@ export type { __EpisodeBriefType as EpisodeBriefType }
 export type { __UserMovieListItemType as UserMovieListItemType }
 export type { __UserMovieActionsType as UserMovieActionsType }
 export { __AppLanguagesEnum as AppLanguagesEnum }
+export { __UserRoleEnum as UserRoleEnum }

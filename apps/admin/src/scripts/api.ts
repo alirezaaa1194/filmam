@@ -1,4 +1,4 @@
-import { GetCookie } from '@/scripts';
+import { GetCookie } from '@/scripts'
 import { AppApis } from '../data'
 
 export const __Api = async <T>(
@@ -14,7 +14,7 @@ export const __Api = async <T>(
     body: options.body ? JSON.stringify(options.body) : undefined,
     headers: {
       'content-type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${url === AppApis.auth.logout ? refreshToken : accessToken}`,
     },
   })
 

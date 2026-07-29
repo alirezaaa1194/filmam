@@ -1,3 +1,3 @@
-import { __useAuthStore } from './auth-store'
+import { __useUserStore } from './user-store'
 
-export { __useAuthStore as useAuthStore }
+export { __useUserStore as useUserStore }

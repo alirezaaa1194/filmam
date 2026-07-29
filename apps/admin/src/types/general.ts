@@ -1038,3 +1038,8 @@ export enum __AppLanguagesEnum {
   EN = 'EN',
   AR = 'AR',
 }
+
+export enum __UserRoleEnum {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}

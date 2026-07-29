@@ -10,7 +10,6 @@ import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
 import { OtpModule } from '../otp/otp.module';
 import { AuthStrategy } from './strategies/google.strategy';
 import { LoginRequestModule } from '../login-request/login-request.module';
-import { accessTokenExpTime } from '../lib/utils';
 import { MailModule } from '../mail/mail.module';
 
 @Module({
@@ -22,9 +21,10 @@ import { MailModule } from '../mail/mail.module';
     OtpModule,
     MailModule,
     JwtModule.register({
-      secret: process.env.JWT_ACCESS_SECRET,
-      // signOptions: { expiresIn: '15m' },
-      signOptions: { expiresIn: accessTokenExpTime },
+      secret: process.env.JWT_ACCESS_SECRET ?? 'default-access-secret',
+      signOptions: {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN as any,
+      },
     }),
   ],
   providers: [AuthService, RefreshJwtStrategy, JwtStrategy, AuthStrategy],

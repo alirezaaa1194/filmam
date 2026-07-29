@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Cn } from '@/scripts'
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Button } from '@/utilities/components'
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Button, Spinner } from '@/utilities/components'
 
 type ConfirmDialogProps = {
   open: boolean
@@ -56,6 +56,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
             variant={destructive ? 'destructive' : 'default'}
             disabled={disabled || isLoading}
           >
+            {isLoading ? <Spinner /> : null}
             {confirmText ?? t('common.continue')}
           </Button>
         </AlertDialogFooter>

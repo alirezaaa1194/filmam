@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Loader2, LogIn } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { Cn, Api, SetCookie } from '@/scripts'
 import {
@@ -22,6 +22,7 @@ import {
   FormMessage,
   Input,
   PasswordInput,
+  Spinner,
 } from '@/utilities/components'
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
@@ -36,7 +37,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   start: () => void
 }
 
-export function UserAuthForm({
+export function SignInForm({
   className,
   redirectTo,
   setStep,
@@ -57,6 +58,8 @@ export function UserAuthForm({
       .min(1, t('auth.password_required'))
       .min(7, t('auth.password_min_length')),
   })
+
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,8 +85,8 @@ export function UserAuthForm({
       start()
       toast.success(t('auth.otp_sent'))
     },
-    onError: (data: ApiErrorType) => {
-      toast.error(data.errors[0].detail)
+    onError: (response: ApiErrorType) => {
+      toast.error(response.errors[0].detail)
     },
   })
 
@@ -145,7 +148,7 @@ export function UserAuthForm({
               )}
             />
             <Button className='mt-2' disabled={isPending}>
-              {isPending ? <Loader2 className='animate-spin' /> : <LogIn />}
+              {isPending ? <Spinner /> : <LogIn />}
               {t('auth.sign_in')}
             </Button>
 
@@ -163,32 +166,54 @@ export function UserAuthForm({
               <Button
                 variant='outline'
                 type='button'
-                disabled={isPending}
+                disabled={isPending || isGoogleLoading}
                 className='w-full'
                 onClick={() => {
+                  setIsGoogleLoading(true)
                   const popup = window.open(
                     AppApis.auth.google,
                     'google-oauth',
                     'width=500,height=600'
                   )
                   if (!popup) {
-                    toast.error('Popup blocked. Please allow popups for this site.')
+                    setIsGoogleLoading(false)
+                    toast.error(
+                      'Popup blocked. Please allow popups for this site.'
+                    )
                     return
                   }
                   const handleMessage = (event: MessageEvent) => {
-                    if (event.origin !== new URL(AppApis.auth.google).origin) return
-                    const { accessToken, accessTokenExpiresIn, refreshToken, refreshTokenExpiresIn } = event.data
-                    if (!accessToken || !refreshToken) return
+                    if (event.origin !== new URL(AppApis.auth.google).origin)
+                      return
+                    const {
+                      accessToken,
+                      accessTokenExpiresIn,
+                      refreshToken,
+                      refreshTokenExpiresIn,
+                    } = event.data
+                    if (!accessToken || !refreshToken) {
+                      setIsGoogleLoading(false)
+                      return
+                    }
                     SetCookie('accessToken', accessToken, accessTokenExpiresIn)
-                    SetCookie('refreshToken', refreshToken, refreshTokenExpiresIn)
+                    SetCookie(
+                      'refreshToken',
+                      refreshToken,
+                      refreshTokenExpiresIn
+                    )
+                    setIsGoogleLoading(false)
                     window.removeEventListener('message', handleMessage)
                     navigate({ to: '/' })
                   }
                   window.addEventListener('message', handleMessage)
                 }}
               >
-                <IconGoogle className='h-4 w-4' />{' '}
-                {t('auth_providers.facebook')}
+                {isGoogleLoading ? (
+                  <Spinner />
+                ) : (
+                  <IconGoogle className='h-4 w-4' />
+                )}{' '}
+                Google
               </Button>
             </div>
           </form>

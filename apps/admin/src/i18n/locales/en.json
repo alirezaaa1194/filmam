@@ -278,7 +278,7 @@
     "verify": "Verify",
     "resend_code": "Resend a new code.",
     "description": "Enter your email and password below to log into your account.",
-    "otp_description": "Enter the verification code sent to your email.",
+    "otp_description": "Enter the verification code sent to --",
     "edit_credential": "Edit Credential",
     "resend_timer": "Resend after: {{timer}}",
     "resend": "Resend",
@@ -291,10 +291,6 @@
     "password_min_length": "Password must be at least 7 characters long.",
     "otp_required": "Please enter the verification code.",
     "otp_length": "The code must be 5 digits."
-  },
-  "auth_providers": {
-    "github": "GitHub",
-    "facebook": "Facebook"
   },
   "errors": {
     "404_title": "404",

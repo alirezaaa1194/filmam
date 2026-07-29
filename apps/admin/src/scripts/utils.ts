@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { AppLanguagesEnum } from '../types'
 
 export function __Cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -53,4 +54,7 @@ export function __GetDisplayNameInitials(displayName: string): string {
   return (first + last).toUpperCase()
 }
 
+export function __LogOut(){}
+
+export const __DefaultLanguage = AppLanguagesEnum.EN
 export const __AppLanguages = ['FA', 'EN', 'AR']

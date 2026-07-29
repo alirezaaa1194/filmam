@@ -4,10 +4,10 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { ArrowRight, Loader2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { Sleep, Cn } from '@/scripts'
-import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@/utilities/components'
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Spinner } from '@/utilities/components'
 
 const formSchema = z.object({
   email: z.email({
@@ -65,7 +65,7 @@ export function ForgotPasswordForm({
         />
         <Button className='mt-2' disabled={isLoading}>
           {t('common.continue')}
-          {isLoading ? <Loader2 className='animate-spin' /> : <ArrowRight />}
+          {isLoading ? <Spinner /> : <ArrowRight />}
         </Button>
       </form>
     </Form>

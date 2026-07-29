@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -19,7 +20,7 @@ import { OtpService } from '../otp/otp.service';
 import { LoginOtpDto, SignupOtpDto } from './dto/otp.dto';
 import { ResetPasswordDto } from './dto/password.dto';
 import { LoginRequestService } from '../login-request/login-request.service';
-import { accessTokenExpTime, defaultLang } from '../lib/utils';
+import { defaultLang } from '../lib/utils';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { OtpType, UserRole, AppLanguage } from '../generated/prisma';
 import { MailService } from '../mail/mail.service';
@@ -41,15 +42,14 @@ export class AuthService {
     const payload = { sub: userId, email: email };
 
     const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_ACCESS_SECRET,
-      // expiresIn: '15m',
-      expiresIn: accessTokenExpTime,
+      secret: process.env.JWT_ACCESS_SECRET ?? 'default-access-secret',
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN as any,
     });
     const refreshToken = this.jwtService.sign(
       { ...payload, jti: randomUUID() },
       {
-        secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: '30d',
+        secret: process.env.JWT_REFRESH_SECRET ?? 'default-refresh-secret',
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as any,
       },
     );
     const hashedRefreshToken = createHash('sha256')
@@ -217,9 +217,13 @@ export class AuthService {
     };
   }
 
-  async verifyOtp(otpDto: LoginOtpDto | SignupOtpDto) {
+  async verifyOtp(otpDto: LoginOtpDto | SignupOtpDto, adminOnly?: boolean) {
     const { email, otp } = otpDto;
     let user = await this.userService.getUserByEmail(email);
+
+    if (adminOnly && user?.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('This route is for admin');
+    }
 
     const otpInfo = await this.otpService.getUserValidOtp({
       ...(user ? { userId: user.id } : { userEmail: email }),
@@ -255,7 +259,7 @@ export class AuthService {
           preferred_language: otpDto.preferred_language,
         });
       } else if (!user && otpType === OtpType.LOGIN) {
-        throw new NotFoundException('User not found');
+        throw new UnauthorizedException('Invalid email or password');
       }
       if (user) {
         return await this.jwtGenerator(user.id, user.email);
@@ -265,9 +269,14 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, adminOnly?: boolean) {
     const { email, password } = loginDto;
     const user = await this.userService.getUserByEmail(email);
+
+    if (adminOnly && user?.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('This route is for admin');
+    }
+
     if (user) {
       if (
         user.role !== UserRole.ADMIN &&
@@ -316,7 +325,7 @@ export class AuthService {
         }
       }
     } else {
-      throw new NotFoundException('User not found');
+      throw new UnauthorizedException('Invalid email or password');
     }
   }
 
@@ -387,8 +396,13 @@ export class AuthService {
     }
   }
 
-  async forgetPassword(email: string) {
+  async forgetPassword(email: string, adminOnly?: boolean) {
     const user = await this.userService.getUserByEmail(email);
+
+    if (adminOnly && user?.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('This Route is for admin');
+    }
+
     if (user) {
       if (
         user.role !== UserRole.ADMIN &&
@@ -427,13 +441,18 @@ export class AuthService {
         }
       }
     } else {
-      throw new NotFoundException('User not found');
+      throw new UnauthorizedException('Invalid email or password');
     }
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(resetPasswordDto: ResetPasswordDto, adminOnly?: boolean) {
     const { email, new_password, otp } = resetPasswordDto;
     const user = await this.userService.getUserByEmail(email);
+
+    if (adminOnly && user?.role !== UserRole.ADMIN) {
+      throw new ForbiddenException('This Route is for admin');
+    }
+
     if (user) {
       const otpInfo = await this.otpService.getUserValidOtp({
         userEmail: email,
@@ -469,7 +488,7 @@ export class AuthService {
         throw new UnauthorizedException('OTP is not correct');
       }
     } else {
-      throw new NotFoundException('User not found');
+      throw new UnauthorizedException('Invalid email or password');
     }
   }
 

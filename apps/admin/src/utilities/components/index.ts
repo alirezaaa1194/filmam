@@ -68,6 +68,7 @@ export {
   SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator,
   SidebarTrigger, useSidebar,
   Skeleton,
+  Spinner,
   Switch,
   Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption,
   Tabs, TabsList, TabsTrigger, TabsContent,

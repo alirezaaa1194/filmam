@@ -1,7 +1,6 @@
 import { AppLanguage } from '../generated/prisma';
 
 export const defaultLang = AppLanguage.FA;
-export const accessTokenExpTime = '30d';
 
 export const paginationCalculator = (page: number, page_size: number) => {
   return {

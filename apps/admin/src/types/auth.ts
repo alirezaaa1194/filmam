@@ -1,3 +1,5 @@
+import { UserType } from '.'
+
 export interface __AuthUser {
   accountNo: string
   email: string
@@ -5,13 +7,7 @@ export interface __AuthUser {
   exp: number
 }
 
-export interface __AuthState {
-  auth: {
-    user: __AuthUser | null
-    setUser: (user: __AuthUser | null) => void
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
-    reset: () => void
-  }
+export interface __UserState {
+  user: UserType | null
+  setUser: (user: UserType | null) => void
 }

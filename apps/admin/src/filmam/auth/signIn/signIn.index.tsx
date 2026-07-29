@@ -1,8 +1,8 @@
 import { AuthLayout } from '../authLayout/authLayout.index'
-import { UserAuthForm } from './userAuthForm/userAuthForm.index'
 import { useState } from 'react'
-import { OtpForm } from '../otp/otpForm/otpForm.index'
 import { useTimer } from '../../../hooks'
+import { SignInForm } from './signInForm/signInForm.index'
+import { OtpForm } from './otpForm/otpForm.index'
 
 export function SignIn() {
   const [step, setStep] = useState<'Login' | 'Otp'>('Login')
@@ -13,7 +13,7 @@ export function SignIn() {
   return (
     <AuthLayout>
       {step === 'Login' ? (
-        <UserAuthForm
+        <SignInForm
           setStep={setStep}
           setEmail={setEmail}
           setPassword={setPassword}
