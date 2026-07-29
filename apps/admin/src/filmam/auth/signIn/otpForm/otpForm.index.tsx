@@ -28,7 +28,7 @@ import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '../../../../data'
 import { toast } from 'sonner'
 import { timerParser } from './otpForm.script'
-import { ApiErrorType } from '../../../../types'
+import { ApiErrorType, JWTTokenType } from '../../../../types'
 
 type OtpFormProps = {
   email: string
@@ -69,7 +69,7 @@ export function OtpForm({
       password: string
       otp: string
     }) =>
-      Api<any>(AppApis.auth.loginVerify, {
+      Api<JWTTokenType>(AppApis.auth.adminLoginVerify, {
         method: 'POST',
         body: {
           email,
@@ -91,7 +91,7 @@ export function OtpForm({
 
   const { mutate: loginMutate, isPending: loginIsPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
-      Api(AppApis.auth.login, {
+      Api(AppApis.auth.adminLogin, {
         method: 'POST',
         body: {
           email,

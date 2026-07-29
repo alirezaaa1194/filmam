@@ -1,8 +1,6 @@
 import { type SVGProps } from 'react'
-import { Cn } from '@/scripts'
-import iconGooglePng from './icon-google.png'
 
-export function IconGoogle({ className }: SVGProps<SVGSVGElement>) {
+export function IconGoogle(_props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 export default function __UseTimer(time: number) {
   const [timer, setTimer] = useState(time)
-  const timerRef = useRef<number>(null)
+  const timerRef = useRef<ReturnType<typeof setInterval>>(null)
 
   function start() {
     stop()

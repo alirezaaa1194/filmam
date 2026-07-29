@@ -27,7 +27,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
 import { IconGoogle } from '@/assets/brand-icons/icon-google'
-import { ApiErrorType } from '@/types'
+import { ApiErrorType, MessageType } from '@/types'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
@@ -71,7 +71,7 @@ export function SignInForm({
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
-      Api(AppApis.auth.login, {
+      Api<MessageType>(AppApis.auth.adminLogin, {
         method: 'POST',
         body: {
           email,

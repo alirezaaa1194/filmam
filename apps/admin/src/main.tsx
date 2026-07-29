@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores'
 import { HandleServerError } from '@/scripts'
 import { routeTree } from './routeTree.gen'
 import './utilities/styles/index.css'
