@@ -5,8 +5,9 @@ import { Cn } from '@/scripts'
 
 const InputOTP = React.forwardRef<
   HTMLInputElement,
-  Omit<React.ComponentProps<typeof OTPInput>, 'ref' | 'render'> & {
+  Omit<React.ComponentProps<typeof OTPInput>, 'ref' | 'render' | 'children'> & {
     containerClassName?: string
+    children: React.ReactNode
   }
 >(({ className, containerClassName, ...props }, ref) => (
   <OTPInput
