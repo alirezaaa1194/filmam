@@ -295,7 +295,8 @@
     "password_reset_success": "Password has been reset successfully.",
     "forgot_password_description": "Enter your registered email and we will send you an OTP to reset your password.",
     "back_to_sign_in": "Back to Sign in",
-    "popup_blocked": "Popup blocked. Please allow popups for this site."
+    "popup_blocked": "Popup blocked. Please allow popups for this site.",
+    "admin_only": "Only administrators can access the admin panel"
   },
   "errors": {
     "bad_request": "Something went wrong. Please check your input.",
@@ -333,7 +334,14 @@
   "notifications": {
     "session_expired": "Session expired!",
     "internal_server_error": "Internal Server Error!",
-    "content_not_modified": "Content not modified!"
+    "content_not_modified": "Content not modified!",
+    "dropdown": {
+      "comments": "{{count}} new comment",
+      "comments_plural": "{{count}} new comments",
+      "contacts": "{{count}} new contact",
+      "contacts_plural": "{{count}} new contacts",
+      "empty": "No notifications"
+    }
   },
   "config_drawer": {
     "sidebar": "Sidebar",
@@ -408,7 +416,8 @@
     "max_size": "{{size}}MB max",
     "fetching": "Fetching...",
     "via_url": "Via URL",
-    "uploaded": "Uploaded",
+    "uploaded": "File uploaded successfully",
+    "deleted": "File removed successfully",
     "cancel_upload": "Cancel upload",
     "remove_file": "Remove file",
     "file_exceeds": "File exceeds {{size}}MB",

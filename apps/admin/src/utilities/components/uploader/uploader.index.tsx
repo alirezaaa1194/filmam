@@ -71,6 +71,7 @@ interface UploaderProps {
   label?: string
   fileType?: MediaFileType | MediaFileType[]
   maxSizeMB?: number
+  name?: string
 }
 
 export default function Uploader({
@@ -82,6 +83,7 @@ export default function Uploader({
   label,
   fileType,
   maxSizeMB = 50,
+  name,
 }: UploaderProps) {
   const { t } = useTranslation()
   const isControlled = controlledValue !== undefined
@@ -151,10 +153,9 @@ export default function Uploader({
         updateFiles([...files, data])
       }
       setUrl('')
-      setUploading(null)
+      toast.success(t('upload.uploaded'))
     },
     onError: (error: ApiErrorType) => {
-      setUploading(null)
       toast.error(TranslateServerError(error.errors[0].status))
     },
   })
@@ -166,7 +167,13 @@ export default function Uploader({
         body: { upload_ids: [uploadId] },
       }),
     onSuccess: (_, uploadId) => {
+      const deleted = files.find((f) => f.id === uploadId)
+      if (deleted?.source_type === 'FROM_URL') {
+        setUrl('')
+        setMode('file')
+      }
       updateFiles(files.filter((f) => f.id !== uploadId))
+      toast.success(t('upload.deleted'))
     },
     onError: (error: ApiErrorType) => {
       toast.error(TranslateServerError(error.errors[0].status))
@@ -209,6 +216,7 @@ export default function Uploader({
         } else {
           updateFiles([...files, data])
         }
+        toast.success(t('upload.uploaded'))
       } else {
         try {
           const err = JSON.parse(xhr.responseText)
@@ -264,7 +272,6 @@ export default function Uploader({
 
   const handleUrlSubmit = () => {
     if (!url.trim()) return
-    setUploading({ name: url.trim(), size: 0, preview: null })
     urlMutation.mutate(url.trim())
   }
 
@@ -357,15 +364,15 @@ export default function Uploader({
       {isUploading && (
         <div className='rounded-lg border p-2.5'>
           <div className='flex items-center gap-2.5'>
-            <div className='flex size-8 shrink-0 items-center justify-center rounded-md bg-muted'>
+            <div className='flex h-14 w-20 shrink-0 items-center justify-center rounded-md bg-muted'>
               {uploading.preview ? (
                 <img
                   src={uploading.preview}
                   alt=''
-                  className='size-8 rounded-md object-cover'
+                  className='size-full rounded-md object-cover'
                 />
               ) : (
-                <File className='size-4 text-muted-foreground' />
+                <File className='size-5 text-muted-foreground' />
               )}
             </div>
             <div className='min-w-0 flex-1'>
@@ -408,7 +415,7 @@ export default function Uploader({
                 key={file.id}
                 className='flex items-center gap-2.5 rounded-lg border p-2'
               >
-                <div className='flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted'>
+                <div className='flex h-14 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted'>
                   {isImage && file.path ? (
                     <img
                       src={file.path}
@@ -416,7 +423,7 @@ export default function Uploader({
                       className='size-full object-cover'
                     />
                   ) : (
-                    <Icon className='size-4 text-muted-foreground' />
+                    <Icon className='size-5 text-muted-foreground' />
                   )}
                 </div>
                 <div className='min-w-0 flex-1'>
@@ -447,6 +454,9 @@ export default function Uploader({
             )
           })}
         </div>
+      )}
+      {name && !multiple && files.length > 0 && (
+        <input type='hidden' name={name} value={files[0].id} />
       )}
     </div>
   )

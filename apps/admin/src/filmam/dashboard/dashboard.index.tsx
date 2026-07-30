@@ -48,7 +48,9 @@ export function Dashboard() {
           </h1>
         </div>
 
-        <Uploader />
+        <br />
+        <Uploader defaultUploadIds={[27]} name='poster' />
+        <br />
 
         <Tabs
           orientation='vertical'

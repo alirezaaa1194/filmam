@@ -17,7 +17,6 @@ import {
 } from '@/utilities/components'
 import { useUserStore } from '@/stores'
 import { HashEmail } from '@/scripts'
-import React from 'react'
 
 export function ProfileDropdown() {
   const { t } = useTranslation()
@@ -28,7 +27,7 @@ export function ProfileDropdown() {
     return null
   }
 
-  const hashedEmail = React.use(HashEmail(user.email))
+  const hashedEmail = HashEmail(user.email)
 
   return (
     <>
@@ -41,8 +40,8 @@ export function ProfileDropdown() {
                 alt='@shadcn'
               />
               <AvatarFallback>
-                {user?.username.split(' ')[0][0].toUpperCase()}
-                {user?.username.split(' ')[1][0].toUpperCase()}
+                {user.username.split(' ')[0][0].toUpperCase()}
+                {user.username.split(' ')[1][0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </Button>

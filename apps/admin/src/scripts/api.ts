@@ -5,7 +5,7 @@ import { JWTTokenType } from '../types'
 
 export const __Api = async <T>(
   url: string,
-  options: { method: string; body?: unknown },
+  options: { method: 'GET' | 'POST' | 'DELETE' | 'PUT'; body?: unknown },
   retry = true
 ): Promise<T> => {
   const accessToken = GetCookie('accessToken')

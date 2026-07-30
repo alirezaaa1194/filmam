@@ -102,6 +102,7 @@ import type {
   __EpisodeBriefType,
   __UserMovieListItemType,
   __UserMovieActionsType,
+  __NotificationResponse,
 } from './general'
 import { __AppLanguagesEnum, __UserRoleEnum } from './general'
 
@@ -208,6 +209,8 @@ export type { __MovieBriefType as MovieBriefType }
 export type { __EpisodeBriefType as EpisodeBriefType }
 export type { __UserMovieListItemType as UserMovieListItemType }
 export type { __UserMovieActionsType as UserMovieActionsType }
+export type { __NotificationResponse as NotificationResponse }
+
 export { __AppLanguagesEnum as AppLanguagesEnum }
 export { __UserRoleEnum as UserRoleEnum }
 export { __MediaFileAcceptMap as MediaFileAcceptMap } from './general'

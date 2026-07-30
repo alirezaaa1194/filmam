@@ -295,7 +295,8 @@
     "password_reset_success": "تم إعادة تعيين كلمة المرور بنجاح.",
     "forgot_password_description": "أدخل بريدك الإلكتروني المسجل وسنرسل لك رمز تحقق لإعادة تعيين كلمة المرور الخاصة بك.",
     "back_to_sign_in": "العودة إلى تسجيل الدخول",
-    "popup_blocked": "تم حظر النافذة المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع."
+    "popup_blocked": "تم حظر النافذة المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.",
+    "admin_only": "يمكن للمسؤولين فقط الوصول إلى لوحة التحكم"
   },
   "errors": {
     "bad_request": "حدث خطأ. يرجى التحقق من المدخلات.",
@@ -333,7 +334,14 @@
   "notifications": {
     "session_expired": "انتهت الجلسة!",
     "internal_server_error": "خطأ داخلي في الخادم!",
-    "content_not_modified": "لم يتم تعديل المحتوى!"
+    "content_not_modified": "لم يتم تعديل المحتوى!",
+    "dropdown": {
+      "comments": "{{count}} تعليق جديد",
+      "comments_plural": "{{count}} تعليقات جديدة",
+      "contacts": "{{count}} جهة اتصال جديدة",
+      "contacts_plural": "{{count}} جهات اتصال جديدة",
+      "empty": "لا توجد إشعارات"
+    }
   },
   "config_drawer": {
     "sidebar": "الشريط الجانبي",
@@ -408,7 +416,8 @@
     "max_size": "{{size}} ميغابايت كحد أقصى",
     "fetching": "جارٍ الجلب...",
     "via_url": "عبر الرابط",
-    "uploaded": "تم الرفع",
+    "uploaded": "تم رفع الملف بنجاح",
+    "deleted": "تم حذف الملف بنجاح",
     "cancel_upload": "إلغاء الرفع",
     "remove_file": "حذف الملف",
     "file_exceeds": "الملف يتجاوز {{size}} ميغابايت",

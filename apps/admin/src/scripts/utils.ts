@@ -4,6 +4,8 @@ import { AppLanguagesEnum, MessageType } from '../types'
 import { Api, RemoveCookie } from '.'
 import { AppApis } from '../data'
 import { useUserStore } from '../stores'
+import { sha256 } from '@noble/hashes/sha2'
+import { bytesToHex } from '@noble/hashes/utils'
 
 export function __Cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -65,20 +67,10 @@ export async function __LogOut() {
   RemoveCookie('refreshToken')
 }
 
-export async function __HashEmail(email: string) {
-  const encoder = new TextEncoder()
+export function __HashEmail(email: string) {
+  const normalized = email.trim().toLowerCase()
 
-  const data = encoder.encode(email)
-
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-
-  const hashedEmail = hashArray
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-
-  return hashedEmail
+  return bytesToHex(sha256(new TextEncoder().encode(normalized)))
 }
 
 export const __DefaultLanguage = AppLanguagesEnum.EN

@@ -1038,6 +1038,11 @@ export const __MediaFileAcceptMap: Record<__MediaFileType, string> = {
   video: 'video/mp4,video/webm,video/quicktime',
 }
 
+export type __NotificationResponse = {
+  comments: number
+  contacts: number
+}
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {

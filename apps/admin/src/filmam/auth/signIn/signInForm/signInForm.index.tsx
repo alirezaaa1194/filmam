@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState, type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -28,7 +28,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
 import { IconGoogle } from '@/assets/brand-icons/icon-google'
-import { ApiErrorType, MessageType } from '@/types'
+import type { ApiErrorType, MessageType } from '@/types'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
@@ -173,7 +173,7 @@ export function SignInForm({
                 onClick={() => {
                   setIsGoogleLoading(true)
                   const popup = window.open(
-                    AppApis.auth.google,
+                    AppApis.auth.googleAdmin,
                     'google-oauth',
                     'width=500,height=600'
                   )
@@ -183,7 +183,10 @@ export function SignInForm({
                     return
                   }
                   const handleMessage = (event: MessageEvent) => {
-                    if (event.origin !== new URL(AppApis.auth.google).origin)
+                    if (
+                      event.origin !==
+                      new URL(AppApis.auth.googleAdmin).origin
+                    )
                       return
                     const {
                       accessToken,
@@ -194,7 +197,9 @@ export function SignInForm({
                     } = event.data
                     if (error) {
                       setIsGoogleLoading(false)
-                      toast.error(t('errors.forbidden'))
+                      toast.error(
+                        t('auth.admin_only')
+                      )
                       window.removeEventListener('message', handleMessage)
                       return
                     }
