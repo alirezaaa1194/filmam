@@ -105,7 +105,10 @@ export function ForgotPasswordForm({
                 <FormItem>
                   <FormLabel>{t('auth.email')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('auth.email_placeholder')} {...field} />
+                    <Input
+                      placeholder={t('auth.email_placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -113,7 +116,13 @@ export function ForgotPasswordForm({
             />
             <Button className='mt-2' disabled={isPending}>
               {t('common.continue')}
-              {isPending ? <Spinner /> : dir === 'rtl' ? <ArrowLeft /> : <ArrowRight />}
+              {isPending ? (
+                <Spinner />
+              ) : dir === 'rtl' ? (
+                <ArrowLeft />
+              ) : (
+                <ArrowRight />
+              )}
             </Button>
           </form>
         </Form>
