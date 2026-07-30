@@ -16,11 +16,12 @@ import { AppLanguagesEnum } from '../../../types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AppApis } from '../../../data'
 import { useUserStore } from '../../../stores'
+import { languageDirectionMap } from '@/utilities/config/direction'
 
 const languages = [
-  { code: AppLanguagesEnum.EN, label: 'English', dir: 'ltr' as const },
-  { code: AppLanguagesEnum.FA, label: 'فارسی', dir: 'rtl' as const },
-  { code: AppLanguagesEnum.AR, label: 'العربی', dir: 'rtl' as const },
+  { code: AppLanguagesEnum.EN, label: 'English' },
+  { code: AppLanguagesEnum.FA, label: 'فارسی' },
+  { code: AppLanguagesEnum.AR, label: 'العربی' },
 ]
 
 export function LanguageSwitcher() {
@@ -70,7 +71,7 @@ export function LanguageSwitcher() {
             className='gap-2'
             onClick={() => {
               i18n.changeLanguage(lang.code)
-              setDir(lang.dir)
+              setDir(languageDirectionMap[lang.code])
 
               if (user) {
                 mutate(lang.code)

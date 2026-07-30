@@ -11,10 +11,11 @@ import { NavigationProgress, Toaster } from '@/utilities/components'
 import { GeneralError } from '@/filmam/errors/generalError/generalError.index'
 import { NotFoundError } from '@/filmam/errors/notFoundError/notFoundError.index'
 import { __AppApis } from '../data/api'
-import { Api } from '../scripts'
+import { Api, SetCookie } from '../scripts'
 import { UserType } from '../types'
 import { useUserStore } from '../stores'
 import { changeLanguage } from 'i18next'
+import { languageDirectionMap } from '@/utilities/config/direction'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -40,6 +41,12 @@ export const Route = createRootRouteWithContext<{
       useUserStore.getState().setUser(user)
 
       changeLanguage(user.preferred_language)
+
+      const dir = languageDirectionMap[user.preferred_language]
+      if (dir) {
+        SetCookie('dir', dir, 60 * 60 * 24 * 365)
+        document.documentElement.setAttribute('dir', dir)
+      }
 
       if (
         location.pathname === '/sign-in' ||
