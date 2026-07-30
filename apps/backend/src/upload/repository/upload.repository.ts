@@ -44,6 +44,12 @@ export class UploadRepository {
     });
   }
 
+  async findById(uploadId: number) {
+    return await prisma.upload.findUnique({
+      where: { id: uploadId },
+    });
+  }
+
   async getUploads(uploadIds: number[]) {
     return await prisma.upload.findMany({
       where: {

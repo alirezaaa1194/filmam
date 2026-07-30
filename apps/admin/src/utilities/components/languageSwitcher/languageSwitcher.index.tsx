@@ -12,10 +12,10 @@ import {
 import fa from '@/assets/flags/fa.svg'
 import en from '@/assets/flags/en.svg'
 import ar from '@/assets/flags/ar.svg'
-import { AppLanguagesEnum } from '../../../types'
+import { AppLanguagesEnum } from '@/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AppApis } from '../../../data'
-import { useUserStore } from '../../../stores'
+import { AppApis } from '@/data'
+import { useUserStore } from '@/stores'
 import { languageDirectionMap } from '@/utilities/config/direction'
 
 const languages = [
@@ -47,7 +47,7 @@ export function LanguageSwitcher() {
         <Button
           variant='ghost'
           size='icon'
-          className='scale-95 overflow-hidden rounded-full'
+          className='size-8 overflow-hidden rounded-full'
         >
           <img
             src={
@@ -93,7 +93,11 @@ export function LanguageSwitcher() {
                 alt={`${lang.code}-flag`}
               />
             </span>
-            <span>{lang.label}</span>
+            <span
+              className={`${lang.code === AppLanguagesEnum.FA ? 'font-vazirmatn' : lang.code === AppLanguagesEnum.AR ? 'font-ibm-plex-sans-arabic' : 'font-inter'}`}
+            >
+              {lang.label}
+            </span>
             <Check
               size={14}
               className={Cn('ms-auto', i18n.language !== lang.code && 'hidden')}

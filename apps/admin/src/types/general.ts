@@ -1031,6 +1031,13 @@ export type __ApiErrorType = {
   errors: __ApiErrorItemType[]
 }
 
+export type __MediaFileType = 'image' | 'video'
+
+export const __MediaFileAcceptMap: Record<__MediaFileType, string> = {
+  image: 'image/jpeg,image/png,image/webp,image/avif',
+  video: 'video/mp4,video/webm,video/quicktime',
+}
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {

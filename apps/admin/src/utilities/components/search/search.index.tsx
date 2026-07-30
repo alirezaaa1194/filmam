@@ -3,6 +3,7 @@ import { SearchIcon } from 'lucide-react'
 import { Cn } from '@/scripts'
 import { useSearch } from '@/context'
 import { Button } from '../ui/button/button.index'
+import { useIsMobile } from '../../../hooks'
 
 export function Search({
   className = '',
@@ -12,6 +13,21 @@ export function Search({
   const { t } = useTranslation()
   const { setOpen } = useSearch()
   const resolvedPlaceholder = placeholder ?? t('common.search')
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return (
+      <Button
+        variant='ghost'
+        size='icon'
+        className='size-9 rounded-full'
+        onClick={() => setOpen(true)}
+      >
+        <SearchIcon className='size-[1.2rem] scale-100 transition-all' />
+      </Button>
+    )
+  }
+
   return (
     <Button
       {...props}

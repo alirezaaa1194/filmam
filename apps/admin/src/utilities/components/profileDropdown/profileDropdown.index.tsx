@@ -15,20 +15,31 @@ import {
   DropdownMenuTrigger,
   SignOutDialog,
 } from '@/utilities/components'
-import { useUserStore } from '../../../stores'
+import { useUserStore } from '@/stores'
+import { HashEmail } from '@/scripts'
+import React from 'react'
 
 export function ProfileDropdown() {
   const { t } = useTranslation()
   const [open, setOpen] = useDialogState()
   const user = useUserStore((s) => s.user)
 
+  if (!user) {
+    return null
+  }
+
+  const hashedEmail = React.use(HashEmail(user.email))
+
   return (
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
+          <Button variant='ghost' className='relative h-9 w-9 rounded-full'>
             <Avatar className='h-8 w-8'>
-              <AvatarImage src='/avatars/01.png' alt='@shadcn' />
+              <AvatarImage
+                src={`https://www.gravatar.com/avatar/${hashedEmail}?d=mp`}
+                alt='@shadcn'
+              />
               <AvatarFallback>
                 {user?.username.split(' ')[0][0].toUpperCase()}
                 {user?.username.split(' ')[1][0].toUpperCase()}

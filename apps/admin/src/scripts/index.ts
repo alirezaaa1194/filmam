@@ -6,6 +6,7 @@ import {
   __AppLanguages,
   __LogOut,
   __DefaultLanguage,
+  __HashEmail,
 } from './utils'
 import {
   __GetCookie,
@@ -27,6 +28,7 @@ export {
   __AppLanguages as AppLanguages,
   __LogOut as LogOut,
   __DefaultLanguage as DefaultLanguage,
+  __HashEmail as HashEmail,
 }
 export {
   __GetCookie as GetCookie,

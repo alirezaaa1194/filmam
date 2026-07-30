@@ -400,6 +400,21 @@
     "title": "به زودی!",
     "desc": "این صفحه هنوز ایجاد نشده است. اما منتظر باشید!"
   },
+  "upload": {
+    "file": "فایل",
+    "url": "لینک",
+    "upload": "آپلود",
+    "click_or_drag": "کلیک کنید یا بکشید و رها کنید",
+    "max_size": "حداکثر {{size}} مگابایت",
+    "fetching": "در حال دریافت...",
+    "via_url": "از طریق لینک",
+    "uploaded": "آپلود شد",
+    "cancel_upload": "لغو آپلود",
+    "remove_file": "حذف فایل",
+    "file_exceeds": "حجم فایل بیش از {{size}} مگابایت است",
+    "upload_failed": "آپلود ناموفق بود",
+    "network_error": "خطای شبکه"
+  },
   "page_titles": {
     "dashboard": "داشبورد",
     "users": "کاربران",

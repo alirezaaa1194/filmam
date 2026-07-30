@@ -132,6 +132,7 @@ export const __AppApis = {
     fromFile: `${base}/upload/admin/from-file`,
     fromUrl: `${base}/upload/admin/from-url`,
     adminDelete: `${base}/upload/admin`,
+    byId: (uploadId: number) => `${base}/upload/admin/${uploadId}`,
   },
   user: {
     adminAll: `${base}/user/admin/all`,

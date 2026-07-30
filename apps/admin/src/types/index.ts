@@ -94,6 +94,7 @@ import type {
   __TagTranslationType,
   __TagType,
   __TagListType,
+  __MediaFileType,
   __UploadType,
   __UserType,
   __UserMovieActionType,
@@ -199,6 +200,7 @@ export type { __SectionListItemType as SectionListItemType }
 export type { __TagTranslationType as TagTranslationType }
 export type { __TagType as TagType }
 export type { __TagListType as TagListType }
+export type { __MediaFileType as MediaFileType }
 export type { __UploadType as UploadType }
 export type { __UserType as UserType }
 export type { __UserMovieActionType as UserMovieActionType }
@@ -208,3 +210,4 @@ export type { __UserMovieListItemType as UserMovieListItemType }
 export type { __UserMovieActionsType as UserMovieActionsType }
 export { __AppLanguagesEnum as AppLanguagesEnum }
 export { __UserRoleEnum as UserRoleEnum }
+export { __MediaFileAcceptMap as MediaFileAcceptMap } from './general'

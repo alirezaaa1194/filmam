@@ -28,7 +28,7 @@ import {
 } from '@/utilities/components'
 
 import { useSidebar } from '../ui/sidebar/sidebar.index'
-import { Collapsible } from '../../../types'
+import { Collapsible } from '@/types'
 
 export function ConfigDrawer() {
   const { t } = useTranslation()
@@ -51,7 +51,7 @@ export function ConfigDrawer() {
           size='icon'
           variant='ghost'
           aria-label='Open theme settings'
-          className='rounded-full'
+          className='size-9 rounded-full'
         >
           <Settings aria-hidden='true' />
         </Button>

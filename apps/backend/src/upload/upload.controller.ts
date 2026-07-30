@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
+  Param,
   ParseFilePipe,
+  ParseIntPipe,
   Post,
   UploadedFile,
   UseGuards,
@@ -47,6 +50,14 @@ export class UploadController {
   @Post('admin/from-url')
   async uploadFromUrl(@Body() body: UploadFromUrlDto) {
     return await this.uploadService.uploadFromUrl(body);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOkResponse({ type: UploadResponseDto })
+  @Get('admin/:uploadId')
+  async getUpload(@Param('uploadId', ParseIntPipe) uploadId: number) {
+    return await this.uploadService.findById(uploadId);
   }
 
   @ApiBearerAuth()

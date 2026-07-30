@@ -400,6 +400,21 @@
     "title": "قريباً!",
     "desc": "لم يتم إنشاء هذه الصفحة بعد. ترقبوا!"
   },
+  "upload": {
+    "file": "ملف",
+    "url": "رابط",
+    "upload": "رفع",
+    "click_or_drag": "انقر أو اسحب وأفلت",
+    "max_size": "{{size}} ميغابايت كحد أقصى",
+    "fetching": "جارٍ الجلب...",
+    "via_url": "عبر الرابط",
+    "uploaded": "تم الرفع",
+    "cancel_upload": "إلغاء الرفع",
+    "remove_file": "حذف الملف",
+    "file_exceeds": "الملف يتجاوز {{size}} ميغابايت",
+    "upload_failed": "فشل الرفع",
+    "network_error": "خطأ في الشبكة"
+  },
   "page_titles": {
     "dashboard": "لوحة القيادة",
     "users": "المستخدمون",

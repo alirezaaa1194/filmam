@@ -400,6 +400,21 @@
     "title": "Coming Soon!",
     "desc": "This page has not been created yet. Stay tuned though!"
   },
+  "upload": {
+    "file": "File",
+    "url": "URL",
+    "upload": "Upload",
+    "click_or_drag": "Click or drag to upload",
+    "max_size": "{{size}}MB max",
+    "fetching": "Fetching...",
+    "via_url": "Via URL",
+    "uploaded": "Uploaded",
+    "cancel_upload": "Cancel upload",
+    "remove_file": "Remove file",
+    "file_exceeds": "File exceeds {{size}}MB",
+    "upload_failed": "Upload failed",
+    "network_error": "Network error"
+  },
   "page_titles": {
     "dashboard": "Dashboard",
     "users": "Users",

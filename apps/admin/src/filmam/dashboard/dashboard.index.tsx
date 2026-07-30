@@ -21,21 +21,22 @@ import { Analytics } from './analytics/analytics.index'
 import { Overview } from './overview/overview.index'
 import { RecentSales } from './recentSales/recentSales.index'
 import { useTranslation } from 'react-i18next'
-import { useUserStore } from '../../stores'
 import { PageTitle } from '@/utilities/components'
+import { NotificationDropdown } from '@/utilities/components/notificationDropdown/notificationDropdown'
+import Uploader from '../../utilities/components/uploader/uploader.index'
 
 export function Dashboard() {
   const { t } = useTranslation()
-  const user = useUserStore((s) => s.user)
-  console.log(user);
-  
+
   return (
     <>
       <PageTitle titleKey='dashboard' />
+
       <Header>
         <Search />
         <LanguageSwitcher />
         <ThemeSwitch />
+        <NotificationDropdown />
         <ConfigDrawer />
         <ProfileDropdown />
       </Header>
@@ -46,6 +47,9 @@ export function Dashboard() {
             {t('dashboard.title')}
           </h1>
         </div>
+
+        <Uploader />
+
         <Tabs
           orientation='vertical'
           defaultValue='overview'
