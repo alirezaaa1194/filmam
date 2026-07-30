@@ -420,7 +420,9 @@
     "remove_file": "حذف فایل",
     "file_exceeds": "حجم فایل بیش از {{size}} مگابایت است",
     "upload_failed": "آپلود ناموفق بود",
-    "network_error": "خطای شبکه"
+    "network_error": "خطای شبکه",
+    "url_required": "لطفاً یک لینک وارد کنید",
+    "url_invalid": "لطفاً یک لینک معتبر وارد کنید (http/https)"
   },
   "page_titles": {
     "dashboard": "داشبورد",

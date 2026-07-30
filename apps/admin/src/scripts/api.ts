@@ -55,7 +55,7 @@ export const __Api = async <T>(
   const data = await response.json()
 
   if (!response.ok) {
-    throw data
+    throw response
   }
 
   return data as T

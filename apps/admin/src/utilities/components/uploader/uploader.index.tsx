@@ -24,6 +24,15 @@ import {
 } from '@/types'
 import { toast } from 'sonner'
 
+function isValidUrl(str: string): boolean {
+  try {
+    const url = new URL(str)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 function inferMimeType(url: string): string {
   const ext = url.split('.').pop()?.toLowerCase()
   const map: Record<string, string> = {
@@ -80,7 +89,6 @@ export default function Uploader({
   defaultUploadIds,
   multiple = false,
   maxFiles = 5,
-  label,
   fileType,
   maxSizeMB = 50,
   name,
@@ -100,6 +108,7 @@ export default function Uploader({
     preview: string | null
   } | null>(null)
   const [progress, setProgress] = useState(0)
+  const [urlError, setUrlError] = useState('')
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const xhrRef = useRef<XMLHttpRequest | null>(null)
@@ -271,33 +280,39 @@ export default function Uploader({
   }
 
   const handleUrlSubmit = () => {
-    if (!url.trim()) return
-    urlMutation.mutate(url.trim())
+    const trimmed = url.trim()
+    if (!trimmed) {
+      setUrlError(t('upload.url_required'))
+      return
+    }
+    if (!isValidUrl(trimmed)) {
+      setUrlError(t('upload.url_invalid'))
+      return
+    }
+    setUrlError('')
+    urlMutation.mutate(trimmed)
   }
 
   return (
-    <div className='w-full space-y-2'>
-      <div className='flex items-center justify-between'>
-        <span className='text-sm font-medium text-foreground'>
-          {label || t('upload.upload')}
-        </span>
-        {multiple && (
-          <span className='text-xs text-muted-foreground'>
-            {files.length}/{maxFiles}
-          </span>
-        )}
-      </div>
-
+    <div className='w-full space-y-2 rounded-lg border border-border/50 bg-card p-4 shadow-sm'>
       {showPicker && (
         <Tabs value={mode} onValueChange={(m) => setMode(m as 'file' | 'url')}>
-          <TabsList className='h-7'>
-            <TabsTrigger value='file' className='px-2.5 text-xs'>
-              {t('upload.file')}
-            </TabsTrigger>
-            <TabsTrigger value='url' className='px-2.5 text-xs'>
-              {t('upload.url')}
-            </TabsTrigger>
-          </TabsList>
+          <div className='flex items-center justify-between'>
+            <TabsList className='h-7'>
+              <TabsTrigger value='file' className='px-2.5 text-xs'>
+                {t('upload.file')}
+              </TabsTrigger>
+              <TabsTrigger value='url' className='px-2.5 text-xs'>
+                {t('upload.url')}
+              </TabsTrigger>
+            </TabsList>
+
+            {mode === 'file' && multiple && (
+              <span className='text-xs text-muted-foreground'>
+                {files.length}/{maxFiles}
+              </span>
+            )}
+          </div>
 
           <TabsContent value='file' className='mt-1.5'>
             <div
@@ -334,16 +349,27 @@ export default function Uploader({
           </TabsContent>
 
           <TabsContent value='url' className='mt-1.5'>
-            <div className='flex items-center gap-2'>
-              <div className='relative flex-1'>
-                <Link2 className='absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground' />
-                <Input
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleUrlSubmit()}
-                  placeholder='https://example.com/image.jpg'
-                  className='h-8 pl-8 text-xs'
-                />
+            <div className='flex items-start gap-2'>
+              <div className='flex-1'>
+                <div className='relative'>
+                  <Link2 className='absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground' />
+                  <Input
+                    value={url}
+                    onChange={(e) => {
+                      setUrl(e.target.value)
+                      if (urlError) setUrlError('')
+                    }}
+                    onKeyDown={(e) => e.key === 'Enter' && handleUrlSubmit()}
+                    placeholder='https://example.com/image.jpg'
+                    className='h-8 pl-8 text-xs'
+                    aria-invalid={!!urlError}
+                  />
+                </div>
+                {urlError && (
+                  <p className='mt-1 text-[11px] text-destructive'>
+                    {urlError}
+                  </p>
+                )}
               </div>
               <Button
                 size='sm'

@@ -57,13 +57,17 @@ export const Route = createRootRouteWithContext<{
         })
       }
     } catch (err) {
-      if (
-        location.pathname !== '/sign-in' &&
-        location.pathname !== '/forgot-password'
-      ) {
-        throw redirect({
-          to: '/sign-in',
-        })
+      if (err instanceof Response) {
+        if (err.status === 401 || err.status === 403 || err.status === 404) {
+          if (
+            location.pathname !== '/sign-in' &&
+            location.pathname !== '/forgot-password'
+          ) {
+            throw redirect({
+              to: '/sign-in',
+            })
+          }
+        }
       }
     }
   },

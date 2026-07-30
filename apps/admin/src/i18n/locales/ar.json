@@ -422,7 +422,9 @@
     "remove_file": "حذف الملف",
     "file_exceeds": "الملف يتجاوز {{size}} ميغابايت",
     "upload_failed": "فشل الرفع",
-    "network_error": "خطأ في الشبكة"
+    "network_error": "خطأ في الشبكة",
+    "url_required": "الرجاء إدخال رابط",
+    "url_invalid": "الرجاء إدخال رابط صالح (http/https)"
   },
   "page_titles": {
     "dashboard": "لوحة القيادة",
