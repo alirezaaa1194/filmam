@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -26,7 +26,7 @@ import {
   Spinner,
 } from '@/utilities/components'
 import { useMutation } from '@tanstack/react-query'
-import { ApiErrorType, MessageType } from '@/types'
+import { type MessageType } from '@/types'
 import { AppApis } from '@/data'
 
 type ForgotPasswordFormPropsType = {
@@ -72,8 +72,8 @@ export function ForgotPasswordForm({
       start()
       setStep('Otp')
     },
-    onError: (response: ApiErrorType) => {
-      toast.error(t(TranslateServerError(response.errors[0].status)))
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 

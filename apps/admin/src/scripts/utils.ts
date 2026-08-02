@@ -60,7 +60,11 @@ export function __GetDisplayNameInitials(displayName: string): string {
 }
 
 export async function __LogOut() {
-  await Api<MessageType>(AppApis.auth.logout, { method: 'POST' })
+  try {
+    await Api<MessageType>(AppApis.auth.logout, { method: 'POST' })
+  } catch {
+    // token may already be invalid/rotated
+  }
   useUserStore.getState().setUser(null)
 
   RemoveCookie('accessToken')

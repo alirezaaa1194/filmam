@@ -5,7 +5,7 @@ import { ConfirmDialog } from '@/utilities/components'
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
 import { Api, RemoveCookie, TranslateServerError } from '@/scripts'
-import { ApiErrorType, MessageType } from '@/types'
+import { type MessageType } from '@/types'
 import { toast } from 'sonner'
 interface SignOutDialogProps {
   open: boolean
@@ -32,8 +32,8 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
         replace: true,
       })
     },
-    onError: (response: ApiErrorType) => {
-      toast.error(t(TranslateServerError(response.errors[0].status)))
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 

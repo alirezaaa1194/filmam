@@ -102,7 +102,9 @@ import type {
   __EpisodeBriefType,
   __UserMovieListItemType,
   __UserMovieActionsType,
-  __NotificationResponse,
+  __NotificationType,
+  __StatsOverviewType,
+  __StatsAnalyticsType
 } from './general'
 import { __AppLanguagesEnum, __UserRoleEnum } from './general'
 
@@ -209,7 +211,9 @@ export type { __MovieBriefType as MovieBriefType }
 export type { __EpisodeBriefType as EpisodeBriefType }
 export type { __UserMovieListItemType as UserMovieListItemType }
 export type { __UserMovieActionsType as UserMovieActionsType }
-export type { __NotificationResponse as NotificationResponse }
+export type { __NotificationType as NotificationType }
+export type { __StatsOverviewType as StatsOverviewType }
+export type { __StatsAnalyticsType as StatsAnalyticsType }
 
 export { __AppLanguagesEnum as AppLanguagesEnum }
 export { __UserRoleEnum as UserRoleEnum }

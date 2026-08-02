@@ -6,6 +6,7 @@ import en from './locales/en.json'
 import fa from './locales/fa.json'
 import ar from './locales/ar.json'
 import { AppLanguages } from '../scripts'
+import { AppLanguagesEnum } from '../types'
 
 const resources = {
   EN: {
@@ -24,7 +25,7 @@ i18n
   .use(initReactI18next)
   .init({
     supportedLngs: AppLanguages,
-    fallbackLng: 'EN',
+    fallbackLng: AppLanguagesEnum.EN,
     resources,
     detection: {
       order: ['cookie', 'navigator'],

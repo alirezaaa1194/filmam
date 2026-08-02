@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
 import useDialogState from '@/hooks'
 import {
   Avatar,
@@ -8,7 +7,6 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -37,7 +35,7 @@ export function ProfileDropdown() {
             <Avatar className='h-8 w-8'>
               <AvatarImage
                 src={`https://www.gravatar.com/avatar/${hashedEmail}?d=mp`}
-                alt='@shadcn'
+                alt={user.username}
               />
               <AvatarFallback>
                 {user.username.split(' ')[0][0].toUpperCase()}
@@ -57,12 +55,6 @@ export function ProfileDropdown() {
               </p>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
-              <Link to='/settings'>{t('nav.settings')}</Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
             {t('common.sign_out')}

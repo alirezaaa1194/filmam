@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -30,9 +30,9 @@ import {
   Spinner,
 } from '@/utilities/components'
 import { useMutation } from '@tanstack/react-query'
-import { AppApis } from '../../../../data'
+import { AppApis } from '@/data'
 import { toast } from 'sonner'
-import { ApiErrorType, JWTTokenType } from '../../../../types'
+import { type JWTTokenType } from '@/types'
 
 type OtpFormProps = {
   email: string
@@ -88,8 +88,8 @@ export function OtpForm({
       toast.success(t('auth.login_successful'))
       navigate({ to: '/' })
     },
-    onError: (response: ApiErrorType) => {
-      toast.error(t(TranslateServerError(response.errors[0].status)))
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 
@@ -107,8 +107,8 @@ export function OtpForm({
       toast.success(t('auth.otp_resent'))
       form.resetField('otp')
     },
-    onError: (response: ApiErrorType) => {
-      toast.error(response.errors[0].detail)
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 

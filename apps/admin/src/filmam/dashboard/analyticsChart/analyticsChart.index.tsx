@@ -1,50 +1,31 @@
 import { useTranslation } from 'react-i18next'
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import {
+  Area,
+  AreaChart,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import { getDayLabel } from '../chartLabels'
 
-const data = [
-  {
-    name: 'Mon',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Tue',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Wed',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Thu',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Fri',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Sat',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-  {
-    name: 'Sun',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
-  },
-]
-
-export function AnalyticsChart() {
-  const { t } = useTranslation()
+export function AnalyticsChart({
+  data,
+}: {
+  data: {
+    day: number
+    total_plays: number
+    unique_viewers: number
+  }[]
+}) {
+  const { t, i18n } = useTranslation()
   const translatedData = data.map((d) => ({
-    ...d,
-    name: t(`analytics_chart.${d.name.toLowerCase()}`),
+    name: getDayLabel(d.day, i18n.resolvedLanguage),
+    total_plays: d.total_plays,
+    unique_viewers: d.unique_viewers,
   }))
+
   return (
     <ResponsiveContainer width='100%' height={300}>
       <AreaChart data={translatedData}>
@@ -61,9 +42,14 @@ export function AnalyticsChart() {
           tickLine={false}
           axisLine={false}
         />
+        <Tooltip cursor={{ stroke: 'hsl(var(--border))' }} />
+        <Legend
+          iconType='circle'
+          formatter={(value: string) => t(`dashboard.${value}`)}
+        />
         <Area
           type='monotone'
-          dataKey='clicks'
+          dataKey='total_plays'
           stroke='currentColor'
           className='text-primary'
           fill='currentColor'
@@ -71,7 +57,7 @@ export function AnalyticsChart() {
         />
         <Area
           type='monotone'
-          dataKey='uniques'
+          dataKey='unique_viewers'
           stroke='currentColor'
           className='text-muted-foreground'
           fill='currentColor'

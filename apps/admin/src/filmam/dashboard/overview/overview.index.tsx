@@ -1,63 +1,32 @@
 import { useTranslation } from 'react-i18next'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { EmptyState } from '@/utilities/components'
+import { ChartColumn } from 'lucide-react'
+import { getMonthLabel } from '../chartLabels'
 
-const data = [
-  {
-    name: 'Jan',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Feb',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Mar',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Apr',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'May',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jun',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jul',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Aug',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Sep',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Oct',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Nov',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Dec',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
+export function Overview({
+  data,
+}: {
+  data: { month: number; total: number }[]
+}) {
+  const { t, i18n } = useTranslation()
 
-export function Overview() {
-  const { t } = useTranslation()
+  if (!data.length) {
+    return (
+      <EmptyState
+        icon={ChartColumn}
+        title={t('common.no_results')}
+        description={t('common.no_data')}
+        className='h-[350px]'
+      />
+    )
+  }
+
   const translatedData = data.map((d) => ({
+    name: getMonthLabel(d.month, i18n.resolvedLanguage),
     ...d,
-    name: t(`overview_chart.${d.name.toLowerCase()}`),
   }))
+
   return (
     <ResponsiveContainer width='100%' height={350}>
       <BarChart data={translatedData}>
@@ -69,13 +38,15 @@ export function Overview() {
           axisLine={false}
         />
         <YAxis
+          tickCount={3}
           direction='ltr'
           stroke='#888888'
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => value}
         />
+        <Tooltip cursor={{ fill: 'hsl(var(--muted) / 0.5)' }} />
         <Bar
           dataKey='total'
           fill='currentColor'

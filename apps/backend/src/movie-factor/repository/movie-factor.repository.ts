@@ -25,7 +25,7 @@ export class MovieFactorRepository {
       const normalizedMovieFactorTranslation = translations.map((tr) => ({
         movie_factor_id: createdMovieFactor.id,
         language: tr.lang,
-        ...tr,
+        role_name: tr.role_name,
       }));
 
       return await tx.movieFactorTranslation.createMany({

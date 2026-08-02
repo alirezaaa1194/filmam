@@ -1,9 +1,47 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/utilities/components'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Skeleton,
+} from '@/utilities/components'
+import {
+  ChartColumn,
+  CircleCheck,
+  Clapperboard,
+  Play,
+  Tags,
+  UserCheck,
+  Watch,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { AnalyticsChart } from '../analyticsChart/analyticsChart.index'
+import { useQuery } from '@tanstack/react-query'
+import { AppApis } from '@/data'
+import { Api } from '@/scripts'
+import { type StatsAnalyticsType } from '../../../types'
+import { GrowthRate } from '../growthRate/growthRate.index'
+import { formatNumber } from '../formatNumber'
 
 export function Analytics() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['stats-analytics'],
+    queryFn: () =>
+      Api<StatsAnalyticsType>(AppApis.admin.statsAnalytics, { method: 'GET' }),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
+
+  const ready = !isLoading && data
+
+  if (!ready) {
+    return <AnalyticsSkeleton />
+  }
+
   return (
     <div className='space-y-4'>
       <Card>
@@ -12,135 +50,211 @@ export function Analytics() {
           <CardDescription>{t('dashboard.traffic_desc')}</CardDescription>
         </CardHeader>
         <CardContent className='px-6'>
-          <AnalyticsChart />
+          {data?.current_week_chart_data?.length ? (
+            <AnalyticsChart data={data.current_week_chart_data} />
+          ) : (
+            <EmptyState
+              icon={ChartColumn}
+              title={t('common.no_results')}
+              description={t('common.no_data')}
+              className='h-[300px]'
+            />
+          )}
         </CardContent>
       </Card>
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>{t('dashboard.total_clicks')}</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='h-4 w-4 text-muted-foreground'
-            >
-              <path d='M3 3v18h18' />
-              <path d='M7 15l4-4 4 4 4-6' />
-            </svg>
+            <CardTitle className='text-sm font-medium'>
+              {t('dashboard.total_plays')}
+            </CardTitle>
+            <Play className='size-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{t('dashboard.clicks_value')}</div>
-            <p className='text-xs text-muted-foreground'>{t('dashboard.clicks_change')}</p>
+            <div className='text-2xl font-bold'>
+              {formatNumber(data?.cards_data.total_plays ?? 0, i18n.resolvedLanguage)}
+            </div>
+            <GrowthRate
+              value={data?.cards_data.total_plays_growth}
+              period='week'
+            />
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>{t('dashboard.unique_visitors')}</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='h-4 w-4 text-muted-foreground'
-            >
-              <circle cx='12' cy='7' r='4' />
-              <path d='M6 21v-2a6 6 0 0 1 12 0v2' />
-            </svg>
+            <CardTitle className='text-sm font-medium'>
+              {t('dashboard.unique_viewers')}
+            </CardTitle>
+            <UserCheck className='size-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{t('dashboard.visitors_value')}</div>
-            <p className='text-xs text-muted-foreground'>{t('dashboard.visitors_change')}</p>
+            <div className='text-2xl font-bold'>
+              {formatNumber(data?.cards_data.unique_viewers ?? 0, i18n.resolvedLanguage)}
+            </div>
+            <GrowthRate
+              value={data?.cards_data.unique_viewers_growth}
+              period='week'
+            />
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>{t('dashboard.bounce_rate')}</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='h-4 w-4 text-muted-foreground'
-            >
-              <path d='M3 12h6l3 6 3-6h6' />
-            </svg>
+            <CardTitle className='text-sm font-medium'>
+              {t('dashboard.completion_rate')}
+            </CardTitle>
+            <CircleCheck className='size-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{t('dashboard.bounce_value')}</div>
-            <p className='text-xs text-muted-foreground'>{t('dashboard.bounce_change')}</p>
+            <div className='text-2xl font-bold'>
+              {formatNumber(data?.cards_data.completion_rate ?? 0, i18n.resolvedLanguage)}
+            </div>
+            <GrowthRate
+              value={data?.cards_data.completion_rate_growth}
+              period='week'
+            />
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>{t('dashboard.avg_session')}</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='h-4 w-4 text-muted-foreground'
-            >
-              <circle cx='12' cy='12' r='10' />
-              <path d='M12 6v6l4 2' />
-            </svg>
+            <CardTitle className='text-sm font-medium'>
+              {t('dashboard.avg_watch_time')}
+            </CardTitle>
+            <Watch className='size-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{t('dashboard.session_value')}</div>
-            <p className='text-xs text-muted-foreground'>{t('dashboard.session_change')}</p>
+            <div className='text-2xl font-bold'>
+              {formatNumber(data?.cards_data.avg_watch_time ?? 0, i18n.resolvedLanguage)}
+            </div>
+            <GrowthRate
+              value={data?.cards_data.avg_watch_time_growth}
+              period='week'
+            />
           </CardContent>
         </Card>
       </div>
       <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
         <Card className='col-span-1 lg:col-span-4'>
-          <CardHeader>
-            <CardTitle>{t('dashboard.referrers')}</CardTitle>
-            <CardDescription>{t('dashboard.referrers_desc')}</CardDescription>
+          <CardHeader className='flex flex-row items-start justify-between space-y-0'>
+            <div>
+              <CardTitle>{t('dashboard.top_movies')}</CardTitle>
+              <CardDescription>
+                {t('dashboard.top_movies_desc')}
+              </CardDescription>
+            </div>
+            <Clapperboard className='size-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <SimpleBarList
-              items={[
-                { name: t('referrers.direct'), value: 512 },
-                { name: t('referrers.product_hunt'), value: 238 },
-                { name: t('referrers.twitter'), value: 174 },
-                { name: t('referrers.blog'), value: 104 },
-              ]}
-              barClass='bg-primary'
-              valueFormatter={(n) => `${n}`}
-            />
+            {data?.top_movies?.length ? (
+              <SimpleBarList
+                items={data.top_movies.map((movie) => ({
+                  name: movie.title,
+                  value: movie.plays_count,
+                }))}
+                barClass='bg-primary'
+                valueFormatter={(n) => `${n}`}
+              />
+            ) : (
+              <EmptyState
+                icon={Clapperboard}
+                title={t('common.no_results')}
+                description={t('common.no_data')}
+              />
+            )}
+          </CardContent>
+        </Card>
+        <Card className='col-span-1 lg:col-span-3'>
+          <CardHeader className='flex flex-row items-start justify-between space-y-0'>
+            <div>
+              <CardTitle>{t('dashboard.top_genres')}</CardTitle>
+              <CardDescription>
+                {t('dashboard.top_genres_desc')}
+              </CardDescription>
+            </div>
+            <Tags className='size-4 text-muted-foreground' />
+          </CardHeader>
+          <CardContent>
+            {data?.top_genres?.length ? (
+              <SimpleBarList
+                items={data.top_genres.map((genre) => ({
+                  name: genre.name,
+                  value: genre.plays_count,
+                }))}
+                barClass='bg-muted-foreground'
+                valueFormatter={(n) => `${n}`}
+              />
+            ) : (
+              <EmptyState
+                icon={Tags}
+                title={t('common.no_results')}
+                description={t('common.no_data')}
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+function AnalyticsSkeleton() {
+  return (
+    <div className='space-y-4'>
+      <Card>
+        <CardHeader>
+          <Skeleton className='h-5 w-40' />
+          <Skeleton className='h-4 w-64' />
+        </CardHeader>
+        <CardContent className='px-6'>
+          <Skeleton className='h-[300px] w-full' />
+        </CardContent>
+      </Card>
+      <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Card key={i}>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <Skeleton className='h-4 w-28' />
+              <Skeleton className='size-4' />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className='h-8 w-16' />
+              <Skeleton className='mt-2 h-3 w-36' />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
+        <Card className='col-span-1 lg:col-span-4'>
+          <CardHeader>
+            <Skeleton className='h-5 w-32' />
+            <Skeleton className='h-4 w-48' />
+          </CardHeader>
+          <CardContent>
+            <SimpleBarListSkeleton rows={5} />
           </CardContent>
         </Card>
         <Card className='col-span-1 lg:col-span-3'>
           <CardHeader>
-            <CardTitle>{t('dashboard.devices')}</CardTitle>
-            <CardDescription>{t('dashboard.devices_desc')}</CardDescription>
+            <Skeleton className='h-5 w-32' />
+            <Skeleton className='h-4 w-48' />
           </CardHeader>
           <CardContent>
-            <SimpleBarList
-              items={[
-                { name: t('devices.desktop'), value: 74 },
-                { name: t('devices.mobile'), value: 22 },
-                { name: t('devices.tablet'), value: 4 },
-              ]}
-              barClass='bg-muted-foreground'
-              valueFormatter={(n) => `${n}%`}
-            />
+            <SimpleBarListSkeleton rows={5} />
           </CardContent>
         </Card>
       </div>
+    </div>
+  )
+}
+
+function SimpleBarListSkeleton({ rows }: { rows: number }) {
+  return (
+    <div className='space-y-3'>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className='flex items-center justify-between gap-3'>
+          <Skeleton className='h-4 w-full' />
+          <Skeleton className='h-4 w-10 shrink-0' />
+        </div>
+      ))}
     </div>
   )
 }

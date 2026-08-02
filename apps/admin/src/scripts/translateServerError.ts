@@ -4,6 +4,7 @@ const errorMap: Record<number, string> = {
   403: 'errors.forbidden',
   404: 'errors.not_found',
   409: 'errors.conflict',
+  413: 'errors.payload_too_large',
   429: 'errors.too_many_requests',
   500: 'errors.internal_server_error',
 }

@@ -14,6 +14,7 @@ export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsib
 export { Command, CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandShortcut, CommandSeparator } from './command/command.index'
 export { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger } from './dialog/dialog.index'
 export { DropdownMenu, DropdownMenuPortal, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from './dropdownMenu/dropdownMenu.index'
+export { EmptyState } from './emptyState/emptyState.index'
 export { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField, useFormField } from './form/form.index'
 export { Input } from './input/input.index'
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from './inputOtp/inputOtp.index'

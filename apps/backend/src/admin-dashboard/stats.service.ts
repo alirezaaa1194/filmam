@@ -24,7 +24,7 @@ export class StatsService {
     if (previous === 0) {
       return current > 0 ? 100 : 0;
     }
-    return ((current - previous) / previous) * 100;
+    return Math.round(((current - previous) / previous) * 10000) / 100;
   }
 
   async getOverviewStats() {
@@ -265,12 +265,12 @@ export class StatsService {
 
     const recentWeekCompletionRate =
       recentWeekTotalPlayedMovies > 0
-        ? (recentWeekTotalWatchedMovies / recentWeekTotalPlayedMovies) * 100
+        ? Math.round((recentWeekTotalWatchedMovies / recentWeekTotalPlayedMovies) * 10000) / 100
         : 0;
 
     const lastWeekCompletionRate =
       lastWeekTotalPlayedMovies > 0
-        ? (lastWeekTotalWatchedMovies / lastWeekTotalPlayedMovies) * 100
+        ? Math.round((lastWeekTotalWatchedMovies / lastWeekTotalPlayedMovies) * 10000) / 100
         : 0;
 
     const completionRateGrowth = this.calcGrowthRate(
@@ -278,10 +278,12 @@ export class StatsService {
       lastWeekCompletionRate,
     );
 
-    const recentWeekProgressAvg =
-      recentWeekProgressAvgResult._avg.progress_time ?? 0;
-    const lastWeekProgressAvg =
-      lastWeekProgressAvgResult._avg.progress_time ?? 0;
+    const recentWeekProgressAvg = Math.round(
+      recentWeekProgressAvgResult._avg.progress_time ?? 0,
+    );
+    const lastWeekProgressAvg = Math.round(
+      lastWeekProgressAvgResult._avg.progress_time ?? 0,
+    );
 
     const progressGrowthRate = this.calcGrowthRate(
       recentWeekProgressAvg,

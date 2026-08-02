@@ -28,7 +28,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
 import { IconGoogle } from '@/assets/brand-icons/icon-google'
-import type { ApiErrorType, MessageType } from '@/types'
+import type { MessageType } from '@/types'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
@@ -87,8 +87,8 @@ export function SignInForm({
       start()
       toast.success(t('auth.otp_sent'))
     },
-    onError: (response: ApiErrorType) => {
-      toast.error(t(TranslateServerError(response.errors[0].status)))
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 

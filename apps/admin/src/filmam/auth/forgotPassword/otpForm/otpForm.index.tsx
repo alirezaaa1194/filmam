@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -27,7 +27,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '../../../../data'
 import { toast } from 'sonner'
-import { ApiErrorType, MessageType } from '../../../../types'
+import { type MessageType } from '../../../../types'
 
 type OtpFormProps = {
   email: string
@@ -74,8 +74,8 @@ export function OtpForm({
         form.resetField('otp')
         toast.success(t('auth.otp_resent'))
       },
-      onError: (response: ApiErrorType) => {
-        toast.error(t(TranslateServerError(response.errors[0].status)))
+      onError: (error: Response) => {
+        toast.error(t(TranslateServerError(error.status)))
       },
     })
 
@@ -103,8 +103,8 @@ export function OtpForm({
         toast.success(t('auth.password_reset_success'))
         navigate({ to: '/sign-in' })
       },
-      onError: (response: ApiErrorType) => {
-        toast.error(t(TranslateServerError(response.errors[0].status)))
+      onError: (error: Response) => {
+        toast.error(t(TranslateServerError(error.status)))
       },
     })
 

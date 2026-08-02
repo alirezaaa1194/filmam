@@ -29,7 +29,9 @@ export class UploadController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: 50 * 1024 * 1024 } }),
+  )
   @ApiCreatedResponse({ type: UploadResponseDto })
   @Post('admin/from-file')
   async uploadFromFile(

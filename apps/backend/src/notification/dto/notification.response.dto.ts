@@ -11,7 +11,7 @@ export class PushSubscriptionResponseDto {
   created_at!: Date;
 }
 
-export class SendNotificationResponseDto {
+export class SendNotificationTypeDto {
   @ApiProperty({ example: 'Notification sent successfully' })
   message!: string;
 }

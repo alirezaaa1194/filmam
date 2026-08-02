@@ -18,7 +18,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs/tabs.index'
 import {
   MediaFileAcceptMap,
   type UploadType,
-  type ApiErrorType,
   type MessageType,
   type MediaFileType,
 } from '@/types'
@@ -108,6 +107,7 @@ export default function Uploader({
     preview: string | null
   } | null>(null)
   const [progress, setProgress] = useState(0)
+  const [processing, setProcessing] = useState(false)
   const [urlError, setUrlError] = useState('')
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -164,8 +164,8 @@ export default function Uploader({
       setUrl('')
       toast.success(t('upload.uploaded'))
     },
-    onError: (error: ApiErrorType) => {
-      toast.error(TranslateServerError(error.errors[0].status))
+    onError: (error: Response) => {
+      toast.error(TranslateServerError(error.status))
     },
   })
 
@@ -184,8 +184,8 @@ export default function Uploader({
       updateFiles(files.filter((f) => f.id !== uploadId))
       toast.success(t('upload.deleted'))
     },
-    onError: (error: ApiErrorType) => {
-      toast.error(TranslateServerError(error.errors[0].status))
+    onError: (error: Response) => {
+      toast.error(TranslateServerError(error.status))
     },
   })
 
@@ -200,48 +200,74 @@ export default function Uploader({
       : null
     setUploading({ name: file.name, size: file.size, preview })
     setProgress(0)
+    setProcessing(false)
 
     const formData = new FormData()
     formData.append('file', file)
 
     const xhr = new XMLHttpRequest()
     xhrRef.current = xhr
+    xhr.timeout = 5 * 60 * 1000
 
     const accessToken = GetCookie('accessToken')
     xhr.open('POST', AppApis.upload.fromFile)
     if (accessToken)
       xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
 
+    const cleanup = (errorMessage?: string) => {
+      if (xhrRef.current === xhr) xhrRef.current = null
+      if (preview) URL.revokeObjectURL(preview)
+      setUploading(null)
+      setProgress(0)
+      setProcessing(false)
+      if (errorMessage) toast.error(errorMessage)
+    }
+
     xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable)
+      if (e.lengthComputable) {
         setProgress(Math.round((e.loaded / e.total) * 100))
+        if (e.loaded === e.total) setProcessing(true)
+      }
     }
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        const data: UploadType = JSON.parse(xhr.responseText)
+        let data: UploadType
+        try {
+          data = JSON.parse(xhr.responseText)
+        } catch {
+          cleanup(t('upload.upload_failed'))
+          return
+        }
         if (!multiple) {
           updateFiles([data])
         } else {
           updateFiles([...files, data])
         }
         toast.success(t('upload.uploaded'))
+        cleanup()
       } else {
+        let detail: string | undefined
         try {
           const err = JSON.parse(xhr.responseText)
-          toast.error(err.errors?.[0]?.detail || t('upload.upload_failed'))
+          detail = err.errors?.[0]?.detail
         } catch {
-          toast.error(t('upload.upload_failed'))
+          // response is not JSON (e.g. proxy/nginx error page)
         }
+        cleanup(detail || t(TranslateServerError(xhr.status)))
       }
-      if (preview) URL.revokeObjectURL(preview)
-      setUploading(null)
+    }
+
+    xhr.ontimeout = () => {
+      cleanup(t('upload.timeout'))
     }
 
     xhr.onerror = () => {
-      toast.error(t('upload.network_error'))
-      if (preview) URL.revokeObjectURL(preview)
-      setUploading(null)
+      cleanup(t('upload.network_error'))
+    }
+
+    xhr.onabort = () => {
+      cleanup()
     }
 
     xhr.send(formData)
@@ -252,6 +278,8 @@ export default function Uploader({
     xhrRef.current = null
     if (uploading?.preview) URL.revokeObjectURL(uploading.preview)
     setUploading(null)
+    setProgress(0)
+    setProcessing(false)
   }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -324,17 +352,19 @@ export default function Uploader({
               onDrop={handleDrop}
               onClick={() => inputRef.current?.click()}
               className={Cn(
-                'flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed p-2.5 text-xs transition-colors',
+                'flex cursor-pointer items-center justify-between gap-2 rounded-lg border-2 border-dashed p-2.5 text-xs transition-colors',
                 dragging
                   ? 'border-primary bg-primary/5'
                   : 'border-muted-foreground/25 hover:border-muted-foreground/50'
               )}
             >
-              <Upload className='size-4 shrink-0 text-muted-foreground' />
-              <span className='text-xs text-muted-foreground'>
-                {t('upload.click_or_drag')}
-              </span>
-              <span className='ml-auto text-[11px] text-muted-foreground/50'>
+              <div className='flex items-center gap-2'>
+                <Upload className='size-4 shrink-0 text-muted-foreground' />
+                <span className='text-xs text-muted-foreground'>
+                  {t('upload.click_or_drag')}
+                </span>
+              </div>
+              <span className='text-[11px] text-muted-foreground/50'>
                 {t('upload.max_size', { size: maxSizeMB })}
               </span>
               <input
@@ -406,16 +436,27 @@ export default function Uploader({
                 {uploading.name}
               </p>
               <p className='text-[11px] text-muted-foreground'>
-                {uploading.size
-                  ? formatBytes(uploading.size)
-                  : t('upload.fetching')}
-                {uploading.size ? ` · ${progress}%` : ''}
+                {processing
+                  ? t('upload.processing')
+                  : uploading.size
+                    ? `${formatBytes(uploading.size)}${
+                        progress > 0 ? ` · ${progress}%` : ` · ${t('upload.uploading')}`
+                      }`
+                    : t('upload.fetching')}
               </p>
               {uploading.size > 0 && (
                 <div className='mt-1 h-1 w-full overflow-hidden rounded-full bg-muted'>
                   <div
-                    className='h-full rounded-full bg-primary transition-all duration-300 ease-out'
-                    style={{ width: `${progress}%` }}
+                    className={Cn(
+                      'h-full rounded-full bg-primary transition-all duration-300 ease-out',
+                      progress === 0 && !processing && 'w-1/2 animate-pulse'
+                    )}
+                    style={{
+                      width:
+                        progress === 0
+                          ? undefined
+                          : `${processing ? 100 : progress}%`,
+                    }}
                   />
                 </div>
               )}

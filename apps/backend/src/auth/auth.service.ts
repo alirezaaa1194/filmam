@@ -513,7 +513,6 @@ export class AuthService {
       );
 
       if (mainToken) {
-        await this.refreshTokenService.deleteCurrentToken(mainToken.id);
         return await this.jwtGenerator(user.id, user.email);
       } else {
         throw new UnauthorizedException('Invalid token');

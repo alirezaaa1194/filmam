@@ -52,6 +52,7 @@ export {
   DropdownMenuLabel, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup,
   DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub,
   DropdownMenuSubTrigger, DropdownMenuSubContent,
+  EmptyState,
   Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField, useFormField,
   Input,
   InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator,

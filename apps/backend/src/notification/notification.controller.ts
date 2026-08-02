@@ -1,7 +1,11 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import {
   CreateNotificationDto,
   SendNotificationDto,
@@ -9,7 +13,7 @@ import {
 import { defaultLang } from '../lib/utils';
 import {
   PushSubscriptionResponseDto,
-  SendNotificationResponseDto,
+  SendNotificationTypeDto,
 } from './dto/notification.response.dto';
 
 @Controller('notification')
@@ -28,7 +32,7 @@ export class NotificationController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({ type: SendNotificationResponseDto })
+  @ApiOkResponse({ type: SendNotificationTypeDto })
   @Post('send')
   @UseGuards(JwtAuthGuard)
   async testNotification(@Req() req, @Body() body: SendNotificationDto) {

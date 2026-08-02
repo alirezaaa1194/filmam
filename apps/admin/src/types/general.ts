@@ -1027,8 +1027,11 @@ export type __ApiErrorItemType = {
 }
 
 export type __ApiErrorType = {
-  success: boolean
-  errors: __ApiErrorItemType[]
+  status: number
+  error: {
+    success: boolean
+    errors: __ApiErrorItemType[]
+  }
 }
 
 export type __MediaFileType = 'image' | 'video'
@@ -1038,9 +1041,58 @@ export const __MediaFileAcceptMap: Record<__MediaFileType, string> = {
   video: 'video/mp4,video/webm,video/quicktime',
 }
 
-export type __NotificationResponse = {
+export type __NotificationType = {
   comments: number
   contacts: number
+}
+
+export type __StatsOverviewType = {
+  cards_data: {
+    total_views: number
+    view_growth_rate: number
+    total_users: number
+    users_growth_rate: number
+    total_content: number
+    total_series: number
+    total_cinematic: number
+    movies_growth_rate: number
+    total_watch_times: number
+    watch_progress_growth: number
+  }
+  current_year_watch_data: {
+    month: number
+    total: number
+  }[]
+
+  recent_users: __UserType[]
+}
+
+export type __StatsAnalyticsType = {
+  cards_data: {
+    total_plays: number
+    total_plays_growth: number
+    unique_viewers: number
+    unique_viewers_growth: number
+    completion_rate: number
+    completion_rate_growth: number
+    avg_watch_time: number
+    avg_watch_time_growth: number
+  }
+  current_week_chart_data: {
+    day: number
+    total_plays: number
+    unique_viewers: number
+  }[]
+  top_movies: {
+    id: number
+    title: string
+    plays_count: number
+  }[]
+  top_genres: {
+    id: number
+    name: string
+    plays_count: number
+  }[]
 }
 
 //      ----------------------- enums -----------------------

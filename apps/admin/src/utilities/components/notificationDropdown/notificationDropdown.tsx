@@ -11,14 +11,14 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { Api } from '@/scripts'
 import { AppApis } from '@/data'
-import { NotificationResponse } from '@/types'
+import { NotificationType } from '@/types'
 
 export function NotificationDropdown() {
   const { t } = useTranslation()
   const { data, isPending } = useQuery({
     queryKey: ['notification'],
     queryFn: () =>
-      Api<NotificationResponse>(AppApis.admin.summary, { method: 'GET' }),
+      Api<NotificationType>(AppApis.admin.summary, { method: 'GET' }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
