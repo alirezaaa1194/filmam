@@ -21,7 +21,9 @@ export function DataTablePagination<TData>({
   const { t } = useTranslation()
   const currentPage = table.getState().pagination.pageIndex + 1
   const totalPages = table.getPageCount()
+  const hasKnownPageCount = totalPages > 0
   const pageNumbers = GetPageNumbers(currentPage, totalPages)
+  const showNavigation = totalPages !== 1
 
   return (
     <div
@@ -33,9 +35,13 @@ export function DataTablePagination<TData>({
       style={{ overflowClipMargin: 1 }}
     >
       <div className='flex w-full items-center justify-between'>
-        <div className='flex w-25 items-center justify-center text-sm font-medium @2xl/content:hidden'>
-          {t('common.page_of', { current: currentPage, total: totalPages })}
-        </div>
+        {showNavigation && (
+          <div className='flex w-25 items-center justify-center text-sm font-medium @2xl/content:hidden'>
+            {hasKnownPageCount
+              ? t('common.page_of', { current: currentPage, total: totalPages })
+              : t('common.page', { current: currentPage })}
+          </div>
+        )}
         <div className='flex items-center gap-2 @max-2xl/content:flex-row-reverse'>
           <Select
             value={`${table.getState().pagination.pageSize}`}
@@ -58,9 +64,12 @@ export function DataTablePagination<TData>({
         </div>
       </div>
 
-      <div className='flex items-center sm:space-x-6 lg:space-x-8'>
+      {showNavigation && (
+        <div className='flex items-center sm:space-x-6 lg:space-x-8'>
         <div className='flex w-25 items-center justify-center text-sm font-medium @max-3xl/content:hidden'>
-          {t('common.page_of', { current: currentPage, total: totalPages })}
+          {hasKnownPageCount
+            ? t('common.page_of', { current: currentPage, total: totalPages })
+            : t('common.page', { current: currentPage })}
         </div>
         <div className='flex items-center space-x-2'>
           <Button
@@ -99,26 +108,29 @@ export function DataTablePagination<TData>({
             </div>
           ))}
 
-          <Button
-            variant='outline'
-            className='size-8 p-0'
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className='sr-only'>{t('common.go_to_next_page')}</span>
-            <ChevronRightIcon className='h-4 w-4' />
-          </Button>
-          <Button
-            variant='outline'
-            className='size-8 p-0 @max-md/content:hidden'
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className='sr-only'>{t('common.go_to_last_page')}</span>
-            <DoubleArrowRightIcon className='h-4 w-4' />
-          </Button>
+          {table.getCanNextPage() && (
+            <Button
+              variant='outline'
+              className='size-8 p-0'
+              onClick={() => table.nextPage()}
+            >
+              <span className='sr-only'>{t('common.go_to_next_page')}</span>
+              <ChevronRightIcon className='h-4 w-4' />
+            </Button>
+          )}
+          {hasKnownPageCount && table.getCanNextPage() && (
+            <Button
+              variant='outline'
+              className='size-8 p-0 @max-md/content:hidden'
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            >
+              <span className='sr-only'>{t('common.go_to_last_page')}</span>
+              <DoubleArrowRightIcon className='h-4 w-4' />
+            </Button>
+          )}
         </div>
-      </div>
+        </div>
+      )}
     </div>
   )
 }

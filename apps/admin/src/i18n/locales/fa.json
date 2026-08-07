@@ -35,6 +35,7 @@
     "filter": "فیلتر...",
     "rows_per_page": "ردیف در هر صفحه",
     "page_of": "صفحه {{current}} از {{total}}",
+    "page": "صفحه {{current}}",
     "go_to_first_page": "رفتن به اولین صفحه",
     "go_to_previous_page": "رفتن به صفحه قبل",
     "go_to_page": "رفتن به صفحه {{page}}",
@@ -181,11 +182,19 @@
     "invite_selected": "دعوت کاربران انتخاب شده",
     "activate_selected": "فعال‌سازی کاربران انتخاب شده",
     "deactivate_selected": "غیرفعال‌سازی کاربران انتخاب شده",
-    "delete_selected": "حذف کاربران انتخاب شده"
+    "delete_selected": "حذف کاربران انتخاب شده",
+    "banned": "مسدود",
+    "filter_placeholder": "جستجوی کاربران...",
+    "yes": "بله",
+    "no": "خیر",
+    "all_users": "همه کاربران",
+    "blocked_users": "کاربران مسدود",
+    "unblocked_users": "کاربران غیرمسدود"
   },
   "users_data": {
     "superadmin": "ابرمدیر",
     "admin": "مدیر",
+    "user": "کاربر",
     "manager": "مدیر میانی",
     "cashier": "صندوقدار"
   },

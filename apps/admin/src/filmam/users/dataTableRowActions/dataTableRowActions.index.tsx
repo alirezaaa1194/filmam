@@ -5,15 +5,17 @@ import { useTranslation } from 'react-i18next'
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/utilities/components'
 
 import { type User } from '../users.type'
+import { type UserType } from '../../../types'
 import { useUsers } from '../usersProvider/usersProvider.index'
 
 type DataTableRowActionsProps = {
-  row: Row<User>
+  row: Row<UserType>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { t } = useTranslation()
   const { setOpen, setCurrentRow } = useUsers()
+  const currentRow = row.original as unknown as User
   return (
     <>
       <DropdownMenu modal={false}>
@@ -29,7 +31,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuContent align='end' className='w-40'>
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original)
+              setCurrentRow(currentRow)
               setOpen('edit')
             }}
           >
@@ -41,7 +43,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original)
+              setCurrentRow(currentRow)
               setOpen('delete')
             }}
             className='text-red-500!'

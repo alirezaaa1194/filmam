@@ -8,9 +8,6 @@ import {
   Wrench,
   UserCog,
   Users,
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
 } from 'lucide-react'
 import { type SidebarData } from './appSidebar.type'
 import type { TFunction } from 'i18next'
@@ -22,23 +19,6 @@ export function getSidebarData(t: TFunction): SidebarData {
       email: 'satnaingdev@gmail.com',
       avatar: '/avatars/shadcn.jpg',
     },
-    teams: [
-      {
-        name: 'Shadcn Admin',
-        logo: Command,
-        plan: 'Vite + ShadcnUI',
-      },
-      {
-        name: 'Acme Inc',
-        logo: GalleryVerticalEnd,
-        plan: 'Enterprise',
-      },
-      {
-        name: 'Acme Corp.',
-        logo: AudioWaveform,
-        plan: 'Startup',
-      },
-    ],
     navGroups: [
       {
         title: t('nav.general'),
@@ -49,14 +29,14 @@ export function getSidebarData(t: TFunction): SidebarData {
             icon: LayoutDashboard,
           },
           {
-            title: t('nav.tasks'),
-            url: '/tasks',
-            icon: ListTodo,
-          },
-          {
             title: t('nav.users'),
             url: '/users',
             icon: Users,
+          },
+          {
+            title: t('nav.tasks'),
+            url: '/tasks',
+            icon: ListTodo,
           },
         ],
       },

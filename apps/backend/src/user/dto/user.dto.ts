@@ -104,6 +104,15 @@ export class GetAllUsersDto {
 
 export class BlockUserDto {
   @ApiProperty({
+    name: 'users_ids',
+    example: [1, 2, 3],
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @Type(() => Number)
+  users_ids!: number[];
+
+  @ApiProperty({
     name: 'block_expires_at',
     example: new Date().toISOString(),
     required: false,

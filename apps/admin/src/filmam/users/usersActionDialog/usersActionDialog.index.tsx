@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ShowSubmittedData } from '@/scripts'
+import i18n from '@/i18n'
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, PasswordInput, SelectDropdown } from '@/utilities/components'
 
 import { roles } from '../users.data'
@@ -246,8 +247,8 @@ export function UsersActionDialog({
                       onValueChange={field.onChange}
                       placeholder='Select a role'
                       className='col-span-4'
-                      items={roles.map(({ label, value }) => ({
-                        label,
+                      items={roles.map(({ labelKey, value }) => ({
+                        label: i18n.t(labelKey),
                         value,
                       }))}
                     />

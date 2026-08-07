@@ -6,10 +6,12 @@ import { Button, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, Dr
 
 type DataTableViewOptionsProps<TData> = {
   table: Table<TData>
+  labels?: Record<string, string>
 }
 
 export function DataTableViewOptions<TData>({
   table,
+  labels,
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
   return (
@@ -41,7 +43,7 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {labels?.[column.id] ?? column.id}
               </DropdownMenuCheckboxItem>
             )
           })}

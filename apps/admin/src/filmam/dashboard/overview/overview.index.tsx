@@ -46,7 +46,21 @@ export function Overview({
           axisLine={false}
           tickFormatter={(value) => value}
         />
-        <Tooltip cursor={{ fill: 'hsl(var(--muted) / 0.5)' }} />
+        <Tooltip
+          cursor={{ fill: 'hsl(var(--muted) / 0.5)' }}
+          contentStyle={{
+            backgroundColor: 'var(--color-popover)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius)',
+            color: 'var(--color-popover-foreground)',
+          }}
+          itemStyle={{
+            color: 'var(--color-popover-foreground)',
+          }}
+          labelStyle={{
+            color: 'var(--color-popover-foreground)',
+          }}
+        />
         <Bar
           dataKey='total'
           fill='currentColor'

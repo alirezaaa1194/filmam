@@ -29,7 +29,7 @@ export function Analytics() {
   const { t, i18n } = useTranslation()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['stats-analytics'],
+    queryKey: ['stats-analytics', i18n.resolvedLanguage],
     queryFn: () =>
       Api<StatsAnalyticsType>(AppApis.admin.statsAnalytics, { method: 'GET' }),
     staleTime: 5 * 60 * 1000,
@@ -72,7 +72,10 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {formatNumber(data?.cards_data.total_plays ?? 0, i18n.resolvedLanguage)}
+              {formatNumber(
+                data?.cards_data.total_plays ?? 0,
+                i18n.resolvedLanguage
+              )}
             </div>
             <GrowthRate
               value={data?.cards_data.total_plays_growth}
@@ -89,7 +92,10 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {formatNumber(data?.cards_data.unique_viewers ?? 0, i18n.resolvedLanguage)}
+              {formatNumber(
+                data?.cards_data.unique_viewers ?? 0,
+                i18n.resolvedLanguage
+              )}
             </div>
             <GrowthRate
               value={data?.cards_data.unique_viewers_growth}
@@ -106,7 +112,10 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {formatNumber(data?.cards_data.completion_rate ?? 0, i18n.resolvedLanguage)}
+              {formatNumber(
+                data?.cards_data.completion_rate ?? 0,
+                i18n.resolvedLanguage
+              )}
             </div>
             <GrowthRate
               value={data?.cards_data.completion_rate_growth}
@@ -123,7 +132,10 @@ export function Analytics() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {formatNumber(data?.cards_data.avg_watch_time ?? 0, i18n.resolvedLanguage)}
+              {formatNumber(
+                data?.cards_data.avg_watch_time ?? 0,
+                i18n.resolvedLanguage
+              )}
             </div>
             <GrowthRate
               value={data?.cards_data.avg_watch_time_growth}

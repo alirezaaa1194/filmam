@@ -42,7 +42,21 @@ export function AnalyticsChart({
           tickLine={false}
           axisLine={false}
         />
-        <Tooltip cursor={{ stroke: 'hsl(var(--border))' }} />
+        <Tooltip
+          cursor={{ stroke: 'hsl(var(--border))' }}
+          contentStyle={{
+            backgroundColor: 'var(--color-popover)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius)',
+            color: 'var(--color-popover-foreground)',
+          }}
+          itemStyle={{
+            color: 'var(--color-popover-foreground)',
+          }}
+          labelStyle={{
+            color: 'var(--color-popover-foreground)',
+          }}
+        />
         <Legend
           iconType='circle'
           formatter={(value: string) => t(`dashboard.${value}`)}

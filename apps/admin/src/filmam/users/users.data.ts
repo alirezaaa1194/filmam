@@ -1,68 +1,57 @@
-import { faker } from '@faker-js/faker'
-import i18n from '@/i18n'
-import { Shield, UserCheck, Users, CreditCard } from 'lucide-react'
-import { type UserStatus } from './users.type'
+// import { faker } from '@faker-js/faker'
+import { UserCheck, Users } from 'lucide-react'
+import { UserRoleEnum, type UserType } from '../../types'
 
-faker.seed(67890)
+// faker.seed(67890)
 
-export const callTypes = new Map<UserStatus, string>([
-  ['active', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],
-  ['inactive', 'bg-neutral-300/40 border-neutral-300'],
-  ['invited', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
+export const callTypes = new Map<string, string>([
   [
-    'suspended',
-    'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
+    'ADMIN',
+    'bg-violet-100/60 text-violet-900 border-violet-300 dark:bg-violet-500/20 dark:text-violet-200 dark:border-violet-500',
+  ],
+  [
+    'USER',
+    'bg-neutral-200/50 text-neutral-800 border-neutral-300 dark:bg-neutral-800/60 dark:text-neutral-300 dark:border-neutral-600',
   ],
 ])
 
 export const roles = [
   {
-    label: i18n.t('users_data.superadmin'),
-    value: 'superadmin',
-    icon: Shield,
-  },
-  {
-    label: i18n.t('users_data.admin'),
-    value: 'admin',
+    labelKey: 'users_data.admin',
+    value: UserRoleEnum.ADMIN,
     icon: UserCheck,
   },
   {
-    label: i18n.t('users_data.manager'),
-    value: 'manager',
+    labelKey: 'users_data.user',
+    value: UserRoleEnum.USER,
     icon: Users,
-  },
-  {
-    label: i18n.t('users_data.cashier'),
-    value: 'cashier',
-    icon: CreditCard,
   },
 ] as const
 
-export const users = Array.from({ length: 500 }, () => {
-  const firstName = faker.person.firstName()
-  const lastName = faker.person.lastName()
-  return {
-    id: faker.string.uuid(),
-    firstName,
-    lastName,
-    username: faker.internet
-      .username({ firstName, lastName })
-      .toLocaleLowerCase(),
-    email: faker.internet.email({ firstName }).toLocaleLowerCase(),
-    phoneNumber: faker.phone.number({ style: 'international' }),
-    status: faker.helpers.arrayElement([
-      'active',
-      'inactive',
-      'invited',
-      'suspended',
-    ]),
-    role: faker.helpers.arrayElement([
-      'superadmin',
-      'admin',
-      'cashier',
-      'manager',
-    ]),
-    createdAt: faker.date.past(),
-    updatedAt: faker.date.recent(),
-  }
-})
+export function isUserBanned(blockExpiresAt: UserType['block_expires_at']) {
+  return blockExpiresAt !== null && new Date(blockExpiresAt) > new Date()
+}
+
+// export const users = Array.from({ length: 500 }, () => {
+//   const firstName = faker.person.firstName()
+//   const lastName = faker.person.lastName()
+//   return {
+//     id: faker.string.uuid(),
+//     firstName,
+//     lastName,
+//     username: faker.internet
+//       .username({ firstName, lastName })
+//       .toLocaleLowerCase(),
+//     email: faker.internet.email({ firstName }).toLocaleLowerCase(),
+//     phoneNumber: faker.phone.number({ style: 'international' }),
+//     status: faker.helpers.arrayElement([
+//       'active',
+//       'inactive',
+//       'invited',
+//       'suspended',
+//     ]),
+//     role: faker.helpers.arrayElement(['admin', 'manager']),
+//     createdAt: faker.date.past(),
+//     updatedAt: faker.date.recent(),
+//   }
+// })

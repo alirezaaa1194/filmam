@@ -1,7 +1,7 @@
 import { GetCookie, LogOut, SetCookie } from '@/scripts'
 import { AppApis } from '../data'
 import i18n from '../i18n'
-import { JWTTokenType } from '../types'
+import { ApiQueryType, JWTTokenType } from '../types'
 
 let refreshPromise: Promise<Response> | null = null
 
@@ -36,15 +36,30 @@ async function refreshTokens(): Promise<Response> {
 
 export const __Api = async <T>(
   url: string,
-  options: { method: 'GET' | 'POST' | 'DELETE' | 'PUT'; body?: unknown },
+  options: {
+    method: 'GET' | 'POST' | 'DELETE' | 'PUT'
+    body?: unknown
+    query?: Record<string, unknown> | ApiQueryType
+  },
   retry = true
 ): Promise<T> => {
   const accessToken = GetCookie('accessToken')
   const refreshToken = GetCookie('refreshToken')
 
   const currentLanguage = i18n.resolvedLanguage
+  let queryString = ''
 
-  const response = await fetch(`${url}?lang=${currentLanguage}`, {
+  if (options.query) {
+    const queryParams = new URLSearchParams()
+    for (const key in options.query) {
+      const value = options.query[key as keyof ApiQueryType]
+      if (value !== undefined && value !== null) {
+        queryParams.append(key, String(value))
+      }
+    }
+    queryString = `&${queryParams.toString()}`
+  }
+  const response = await fetch(`${url}?lang=${currentLanguage}${queryString}`, {
     ...options,
     body: options.body ? JSON.stringify(options.body) : undefined,
     headers: {

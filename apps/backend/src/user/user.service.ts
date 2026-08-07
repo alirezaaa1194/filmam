@@ -8,6 +8,7 @@ import { UserRepository } from './repository/user.repository';
 import { GoogleAuthDto } from '../auth/dto/google-auth.dto';
 
 import {
+  BlockUserDto,
   ChangeUserPasswordAdminDto,
   CreateUserDto,
   DeleteUsersDto,
@@ -70,6 +71,10 @@ export class UserService {
 
   async changeUserPassword(email: string, newPassword: string) {
     return await this.userRepository.changeUserPassword(email, newPassword);
+  }
+
+  async blockUsers(body: BlockUserDto) {
+    return await this.userRepository.blockUsers(body);
   }
 
   async blockUser(userId: number, expireTime: Date | null) {

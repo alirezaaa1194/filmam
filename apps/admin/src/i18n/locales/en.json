@@ -35,6 +35,7 @@
     "filter": "Filter...",
     "rows_per_page": "Rows per page",
     "page_of": "Page {{current}} of {{total}}",
+    "page": "Page {{current}}",
     "go_to_first_page": "Go to first page",
     "go_to_previous_page": "Go to previous page",
     "go_to_page": "Go to page {{page}}",
@@ -181,11 +182,19 @@
     "invite_selected": "Invite selected users",
     "activate_selected": "Activate selected users",
     "deactivate_selected": "Deactivate selected users",
-    "delete_selected": "Delete selected users"
+    "delete_selected": "Delete selected users",
+    "banned": "Banned",
+    "filter_placeholder": "Filter users...",
+    "yes": "Yes",
+    "no": "No",
+    "all_users": "All users",
+    "blocked_users": "Blocked users",
+    "unblocked_users": "Unblocked users"
   },
   "users_data": {
     "superadmin": "Superadmin",
     "admin": "Admin",
+    "user": "User",
     "manager": "Manager",
     "cashier": "Cashier"
   },

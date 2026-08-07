@@ -1095,6 +1095,13 @@ export type __StatsAnalyticsType = {
   }[]
 }
 
+export type __ApiQueryType = {
+  search?: string
+  page?: number
+  page_size?: number
+  lang?: __AppLanguagesEnum
+  sort?: __SortTypeEnum
+}
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {
@@ -1106,4 +1113,9 @@ export enum __AppLanguagesEnum {
 export enum __UserRoleEnum {
   USER = 'USER',
   ADMIN = 'ADMIN',
+}
+
+export enum __SortTypeEnum {
+  ASC = 'ASC',
+  DESC = 'DESC',
 }

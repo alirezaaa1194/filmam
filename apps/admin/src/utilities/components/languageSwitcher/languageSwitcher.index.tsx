@@ -13,7 +13,7 @@ import fa from '@/assets/flags/fa.svg'
 import en from '@/assets/flags/en.svg'
 import ar from '@/assets/flags/ar.svg'
 import { AppLanguagesEnum } from '@/types'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
 import { useUserStore } from '@/stores'
 import { languageDirectionMap } from '@/utilities/config/direction'
@@ -28,7 +28,6 @@ export function LanguageSwitcher() {
   const { i18n } = useTranslation()
   const { setDir } = useDirection()
   const { user } = useUserStore()
-  const queryClient = useQueryClient()
 
   const { mutate } = useMutation({
     mutationFn: (langCode: AppLanguagesEnum) =>
@@ -36,9 +35,6 @@ export function LanguageSwitcher() {
         method: 'PUT',
         body: { ...user, preferred_language: langCode },
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries()
-    },
   })
 
   return (

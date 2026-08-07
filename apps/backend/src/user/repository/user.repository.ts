@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { UserRole } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { GoogleAuthDto } from '../../auth/dto/google-auth.dto';
-import { CreateUserDto, UpdateUserInfoDto } from '../dto/user.dto';
+import {
+  BlockUserDto,
+  CreateUserDto,
+  UpdateUserInfoDto,
+} from '../dto/user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -42,6 +46,13 @@ export class UserRepository {
 
   async getUsersCount() {
     return await prisma.user.count();
+  }
+
+  async blockUsers(body: BlockUserDto) {
+    return await prisma.user.updateMany({
+      data: { block_expires_at: body.block_expires_at },
+      where: { id: { in: body.users_ids }, role: { not: UserRole.ADMIN } },
+    });
   }
 
   async blockUser(userId: number, expireTime: Date | null) {

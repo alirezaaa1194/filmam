@@ -104,9 +104,10 @@ import type {
   __UserMovieActionsType,
   __NotificationType,
   __StatsOverviewType,
-  __StatsAnalyticsType
+  __StatsAnalyticsType,
+  __ApiQueryType,
 } from './general'
-import { __AppLanguagesEnum, __UserRoleEnum } from './general'
+import { __AppLanguagesEnum, __UserRoleEnum, __SortTypeEnum } from './general'
 
 export type { __NavigateFn as NavigateFn }
 export type { __Direction as Direction }
@@ -214,7 +215,9 @@ export type { __UserMovieActionsType as UserMovieActionsType }
 export type { __NotificationType as NotificationType }
 export type { __StatsOverviewType as StatsOverviewType }
 export type { __StatsAnalyticsType as StatsAnalyticsType }
+export type { __ApiQueryType as ApiQueryType }
 
 export { __AppLanguagesEnum as AppLanguagesEnum }
+export { __SortTypeEnum as SortTypeEnum }
 export { __UserRoleEnum as UserRoleEnum }
 export { __MediaFileAcceptMap as MediaFileAcceptMap } from './general'

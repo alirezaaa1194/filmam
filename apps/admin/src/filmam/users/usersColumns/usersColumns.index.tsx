@@ -1,13 +1,18 @@
 import i18n from '@/i18n'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Cn } from '@/scripts'
-import { Badge, Checkbox, DataTableColumnHeader, LongText } from '@/utilities/components'
+import {
+  Badge,
+  Checkbox,
+  DataTableColumnHeader,
+  LongText,
+} from '@/utilities/components'
 
-import { callTypes, roles } from '../users.data'
-import { type User } from '../users.type'
+import { callTypes, isUserBanned, roles } from '../users.data'
 import { DataTableRowActions } from '../dataTableRowActions/dataTableRowActions.index'
+import type { UserType } from '../../../types'
 
-export const usersColumns: ColumnDef<User>[] = [
+export const usersColumns: ColumnDef<UserType>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -49,19 +54,6 @@ export const usersColumns: ColumnDef<User>[] = [
         'inset-s-6 ps-0.5 max-md:sticky @4xl/content:table-cell @4xl/content:drop-shadow-none'
       ),
     },
-    enableHiding: false,
-  },
-  {
-    id: 'fullName',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={i18n.t('users.name')} />
-    ),
-    cell: ({ row }) => {
-      const { firstName, lastName } = row.original
-      const fullName = `${firstName} ${lastName}`
-      return <LongText className='max-w-36'>{fullName}</LongText>
-    },
-    meta: { className: 'w-36' },
   },
   {
     accessorKey: 'email',
@@ -71,36 +63,6 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className='w-fit ps-2 text-nowrap'>{row.getValue('email')}</div>
     ),
-  },
-  {
-    accessorKey: 'phoneNumber',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={i18n.t('users.phone_number')} />
-    ),
-    cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
-    enableSorting: false,
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={i18n.t('users.status')} />
-    ),
-    cell: ({ row }) => {
-      const { status } = row.original
-      const badgeColor = callTypes.get(status)
-      return (
-        <div className='flex space-x-2'>
-          <Badge variant='outline' className={Cn('capitalize', badgeColor)}>
-            {row.getValue('status')}
-          </Badge>
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
-    enableHiding: false,
-    enableSorting: false,
   },
   {
     accessorKey: 'role',
@@ -114,13 +76,12 @@ export const usersColumns: ColumnDef<User>[] = [
       if (!userType) {
         return null
       }
-
+      const badgeColor = callTypes.get(role)
       return (
-        <div className='flex items-center gap-x-2'>
-          {userType.icon && (
-            <userType.icon size={16} className='text-muted-foreground' />
-          )}
-          <span className='text-sm capitalize'>{row.getValue('role')}</span>
+        <div className='flex space-x-2'>
+          <Badge variant='outline' className={Cn('capitalize', badgeColor)}>
+            {i18n.t(userType.labelKey)}
+          </Badge>
         </div>
       )
     },
@@ -128,7 +89,22 @@ export const usersColumns: ColumnDef<User>[] = [
       return value.includes(row.getValue(id))
     },
     enableSorting: false,
-    enableHiding: false,
+  },
+  {
+    accessorKey: 'isBan',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={i18n.t('users.banned')} />
+    ),
+    cell: ({ row }) => {
+      const isBanned = isUserBanned(row.original.block_expires_at)
+
+      return (
+        <div className='flex space-x-2'>
+          {isBanned ? i18n.t('users.yes') : i18n.t('users.no')}
+        </div>
+      )
+    },
+    enableSorting: false,
   },
   {
     id: 'actions',

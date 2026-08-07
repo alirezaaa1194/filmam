@@ -22,7 +22,11 @@ import {
   GetAllUsersDto,
   UpdateUserInfoDto,
 } from './dto/user.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { MessageResponseDto } from '../common/dto/response.dto';
 import { UserResponseDto, PaginatedUsersDto } from './dto/user.response.dto';
 
@@ -33,7 +37,7 @@ export class UserController {
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Post('admin/create-user')
+  @Post('admin')
   async createUserAdmin(@Body() body: CreateUserDto) {
     return await this.userService.createUserAdmin(body);
   }
@@ -57,12 +61,9 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Put('admin/ban/:userId')
-  async banUserAdmin(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Body() body: BlockUserDto,
-  ) {
-    return await this.userService.blockUser(userId, body.block_expires_at);
+  @Put('admin/ban-users')
+  async banUserAdmin(@Body() body: BlockUserDto) {
+    return await this.userService.blockUsers(body);
   }
 
   @ApiBearerAuth()
@@ -76,7 +77,7 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard)
-  @Delete('delete-account')
+  @Delete()
   async deleteUserAccount(@Req() req) {
     return await this.userService.deleteUserAccount(req.user.userId);
   }
@@ -114,7 +115,7 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard)
-  @Put('update-info')
+  @Put()
   async updateUserInfo(@Req() req, @Body() body: UpdateUserInfoDto) {
     return await this.userService.updateUserInfo(req.user.userId, body);
   }

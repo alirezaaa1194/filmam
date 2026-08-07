@@ -35,6 +35,7 @@
     "filter": "تصفية...",
     "rows_per_page": "صفوف لكل صفحة",
     "page_of": "صفحة {{current}} من {{total}}",
+    "page": "صفحة {{current}}",
     "go_to_first_page": "الانتقال إلى الصفحة الأولى",
     "go_to_previous_page": "الانتقال إلى الصفحة السابقة",
     "go_to_page": "الانتقال إلى الصفحة {{page}}",
@@ -181,11 +182,19 @@
     "invite_selected": "دعوة المستخدمين المحددين",
     "activate_selected": "تفعيل المستخدمين المحددين",
     "deactivate_selected": "إلغاء تنشيط المستخدمين المحددين",
-    "delete_selected": "حذف المستخدمين المحددين"
+    "delete_selected": "حذف المستخدمين المحددين",
+    "banned": "محظور",
+    "filter_placeholder": "تصفية المستخدمين...",
+    "yes": "نعم",
+    "no": "لا",
+    "all_users": "جميع المستخدمين",
+    "blocked_users": "المستخدمون المحظورون",
+    "unblocked_users": "المستخدمون غير المحظورين"
   },
   "users_data": {
     "superadmin": "مشرف عام",
     "admin": "مدير",
+    "user": "مستخدم",
     "manager": "مسؤول",
     "cashier": "أمين الصندوق"
   },

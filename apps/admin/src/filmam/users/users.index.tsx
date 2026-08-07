@@ -1,11 +1,12 @@
 import { getRouteApi } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { PageTitle } from '@/utilities/components'
 import {
   ConfigDrawer,
   Header,
   LanguageSwitcher,
   Main,
+  PageTitle,
   ProfileDropdown,
   Search,
   ThemeSwitch,
@@ -15,14 +16,37 @@ import { UsersDialogs } from './usersDialogs/usersDialogs.index'
 import { UsersPrimaryButtons } from './usersPrimaryButtons/usersPrimaryButtons.index'
 import { UsersProvider } from './usersProvider/usersProvider.index'
 import { UsersTable } from './usersTable/usersTable.index'
-import { users } from './users.data'
+import { Api } from '../../scripts'
+import { AppApis } from '../../data'
+import type { UserType } from '../../types'
 
 const route = getRouteApi('/_authenticated/users/')
 
 export function Users() {
   const { t } = useTranslation()
   const search = route.useSearch()
-  const navigate = route.useNavigate()
+
+  const { data, isPending } = useQuery({
+    queryKey: [
+      'users',
+      search.username,
+      search.page,
+      search.pageSize,
+      search.blocked,
+      search.sort,
+    ],
+    queryFn: () =>
+      Api<UserType[]>(AppApis.user.adminAll, {
+        method: 'GET',
+        query: {
+          page: search.page,
+          page_size: search.pageSize,
+          search: search.username || undefined,
+          blocked: search.blocked === 'blocked' ? true : undefined,
+          sort: search.sort,
+        },
+      }),
+  })
 
   return (
     <UsersProvider>
@@ -45,7 +69,7 @@ export function Users() {
           </div>
           <UsersPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <UsersTable data={data ?? []} isPending={isPending} />
       </Main>
 
       <UsersDialogs />
