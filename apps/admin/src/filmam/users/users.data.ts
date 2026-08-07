@@ -1,6 +1,34 @@
 // import { faker } from '@faker-js/faker'
 import { UserCheck, Users } from 'lucide-react'
+import i18n from '@/i18n'
 import { UserRoleEnum, type UserType } from '../../types'
+
+export const PERMANENT_BLOCK_DURATION_MS = 10 * 365 * 24 * 60 * 60 * 1000
+
+const intlLocales: Record<string, string> = {
+  FA: 'fa-IR-u-ca-persian',
+  EN: 'en-US',
+  AR: 'ar-EG',
+}
+
+export function formatUserCreatedAt(createdAt: string | Date) {
+  const lang = (i18n.resolvedLanguage ?? 'EN').toUpperCase()
+  return new Intl.DateTimeFormat(intlLocales[lang] ?? 'en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(createdAt))
+}
+
+export const blockDurations = [
+  { labelKey: 'users.duration_1h', ms: 60 * 60 * 1000 },
+  { labelKey: 'users.duration_2h', ms: 2 * 60 * 60 * 1000 },
+  { labelKey: 'users.duration_6h', ms: 6 * 60 * 60 * 1000 },
+  { labelKey: 'users.duration_12h', ms: 12 * 60 * 60 * 1000 },
+  { labelKey: 'users.duration_1d', ms: 24 * 60 * 60 * 1000 },
+  { labelKey: 'users.duration_3d', ms: 3 * 24 * 60 * 60 * 1000 },
+  { labelKey: 'users.duration_1w', ms: 7 * 24 * 60 * 60 * 1000 },
+  { labelKey: 'users.duration_1M', ms: 30 * 24 * 60 * 60 * 1000 },
+] as const
 
 // faker.seed(67890)
 
@@ -30,6 +58,14 @@ export const roles = [
 
 export function isUserBanned(blockExpiresAt: UserType['block_expires_at']) {
   return blockExpiresAt !== null && new Date(blockExpiresAt) > new Date()
+}
+
+export function getRoleLabelKey(role: string) {
+  return roles.find(({ value }) => value === role)?.labelKey ?? 'users_data.user'
+}
+
+export function getOppositeRole(role: string) {
+  return role === UserRoleEnum.ADMIN ? UserRoleEnum.USER : UserRoleEnum.ADMIN
 }
 
 // export const users = Array.from({ length: 500 }, () => {

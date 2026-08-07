@@ -232,6 +232,7 @@ export function UsersTable({ data, isPending }: DataTableProps) {
           labels={{
             username: t('users.username'),
             email: t('users.email'),
+            created_at: t('users.created_at'),
             role: t('users.role'),
             isBan: t('users.banned'),
           }}
@@ -299,7 +300,7 @@ export function UsersTable({ data, isPending }: DataTableProps) {
                     colSpan={columns.length}
                     className='h-24 text-center'
                   >
-                    No results.
+                    {t('common.no_results')}
                   </TableCell>
                 </TableRow>
               )}

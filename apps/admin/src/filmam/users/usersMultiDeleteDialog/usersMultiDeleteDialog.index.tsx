@@ -1,11 +1,20 @@
 'use client'
 
-import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Api, TranslateServerError } from '@/scripts'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  ConfirmDialog,
+} from '@/utilities/components'
+
+import { type User } from '../users.type'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AppApis } from '../../../data'
 import { toast } from 'sonner'
-import { Sleep } from '@/scripts'
-import { Alert, AlertDescription, AlertTitle, ConfirmDialog, Input, Label } from '@/utilities/components'
 
 type UserMultiDeleteDialogProps<TData> = {
   open: boolean
@@ -13,52 +22,48 @@ type UserMultiDeleteDialogProps<TData> = {
   table: Table<TData>
 }
 
-const CONFIRM_WORD = 'DELETE'
-
 export function UsersMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
 }: UserMultiDeleteDialogProps<TData>) {
-  const [value, setValue] = useState('')
+  const { t } = useTranslation()
+  const queryclient = useQueryClient()
 
   const selectedRows = table.getFilteredSelectedRowModel().rows
+  const selectedUsers = selectedRows.map((row) => row.original as User)
+  const selectedCount = selectedUsers.length
 
-  const handleDelete = () => {
-    if (value.trim() !== CONFIRM_WORD) {
-      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
-      return
-    }
-
-    onOpenChange(false)
-
-    toast.promise(Sleep(2000), {
-      loading: 'Deleting users...',
-      success: () => {
-        setValue('')
-        table.resetRowSelection()
-        return `Deleted ${selectedRows.length} ${
-          selectedRows.length > 1 ? 'users' : 'user'
-        }`
-      },
-      error: 'Error',
-    })
-  }
+  const { mutate, isPending } = useMutation({
+    mutationFn: () =>
+      Api(AppApis.user.adminDelete, {
+        method: 'DELETE',
+        body: { users_ids: selectedUsers.map((user) => Number(user.id)) },
+      }),
+    onSuccess: () => {
+      toast.success(t('users.users_deleted', { count: selectedCount }))
+      table.resetRowSelection()
+      onOpenChange(false)
+      queryclient.invalidateQueries({ queryKey: ['users'] })
+    },
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
+    },
+  })
 
   return (
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
+      isLoading={isPending}
       form='users-multi-delete-form'
-      disabled={value.trim() !== CONFIRM_WORD}
       title={
         <span className='text-destructive'>
           <AlertTriangle
             className='me-1 inline-block stroke-destructive'
             size={18}
           />{' '}
-          Delete {selectedRows.length}{' '}
-          {selectedRows.length > 1 ? 'users' : 'user'}
+          {t('users.delete_selected')}
         </span>
       }
       desc={
@@ -66,34 +71,23 @@ export function UsersMultiDeleteDialog<TData>({
           id='users-multi-delete-form'
           onSubmit={(e) => {
             e.preventDefault()
-            handleDelete()
+            mutate()
           }}
           className='space-y-4'
         >
           <p className='mb-2'>
-            Are you sure you want to delete the selected users? <br />
-            This action cannot be undone.
+            {t('users.multi_delete_desc', { count: selectedCount })}
           </p>
 
-          <Label className='my-4 flex flex-col items-start gap-1.5'>
-            <span className=''>Confirm by typing "{CONFIRM_WORD}":</span>
-            <Input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder={`Type "${CONFIRM_WORD}" to confirm.`}
-              autoFocus
-            />
-          </Label>
-
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t('users.warning')}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
+              {t('users.delete_user_confirmation')}
             </AlertDescription>
           </Alert>
         </form>
       }
-      confirmText='Delete'
+      confirmText={t('users.delete_user')}
       destructive
     />
   )

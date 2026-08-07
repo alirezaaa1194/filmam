@@ -1,11 +1,19 @@
 'use client'
 
-import { useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
-import { ShowSubmittedData } from '@/scripts'
-import { Alert, AlertDescription, AlertTitle, ConfirmDialog, Input, Label } from '@/utilities/components'
+import { useTranslation } from 'react-i18next'
+import { Api, TranslateServerError } from '@/scripts'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  ConfirmDialog,
+} from '@/utilities/components'
 
 import { type User } from '../users.type'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AppApis } from '../../../data'
+import { toast } from 'sonner'
 
 type UserDeleteDialogProps = {
   open: boolean
@@ -18,28 +26,37 @@ export function UsersDeleteDialog({
   onOpenChange,
   currentRow,
 }: UserDeleteDialogProps) {
-  const [value, setValue] = useState('')
-
-  const handleDelete = () => {
-    if (value.trim() !== currentRow.username) return
-
-    onOpenChange(false)
-    ShowSubmittedData(currentRow, 'The following user has been deleted:')
-  }
+  const { t } = useTranslation()
+  const queryclient = useQueryClient()
+  const { mutate, isPending } = useMutation({
+    mutationFn: () =>
+      Api(AppApis.user.adminDelete, {
+        method: 'DELETE',
+        body: { users_ids: [Number(currentRow.id)] },
+      }),
+    onSuccess: () => {
+      toast.success(t('users.user_deleted'))
+      onOpenChange(false)
+      queryclient.invalidateQueries({ queryKey: ['users'] })
+    },
+    onError: (error: Response) => {
+      toast.error(t(TranslateServerError(error.status)))
+    },
+  })
 
   return (
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
+      isLoading={isPending}
       form='users-delete-form'
-      disabled={value.trim() !== currentRow.username}
       title={
         <span className='text-destructive'>
           <AlertTriangle
             className='me-1 inline-block stroke-destructive'
             size={18}
           />{' '}
-          Delete User
+          {t('users.delete_user')}
         </span>
       }
       desc={
@@ -47,40 +64,26 @@ export function UsersDeleteDialog({
           id='users-delete-form'
           onSubmit={(e) => {
             e.preventDefault()
-            handleDelete()
+            mutate()
           }}
           className='space-y-4'
         >
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
-            <span className='font-bold'>{currentRow.username}</span>?
-            <br />
-            This action will permanently remove the user with the role of{' '}
-            <span className='font-bold'>
-              {currentRow.role.toUpperCase()}
-            </span>{' '}
-            from the system. This cannot be undone.
+            {t('users.delete_user_desc', {
+              username: currentRow.username,
+              role: currentRow.role.toUpperCase(),
+            })}
           </p>
 
-          <Label className='my-2'>
-            Username:
-            <Input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter username to confirm deletion.'
-              autoFocus
-            />
-          </Label>
-
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t('users.warning')}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
+              {t('users.delete_user_confirmation')}
             </AlertDescription>
           </Alert>
         </form>
       }
-      confirmText='Delete'
+      confirmText={t('users.delete_user')}
       destructive
     />
   )

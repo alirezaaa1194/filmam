@@ -29,17 +29,21 @@ export const __AppApis = {
     adminAll: `${base}/comment/admin/all`,
     adminById: (commentId: number) => `${base}/comment/admin/${commentId}`,
     adminUpdate: (commentId: number) => `${base}/comment/admin/${commentId}`,
-    adminUpdateStatus: (commentId: number) => `${base}/comment/admin/status/${commentId}`,
+    adminUpdateStatus: (commentId: number) =>
+      `${base}/comment/admin/status/${commentId}`,
     adminDelete: `${base}/comment/admin`,
     byMovie: (movieSlug: string) => `${base}/comment/movie/${movieSlug}`,
-    byEpisode: (episodeSlug: string) => `${base}/comment/episode/${episodeSlug}`,
+    byEpisode: (episodeSlug: string) =>
+      `${base}/comment/episode/${episodeSlug}`,
     vote: (commentId: number) => `${base}/comment/vote/${commentId}`,
   },
   contact: {
     adminAll: `${base}/contact/admin/all`,
     adminById: (contactId: number) => `${base}/contact/admin/${contactId}`,
-    adminAnswer: (contactId: number) => `${base}/contact/admin/answer/${contactId}`,
-    adminReject: (contactId: number) => `${base}/contact/admin/reject/${contactId}`,
+    adminAnswer: (contactId: number) =>
+      `${base}/contact/admin/answer/${contactId}`,
+    adminReject: (contactId: number) =>
+      `${base}/contact/admin/reject/${contactId}`,
     adminDelete: `${base}/contact/admin`,
   },
   country: {
@@ -113,7 +117,8 @@ export const __AppApis = {
     adminCreate: `${base}/season/admin`,
     adminUpdate: (seasonId: number) => `${base}/season/admin/${seasonId}`,
     adminDelete: `${base}/season/admin`,
-    episodesBySlug: (seasonSlug: string) => `${base}/season/${seasonSlug}/episodes`,
+    episodesBySlug: (seasonSlug: string) =>
+      `${base}/season/${seasonSlug}/episodes`,
   },
   section: {
     publicAll: `${base}/section/public/all`,
@@ -138,18 +143,21 @@ export const __AppApis = {
   user: {
     adminAll: `${base}/user/admin/all`,
     adminById: (userId: number) => `${base}/user/admin/${userId}`,
-    adminCreate: `${base}/user/admin/create-user`,
+    adminCreate: `${base}/user/admin`,
     adminUpdate: (userId: number) => `${base}/user/admin/${userId}`,
-    adminBan: (userId: number) => `${base}/user/admin/ban/${userId}`,
-    adminChangeRole: (userId: number) => `${base}/user/admin/change-role/${userId}`,
-    adminChangePassword: (userId: number) => `${base}/user/admin/change-password/${userId}`,
+    adminBan: `${base}/user/admin/ban-users`,
+    adminChangeRole: (userId: number) =>
+      `${base}/user/admin/change-role/${userId}`,
+    adminChangePassword: (userId: number) =>
+      `${base}/user/admin/change-password/${userId}`,
     adminDelete: `${base}/user/admin/delete-users`,
-    deleteAccount: `${base}/user/delete-account`,
-    updateInfo: `${base}/user/update-info`,
+    deleteAccount: `${base}/user`,
+    updateInfo: `${base}/user`,
   },
   userMovie: {
     all: `${base}/user-movie/all`,
-    movieActions: (entityId: number) => `${base}/user-movie/movie_actions/${entityId}`,
+    movieActions: (entityId: number) =>
+      `${base}/user-movie/movie_actions/${entityId}`,
     deleteAction: (actionId: number) => `${base}/user-movie/${actionId}`,
   },
 }

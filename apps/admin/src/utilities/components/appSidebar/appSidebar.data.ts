@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   Monitor,
-  ListTodo,
   Bell,
   Palette,
   Settings,
@@ -32,11 +31,6 @@ export function getSidebarData(t: TFunction): SidebarData {
             title: t('nav.users'),
             url: '/users',
             icon: Users,
-          },
-          {
-            title: t('nav.tasks'),
-            url: '/tasks',
-            icon: ListTodo,
           },
         ],
       },

@@ -2,7 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
-import { Button, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator } from '@/utilities/components'
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from '@/utilities/components'
 
 type DataTableViewOptionsProps<TData> = {
   table: Table<TData>
@@ -14,6 +21,7 @@ export function DataTableViewOptions<TData>({
   labels,
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -33,7 +41,11 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== 'undefined' && column.getCanHide()
+              typeof column.accessorFn !== 'undefined' &&
+              column.getCanHide() &&
+              (column.id === 'created_at' ||
+                column.id === 'isBan' ||
+                column.id === 'role')
           )
           .map((column) => {
             return (

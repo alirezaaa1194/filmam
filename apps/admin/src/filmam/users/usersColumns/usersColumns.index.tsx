@@ -8,7 +8,7 @@ import {
   LongText,
 } from '@/utilities/components'
 
-import { callTypes, isUserBanned, roles } from '../users.data'
+import { callTypes, formatUserCreatedAt, isUserBanned, roles } from '../users.data'
 import { DataTableRowActions } from '../dataTableRowActions/dataTableRowActions.index'
 import type { UserType } from '../../../types'
 
@@ -62,6 +62,17 @@ export const usersColumns: ColumnDef<UserType>[] = [
     ),
     cell: ({ row }) => (
       <div className='w-fit ps-2 text-nowrap'>{row.getValue('email')}</div>
+    ),
+  },
+  {
+    accessorKey: 'created_at',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={i18n.t('users.created_at')} />
+    ),
+    cell: ({ row }) => (
+      <div className='w-fit ps-2 text-nowrap'>
+        {formatUserCreatedAt(row.getValue('created_at'))}
+      </div>
     ),
   },
   {

@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
-import { Trash2, UserX, UserCheck, Mail } from 'lucide-react'
+import { Ban, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
-import { Sleep } from '@/scripts'
 import { Button, DataTableBulkActions as BulkActionsToolbar, Tooltip, TooltipContent, TooltipTrigger } from '@/utilities/components'
 import { type User } from '../users.type'
+import { UsersBlockDialog } from '../usersBlockDialog/usersBlockDialog.index'
 import { UsersMultiDeleteDialog } from '../usersMultiDeleteDialog/usersMultiDeleteDialog.index'
 
 type DataTableBulkActionsProps<TData> = {
@@ -17,33 +16,9 @@ export function DataTableBulkActions<TData>({
 }: DataTableBulkActionsProps<TData>) {
   const { t } = useTranslation()
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showBlock, setShowBlock] = useState(false)
   const selectedRows = table.getFilteredSelectedRowModel().rows
-
-  const handleBulkStatusChange = (status: 'active' | 'inactive') => {
-    const selectedUsers = selectedRows.map((row) => row.original as User)
-    toast.promise(Sleep(2000), {
-      loading: status === 'active' ? t('users.activating') : t('users.deactivating'),
-      success: () => {
-        table.resetRowSelection()
-        return `${status === 'active' ? 'Activated' : 'Deactivated'} ${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}`
-      },
-      error: status === 'active' ? `Error activating users` : `Error deactivating users`,
-    })
-    table.resetRowSelection()
-  }
-
-  const handleBulkInvite = () => {
-    const selectedUsers = selectedRows.map((row) => row.original as User)
-    toast.promise(Sleep(2000), {
-      loading: t('users.inviting'),
-      success: () => {
-        table.resetRowSelection()
-        return `Invited ${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}`
-      },
-      error: t('users.error_inviting'),
-    })
-    table.resetRowSelection()
-  }
+  const selectedUsers = selectedRows.map((row) => row.original as User)
 
   return (
     <>
@@ -53,55 +28,17 @@ export function DataTableBulkActions<TData>({
             <Button
               variant='outline'
               size='icon'
-              onClick={handleBulkInvite}
+              onClick={() => setShowBlock(true)}
               className='size-8'
-              aria-label={t('users.invite_selected')}
-              title={t('users.invite_selected')}
+              aria-label={t('users.ban_selected')}
+              title={t('users.ban_selected')}
             >
-              <Mail />
-              <span className='sr-only'>{t('users.invite_selected')}</span>
+              <Ban />
+              <span className='sr-only'>{t('users.ban_selected')}</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{t('users.invite_selected')}</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant='outline'
-              size='icon'
-              onClick={() => handleBulkStatusChange('active')}
-              className='size-8'
-              aria-label={t('users.activate_selected')}
-              title={t('users.activate_selected')}
-            >
-              <UserCheck />
-              <span className='sr-only'>{t('users.activate_selected')}</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{t('users.activate_selected')}</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant='outline'
-              size='icon'
-              onClick={() => handleBulkStatusChange('inactive')}
-              className='size-8'
-              aria-label={t('users.deactivate_selected')}
-              title={t('users.deactivate_selected')}
-            >
-              <UserX />
-              <span className='sr-only'>{t('users.deactivate_selected')}</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{t('users.deactivate_selected')}</p>
+            <p>{t('users.ban_selected')}</p>
           </TooltipContent>
         </Tooltip>
 
@@ -124,6 +61,12 @@ export function DataTableBulkActions<TData>({
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
+
+      <UsersBlockDialog
+        users={selectedUsers}
+        open={showBlock}
+        onOpenChange={setShowBlock}
+      />
 
       <UsersMultiDeleteDialog
         table={table}
