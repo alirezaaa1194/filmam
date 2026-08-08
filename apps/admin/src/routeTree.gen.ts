@@ -25,6 +25,7 @@ import { Route as AuthenticatedFactorsIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedGenresIndexRouteImport } from './routes/_authenticated/genres/index'
 import { Route as AuthenticatedHeaderMenusIndexRouteImport } from './routes/_authenticated/header-menus/index'
 import { Route as AuthenticatedLanguagesIndexRouteImport } from './routes/_authenticated/languages/index'
+import { Route as AuthenticatedMoviesIndexRouteImport } from './routes/_authenticated/movies/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
@@ -120,6 +121,12 @@ const AuthenticatedLanguagesIndexRoute =
     path: '/languages/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMoviesIndexRoute =
+  AuthenticatedMoviesIndexRouteImport.update({
+    id: '/movies/',
+    path: '/movies/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedRolesIndexRoute = AuthenticatedRolesIndexRouteImport.update({
   id: '/roles/',
   path: '/roles/',
@@ -186,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/genres/': typeof AuthenticatedGenresIndexRoute
   '/header-menus/': typeof AuthenticatedHeaderMenusIndexRoute
   '/languages/': typeof AuthenticatedLanguagesIndexRoute
+  '/movies/': typeof AuthenticatedMoviesIndexRoute
   '/roles/': typeof AuthenticatedRolesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tags/': typeof AuthenticatedTagsIndexRoute
@@ -210,6 +218,7 @@ export interface FileRoutesByTo {
   '/genres': typeof AuthenticatedGenresIndexRoute
   '/header-menus': typeof AuthenticatedHeaderMenusIndexRoute
   '/languages': typeof AuthenticatedLanguagesIndexRoute
+  '/movies': typeof AuthenticatedMoviesIndexRoute
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tags': typeof AuthenticatedTagsIndexRoute
@@ -237,6 +246,7 @@ export interface FileRoutesById {
   '/_authenticated/genres/': typeof AuthenticatedGenresIndexRoute
   '/_authenticated/header-menus/': typeof AuthenticatedHeaderMenusIndexRoute
   '/_authenticated/languages/': typeof AuthenticatedLanguagesIndexRoute
+  '/_authenticated/movies/': typeof AuthenticatedMoviesIndexRoute
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tags/': typeof AuthenticatedTagsIndexRoute
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/genres/'
     | '/header-menus/'
     | '/languages/'
+    | '/movies/'
     | '/roles/'
     | '/settings/'
     | '/tags/'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/genres'
     | '/header-menus'
     | '/languages'
+    | '/movies'
     | '/roles'
     | '/settings'
     | '/tags'
@@ -314,6 +326,7 @@ export interface FileRouteTypes {
     | '/_authenticated/genres/'
     | '/_authenticated/header-menus/'
     | '/_authenticated/languages/'
+    | '/_authenticated/movies/'
     | '/_authenticated/roles/'
     | '/_authenticated/settings/'
     | '/_authenticated/tags/'
@@ -445,6 +458,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLanguagesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/movies/': {
+      id: '/_authenticated/movies/'
+      path: '/movies'
+      fullPath: '/movies/'
+      preLoaderRoute: typeof AuthenticatedMoviesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/roles/': {
       id: '/_authenticated/roles/'
       path: '/roles'
@@ -536,6 +556,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedGenresIndexRoute: typeof AuthenticatedGenresIndexRoute
   AuthenticatedHeaderMenusIndexRoute: typeof AuthenticatedHeaderMenusIndexRoute
   AuthenticatedLanguagesIndexRoute: typeof AuthenticatedLanguagesIndexRoute
+  AuthenticatedMoviesIndexRoute: typeof AuthenticatedMoviesIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
   AuthenticatedTagsIndexRoute: typeof AuthenticatedTagsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -550,6 +571,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGenresIndexRoute: AuthenticatedGenresIndexRoute,
   AuthenticatedHeaderMenusIndexRoute: AuthenticatedHeaderMenusIndexRoute,
   AuthenticatedLanguagesIndexRoute: AuthenticatedLanguagesIndexRoute,
+  AuthenticatedMoviesIndexRoute: AuthenticatedMoviesIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
   AuthenticatedTagsIndexRoute: AuthenticatedTagsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,

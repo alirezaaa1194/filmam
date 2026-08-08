@@ -2,6 +2,7 @@ import type { TFunction } from 'i18next'
 import {
   Bell,
   Clapperboard,
+  Film,
   Globe,
   IdCard,
   Languages,
@@ -33,6 +34,11 @@ export function getSidebarData(t: TFunction): SidebarData {
             title: t('nav.dashboard'),
             url: '/',
             icon: LayoutDashboard,
+          },
+          {
+            title: t('nav.movies'),
+            url: '/movies',
+            icon: Film,
           },
           {
             title: t('nav.users'),

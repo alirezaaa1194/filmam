@@ -5,6 +5,7 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -16,11 +17,11 @@ import { RequiredTranslations } from '../../common/decorators/required-translati
 export class CreateMovieFactorTranslationDto {
   @ApiProperty({
     type: 'string',
-    required: true,
+    required: false,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  role_name!: string;
+  role_name?: string;
 
   @ApiProperty()
   @IsString()

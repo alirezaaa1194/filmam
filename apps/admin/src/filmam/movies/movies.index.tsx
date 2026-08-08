@@ -1,0 +1,86 @@
+import { useQuery } from '@tanstack/react-query'
+import { getRouteApi } from '@tanstack/react-router'
+import {
+  ConfigDrawer,
+  Header,
+  LanguageSwitcher,
+  Main,
+  PageTitle,
+  ProfileDropdown,
+  Search,
+  ThemeSwitch,
+} from '@/utilities/components'
+import { useTranslation } from 'react-i18next'
+import { AppApis } from '../../data'
+import { Api } from '../../scripts'
+import { MoviesDialogs } from './moviesDialogs/moviesDialogs.index'
+import { MoviesPrimaryButtons } from './moviesPrimaryButtons/moviesPrimaryButtons.index'
+import { MoviesProvider } from './moviesProvider/moviesProvider.index'
+import { MoviesTable } from './moviesTable/moviesTable.index'
+import type { MoviesApiResponseType } from './movies.type'
+import { NotificationDropdown } from '../../utilities/components/notificationDropdown/notificationDropdown'
+
+const route = getRouteApi('/_authenticated/movies/')
+
+export function Movies() {
+  const { t, i18n } = useTranslation()
+  const search = route.useSearch()
+
+  const { data, isPending } = useQuery({
+    queryKey: [
+      'movies',
+      i18n.resolvedLanguage,
+      search.search,
+      search.page,
+      search.pageSize,
+      search.sort,
+      search.sortBy,
+      search.type,
+    ],
+    queryFn: () =>
+      Api<MoviesApiResponseType>(AppApis.movie.all, {
+        method: 'GET',
+        query: {
+          page: search.page,
+          page_size: search.pageSize,
+          search: search.search || undefined,
+          sort_by: search.sortBy ?? 'CREATED_AT',
+          sort_order: search.sort?.toUpperCase(),
+          type: search.type || undefined,
+        },
+      }),
+  })
+
+  return (
+    <MoviesProvider>
+      <PageTitle titleKey='movies' />
+      <Header fixed>
+        <Search />
+        <LanguageSwitcher />
+        <ThemeSwitch />
+        <NotificationDropdown />
+        <ConfigDrawer />
+        <ProfileDropdown />
+      </Header>
+
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>
+              {t('movies.list_title')}
+            </h2>
+            <p className='text-muted-foreground'>{t('movies.list_description')}</p>
+          </div>
+          <MoviesPrimaryButtons />
+        </div>
+        <MoviesTable
+          data={data?.data ?? []}
+          count={data?.count ?? 0}
+          isPending={isPending}
+        />
+      </Main>
+
+      <MoviesDialogs />
+    </MoviesProvider>
+  )
+}

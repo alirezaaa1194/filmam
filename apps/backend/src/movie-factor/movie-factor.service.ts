@@ -9,6 +9,7 @@ import {
   normalizeMovieDetail,
   paginationCalculator,
 } from '../lib/utils';
+import { AppLanguage } from '../generated/prisma';
 import { TransactionType } from '../common/types/types';
 
 @Injectable()
@@ -19,10 +20,42 @@ export class MovieFactorService {
     movieId: number,
     tx: TransactionType,
   ) {
-    const movieFactors = body.map((movieFactor) => ({
-      ...movieFactor,
-      movie_id: movieId,
-    }));
+    const roleIds = [...new Set(body.map((movieFactor) => movieFactor.role_id))];
+    const roles = await tx.role.findMany({
+      where: { id: { in: roleIds } },
+      include: {
+        translations: {
+          select: {
+            language: true,
+            name: true,
+          },
+        },
+      },
+    });
+    const roleNames = new Map<number, Map<AppLanguage, string>>();
+    roles.forEach((role) => {
+      const names = new Map<AppLanguage, string>();
+      role.translations.forEach((translation) => {
+        names.set(translation.language, translation.name);
+      });
+      roleNames.set(role.id, names);
+    });
+
+    const movieFactors = body.map((movieFactor) => {
+      const names = roleNames.get(movieFactor.role_id) ?? new Map();
+      return {
+        ...movieFactor,
+        movie_id: movieId,
+        translations: movieFactor.translations.map((translation) => ({
+          ...translation,
+          role_name:
+            translation.role_name?.trim() ||
+            names.get(translation.lang) ||
+            names.values().next().value ||
+            '',
+        })),
+      };
+    });
     return await this.movieFactorRepository.createMovieFactors(
       movieFactors,
       tx,

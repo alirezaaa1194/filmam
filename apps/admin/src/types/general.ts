@@ -660,6 +660,7 @@ export type __MovieAdminDetailType = {
   combined_tags: string
   factors: __MovieAdminFactorType[]
   genres: __MovieAdminGenreType[]
+  tags: __TagType[]
   files: __MovieFileType[]
   seasons: __MovieAdminSeasonType[]
   episodes: __MovieAdminEpisodeType[]
@@ -699,6 +700,7 @@ export type __MovieListItemType = {
   watches_count: number
   title: string
   short_description: string
+  combined_tags?: string
   seasons_count?: number
   episodes_count?: number
   factors?: __MovieFactorType[]

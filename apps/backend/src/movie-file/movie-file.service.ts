@@ -15,6 +15,9 @@ export class MovieFileService {
       upload_id: movieFile.upload_id,
       type: movieFile.upload_type,
       movie_id: movieId,
+      intro_duration: movieFile.intro_duration,
+      intro_start_time: movieFile.intro_start_time,
+      outro_duration: movieFile.outro_duration,
     }));
     return await this.movieFileRepository.createMovieFile(movieFiles, tx);
   }

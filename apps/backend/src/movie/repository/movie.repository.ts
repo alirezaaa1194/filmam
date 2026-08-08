@@ -53,6 +53,15 @@ export class MovieRepository {
         seasons: true,
         episodes: true,
         translations: true,
+        tags: {
+          include: {
+            tag: {
+              include: {
+                translations: true,
+              },
+            },
+          },
+        },
         factors: {
           orderBy: {
             order: 'desc',
@@ -92,6 +101,9 @@ export class MovieRepository {
           select: {
             upload: true,
             type: true,
+            intro_start_time: true,
+            intro_duration: true,
+            outro_duration: true,
           },
         },
       },
@@ -190,6 +202,9 @@ export class MovieRepository {
           select: {
             upload: true,
             type: true,
+            intro_start_time: true,
+            intro_duration: true,
+            outro_duration: true,
           },
         },
         seasons: {

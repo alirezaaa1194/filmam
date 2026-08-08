@@ -8,6 +8,7 @@ import {
   AppLanguage,
 } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
+import { TagResponseDto } from '../../tag/dto/tag.response.dto';
 
 export class MovieFileResponseDto {
   @ApiProperty()
@@ -417,6 +418,9 @@ export class MovieAdminDetailResponseDto {
 
   @ApiProperty({ type: [MovieAdminGenreDto] })
   genres!: MovieAdminGenreDto[];
+
+  @ApiProperty({ type: [TagResponseDto] })
+  tags!: TagResponseDto[];
 
   @ApiProperty({ type: [MovieFileResponseDto] })
   files!: MovieFileResponseDto[];

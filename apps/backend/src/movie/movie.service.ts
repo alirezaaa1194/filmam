@@ -200,14 +200,14 @@ export class MovieService {
   async getMovieDetailAdmin(movieId: number, tx?: TransactionType) {
     const movie = await this.movieRepository.getMovieDetailAdmin(movieId, tx);
     if (movie) {
-      const { factors, genres, files, _count, ...otherMovieData } = movie;
+      const { factors, genres, tags, files, _count, ...otherMovieData } = movie;
 
       const movieFactors = factors.map((movieFactor) => {
         const { factor, role } = movieFactor;
         const { files, ...otherFactorData } = factor;
         const factorProfile = {
-          ...factor.files[0].upload,
-          type: factor.files[0].type,
+          ...factor.files[0]?.upload,
+          type: factor.files[0]?.type,
         };
         return {
           ...otherFactorData,
@@ -222,15 +222,27 @@ export class MovieService {
         return genre;
       });
 
+      const movieTags = tags.map((movieTag) => {
+        const { tag } = movieTag;
+        return tag;
+      });
+
       const movieFiles = files.map((movieFile) => {
         const { upload, type } = movieFile;
-        return { ...upload, type };
+        return {
+          ...upload,
+          type,
+          intro_start_time: movieFile.intro_start_time,
+          intro_duration: movieFile.intro_duration,
+          outro_duration: movieFile.outro_duration,
+        };
       });
 
       return {
         ...otherMovieData,
         factors: movieFactors,
         genres: movieGenres,
+        tags: movieTags,
         files: movieFiles,
         seasons_count: _count.seasons,
         episodes_count: _count.episodes,
