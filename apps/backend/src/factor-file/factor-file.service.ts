@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FactorFileRepository } from './repository/factor-file.repository';
 import { CreateFactorFileDto } from './dto/factor-file.dto';
 import { TransactionType } from '../common/types/types';
+import { FactorFileType } from '../generated/prisma';
 
 @Injectable()
 export class FactorFileService {
@@ -19,6 +20,14 @@ export class FactorFileService {
     uploadId: number,
     tx: TransactionType,
   ) {
-    return await this.factorFileRepository.updateFactorFile(factorId, uploadId, tx);
+    await this.factorFileRepository.deleteFactorFiles(factorId, tx);
+    return await this.factorFileRepository.createFactorFile(
+      {
+        factor_id: factorId,
+        upload_id: uploadId,
+        upload_type: FactorFileType.PROFILE,
+      },
+      tx,
+    );
   }
 }

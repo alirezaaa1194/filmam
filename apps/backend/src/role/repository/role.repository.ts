@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '../../lib/prisma';
 import { CreateRoleDto } from '../dto/role.dto';
-import { RepositoryPaginationQueryProps, TransactionType } from '../../common/types/types';
-import { RoleType } from '../../generated/prisma';
+import {
+  RepositoryPaginationQueryProps,
+  TransactionType,
+} from '../../common/types/types';
 
 @Injectable()
 export class RoleRepository {
@@ -70,7 +72,7 @@ export class RoleRepository {
 
   async createRole(body: CreateRoleDto, tx: TransactionType) {
     return await tx.role.create({
-      data: { slug: body.slug, type: body.type as RoleType },
+      data: { slug: body.slug, type: body.type },
     });
   }
 
@@ -84,6 +86,7 @@ export class RoleRepository {
     return await tx.role.update({
       data: {
         slug: body.slug,
+        type: body.type,
       },
       where: { id: roleId },
     });

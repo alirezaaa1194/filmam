@@ -1,0 +1,16 @@
+import { Button } from '@/utilities/components'
+import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { useRoles } from '../rolesProvider/rolesProvider.index'
+
+export function RolesPrimaryButtons() {
+  const { t } = useTranslation()
+  const { setOpen } = useRoles()
+  return (
+    <div className='flex gap-2'>
+      <Button className='space-x-1' onClick={() => setOpen('add')}>
+        <span>{t('roles.add_role')}</span> <Plus size={18} />
+      </Button>
+    </div>
+  )
+}

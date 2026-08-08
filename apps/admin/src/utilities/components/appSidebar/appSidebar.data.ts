@@ -1,4 +1,7 @@
+import type { TFunction } from 'i18next'
 import {
+  Clapperboard,
+  IdCard,
   LayoutDashboard,
   Monitor,
   Bell,
@@ -6,10 +9,10 @@ import {
   Settings,
   Wrench,
   UserCog,
+  UserRound,
   Users,
 } from 'lucide-react'
 import { type SidebarData } from './appSidebar.type'
-import type { TFunction } from 'i18next'
 
 export function getSidebarData(t: TFunction): SidebarData {
   return {
@@ -31,6 +34,21 @@ export function getSidebarData(t: TFunction): SidebarData {
             title: t('nav.users'),
             url: '/users',
             icon: Users,
+          },
+          {
+            title: t('nav.genres'),
+            url: '/genres',
+            icon: Clapperboard,
+          },
+          {
+            title: t('nav.roles'),
+            url: '/roles',
+            icon: IdCard,
+          },
+          {
+            title: t('nav.factors'),
+            url: '/factors',
+            icon: UserRound,
           },
         ],
       },

@@ -31,7 +31,7 @@ export class CreateRoleDto {
   })
   @IsNotEmpty()
   @IsEnum(RoleType)
-  type!: string;
+  type!: RoleType;
 
   @ApiProperty({
     type: [CreateRoleTranslationDto],

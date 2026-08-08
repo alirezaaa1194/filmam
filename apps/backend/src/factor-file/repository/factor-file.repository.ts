@@ -33,4 +33,10 @@ export class FactorFileRepository {
       },
     });
   }
+
+  async deleteFactorFiles(factorId: number, tx: TransactionType) {
+    return await tx.factorFile.deleteMany({
+      where: { factor_id: factorId },
+    });
+  }
 }

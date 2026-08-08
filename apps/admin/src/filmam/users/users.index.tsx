@@ -19,6 +19,7 @@ import { UsersTable } from './usersTable/usersTable.index'
 import { Api } from '../../scripts'
 import { AppApis } from '../../data'
 import type { UserType } from '../../types'
+import { NotificationDropdown } from '../../utilities/components/notificationDropdown/notificationDropdown'
 
 const route = getRouteApi('/_authenticated/users/')
 
@@ -55,6 +56,7 @@ export function Users() {
         <Search />
         <LanguageSwitcher />
         <ThemeSwitch />
+        <NotificationDropdown />
         <ConfigDrawer />
         <ProfileDropdown />
       </Header>

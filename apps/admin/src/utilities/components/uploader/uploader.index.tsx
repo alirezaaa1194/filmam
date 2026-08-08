@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
 import {
   Upload,
   Link2,
@@ -10,18 +9,19 @@ import {
   File,
   Loader2,
 } from 'lucide-react'
-import { Api, Cn, GetCookie, TranslateServerError } from '@/scripts'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { AppApis } from '@/data'
-import { Button } from '../ui/button/button.index'
-import { Input } from '../ui/input/input.index'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs/tabs.index'
+import { Api, Cn, GetCookie, TranslateServerError } from '@/scripts'
 import {
   MediaFileAcceptMap,
   type UploadType,
   type MessageType,
   type MediaFileType,
 } from '@/types'
-import { toast } from 'sonner'
+import { Button } from '../ui/button/button.index'
+import { Input } from '../ui/input/input.index'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs/tabs.index'
 
 function isValidUrl(str: string): boolean {
   try {
@@ -403,6 +403,7 @@ export default function Uploader({
               </div>
               <Button
                 size='sm'
+                type='button'
                 onClick={handleUrlSubmit}
                 disabled={!url.trim() || urlMutation.isPending}
                 className='h-8 shrink-0'
@@ -440,7 +441,9 @@ export default function Uploader({
                   ? t('upload.processing')
                   : uploading.size
                     ? `${formatBytes(uploading.size)}${
-                        progress > 0 ? ` · ${progress}%` : ` · ${t('upload.uploading')}`
+                        progress > 0
+                          ? ` · ${progress}%`
+                          : ` · ${t('upload.uploading')}`
                       }`
                     : t('upload.fetching')}
               </p>
@@ -462,6 +465,7 @@ export default function Uploader({
               )}
             </div>
             <button
+              type='button'
               onClick={cancelUpload}
               className='shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-destructive'
               aria-label={t('upload.cancel_upload')}
@@ -506,6 +510,7 @@ export default function Uploader({
                   </p>
                 </div>
                 <button
+                  type='button'
                   onClick={() => deleteMutation.mutate(file.id)}
                   disabled={deleteMutation.isPending}
                   className='shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50'
