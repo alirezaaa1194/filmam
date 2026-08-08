@@ -19,15 +19,19 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedCountriesIndexRouteImport } from './routes/_authenticated/countries/index'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedFactorsIndexRouteImport } from './routes/_authenticated/factors/index'
 import { Route as AuthenticatedGenresIndexRouteImport } from './routes/_authenticated/genres/index'
+import { Route as AuthenticatedHeaderMenusIndexRouteImport } from './routes/_authenticated/header-menus/index'
+import { Route as AuthenticatedLanguagesIndexRouteImport } from './routes/_authenticated/languages/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
+import { Route as AuthenticatedTagsIndexRouteImport } from './routes/_authenticated/tags/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -80,6 +84,12 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCountriesIndexRoute =
+  AuthenticatedCountriesIndexRouteImport.update({
+    id: '/countries/',
+    path: '/countries/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -96,6 +106,18 @@ const AuthenticatedGenresIndexRoute =
   AuthenticatedGenresIndexRouteImport.update({
     id: '/genres/',
     path: '/genres/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedHeaderMenusIndexRoute =
+  AuthenticatedHeaderMenusIndexRouteImport.update({
+    id: '/header-menus/',
+    path: '/header-menus/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLanguagesIndexRoute =
+  AuthenticatedLanguagesIndexRouteImport.update({
+    id: '/languages/',
+    path: '/languages/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedRolesIndexRoute = AuthenticatedRolesIndexRouteImport.update({
@@ -133,6 +155,11 @@ const AuthenticatedSettingsNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedTagsIndexRoute = AuthenticatedTagsIndexRouteImport.update({
+  id: '/tags/',
+  path: '/tags/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -154,10 +181,14 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/countries/': typeof AuthenticatedCountriesIndexRoute
   '/factors/': typeof AuthenticatedFactorsIndexRoute
   '/genres/': typeof AuthenticatedGenresIndexRoute
+  '/header-menus/': typeof AuthenticatedHeaderMenusIndexRoute
+  '/languages/': typeof AuthenticatedLanguagesIndexRoute
   '/roles/': typeof AuthenticatedRolesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/tags/': typeof AuthenticatedTagsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -174,10 +205,14 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/countries': typeof AuthenticatedCountriesIndexRoute
   '/factors': typeof AuthenticatedFactorsIndexRoute
   '/genres': typeof AuthenticatedGenresIndexRoute
+  '/header-menus': typeof AuthenticatedHeaderMenusIndexRoute
+  '/languages': typeof AuthenticatedLanguagesIndexRoute
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/tags': typeof AuthenticatedTagsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesById {
@@ -197,10 +232,14 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/countries/': typeof AuthenticatedCountriesIndexRoute
   '/_authenticated/factors/': typeof AuthenticatedFactorsIndexRoute
   '/_authenticated/genres/': typeof AuthenticatedGenresIndexRoute
+  '/_authenticated/header-menus/': typeof AuthenticatedHeaderMenusIndexRoute
+  '/_authenticated/languages/': typeof AuthenticatedLanguagesIndexRoute
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/tags/': typeof AuthenticatedTagsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRouteTypes {
@@ -220,10 +259,14 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/countries/'
     | '/factors/'
     | '/genres/'
+    | '/header-menus/'
+    | '/languages/'
     | '/roles/'
     | '/settings/'
+    | '/tags/'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -240,10 +283,14 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/countries'
     | '/factors'
     | '/genres'
+    | '/header-menus'
+    | '/languages'
     | '/roles'
     | '/settings'
+    | '/tags'
     | '/users'
   id:
     | '__root__'
@@ -262,10 +309,14 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/countries/'
     | '/_authenticated/factors/'
     | '/_authenticated/genres/'
+    | '/_authenticated/header-menus/'
+    | '/_authenticated/languages/'
     | '/_authenticated/roles/'
     | '/_authenticated/settings/'
+    | '/_authenticated/tags/'
     | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
@@ -352,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/countries/': {
+      id: '/_authenticated/countries/'
+      path: '/countries'
+      fullPath: '/countries/'
+      preLoaderRoute: typeof AuthenticatedCountriesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -371,6 +429,20 @@ declare module '@tanstack/react-router' {
       path: '/genres'
       fullPath: '/genres/'
       preLoaderRoute: typeof AuthenticatedGenresIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/header-menus/': {
+      id: '/_authenticated/header-menus/'
+      path: '/header-menus'
+      fullPath: '/header-menus/'
+      preLoaderRoute: typeof AuthenticatedHeaderMenusIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/languages/': {
+      id: '/_authenticated/languages/'
+      path: '/languages'
+      fullPath: '/languages/'
+      preLoaderRoute: typeof AuthenticatedLanguagesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/roles/': {
@@ -415,6 +487,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/tags/': {
+      id: '/_authenticated/tags/'
+      path: '/tags'
+      fullPath: '/tags/'
+      preLoaderRoute: typeof AuthenticatedTagsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
@@ -452,9 +531,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedCountriesIndexRoute: typeof AuthenticatedCountriesIndexRoute
   AuthenticatedFactorsIndexRoute: typeof AuthenticatedFactorsIndexRoute
   AuthenticatedGenresIndexRoute: typeof AuthenticatedGenresIndexRoute
+  AuthenticatedHeaderMenusIndexRoute: typeof AuthenticatedHeaderMenusIndexRoute
+  AuthenticatedLanguagesIndexRoute: typeof AuthenticatedLanguagesIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
+  AuthenticatedTagsIndexRoute: typeof AuthenticatedTagsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
@@ -462,9 +545,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedCountriesIndexRoute: AuthenticatedCountriesIndexRoute,
   AuthenticatedFactorsIndexRoute: AuthenticatedFactorsIndexRoute,
   AuthenticatedGenresIndexRoute: AuthenticatedGenresIndexRoute,
+  AuthenticatedHeaderMenusIndexRoute: AuthenticatedHeaderMenusIndexRoute,
+  AuthenticatedLanguagesIndexRoute: AuthenticatedLanguagesIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
+  AuthenticatedTagsIndexRoute: AuthenticatedTagsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 
