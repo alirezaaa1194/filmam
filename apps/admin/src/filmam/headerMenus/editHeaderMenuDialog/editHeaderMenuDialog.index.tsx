@@ -5,6 +5,7 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  AsyncSelect,
   Button,
   Dialog,
   DialogContent,
@@ -82,14 +83,14 @@ export function EditHeaderMenuDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-lg'>
+      <DialogContent className='max-h-[calc(100dvh-3rem)] overflow-hidden sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>{t('header_menus.edit_header_menu')}</DialogTitle>
           <DialogDescription>
             {t('header_menus.edit_header_menu_desc')}
           </DialogDescription>
         </DialogHeader>
-        <div className='w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
+        <div className='min-h-0 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           {isLoading ? (
             <HeaderMenuDialogSkeleton />
           ) : (
@@ -139,21 +140,19 @@ function HeaderMenuEditForm({
   onOpenChange: (open: boolean) => void
 }) {
   const { t, i18n } = useTranslation()
+  const queryclient = useQueryClient()
 
-  const { data: allMenusData } = useQuery({
-    queryKey: ['header-menus', 'all-options', i18n.resolvedLanguage],
-    queryFn: () =>
-      Api<HeaderMenusApiResponseType>(AppApis.headerMenu.adminAll, {
-        method: 'GET',
-        query: {
-          page: 1,
-          page_size: 100,
-          lang: i18n.resolvedLanguage,
-          sort: 'ASC',
-        },
-      }),
-  })
-  const menuOptions = allMenusData?.data ?? []
+  const parentInitialLabel = headerMenuDetail.parent
+    ? {
+        value: String(headerMenuDetail.parent.id),
+        label:
+          headerMenuDetail.parent.translations?.find(
+            (translation) => translation.language === i18n.resolvedLanguage
+          )?.title ??
+          headerMenuDetail.parent.title ??
+          `${headerMenuDetail.parent.id}`,
+      }
+    : undefined
 
   const formSchema = z
     .object({
@@ -162,7 +161,7 @@ function HeaderMenuEditForm({
       order: z
         .string()
         .refine(
-          (value) => Number.isFinite(Number(value)) && Number(value) > 0,
+          (value) => Number.isFinite(Number(value)) && Number(value) >= 1,
           { message: t('header_menus.order_required') }
         ),
       parent_id: z.string().optional(),
@@ -231,7 +230,6 @@ function HeaderMenuEditForm({
     control: form.control,
     name: 'translations',
   })
-  const queryclient = useQueryClient()
   const watchMenuType = useWatch({
     control: form.control,
     name: 'menu_type',
@@ -348,6 +346,7 @@ function HeaderMenuEditForm({
               <FormControl>
                 <Input
                   type='number'
+                  min='1'
                   placeholder='1'
                   className='col-span-4'
                   {...field}
@@ -367,23 +366,43 @@ function HeaderMenuEditForm({
                 {t('header_menus.parent_menu')}
               </FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className='col-span-4'>
-                    <SelectValue placeholder={t('header_menus.no_parent')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='none'>
-                      {t('header_menus.no_parent')}
-                    </SelectItem>
-                    {menuOptions
-                      .filter((menu) => menu.id !== headerMenuDetail.id)
-                      .map((menu) => (
-                        <SelectItem key={menu.id} value={String(menu.id)}>
-                          {menu.title}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
+                <AsyncSelect
+                  className='col-span-4'
+                  queryKey={[
+                    'header-menus',
+                    'parent-options',
+                    i18n.resolvedLanguage,
+                  ]}
+                  api={(params) =>
+                    Api<HeaderMenusApiResponseType>(
+                      AppApis.headerMenu.adminAll,
+                      {
+                        method: 'GET',
+                        query: {
+                          page: params.page,
+                          page_size: params.pageSize,
+                          search: params.search || undefined,
+                          lang: i18n.resolvedLanguage,
+                          sort: 'ASC',
+                        },
+                      }
+                    )
+                  }
+                  getOptionId={(menu) => String(menu.id)}
+                  getOptionLabel={(menu) => menu.title}
+                  initialLabels={
+                    parentInitialLabel ? [parentInitialLabel] : undefined
+                  }
+                  value={
+                    field.value && field.value !== 'none' ? [field.value] : []
+                  }
+                  onValueChange={(values) =>
+                    field.onChange(values[0] ?? 'none')
+                  }
+                  excludeValues={[String(headerMenuDetail.id)]}
+                  placeholder={t('header_menus.no_parent')}
+                  searchPlaceholder={t('header_menus.search_parent_menu')}
+                />
               </FormControl>
               <FormMessage className='col-span-4 col-start-3' />
             </FormItem>

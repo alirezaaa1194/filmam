@@ -1,6 +1,5 @@
 import { AddHeaderMenuDialog } from '../addHeaderMenuDialog/addHeaderMenuDialog.index'
 import { EditHeaderMenuDialog } from '../editHeaderMenuDialog/editHeaderMenuDialog.index'
-import { FiltersManagerDrawer } from '../filtersManagerDrawer/filtersManagerDrawer.index'
 import { HeaderMenusDeleteDialog } from '../headerMenusDeleteDialog/headerMenusDeleteDialog.index'
 import { useHeaderMenus } from '../headerMenusProvider/headerMenusProvider.index'
 
@@ -12,12 +11,6 @@ export function HeaderMenusDialogs() {
         key='header-menu-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
-      />
-
-      <FiltersManagerDrawer
-        key='header-menu-filters'
-        open={open === 'filters'}
-        onOpenChange={() => setOpen('filters')}
       />
 
       {currentRow && (

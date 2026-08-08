@@ -7,13 +7,13 @@ import {
   LongText,
 } from '@/utilities/components'
 import { Cn } from '@/scripts'
+import { DataTableRowActions } from '../dataTableRowActions/dataTableRowActions.index'
 import {
   formatHeaderMenuCreatedAt,
   headerMenuCallTypes,
   headerMenuTypes,
 } from '../headerMenus.data'
 import type { HeaderMenuItem } from '../headerMenus.type'
-import { DataTableRowActions } from '../dataTableRowActions/dataTableRowActions.index'
 
 export const headerMenusColumns: ColumnDef<HeaderMenuItem>[] = [
   {
@@ -96,7 +96,6 @@ export const headerMenusColumns: ColumnDef<HeaderMenuItem>[] = [
     cell: ({ row }) => (
       <div className='w-fit ps-2 text-nowrap'>{row.getValue('order')}</div>
     ),
-    enableSorting: false,
   },
   {
     accessorKey: 'href',
@@ -111,6 +110,31 @@ export const headerMenusColumns: ColumnDef<HeaderMenuItem>[] = [
         {row.getValue('href') ?? '-'}
       </LongText>
     ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'parent_id',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title={i18n.t('header_menus.parent_column')}
+      />
+    ),
+    cell: ({ row, table }) => {
+      const parentId = row.original.parent_id
+      if (parentId == null) {
+        return <div className='ps-2 text-muted-foreground'>-</div>
+      }
+      const parentTitle = table
+        .getRowModel()
+        .rows.find((item) => item.original.id === parentId)?.original.title
+      return (
+        <div className='w-fit ps-2 text-nowrap'>
+          {parentTitle ?? `#${parentId}`}
+        </div>
+      )
+    },
+    enableSorting: false,
   },
   {
     accessorKey: 'created_at',

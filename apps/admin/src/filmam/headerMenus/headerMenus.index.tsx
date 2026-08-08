@@ -14,11 +14,11 @@ import { useTranslation } from 'react-i18next'
 import { AppApis } from '../../data'
 import { Api } from '../../scripts'
 import { NotificationDropdown } from '../../utilities/components/notificationDropdown/notificationDropdown'
+import type { HeaderMenusApiResponseType } from './headerMenus.type'
 import { HeaderMenusDialogs } from './headerMenusDialogs/headerMenusDialogs.index'
 import { HeaderMenusPrimaryButtons } from './headerMenusPrimaryButtons/headerMenusPrimaryButtons.index'
 import { HeaderMenusProvider } from './headerMenusProvider/headerMenusProvider.index'
 import { HeaderMenusTable } from './headerMenusTable/headerMenusTable.index'
-import type { HeaderMenusApiResponseType } from './headerMenus.type'
 
 const route = getRouteApi('/_authenticated/header-menus/')
 
@@ -77,6 +77,7 @@ export function HeaderMenus() {
           isPending={isPending}
         />
       </Main>
+      
 
       <HeaderMenusDialogs />
     </HeaderMenusProvider>

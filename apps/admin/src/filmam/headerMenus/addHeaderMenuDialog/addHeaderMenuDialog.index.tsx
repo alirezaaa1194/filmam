@@ -3,8 +3,9 @@
 import { z } from 'zod'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  AsyncSelect,
   Button,
   Dialog,
   DialogContent,
@@ -59,22 +60,6 @@ export function AddHeaderMenuDialog({
 }: HeaderMenuAddDialogProps) {
   const { t, i18n } = useTranslation()
 
-  const { data: allMenusData } = useQuery({
-    queryKey: ['header-menus', 'all-options', i18n.resolvedLanguage],
-    queryFn: () =>
-      Api<HeaderMenusApiResponseType>(AppApis.headerMenu.adminAll, {
-        method: 'GET',
-        query: {
-          page: 1,
-          page_size: 100,
-          lang: i18n.resolvedLanguage,
-          sort: 'ASC',
-        },
-      }),
-    enabled: open,
-  })
-  const menuOptions = allMenusData?.data ?? []
-
   const formSchema = z
     .object({
       menu_type: z.enum(['PAGE', 'FILTER']),
@@ -82,7 +67,7 @@ export function AddHeaderMenuDialog({
       order: z
         .string()
         .refine(
-          (value) => Number.isFinite(Number(value)) && Number(value) > 0,
+          (value) => Number.isFinite(Number(value)) && Number(value) >= 1,
           { message: t('header_menus.order_required') }
         ),
       parent_id: z.string().optional(),
@@ -201,14 +186,14 @@ export function AddHeaderMenuDialog({
         onOpenChange(state)
       }}
     >
-      <DialogContent className='sm:max-w-lg'>
+      <DialogContent className='max-h-[calc(100dvh-3rem)] overflow-hidden sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>{t('header_menus.add_header_menu')}</DialogTitle>
           <DialogDescription>
             {t('header_menus.add_header_menu_desc')}
           </DialogDescription>
         </DialogHeader>
-        <div className='w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
+        <div className='min-h-0 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
               id='header-menu-form'
@@ -279,6 +264,7 @@ export function AddHeaderMenuDialog({
                     <FormControl>
                       <Input
                         type='number'
+                        min='1'
                         placeholder='1'
                         className='col-span-4'
                         {...field}
@@ -298,26 +284,40 @@ export function AddHeaderMenuDialog({
                       {t('header_menus.parent_menu')}
                     </FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className='col-span-4'>
-                          <SelectValue
-                            placeholder={t('header_menus.no_parent')}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='none'>
-                            {t('header_menus.no_parent')}
-                          </SelectItem>
-                          {menuOptions.map((menu) => (
-                            <SelectItem key={menu.id} value={String(menu.id)}>
-                              {menu.title}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <AsyncSelect
+                        className='col-span-4'
+                        queryKey={[
+                          'header-menus',
+                          'parent-options',
+                          i18n.resolvedLanguage,
+                        ]}
+                        api={(params) =>
+                          Api<HeaderMenusApiResponseType>(
+                            AppApis.headerMenu.adminAll,
+                            {
+                              method: 'GET',
+                              query: {
+                                page: params.page,
+                                page_size: params.pageSize,
+                                search: params.search || undefined,
+                                sort: 'ASC',
+                              },
+                            }
+                          )
+                        }
+                        getOptionId={(menu) => String(menu.id)}
+                        getOptionLabel={(menu) => menu.title}
+                        value={
+                          field.value && field.value !== 'none'
+                            ? [field.value]
+                            : []
+                        }
+                        onValueChange={(values) =>
+                          field.onChange(values[0] ?? 'none')
+                        }
+                        placeholder={t('header_menus.no_parent')}
+                        searchPlaceholder={t('header_menus.search_parent_menu')}
+                      />
                     </FormControl>
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useDialogState from '@/hooks'
 import { type HeaderMenuItem } from '../headerMenus.type'
 
-type HeaderMenusDialogType = 'add' | 'edit' | 'delete' | 'filters'
+type HeaderMenusDialogType = 'add' | 'edit' | 'delete'
 
 type HeaderMenusContextType = {
   open: HeaderMenusDialogType | null

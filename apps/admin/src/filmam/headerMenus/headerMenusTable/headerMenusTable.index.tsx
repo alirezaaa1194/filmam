@@ -32,10 +32,10 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Cn } from '@/scripts'
 import { useTableUrlState } from '@/hooks'
+import { DataTableBulkActions } from '../dataTableBulkActions/dataTableBulkActions.index'
 import type { HeaderMenuItem } from '../headerMenus.type'
 import { headerMenusColumns as columns } from '../headerMenusColumns/headerMenusColumns.index'
 import { HeaderMenusTableSkeleton } from '../headerMenusTableSkeleton/headerMenusTableSkeleton.index'
-import { DataTableBulkActions } from '../dataTableBulkActions/dataTableBulkActions.index'
 
 const route = getRouteApi('/_authenticated/header-menus/')
 
@@ -177,9 +177,11 @@ export function HeaderMenusTable({ data, count, isPending }: DataTableProps) {
         </div>
         <DataTableViewOptions
           table={table}
+          columns={['menu_type', 'parent_id', 'order', 'href', 'created_at']}
           labels={{
             title: t('header_menus.title_column'),
             menu_type: t('header_menus.menu_type'),
+            parent_id: t('header_menus.parent_column'),
             order: t('header_menus.order'),
             href: t('header_menus.href'),
             created_at: t('header_menus.created_at'),
