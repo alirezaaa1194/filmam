@@ -29,6 +29,7 @@ export const normalizeMovieDetail = (movie) => {
     const { name } = movieFactorRoleTranslation?.[0];
     return {
       ...otherMovieFactorData,
+      order: movieFactor.order,
       first_name,
       last_name,
       role_name: mainMovieFactorTranslation?.role_name || null,

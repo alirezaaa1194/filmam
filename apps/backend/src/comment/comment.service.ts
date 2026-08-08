@@ -101,7 +101,15 @@ export class CommentService {
   }
 
   async updateCommentStatus(commentId: number, body: UpdateCommentStatusDto) {
-    return await this.commentRepository.updateCommentStatus(commentId, body);
+    const comment = await this.commentRepository.getCommentDetailAdmin(commentId);
+    if (comment) {
+      if (comment.status !== CommentStatus.PENDING) {
+        throw new BadRequestException('Cannot change a closed comment');
+      }
+      return await this.commentRepository.updateCommentStatus(commentId, body);
+    } else {
+      throw new BadRequestException('Comment not found');
+    }
   }
 
   async deleteComments(body: DeleteCommentsDto) {

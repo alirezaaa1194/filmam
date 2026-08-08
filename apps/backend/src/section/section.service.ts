@@ -776,8 +776,42 @@ export class SectionService {
     return result;
   }
 
-  async getSectionDetailAdmin(sectionId: number, lang?: AppLanguage) {
-    const section = await this.sectionRepository.getSectionDetailAdmin(
+  async getAllSectionsAdmin(query: GetAllSectionsDto) {
+    const { page, page_size } = paginationCalculator(
+      query.page || 1,
+      query.page_size || 10,
+    );
+    const sections = await this.sectionRepository.getAllSectionsAdmin(
+      page,
+      page_size,
+      query.lang || defaultLang,
+      query.search?.trim(),
+      query.sort || SortType.ASC,
+    );
+    const sectionsCount = await this.sectionRepository.getSectionsCount(
+      query.search?.trim(),
+    );
+
+    const normalizedSections = sections.map((section) => {
+      const { _count, translations, ...otherSectionData } = section;
+      const translation = translations[0];
+      return {
+        ...otherSectionData,
+        title: translation?.title ?? '',
+        description: translation?.description,
+        movies_count: _count.section_movies,
+      };
+    });
+
+    return {
+      page: page + 1,
+      page_size,
+      count: sectionsCount,
+      data: normalizedSections,
+    };
+  }
+
+  async getSectionDetailAdmin(sectionId: number, lang?: AppLanguage) {    const section = await this.sectionRepository.getSectionDetailAdmin(
       sectionId,
       lang || defaultLang,
     );

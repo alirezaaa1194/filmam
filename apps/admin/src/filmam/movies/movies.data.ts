@@ -13,6 +13,7 @@ import type { GenresApiResponseType } from '../genres/genres.type'
 import type { LanguagesApiResponseType } from '../languages/languages.type'
 import type { RolesApiResponseType } from '../roles/roles.type'
 import type { TagsApiResponseType } from '../tags/tags.type'
+import type { MoviesApiResponseType } from './movies.type'
 
 const intlLocales: Record<string, string> = {
   FA: 'fa-IR-u-ca-persian',
@@ -59,6 +60,9 @@ const makeApi = <T>(
 
 export const genresSelectApi = makeApi<GenresApiResponseType['data'][number]>(
   AppApis.genre.all
+)
+export const moviesSelectApi = makeApi<MoviesApiResponseType['data'][number]>(
+  AppApis.movie.all
 )
 export const tagsSelectApi = makeApi<TagsApiResponseType['data'][number]>(
   AppApis.tag.all

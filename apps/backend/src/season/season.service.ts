@@ -208,6 +208,7 @@ export class SeasonService {
       search: query.search?.trim() || '',
       lang: query.lang || defaultLang,
       sort_type: query.sort === SortType.ASC ? 'asc' : 'desc',
+      movie_id: query.movie_id,
     });
 
     const normalizedSeasons = seasons.map((season) => {
@@ -228,6 +229,7 @@ export class SeasonService {
     });
     const seasonsCount = await this.seasonRepository.getSeasonsCount(
       query.search?.trim(),
+      query.movie_id,
     );
     return {
       page: page + 1,

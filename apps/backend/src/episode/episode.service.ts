@@ -232,7 +232,13 @@ export class EpisodeService {
     if (episode) {
       const { files, ...otherEpisodeData } = episode;
       const episodeFiles = files.map((file) => {
-        return { ...file.upload, type: file.type };
+        return {
+          ...file.upload,
+          type: file.type,
+          intro_start_time: file.intro_start_time,
+          intro_duration: file.intro_duration,
+          outro_duration: file.outro_duration,
+        };
       });
       return { ...otherEpisodeData, files: episodeFiles };
     } else {

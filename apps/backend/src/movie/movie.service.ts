@@ -203,7 +203,7 @@ export class MovieService {
       const { factors, genres, tags, files, _count, ...otherMovieData } = movie;
 
       const movieFactors = factors.map((movieFactor) => {
-        const { factor, role } = movieFactor;
+        const { factor, role, order } = movieFactor;
         const { files, ...otherFactorData } = factor;
         const factorProfile = {
           ...factor.files[0]?.upload,
@@ -213,6 +213,7 @@ export class MovieService {
           ...otherFactorData,
           type: role.type,
           slug: role.slug,
+          order,
           profile: factorProfile,
         };
       });

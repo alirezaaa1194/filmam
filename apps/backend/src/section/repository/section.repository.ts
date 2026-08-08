@@ -179,6 +179,45 @@ export class SectionRepository {
     });
   }
 
+  async getAllSectionsAdmin(
+    page: number,
+    pageSize: number,
+    lang: AppLanguage,
+    search: string = '',
+    sort: SortType,
+    tx?: TransactionType,
+  ) {
+    return await (tx ? tx : prisma).section.findMany({
+      skip: page,
+      take: pageSize,
+      where: {
+        translations: {
+          some: {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+      include: {
+        translations: {
+          where: {
+            language: lang,
+          },
+        },
+        _count: {
+          select: {
+            section_movies: true,
+          },
+        },
+      },
+      orderBy: {
+        order: sort === 'ASC' ? 'asc' : 'desc',
+      },
+    });
+  }
+
   async getSectionDetailPublic(sectionSlug: string, tx?: TransactionType) {
     return await (tx ? tx : prisma).section.findUnique({
       where: {

@@ -203,6 +203,49 @@ export class SectionListItemDto {
   movies!: SectionMovieListItemDto[];
 }
 
+export class SectionAdminListDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  created_at!: Date;
+
+  @ApiProperty()
+  updated_at!: Date;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty({ enum: SectionViewMode })
+  view_mode!: SectionViewMode;
+
+  @ApiProperty({ enum: SectionSelectionMode })
+  selection_mode!: SectionSelectionMode;
+
+  @ApiPropertyOptional({ enum: SectionSortMode })
+  sort_mode?: SectionSortMode;
+
+  @ApiPropertyOptional({ enum: SectionPeriodBase })
+  period_base?: SectionPeriodBase;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiPropertyOptional()
+  description?: string;
+
+  @ApiProperty()
+  movies_count!: number;
+}
+
+export class PaginatedAdminSectionsDto extends PaginationMetaDto {
+  @ApiProperty({ type: [SectionAdminListDto] })
+  data!: SectionAdminListDto[];
+}
+
 export class PaginatedSectionsDto extends PaginationMetaDto {
   @ApiProperty({ type: [SectionListItemDto] })
   data!: SectionListItemDto[];

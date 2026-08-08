@@ -7,7 +7,11 @@ import {
   IdCard,
   Languages,
   LayoutDashboard,
+  Layers,
+  ListVideo,
+  Mail,
   Menu,
+  MessageSquare,
   Monitor,
   Palette,
   Settings,
@@ -39,6 +43,31 @@ export function getSidebarData(t: TFunction): SidebarData {
             title: t('nav.movies'),
             url: '/movies',
             icon: Film,
+          },
+          {
+            title: t('nav.seasons'),
+            url: '/seasons',
+            icon: Layers,
+          },
+          {
+            title: t('nav.episodes'),
+            url: '/episodes',
+            icon: ListVideo,
+          },
+          {
+            title: t('nav.sections'),
+            url: '/sections',
+            icon: Clapperboard,
+          },
+          {
+            title: t('nav.comments'),
+            url: '/comments',
+            icon: MessageSquare,
+          },
+          {
+            title: t('nav.contacts'),
+            url: '/contacts',
+            icon: Mail,
           },
           {
             title: t('nav.users'),

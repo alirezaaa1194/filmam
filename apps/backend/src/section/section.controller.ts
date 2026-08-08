@@ -23,11 +23,23 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Public } from '../common/decorators/public.decorator';
 import { CountResponseDto } from '../common/dto/response.dto';
-import { SectionDetailResponseDto, PaginatedSectionsDto } from './dto/section.response.dto';
+import {
+  SectionDetailResponseDto,
+  PaginatedSectionsDto,
+  PaginatedAdminSectionsDto,
+} from './dto/section.response.dto';
 
 @Controller('section')
 export class SectionController {
   constructor(private sectionService: SectionService) {}
+
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: PaginatedAdminSectionsDto })
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async getAllSectionsAdmin(@Query() query: GetAllSectionsDto) {
+    return await this.sectionService.getAllSectionsAdmin(query);
+  }
 
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: SectionDetailResponseDto })

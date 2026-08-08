@@ -121,6 +121,7 @@ export const __AppApis = {
       `${base}/season/${seasonSlug}/episodes`,
   },
   section: {
+    adminAll: `${base}/section/admin/all`,
     publicAll: `${base}/section/public/all`,
     adminById: (sectionId: number) => `${base}/section/admin/${sectionId}`,
     adminCreate: `${base}/section/admin`,

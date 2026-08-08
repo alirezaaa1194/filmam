@@ -19,7 +19,10 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedCommentsIndexRouteImport } from './routes/_authenticated/comments/index'
+import { Route as AuthenticatedContactsIndexRouteImport } from './routes/_authenticated/contacts/index'
 import { Route as AuthenticatedCountriesIndexRouteImport } from './routes/_authenticated/countries/index'
+import { Route as AuthenticatedEpisodesIndexRouteImport } from './routes/_authenticated/episodes/index'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedFactorsIndexRouteImport } from './routes/_authenticated/factors/index'
 import { Route as AuthenticatedGenresIndexRouteImport } from './routes/_authenticated/genres/index'
@@ -27,6 +30,8 @@ import { Route as AuthenticatedHeaderMenusIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedLanguagesIndexRouteImport } from './routes/_authenticated/languages/index'
 import { Route as AuthenticatedMoviesIndexRouteImport } from './routes/_authenticated/movies/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
+import { Route as AuthenticatedSeasonsIndexRouteImport } from './routes/_authenticated/seasons/index'
+import { Route as AuthenticatedSectionsIndexRouteImport } from './routes/_authenticated/sections/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -85,10 +90,28 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCommentsIndexRoute =
+  AuthenticatedCommentsIndexRouteImport.update({
+    id: '/comments/',
+    path: '/comments/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedContactsIndexRoute =
+  AuthenticatedContactsIndexRouteImport.update({
+    id: '/contacts/',
+    path: '/contacts/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCountriesIndexRoute =
   AuthenticatedCountriesIndexRouteImport.update({
     id: '/countries/',
     path: '/countries/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEpisodesIndexRoute =
+  AuthenticatedEpisodesIndexRouteImport.update({
+    id: '/episodes/',
+    path: '/episodes/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedErrorsErrorRoute =
@@ -132,6 +155,18 @@ const AuthenticatedRolesIndexRoute = AuthenticatedRolesIndexRouteImport.update({
   path: '/roles/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSeasonsIndexRoute =
+  AuthenticatedSeasonsIndexRouteImport.update({
+    id: '/seasons/',
+    path: '/seasons/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSectionsIndexRoute =
+  AuthenticatedSectionsIndexRouteImport.update({
+    id: '/sections/',
+    path: '/sections/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -188,13 +223,18 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/comments/': typeof AuthenticatedCommentsIndexRoute
+  '/contacts/': typeof AuthenticatedContactsIndexRoute
   '/countries/': typeof AuthenticatedCountriesIndexRoute
+  '/episodes/': typeof AuthenticatedEpisodesIndexRoute
   '/factors/': typeof AuthenticatedFactorsIndexRoute
   '/genres/': typeof AuthenticatedGenresIndexRoute
   '/header-menus/': typeof AuthenticatedHeaderMenusIndexRoute
   '/languages/': typeof AuthenticatedLanguagesIndexRoute
   '/movies/': typeof AuthenticatedMoviesIndexRoute
   '/roles/': typeof AuthenticatedRolesIndexRoute
+  '/seasons/': typeof AuthenticatedSeasonsIndexRoute
+  '/sections/': typeof AuthenticatedSectionsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tags/': typeof AuthenticatedTagsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
@@ -213,13 +253,18 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/comments': typeof AuthenticatedCommentsIndexRoute
+  '/contacts': typeof AuthenticatedContactsIndexRoute
   '/countries': typeof AuthenticatedCountriesIndexRoute
+  '/episodes': typeof AuthenticatedEpisodesIndexRoute
   '/factors': typeof AuthenticatedFactorsIndexRoute
   '/genres': typeof AuthenticatedGenresIndexRoute
   '/header-menus': typeof AuthenticatedHeaderMenusIndexRoute
   '/languages': typeof AuthenticatedLanguagesIndexRoute
   '/movies': typeof AuthenticatedMoviesIndexRoute
   '/roles': typeof AuthenticatedRolesIndexRoute
+  '/seasons': typeof AuthenticatedSeasonsIndexRoute
+  '/sections': typeof AuthenticatedSectionsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tags': typeof AuthenticatedTagsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -241,13 +286,18 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/comments/': typeof AuthenticatedCommentsIndexRoute
+  '/_authenticated/contacts/': typeof AuthenticatedContactsIndexRoute
   '/_authenticated/countries/': typeof AuthenticatedCountriesIndexRoute
+  '/_authenticated/episodes/': typeof AuthenticatedEpisodesIndexRoute
   '/_authenticated/factors/': typeof AuthenticatedFactorsIndexRoute
   '/_authenticated/genres/': typeof AuthenticatedGenresIndexRoute
   '/_authenticated/header-menus/': typeof AuthenticatedHeaderMenusIndexRoute
   '/_authenticated/languages/': typeof AuthenticatedLanguagesIndexRoute
   '/_authenticated/movies/': typeof AuthenticatedMoviesIndexRoute
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
+  '/_authenticated/seasons/': typeof AuthenticatedSeasonsIndexRoute
+  '/_authenticated/sections/': typeof AuthenticatedSectionsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tags/': typeof AuthenticatedTagsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -269,13 +319,18 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/comments/'
+    | '/contacts/'
     | '/countries/'
+    | '/episodes/'
     | '/factors/'
     | '/genres/'
     | '/header-menus/'
     | '/languages/'
     | '/movies/'
     | '/roles/'
+    | '/seasons/'
+    | '/sections/'
     | '/settings/'
     | '/tags/'
     | '/users/'
@@ -294,13 +349,18 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/comments'
+    | '/contacts'
     | '/countries'
+    | '/episodes'
     | '/factors'
     | '/genres'
     | '/header-menus'
     | '/languages'
     | '/movies'
     | '/roles'
+    | '/seasons'
+    | '/sections'
     | '/settings'
     | '/tags'
     | '/users'
@@ -321,13 +381,18 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/comments/'
+    | '/_authenticated/contacts/'
     | '/_authenticated/countries/'
+    | '/_authenticated/episodes/'
     | '/_authenticated/factors/'
     | '/_authenticated/genres/'
     | '/_authenticated/header-menus/'
     | '/_authenticated/languages/'
     | '/_authenticated/movies/'
     | '/_authenticated/roles/'
+    | '/_authenticated/seasons/'
+    | '/_authenticated/sections/'
     | '/_authenticated/settings/'
     | '/_authenticated/tags/'
     | '/_authenticated/users/'
@@ -416,11 +481,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/comments/': {
+      id: '/_authenticated/comments/'
+      path: '/comments'
+      fullPath: '/comments/'
+      preLoaderRoute: typeof AuthenticatedCommentsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/contacts/': {
+      id: '/_authenticated/contacts/'
+      path: '/contacts'
+      fullPath: '/contacts/'
+      preLoaderRoute: typeof AuthenticatedContactsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/countries/': {
       id: '/_authenticated/countries/'
       path: '/countries'
       fullPath: '/countries/'
       preLoaderRoute: typeof AuthenticatedCountriesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/episodes/': {
+      id: '/_authenticated/episodes/'
+      path: '/episodes'
+      fullPath: '/episodes/'
+      preLoaderRoute: typeof AuthenticatedEpisodesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/errors/$error': {
@@ -470,6 +556,20 @@ declare module '@tanstack/react-router' {
       path: '/roles'
       fullPath: '/roles/'
       preLoaderRoute: typeof AuthenticatedRolesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/seasons/': {
+      id: '/_authenticated/seasons/'
+      path: '/seasons'
+      fullPath: '/seasons/'
+      preLoaderRoute: typeof AuthenticatedSeasonsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sections/': {
+      id: '/_authenticated/sections/'
+      path: '/sections'
+      fullPath: '/sections/'
+      preLoaderRoute: typeof AuthenticatedSectionsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/': {
@@ -551,13 +651,18 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedCommentsIndexRoute: typeof AuthenticatedCommentsIndexRoute
+  AuthenticatedContactsIndexRoute: typeof AuthenticatedContactsIndexRoute
   AuthenticatedCountriesIndexRoute: typeof AuthenticatedCountriesIndexRoute
+  AuthenticatedEpisodesIndexRoute: typeof AuthenticatedEpisodesIndexRoute
   AuthenticatedFactorsIndexRoute: typeof AuthenticatedFactorsIndexRoute
   AuthenticatedGenresIndexRoute: typeof AuthenticatedGenresIndexRoute
   AuthenticatedHeaderMenusIndexRoute: typeof AuthenticatedHeaderMenusIndexRoute
   AuthenticatedLanguagesIndexRoute: typeof AuthenticatedLanguagesIndexRoute
   AuthenticatedMoviesIndexRoute: typeof AuthenticatedMoviesIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
+  AuthenticatedSeasonsIndexRoute: typeof AuthenticatedSeasonsIndexRoute
+  AuthenticatedSectionsIndexRoute: typeof AuthenticatedSectionsIndexRoute
   AuthenticatedTagsIndexRoute: typeof AuthenticatedTagsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
@@ -566,13 +671,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedCommentsIndexRoute: AuthenticatedCommentsIndexRoute,
+  AuthenticatedContactsIndexRoute: AuthenticatedContactsIndexRoute,
   AuthenticatedCountriesIndexRoute: AuthenticatedCountriesIndexRoute,
+  AuthenticatedEpisodesIndexRoute: AuthenticatedEpisodesIndexRoute,
   AuthenticatedFactorsIndexRoute: AuthenticatedFactorsIndexRoute,
   AuthenticatedGenresIndexRoute: AuthenticatedGenresIndexRoute,
   AuthenticatedHeaderMenusIndexRoute: AuthenticatedHeaderMenusIndexRoute,
   AuthenticatedLanguagesIndexRoute: AuthenticatedLanguagesIndexRoute,
   AuthenticatedMoviesIndexRoute: AuthenticatedMoviesIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
+  AuthenticatedSeasonsIndexRoute: AuthenticatedSeasonsIndexRoute,
+  AuthenticatedSectionsIndexRoute: AuthenticatedSectionsIndexRoute,
   AuthenticatedTagsIndexRoute: AuthenticatedTagsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }

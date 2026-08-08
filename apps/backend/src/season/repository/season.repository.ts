@@ -73,7 +73,7 @@ export class SeasonRepository {
     });
   }
 
-  async getSeasonsCount(search: string = '') {
+  async getSeasonsCount(search: string = '', movie_id?: number | null) {
     return await prisma.season.count({
       where: {
         translations: {
@@ -84,6 +84,7 @@ export class SeasonRepository {
             },
           },
         },
+        movie_id: movie_id || undefined,
       },
     });
   }
@@ -140,6 +141,7 @@ export class SeasonRepository {
             },
           },
         },
+        movie_id: query.movie_id || undefined,
       },
       orderBy: {
         created_at: query.sort_type,

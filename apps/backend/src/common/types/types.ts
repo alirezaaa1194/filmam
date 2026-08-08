@@ -7,6 +7,7 @@ export type RepositoryPaginationQueryProps = {
   search: string;
   lang: AppLanguage;
   sort_type: 'asc' | 'desc';
+  movie_id?: number | null;
 };
 
 export type TransactionType = Omit<

@@ -3,11 +3,12 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { CreateSeasonTranslationDto } from '../../season-translation/dto/season-translation.dto';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { appLanguages } from '../../lib/utils';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateSeasonFileDto } from '../../season-file/dto/season-file.dto';
@@ -74,7 +75,13 @@ export class DeleteSeasonsDto {
   season_ids!: number[];
 }
 
-export class GetAllSeasonsDto extends CommonQueryParamsDto {}
+export class GetAllSeasonsDto extends CommonQueryParamsDto {
+  @ApiProperty({ name: 'movie_id', required: false })
+  @Transform(({ value }) => (!value ? null : Number(value)))
+  @IsNumber()
+  @IsOptional()
+  movie_id?: number | null;
+}
 
 export class GetSeasonEpisodesDto extends CommonQueryParamsDto {}
 

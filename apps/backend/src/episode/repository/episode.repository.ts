@@ -66,6 +66,9 @@ export class EpisodeRepository {
           select: {
             upload: true,
             type: true,
+            intro_start_time: true,
+            intro_duration: true,
+            outro_duration: true,
           },
         },
       },
