@@ -140,7 +140,7 @@ export function EpisodesTable({ data, count, isPending }: DataTableProps) {
                 navigate({
                   search: (prev) => ({
                     ...prev,
-                    sort: value,
+                    sort: value as 'asc' | 'desc',
                     page: undefined,
                   }),
                 })
