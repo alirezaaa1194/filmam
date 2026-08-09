@@ -165,7 +165,7 @@ export default function Uploader({
       toast.success(t('upload.uploaded'))
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status))
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 
@@ -185,7 +185,7 @@ export default function Uploader({
       toast.success(t('upload.deleted'))
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status))
+      toast.error(t(TranslateServerError(error.status)))
     },
   })
 

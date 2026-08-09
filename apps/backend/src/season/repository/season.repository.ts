@@ -54,7 +54,7 @@ export class SeasonRepository {
         movie: {
           select: {
             translations: {
-              select: { title: true },
+              select: { title: true, language: true },
             },
           },
         },
@@ -76,14 +76,36 @@ export class SeasonRepository {
   async getSeasonsCount(search: string = '', movie_id?: number | null) {
     return await prisma.season.count({
       where: {
-        translations: {
-          some: {
-            title: {
+        OR: [
+          {
+            translations: {
+              some: {
+                title: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+          {
+            slug: {
               contains: search,
               mode: 'insensitive',
             },
           },
-        },
+          {
+            movie: {
+              translations: {
+                some: {
+                  title: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              },
+            },
+          },
+        ],
         movie_id: movie_id || undefined,
       },
     });
@@ -123,24 +145,36 @@ export class SeasonRepository {
       skip: query.page,
       take: query.page_size,
       where: {
-        translations: {
-          some: {
-            title: {
+        OR: [
+          {
+            translations: {
+              some: {
+                title: {
+                  contains: query.search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+          {
+            slug: {
               contains: query.search,
               mode: 'insensitive',
             },
           },
-        },
-        movie: {
-          translations: {
-            some: {
-              title: {
-                contains: query.search,
-                mode: 'insensitive',
+          {
+            movie: {
+              translations: {
+                some: {
+                  title: {
+                    contains: query.search,
+                    mode: 'insensitive',
+                  },
+                },
               },
             },
           },
-        },
+        ],
         movie_id: query.movie_id || undefined,
       },
       orderBy: {

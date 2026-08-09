@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { getRouteApi } from '@tanstack/react-router'
 import {
@@ -115,7 +115,7 @@ export function ContactsTable({ data, count, isPending }: DataTableProps) {
       search: (prev) => ({
         ...prev,
         search: undefined,
-        sort: undefined,
+        sort: 'desc',
         status: undefined,
         page: undefined,
       }),
@@ -173,7 +173,7 @@ export function ContactsTable({ data, count, isPending }: DataTableProps) {
                 navigate({
                   search: (prev) => ({
                     ...prev,
-                    sort: value === 'desc' ? undefined : 'asc',
+                    sort: value,
                     page: undefined,
                   }),
                 })
@@ -201,6 +201,7 @@ export function ContactsTable({ data, count, isPending }: DataTableProps) {
         </div>
         <DataTableViewOptions
           table={table}
+          columns={['is_registered', 'status', 'created_at']}
           labels={{
             user_email: t('contacts.user_email'),
             message: t('contacts.message'),

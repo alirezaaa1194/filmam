@@ -105,7 +105,7 @@ export function buildEpisodePayload(
     uploadType: EpisodeUploadTypeValue
   ) => {
     if (upload) {
-      filesPayload.push({ upload_id: upload.id, upload_type: uploadType })
+      filesPayload.push({ upload_id: upload.id, type: uploadType })
     }
   }
   append(files.poster[0], 'POSTER')
@@ -114,7 +114,7 @@ export function buildEpisodePayload(
   if (files.film[0]) {
     filesPayload.push({
       upload_id: files.film[0].id,
-      upload_type: 'FILM',
+      type: 'FILM',
       intro_start_time:
         files.introStartTime.trim() !== ''
           ? Number(files.introStartTime)

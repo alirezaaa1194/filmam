@@ -36,7 +36,7 @@ export function ContactViewMessageDialog({
     >
       <DialogContent className='sm:max-w-xl'>
         <DialogHeader className='text-start'>
-          <div className='flex items-center justify-between gap-2'>
+          <div className='flex items-center justify-between gap-2 pe-8'>
             <DialogTitle>{t('contacts.view_message')}</DialogTitle>
             <Badge
               variant='outline'

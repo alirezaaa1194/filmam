@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { EmptyState } from '@/utilities/components'
 import { ChartColumn } from 'lucide-react'
-import { getMonthLabel } from '../chartLabels'
+import { getMonthLabel } from '../dashboard.script'
 
 export function Overview({
   data,

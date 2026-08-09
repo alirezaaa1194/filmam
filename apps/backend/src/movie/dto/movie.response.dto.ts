@@ -254,8 +254,20 @@ export class MovieAdminFactorDto {
   @ApiProperty()
   slug!: string;
 
+  @ApiProperty()
+  first_name!: string;
+
+  @ApiProperty()
+  last_name!: string;
+
+  @ApiProperty()
+  order!: number;
+
   @ApiProperty({ enum: RoleType })
   type!: RoleType;
+
+  @ApiProperty({ type: MovieRoleResponseDto })
+  role!: MovieRoleResponseDto;
 
   @ApiProperty({ type: MovieAdminFactorProfileDto })
   profile!: MovieAdminFactorProfileDto;
@@ -418,6 +430,12 @@ export class MovieAdminDetailResponseDto {
 
   @ApiProperty({ type: [MovieAdminGenreDto] })
   genres!: MovieAdminGenreDto[];
+
+  @ApiProperty({ type: [MovieCountryResponseDto] })
+  countries!: MovieCountryResponseDto[];
+
+  @ApiProperty({ type: [MovieLanguageResponseDto] })
+  languages!: MovieLanguageResponseDto[];
 
   @ApiProperty({ type: [TagResponseDto] })
   tags!: TagResponseDto[];

@@ -86,7 +86,7 @@ export function SeasonForm({
                   {t('seasons.slug')}
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder='e.g., season-1' className='col-span-4' {...field} />
+                  <Input placeholder={t('seasons.slug_placeholder')} className='col-span-4' {...field} />
                 </FormControl>
                 <FormMessage className='col-span-4 col-start-3' />
               </FormItem>
@@ -106,7 +106,7 @@ export function SeasonForm({
                     type='number'
                     min='1'
                     step='1'
-                    placeholder='1'
+                    placeholder={t('seasons.order_placeholder')}
                     className='col-span-4'
                     {...field}
                   />

@@ -1,4 +1,4 @@
-import {
+﻿import {
   BadRequestException,
   ConflictException,
   Injectable,
@@ -160,13 +160,16 @@ export class SectionService {
     }
     const { section_movies, ...otherSectionData } = section;
     const normalizedSectionMovies = section_movies.map((sectionMovie) => {
-      const { movie } = sectionMovie;
-      return normalizeMovieDetail(movie);
+      const { movie, ...otherSectionMovieData } = sectionMovie;
+      return {
+        ...otherSectionMovieData,
+        ...normalizeMovieDetail(movie),
+      };
     });
 
     return {
       ...otherSectionData,
-      movies: normalizedSectionMovies,
+      section_movies: normalizedSectionMovies,
     };
   }
 
@@ -287,13 +290,16 @@ export class SectionService {
     }
     const { section_movies, ...otherSectionData } = section;
     const normalizedSectionMovies = section_movies.map((sectionMovie) => {
-      const { movie } = sectionMovie;
-      return normalizeMovieDetail(movie);
+      const { movie, ...otherSectionMovieData } = sectionMovie;
+      return {
+        ...otherSectionMovieData,
+        ...normalizeMovieDetail(movie),
+      };
     });
 
     return {
       ...otherSectionData,
-      movies: normalizedSectionMovies,
+      section_movies: normalizedSectionMovies,
     };
   }
 
@@ -308,7 +314,7 @@ export class SectionService {
         page_size,
         query.lang || defaultLang,
         query.search?.trim(),
-        query.sort || SortType.ASC,
+        query.sort || SortType.DESC,
         tx,
       );
 
@@ -786,7 +792,7 @@ export class SectionService {
       page_size,
       query.lang || defaultLang,
       query.search?.trim(),
-      query.sort || SortType.ASC,
+      query.sort || SortType.DESC,
     );
     const sectionsCount = await this.sectionRepository.getSectionsCount(
       query.search?.trim(),

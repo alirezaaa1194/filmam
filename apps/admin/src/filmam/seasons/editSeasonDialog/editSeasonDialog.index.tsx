@@ -15,6 +15,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Api, TranslateServerError } from '@/scripts'
+import i18n from '@/i18n'
 import { AppApis } from '../../../data'
 import type { SeasonDetailType } from '../../../types'
 import { SeasonDialogSkeleton } from './seasonDialogSkeleton.index'
@@ -31,6 +32,17 @@ type EditSeasonDialogProps = {
   currentRow: Season
 }
 
+function getMovieTitleForLanguage(seasonDetail: SeasonDetailType): string {
+  const currentLanguage = i18n.resolvedLanguage?.toUpperCase()
+  const translation = seasonDetail.movie.translations.find(
+    (item) => item.language.toUpperCase() === currentLanguage
+  )
+  return (
+    translation?.title ??
+    seasonDetail.movie.translations[0]?.title ??
+    String(seasonDetail.movie_id)
+  )
+}
 export function EditSeasonDialog({
   open,
   onOpenChange,
@@ -76,7 +88,7 @@ export function EditSeasonDialog({
       ? [
           {
             value: String(seasonDetail.movie_id),
-            label: seasonDetail.movie.translations[0]?.title ?? String(seasonDetail.movie_id),
+            label: getMovieTitleForLanguage(seasonDetail),
           },
         ]
       : undefined,

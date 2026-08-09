@@ -1,4 +1,4 @@
-import { type ColumnDef } from '@tanstack/react-table'
+﻿import { type ColumnDef } from '@tanstack/react-table'
 import i18n from '@/i18n'
 import {
   Badge,
@@ -54,6 +54,16 @@ export const rolesColumns: ColumnDef<Role>[] = [
       ),
     },
   },
+
+  {
+    accessorKey: 'name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={i18n.t('roles.name')} />
+    ),
+    cell: ({ row }) => (
+      <div className='w-fit ps-2 text-nowrap'>{row.getValue('name')}</div>
+    ),
+  },
   {
     accessorKey: 'type',
     header: ({ column }) => (
@@ -76,15 +86,6 @@ export const rolesColumns: ColumnDef<Role>[] = [
       )
     },
     enableSorting: false,
-  },
-  {
-    accessorKey: 'name',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={i18n.t('roles.name')} />
-    ),
-    cell: ({ row }) => (
-      <div className='w-fit ps-2 text-nowrap'>{row.getValue('name')}</div>
-    ),
   },
   {
     accessorKey: 'created_at',

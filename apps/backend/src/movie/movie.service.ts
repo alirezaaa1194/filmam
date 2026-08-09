@@ -197,30 +197,76 @@ export class MovieService {
     return result;
   }
 
-  async getMovieDetailAdmin(movieId: number, tx?: TransactionType) {
+  async getMovieDetailAdmin(
+    movieId: number,
+    tx?: TransactionType,
+    lang: AppLanguage = defaultLang,
+  ) {
     const movie = await this.movieRepository.getMovieDetailAdmin(movieId, tx);
     if (movie) {
-      const { factors, genres, tags, files, _count, ...otherMovieData } = movie;
+      const {
+        factors,
+        genres,
+        countries,
+        languages,
+        tags,
+        files,
+        _count,
+        ...otherMovieData
+      } = movie;
 
       const movieFactors = factors.map((movieFactor) => {
         const { factor, role, order } = movieFactor;
-        const { files, ...otherFactorData } = factor;
+        const { files, translations, ...otherFactorData } = factor;
+        const factorTranslation =
+          translations?.find((tr) => tr.language === lang) ??
+          translations?.[0];
+        const { first_name = '', last_name = '' } = factorTranslation ?? {};
+
+        const { translations: roleTranslations, ...otherRoleData } = role;
+        const roleTranslation =
+          roleTranslations?.find((tr) => tr.language === lang) ??
+          roleTranslations?.[0];
+        const { name = '' } = roleTranslation ?? {};
+
         const factorProfile = {
           ...factor.files[0]?.upload,
           type: factor.files[0]?.type,
         };
         return {
           ...otherFactorData,
+          first_name,
+          last_name,
           type: role.type,
           slug: role.slug,
           order,
           profile: factorProfile,
+          role: { ...otherRoleData, name },
         };
       });
 
       const movieGenres = genres.map((movieGenre) => {
         const { genre } = movieGenre;
         return genre;
+      });
+
+      const movieCountries = countries.map((movieCountry) => {
+        const { country } = movieCountry;
+        const { translations, ...otherCountryData } = country;
+        const countryTranslation =
+          translations?.find((tr) => tr.language === lang) ??
+          translations?.[0];
+        const { label = '' } = countryTranslation ?? {};
+        return { ...otherCountryData, label };
+      });
+
+      const movieLanguages = languages.map((movieLanguage) => {
+        const { language } = movieLanguage;
+        const { translations, ...otherLanguageData } = language;
+        const languageTranslation =
+          translations?.find((tr) => tr.lang === lang) ?? translations?.[0];
+        const { label = '' } = languageTranslation ?? {};
+        return { ...otherLanguageData, label };
       });
 
       const movieTags = tags.map((movieTag) => {
@@ -243,6 +289,8 @@ export class MovieService {
         ...otherMovieData,
         factors: movieFactors,
         genres: movieGenres,
+        countries: movieCountries,
+        languages: movieLanguages,
         tags: movieTags,
         files: movieFiles,
         seasons_count: _count.seasons,

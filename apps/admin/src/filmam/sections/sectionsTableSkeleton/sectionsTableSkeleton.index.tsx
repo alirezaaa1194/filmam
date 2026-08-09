@@ -1,4 +1,4 @@
-import { Skeleton } from '@/utilities/components'
+﻿import { Skeleton } from '@/utilities/components'
 import { Cn } from '@/scripts'
 
 export function SectionsTableSkeleton() {

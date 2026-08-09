@@ -60,29 +60,14 @@ export function getSidebarData(t: TFunction): SidebarData {
             icon: Clapperboard,
           },
           {
-            title: t('nav.comments'),
-            url: '/comments',
-            icon: MessageSquare,
-          },
-          {
-            title: t('nav.contacts'),
-            url: '/contacts',
-            icon: Mail,
-          },
-          {
-            title: t('nav.users'),
-            url: '/users',
-            icon: Users,
-          },
-          {
             title: t('nav.genres'),
             url: '/genres',
             icon: Clapperboard,
           },
           {
-            title: t('nav.roles'),
-            url: '/roles',
-            icon: IdCard,
+            title: t('nav.tags'),
+            url: '/tags',
+            icon: Tag,
           },
           {
             title: t('nav.factors'),
@@ -100,9 +85,24 @@ export function getSidebarData(t: TFunction): SidebarData {
             icon: Languages,
           },
           {
-            title: t('nav.tags'),
-            url: '/tags',
-            icon: Tag,
+            title: t('nav.comments'),
+            url: '/comments',
+            icon: MessageSquare,
+          },
+          {
+            title: t('nav.contacts'),
+            url: '/contacts',
+            icon: Mail,
+          },
+          {
+            title: t('nav.users'),
+            url: '/users',
+            icon: Users,
+          },
+          {
+            title: t('nav.roles'),
+            url: '/roles',
+            icon: IdCard,
           },
           {
             title: t('nav.header_menus'),

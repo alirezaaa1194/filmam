@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { getRouteApi } from '@tanstack/react-router'
 import {
@@ -115,7 +115,7 @@ export function CommentsTable({ data, count, isPending }: DataTableProps) {
       search: (prev) => ({
         ...prev,
         search: undefined,
-        sort: undefined,
+        sort: 'desc',
         status: undefined,
         page: undefined,
       }),
@@ -173,7 +173,7 @@ export function CommentsTable({ data, count, isPending }: DataTableProps) {
                 navigate({
                   search: (prev) => ({
                     ...prev,
-                    sort: value === 'desc' ? undefined : 'asc',
+                    sort: value,
                     page: undefined,
                   }),
                 })
@@ -201,6 +201,13 @@ export function CommentsTable({ data, count, isPending }: DataTableProps) {
         </div>
         <DataTableViewOptions
           table={table}
+          columns={[
+            'entity',
+            'status',
+            'likes_count',
+            'dislikes_count',
+            'created_at',
+          ]}
           labels={{
             body: t('comments.body'),
             user: t('comments.user'),

@@ -131,6 +131,7 @@ export class SectionRepository {
       where: { id: sectionId },
       include: {
         translations: true,
+        section_filters: true,
         section_movies: {
           include: {
             movie: {

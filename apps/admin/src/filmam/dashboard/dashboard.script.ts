@@ -1,11 +1,17 @@
-const IntlLocales: Record<string, string> = {
+const dateIntlLocales: Record<string, string> = {
   FA: 'fa-IR-u-ca-persian',
   EN: 'en-US',
   AR: 'ar-EG',
 }
 
+const numberIntlLocales: Record<string, string> = {
+  FA: 'fa-IR',
+  EN: 'en-US',
+  AR: 'ar-EG',
+}
+
 function intlLocale(lang?: string) {
-  return IntlLocales[lang?.toUpperCase() ?? 'EN'] ?? 'en-US'
+  return dateIntlLocales[lang?.toUpperCase() ?? 'EN'] ?? 'en-US'
 }
 
 function weekdayStyle(lang?: string): 'short' | 'long' {
@@ -39,4 +45,11 @@ export function getMonthLabel(monthIndex: number, lang?: string) {
   return new Intl.DateTimeFormat(intlLocale(lang), {
     month: monthStyle(lang),
   }).format(date)
+}
+
+export function formatNumber(value: number, lang?: string) {
+  const locale = numberIntlLocales[lang?.toUpperCase() ?? 'EN'] ?? 'en-US'
+  return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(
+    value
+  )
 }

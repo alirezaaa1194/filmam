@@ -77,11 +77,13 @@ export class UserRepository {
           {
             username: {
               contains: query.search,
+              mode: 'insensitive',
             },
           },
           {
             email: {
               contains: query.search,
+              mode: 'insensitive',
             },
           },
         ],

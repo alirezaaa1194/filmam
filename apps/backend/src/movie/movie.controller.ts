@@ -66,8 +66,11 @@ export class MovieController {
   @ApiOkResponse({ type: MovieAdminDetailResponseDto })
   @Get('admin/:movieId')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async getMovieDetailAdmin(@Param('movieId', ParseIntPipe) movieId: number) {
-    return this.movieService.getMovieDetailAdmin(movieId);
+  async getMovieDetailAdmin(
+    @Param('movieId', ParseIntPipe) movieId: number,
+    @Query() query: GetMovieDetailPublicDto,
+  ) {
+    return this.movieService.getMovieDetailAdmin(movieId, undefined, query.lang);
   }
 
   @ApiBearerAuth()

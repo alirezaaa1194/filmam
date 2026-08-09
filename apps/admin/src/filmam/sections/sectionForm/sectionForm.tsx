@@ -121,7 +121,7 @@ export function SectionForm({
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='e.g., trending-movies'
+                    placeholder={t('sections.slug_placeholder')}
                     className='col-span-4'
                     {...field}
                   />
@@ -144,7 +144,7 @@ export function SectionForm({
                     type='number'
                     min='1'
                     step='1'
-                    placeholder='1'
+                    placeholder={t('sections.order_placeholder')}
                     className='col-span-4'
                     {...field}
                   />

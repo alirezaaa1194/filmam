@@ -35,7 +35,7 @@ export type CreateEpisodePayloadType = {
   }[]
   files: {
     upload_id: number
-    upload_type: EpisodeUploadTypeValue
+    type: EpisodeUploadTypeValue
     intro_start_time?: number
     intro_duration?: number
     outro_duration?: number

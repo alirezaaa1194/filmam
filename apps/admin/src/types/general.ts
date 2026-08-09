@@ -591,7 +591,10 @@ export type __MovieAdminFactorType = {
   created_at: string
   updated_at: string
   slug: string
+  first_name: string
+  last_name: string
   type: string
+  role: __MovieRoleType
   profile: __MovieAdminFactorProfileType
   translations: __MovieAdminFactorTranslationType[]
 }
@@ -660,6 +663,8 @@ export type __MovieAdminDetailType = {
   combined_tags: string
   factors: __MovieAdminFactorType[]
   genres: __MovieAdminGenreType[]
+  countries: __MovieCountryType[]
+  languages: __MovieLanguageType[]
   tags: __TagType[]
   files: __MovieFileType[]
   seasons: __MovieAdminSeasonType[]
@@ -782,6 +787,7 @@ export type __SeasonTranslationType = {
 
 export type __SeasonDetailMovieTranslationType = {
   title: string
+  language: string
 }
 
 export type __SeasonDetailMovieType = {

@@ -181,7 +181,7 @@
     "password_mismatch": "Passwords do not match.",
     "save_changes": "Save changes",
     "delete_user": "Delete User",
-    "delete_user_desc": "Are you sure you want to delete {{username}} with the role of {{role}}? This action cannot be undone.",
+    "delete_user_desc": "Are you sure you want to delete \"{{username}}\" with the role of \"{{role}}\"? This action cannot be undone.",
     "delete_user_confirmation": "Please be careful, this operation cannot be rolled back.",
     "warning": "Warning!",
     "user_created": "User created successfully",
@@ -194,16 +194,16 @@
     "role_changed": "User role changed successfully",
     "role_changing": "Changing role...",
     "change_role": "Change Role",
-    "change_role_desc": "Do you want to change user {{username}} to the {{role}} role?",
+    "change_role_desc": "Do you want to change user \"{{username}}\" to the \"{{role}}\" role?",
     "change_role_action": "Change Role",
     "password_changed": "User password changed successfully",
     "password_changing": "Changing password...",
     "error_changing_password": "Error changing password",
     "change_password": "Change Password",
-    "change_password_desc": "Set a new password for user {{username}}.",
+    "change_password_desc": "Set a new password for user \"{{username}}\".",
     "block_user": "Block User",
     "block_users": "Block Users",
-    "block_user_desc": "Set the date and time until which {{username}} will be blocked.",
+    "block_user_desc": "Set the date and time until which \"{{username}}\" will be blocked.",
     "block_users_desc": "Set the date and time until which the {{count}} selected users will be blocked.",
     "block_expires_at": "Block expires at",
     "quick_durations": "Quick durations",
@@ -945,7 +945,9 @@
     "delete_season_desc": "Are you sure you want to delete \"{{name}}\"?",
     "multi_delete_desc": "Are you sure you want to delete {{count}} seasons?",
     "warning": "Warning",
-    "delete_season_confirmation": "This action cannot be undone. This will permanently delete the season and all its data."
+    "delete_season_confirmation": "This action cannot be undone. This will permanently delete the season and all its data.",
+    "slug_placeholder": "e.g., season-1",
+    "order_placeholder": "1"
   },
   "episodes": {
     "list_title": "Episode List",
@@ -1013,7 +1015,10 @@
       "poster_required": "A poster is required.",
       "film_required": "A film file is required.",
       "intro_outro_required": "Intro start, intro duration and outro duration must be valid numbers."
-    }
+    },
+    "slug_placeholder": "e.g., episode-1",
+    "order_placeholder": "1",
+    "timing_placeholder": "0"
   },
   "sections": {
     "list_title": "Section List",
@@ -1114,7 +1119,9 @@
       "movies_required": "Manual selection mode requires at least one movie.",
       "puzzle_items_required": "Puzzle sections require exactly 4 puzzle items.",
       "puzzle_slider_required": "Puzzle sections require at least one slider item."
-    }
+    },
+    "slug_placeholder": "e.g., trending-movies",
+    "order_placeholder": "1"
   },
   "comments": {
     "list_title": "Comment List",

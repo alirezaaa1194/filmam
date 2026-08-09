@@ -23,7 +23,7 @@ import { AppApis } from '@/data'
 import { Api } from '@/scripts'
 import { type StatsAnalyticsType } from '../../../types'
 import { GrowthRate } from '../growthRate/growthRate.index'
-import { formatNumber } from '../formatNumber'
+import { formatNumber } from '../dashboard.script'
 
 export function Analytics() {
   const { t, i18n } = useTranslation()

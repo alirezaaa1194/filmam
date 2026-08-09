@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { Ban, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'

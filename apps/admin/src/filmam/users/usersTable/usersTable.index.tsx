@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import {
@@ -136,7 +136,7 @@ export function UsersTable({ data, isPending }: DataTableProps) {
         ...prev,
         username: undefined,
         blocked: undefined,
-        sort: undefined,
+        sort: 'desc',
         page: undefined,
       }),
     })
@@ -201,7 +201,7 @@ export function UsersTable({ data, isPending }: DataTableProps) {
                 navigate({
                   search: (prev) => ({
                     ...prev,
-                    sort: value === 'desc' ? undefined : 'asc',
+                    sort: value,
                     page: undefined,
                   }),
                 })

@@ -30,7 +30,7 @@ import { Analytics } from './analytics/analytics.index'
 import { GrowthRate } from './growthRate/growthRate.index'
 import { Overview } from './overview/overview.index'
 import { RecentSales } from './recentSales/recentSales.index'
-import { formatNumber } from './formatNumber'
+import { formatNumber } from './dashboard.script'
 
 export function Dashboard() {
   const { t, i18n } = useTranslation()

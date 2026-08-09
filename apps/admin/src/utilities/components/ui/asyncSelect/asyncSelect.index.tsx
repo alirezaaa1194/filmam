@@ -67,7 +67,7 @@ export function AsyncSelect<T>({
   className,
   pageSize = 10,
 }: AsyncSelectProps<T>) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [open, setOpen] = React.useState(false)
   const [search, setSearch] = React.useState('')
   const [debouncedSearch, setDebouncedSearch] = React.useState('')
@@ -93,7 +93,7 @@ export function AsyncSelect<T>({
   }, [search, open])
 
   const infiniteQuery = useInfiniteQuery({
-    queryKey: [...queryKey, pageSize, debouncedSearch],
+    queryKey: [...queryKey, i18n.resolvedLanguage, pageSize, debouncedSearch],
     queryFn: ({ pageParam }) =>
       apiRef.current({
         search: debouncedSearch,

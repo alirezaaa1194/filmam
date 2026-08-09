@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { getRouteApi } from '@tanstack/react-router'
 import {
@@ -112,7 +112,7 @@ export function SectionsTable({ data, count, isPending }: DataTableProps) {
       search: (prev) => ({
         ...prev,
         search: undefined,
-        sort: undefined,
+        sort: 'desc',
         page: undefined,
       }),
     })
@@ -140,7 +140,7 @@ export function SectionsTable({ data, count, isPending }: DataTableProps) {
                 navigate({
                   search: (prev) => ({
                     ...prev,
-                    sort: value === 'desc' ? undefined : 'asc',
+                    sort: value,
                     page: undefined,
                   }),
                 })
@@ -168,6 +168,7 @@ export function SectionsTable({ data, count, isPending }: DataTableProps) {
         </div>
         <DataTableViewOptions
           table={table}
+          columns={['order', 'view_mode', 'selection_mode', 'movies_count', 'created_at']}
           labels={{
             title: t('sections.title'),
             slug: t('sections.slug'),

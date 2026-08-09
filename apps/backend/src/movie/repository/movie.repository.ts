@@ -64,10 +64,14 @@ export class MovieRepository {
         },
         factors: {
           orderBy: {
-            order: 'desc',
+            order: 'asc',
           },
           include: {
-            role: true,
+            role: {
+              include: {
+                translations: true,
+              },
+            },
             factor: {
               include: {
                 translations: true,
@@ -91,6 +95,24 @@ export class MovieRepository {
         genres: {
           include: {
             genre: {
+              include: {
+                translations: true,
+              },
+            },
+          },
+        },
+        countries: {
+          include: {
+            country: {
+              include: {
+                translations: true,
+              },
+            },
+          },
+        },
+        languages: {
+          include: {
+            language: {
               include: {
                 translations: true,
               },

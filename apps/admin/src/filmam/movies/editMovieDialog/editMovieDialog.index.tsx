@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Api, TranslateServerError } from '@/scripts'
 import { AppApis } from '../../../data'
-import type { MovieDetailPublicType } from '../../../types'
 import { MovieDialogSkeleton } from '../movieDialogSkeleton/movieDialogSkeleton.index'
 import { MovieForm } from '../movieForm/movieForm'
 import {
@@ -58,18 +57,7 @@ export function EditMovieDialog({
     staleTime: 0,
   })
 
-  const { data: moviePublicDetail, isPending: isPublicPending } = useQuery({
-    queryKey: ['movies-detail-public', movieDetail?.slug],
-    queryFn: () =>
-      Api<MovieDetailPublicType>(AppApis.movie.bySlug(movieDetail!.slug), {
-        method: 'GET',
-      }),
-    enabled: open && !!movieDetail,
-    staleTime: 0,
-  })
-
-  const isLoading =
-    isPending || isFetching || !movieDetail || isPublicPending || !moviePublicDetail
+  const isLoading = isPending || isFetching || !movieDetail
 
   const { mutate, isPending: isMutating } = useMutation({
     mutationFn: (payload: CreateMoviePayloadType) =>
@@ -100,15 +88,12 @@ export function EditMovieDialog({
 
         {open && (
           <div className='flex-1 overflow-y-auto px-4 py-4 sm:px-6'>
-            {isLoading || !movieDetail || !moviePublicDetail ? (
+            {isLoading || !movieDetail ? (
               <MovieDialogSkeleton />
             ) : (
               <MovieForm
                 formId='movie-edit-form'
-                defaultValues={buildMovieFormValuesFromDetail(
-                  movieDetail,
-                  moviePublicDetail
-                )}
+                defaultValues={buildMovieFormValuesFromDetail(movieDetail)}
                 defaultFiles={buildMovieFilesFromDetail(movieDetail)}
                 initialLabels={{
                   genres: movieDetail.genres.map((genre) => ({
@@ -119,19 +104,19 @@ export function EditMovieDialog({
                     value: String(tag.id),
                     label: movieTagLabel(movieDetail.tags, tag.id),
                   })),
-                  countries: moviePublicDetail.countries?.map((country) => ({
+                  countries: movieDetail.countries?.map((country) => ({
                     value: String(country.id),
                     label: country.label,
                   })),
-                  languages: moviePublicDetail.languages?.map((language) => ({
+                  languages: movieDetail.languages?.map((language) => ({
                     value: String(language.id),
                     label: language.label,
                   })),
-                  factors: moviePublicDetail.factors?.map((factor) => ({
+                  factors: movieDetail.factors.map((factor) => ({
                     value: String(factor.id),
                     label: `${factor.first_name} ${factor.last_name}`.trim(),
                   })),
-                  roles: moviePublicDetail.factors?.map((factor) => ({
+                  roles: movieDetail.factors.map((factor) => ({
                     value: String(factor.role.id),
                     label: factor.role.name,
                   })) as AsyncSelectOption[] | undefined,

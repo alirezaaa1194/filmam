@@ -122,7 +122,7 @@ export function EpisodeForm({
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='e.g., episode-1'
+                    placeholder={t('episodes.slug_placeholder')}
                     className='col-span-4'
                     {...field}
                   />
@@ -145,7 +145,7 @@ export function EpisodeForm({
                     type='number'
                     min='1'
                     step='1'
-                    placeholder='1'
+                    placeholder={t('episodes.order_placeholder')}
                     className='col-span-4'
                     {...field}
                   />
@@ -399,6 +399,7 @@ function TimingInput({
   value: string
   onChange: (value: string) => void
 }) {
+  const { t } = useTranslation()
   return (
     <div className='space-y-1.5'>
       <label className='text-xs font-medium text-muted-foreground'>
@@ -408,7 +409,7 @@ function TimingInput({
         type='number'
         min='0'
         step='1'
-        placeholder='0'
+        placeholder={t('episodes.timing_placeholder')}
         value={value}
         onChange={(event) => onChange(event.target.value)}
       />

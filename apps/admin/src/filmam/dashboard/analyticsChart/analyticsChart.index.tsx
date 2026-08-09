@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { getDayLabel } from '../chartLabels'
+import { getDayLabel } from '../dashboard.script'
 
 export function AnalyticsChart({
   data,

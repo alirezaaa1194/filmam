@@ -1,4 +1,4 @@
-import { Cn } from '@/scripts'
+﻿import { Cn } from '@/scripts'
 import { Skeleton } from '@/utilities/components'
 
 export function UsersTableSkeleton() {

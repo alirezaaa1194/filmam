@@ -2,7 +2,6 @@ import { z } from 'zod'
 import type { TFunction } from 'i18next'
 import {
   AppLanguagesEnum,
-  type MovieDetailPublicType,
   type MovieFileType,
   type UploadType,
 } from '../../../types'
@@ -88,26 +87,19 @@ export function buildEmptyMovieFormValues(): MovieFormValues {
 }
 
 export function buildMovieFormValuesFromDetail(
-  detail: MovieDetailType,
-  publicDetail?: MovieDetailPublicType
+  detail: MovieDetailType
 ): MovieFormValues {
   const languageIds = new Set(
-    (publicDetail?.languages ?? []).map((language) => String(language.id))
+    (detail.languages ?? []).map((language) => String(language.id))
   )
   const countryIds = new Set(
-    (publicDetail?.countries ?? []).map((country) => String(country.id))
+    (detail.countries ?? []).map((country) => String(country.id))
   )
 
-  const factors = detail.factors.map((factor) => {
-    const publicFactor = publicDetail?.factors?.find(
-      (publicItem) => publicItem.id === factor.id
-    )
-    return {
-      factor_id: String(factor.id),
-      role_id:
-        publicFactor?.role != null ? String(publicFactor.role.id) : '',
-    }
-  })
+  const factors = detail.factors.map((factor) => ({
+    factor_id: String(factor.id),
+    role_id: factor.role?.id != null ? String(factor.role.id) : '',
+  }))
 
   return {
     type: detail.type as MovieTypeValue,

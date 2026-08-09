@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { getRouteApi } from '@tanstack/react-router'
 import {
@@ -121,7 +121,7 @@ export function RolesTable({ data, count, isPending }: DataTableProps) {
       search: (prev) => ({
         ...prev,
         search: undefined,
-        sort: undefined,
+        sort: 'desc',
         page: undefined,
       }),
     })
@@ -149,7 +149,7 @@ export function RolesTable({ data, count, isPending }: DataTableProps) {
                 navigate({
                   search: (prev) => ({
                     ...prev,
-                    sort: value === 'desc' ? undefined : 'asc',
+                    sort: value,
                     page: undefined,
                   }),
                 })
@@ -177,6 +177,7 @@ export function RolesTable({ data, count, isPending }: DataTableProps) {
         </div>
         <DataTableViewOptions
           table={table}
+          columns={['slug', 'type', 'name', 'created_at']}
           labels={{
             slug: t('roles.slug'),
             type: t('roles.type'),

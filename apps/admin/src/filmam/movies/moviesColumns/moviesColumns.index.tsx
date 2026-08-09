@@ -159,28 +159,6 @@ export const moviesColumns: ColumnDef<Movie>[] = [
     enableSorting: false,
   },
   {
-    accessorKey: 'genres',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={i18n.t('movies.genres')} />
-    ),
-    cell: ({ row }) => {
-      const genres = row.getValue<Movie['genres']>('genres') ?? []
-      return (
-        <div className='flex max-w-48 flex-wrap gap-1 ps-2'>
-          {genres.slice(0, 2).map((genre) => (
-            <Badge key={genre.id} variant='secondary' className='max-w-full'>
-              <span className='truncate'>{genre.name}</span>
-            </Badge>
-          ))}
-          {genres.length > 2 && (
-            <Badge variant='outline'>+{genres.length - 2}</Badge>
-          )}
-        </div>
-      )
-    },
-    enableSorting: false,
-  },
-  {
     accessorKey: 'created_at',
     header: ({ column }) => (
       <DataTableColumnHeader
