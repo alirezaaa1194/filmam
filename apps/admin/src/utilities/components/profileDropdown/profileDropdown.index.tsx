@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
 import useDialogState from '@/hooks'
 import {
   Avatar,
@@ -13,6 +14,7 @@ import {
   DropdownMenuTrigger,
   SignOutDialog,
 } from '@/utilities/components'
+import { BadgeCheck } from 'lucide-react'
 import { useUserStore } from '@/stores'
 import { HashEmail } from '@/scripts'
 
@@ -56,7 +58,18 @@ export function ProfileDropdown() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
+          <DropdownMenuItem asChild className='cursor-pointer gap-2'>
+            <Link to='/account' className='font-medium'>
+              <BadgeCheck className='size-4 text-muted-foreground' />
+              <span className='flex-1'>{t('nav.account')}</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            variant='destructive'
+            onClick={() => setOpen(true)}
+            className='cursor-pointer'
+          >
             {t('common.sign_out')}
           </DropdownMenuItem>
         </DropdownMenuContent>

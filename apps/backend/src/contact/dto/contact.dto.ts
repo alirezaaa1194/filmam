@@ -2,8 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ContactStatus } from '../../generated/prisma';
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
@@ -45,6 +47,39 @@ export class RejectContactDto {
   @IsNotEmpty()
   @IsString()
   rejected_detail!: string;
+}
+
+export class UpdateContactsStatusDto {
+  @ApiProperty({
+    example: [1, 2, 3],
+    required: true,
+    isArray: true,
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @IsNumber({ allowNaN: false }, { each: true })
+  contact_ids!: number[];
+
+  @ApiProperty({
+    enum: ContactStatus,
+    example: ContactStatus.ANSWERED,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEnum(ContactStatus)
+  status!: ContactStatus;
+
+  @ApiProperty({ type: 'string', required: false })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  answer_message?: string;
+
+  @ApiProperty({ type: 'string', required: false })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  rejected_detail?: string;
 }
 
 export class GetAllContactsDto extends CommonQueryParamsDto {

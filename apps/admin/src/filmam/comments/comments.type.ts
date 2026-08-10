@@ -21,6 +21,11 @@ export type UpdateCommentStatusPayloadType = {
   status: CommentStatusValue
 }
 
+export type UpdateCommentsStatusPayloadType = {
+  comment_ids: number[]
+  status: CommentStatusValue
+}
+
 export const deleteCommentsSchema = z.object({
   comment_ids: z.array(z.number()),
 })

@@ -1,6 +1,5 @@
 import type { TFunction } from 'i18next'
 import {
-  Bell,
   Clapperboard,
   Film,
   Globe,
@@ -12,14 +11,9 @@ import {
   Mail,
   Menu,
   MessageSquare,
-  Monitor,
-  Palette,
-  Settings,
   Tag,
-  UserCog,
   UserRound,
   Users,
-  Wrench,
 } from 'lucide-react'
 import { type SidebarData } from './appSidebar.type'
 
@@ -108,42 +102,6 @@ export function getSidebarData(t: TFunction): SidebarData {
             title: t('nav.header_menus'),
             url: '/header-menus',
             icon: Menu,
-          },
-        ],
-      },
-      {
-        title: t('nav.other'),
-        items: [
-          {
-            title: t('nav.settings'),
-            icon: Settings,
-            items: [
-              {
-                title: t('nav.profile'),
-                url: '/settings',
-                icon: UserCog,
-              },
-              {
-                title: t('nav.account'),
-                url: '/settings/account',
-                icon: Wrench,
-              },
-              {
-                title: t('nav.appearance'),
-                url: '/settings/appearance',
-                icon: Palette,
-              },
-              {
-                title: t('nav.notifications'),
-                url: '/settings/notifications',
-                icon: Bell,
-              },
-              {
-                title: t('nav.display'),
-                url: '/settings/display',
-                icon: Monitor,
-              },
-            ],
           },
         ],
       },

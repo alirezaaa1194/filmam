@@ -824,13 +824,16 @@ export class SectionService {
     if (section) {
       const { section_movies, ...otherSectionData } = section;
       const normalizedSectionMovies = section_movies.map((sectionMovie) => {
-        const { movie } = sectionMovie;
-        return normalizeMovieDetail(movie);
+        const { movie, ...otherSectionMovieData } = sectionMovie;
+        return {
+          ...otherSectionMovieData,
+          ...normalizeMovieDetail(movie),
+        };
       });
 
       return {
         ...otherSectionData,
-        movies: normalizedSectionMovies,
+        section_movies: normalizedSectionMovies,
       };
     }
   }

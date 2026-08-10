@@ -5,7 +5,7 @@ import {
   GetAllCommentsDto,
   GetEntityCommentsDto,
   UpdateCommentDto,
-  UpdateCommentStatusDto,
+  UpdateCommentsStatusDto,
 } from '../dto/comment.dto';
 import { prisma } from '../../lib/prisma';
 import { SortType } from '../../common/enums';
@@ -54,23 +54,10 @@ export class CommentRepository {
     });
   }
 
-  async updateCommentStatus(
-    commentId: number,
-    body: UpdateCommentStatusDto,
-    tx?: TransactionType,
-  ) {
-    return await (tx || prisma).comment.update({
-      where: { id: commentId },
-      data: { ...body },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-          },
-        },
-      },
+  async updateCommentsStatus(body: UpdateCommentsStatusDto, tx?: TransactionType) {
+    return await (tx || prisma).comment.updateMany({
+      where: { id: { in: body.comment_ids } },
+      data: { status: body.status },
     });
   }
 

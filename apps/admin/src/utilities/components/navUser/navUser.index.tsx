@@ -2,11 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from 'lucide-react'
 import useDialogState from '@/hooks'
 import {
@@ -81,29 +78,10 @@ export function NavUser({ user }: NavUserProps) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <Sparkles />
-                  {t('common.upgrade_to_pro')}
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link to='/settings/account'>
-                    <BadgeCheck />
-                    {t('nav.account')}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to='/settings'>
-                    <CreditCard />
-                    {t('nav.billing')}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to='/settings/notifications'>
-                    <Bell />
-                    {t('nav.notifications')}
+                <DropdownMenuItem asChild className='cursor-pointer gap-2'>
+                  <Link to='/account' className='font-medium'>
+                    <BadgeCheck className='size-4 text-muted-foreground' />
+                    <span className='flex-1'>{t('nav.account')}</span>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -111,6 +89,7 @@ export function NavUser({ user }: NavUserProps) {
               <DropdownMenuItem
                 variant='destructive'
                 onClick={() => setOpen(true)}
+                className='cursor-pointer'
               >
                 <LogOut />
                 {t('common.sign_out')}

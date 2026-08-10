@@ -177,11 +177,9 @@ export function RolesTable({ data, count, isPending }: DataTableProps) {
         </div>
         <DataTableViewOptions
           table={table}
-          columns={['slug', 'type', 'name', 'created_at']}
+          columns={['type', 'created_at']}
           labels={{
-            slug: t('roles.slug'),
             type: t('roles.type'),
-            name: t('roles.name'),
             created_at: t('roles.created_at'),
           }}
         />

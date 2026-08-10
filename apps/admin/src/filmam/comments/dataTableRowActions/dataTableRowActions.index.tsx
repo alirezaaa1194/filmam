@@ -17,7 +17,7 @@ import { Api, TranslateServerError } from '@/scripts'
 import { AppApis } from '../../../data'
 import {
   type Comment,
-  type UpdateCommentStatusPayloadType,
+  type UpdateCommentsStatusPayloadType,
 } from '../comments.type'
 import { useComments } from '../commentsProvider/commentsProvider.index'
 
@@ -37,24 +37,23 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   }
 
   const { mutate: changeStatus } = useMutation({
-    mutationFn: (status: UpdateCommentStatusPayloadType['status']) =>
-      Api<UpdateCommentStatusPayloadType>(
-        AppApis.comment.adminUpdateStatus(currentRow.id),
-        {
-          method: 'PUT',
-          body: { status },
-        }
-      ),
+    mutationFn: (status: UpdateCommentsStatusPayloadType['status']) =>
+      Api<UpdateCommentsStatusPayloadType>(AppApis.comment.adminUpdateStatus, {
+        method: 'PUT',
+        body: { comment_ids: [currentRow.id], status },
+      }),
     onSuccess: () => {
       toast.success(t('comments.comment_status_updated'))
       queryclient.invalidateQueries({ queryKey: ['comments'] })
+      queryclient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (error: Response) => {
       toast.error(t(TranslateServerError(error.status)))
     },
   })
 
-  const isPending = currentRow.status === 'PENDING'
+  const canApprove = currentRow.status !== 'APPROVED'
+  const canReject = currentRow.status !== 'REJECTED'
 
   return (
     <DropdownMenu modal={false}>
@@ -74,21 +73,21 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             <Pencil size={16} />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
-        {isPending && (
-          <>
-            <DropdownMenuItem onClick={() => changeStatus('APPROVED')}>
-              {t('comments.approve')}
-              <DropdownMenuShortcut>
-                <CheckCircle2 size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => changeStatus('REJECTED')}>
-              {t('comments.reject')}
-              <DropdownMenuShortcut>
-                <XCircle size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </>
+        {canApprove && (
+          <DropdownMenuItem onClick={() => changeStatus('APPROVED')}>
+            {t('comments.approve')}
+            <DropdownMenuShortcut>
+              <CheckCircle2 size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        )}
+        {canReject && (
+          <DropdownMenuItem onClick={() => changeStatus('REJECTED')}>
+            {t('comments.reject')}
+            <DropdownMenuShortcut>
+              <XCircle size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem

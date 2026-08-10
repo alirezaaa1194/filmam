@@ -65,6 +65,7 @@ export function ContactRejectDialog({
       toast.success(t('contacts.contact_rejected'))
       onOpenChange(false)
       queryclient.invalidateQueries({ queryKey: ['contacts'] })
+      queryclient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (error: Response) => {
       toast.error(t(TranslateServerError(error.status)))

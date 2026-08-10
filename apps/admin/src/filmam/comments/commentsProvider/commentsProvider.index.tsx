@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useDialogState from '@/hooks'
 import { type Comment } from '../comments.type'
 
-type CommentsDialogType = 'edit' | 'delete'
+type CommentsDialogType = 'edit' | 'delete' | 'view'
 
 type CommentsContextType = {
   open: CommentsDialogType | null

@@ -59,6 +59,23 @@ export class UpdateCommentStatusDto {
   status!: CommentStatus;
 }
 
+export class UpdateCommentsStatusDto {
+  @ApiProperty({ type: 'number', isArray: true, required: true })
+  @IsNotEmpty()
+  @IsNumber({ allowNaN: false }, { each: true })
+  @IsArray()
+  comment_ids!: number[];
+
+  @ApiProperty({
+    enum: CommentStatus,
+    example: CommentStatus.APPROVED,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEnum(CommentStatus)
+  status!: CommentStatus;
+}
+
 export class DeleteCommentsDto {
   @ApiProperty({ type: 'number', isArray: true, required: true })
   @IsNotEmpty()

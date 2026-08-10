@@ -10,7 +10,7 @@ import {
   GetAllCommentsDto,
   GetEntityCommentsDto,
   UpdateCommentDto,
-  UpdateCommentStatusDto,
+  UpdateCommentsStatusDto,
 } from './dto/comment.dto';
 import { CommentRepository } from './repository/comment.repository';
 import { prisma } from '../lib/prisma';
@@ -100,16 +100,15 @@ export class CommentService {
     return await this.commentRepository.updateComment(commentId, body);
   }
 
-  async updateCommentStatus(commentId: number, body: UpdateCommentStatusDto) {
-    const comment = await this.commentRepository.getCommentDetailAdmin(commentId);
-    if (comment) {
-      if (comment.status !== CommentStatus.PENDING) {
-        throw new BadRequestException('Cannot change a closed comment');
-      }
-      return await this.commentRepository.updateCommentStatus(commentId, body);
-    } else {
-      throw new BadRequestException('Comment not found');
+  async updateCommentsStatus(body: UpdateCommentsStatusDto) {
+    if (body.status === CommentStatus.PENDING) {
+      throw new BadRequestException('Comment status cannot be changed to PENDING');
     }
+    const result = await this.commentRepository.updateCommentsStatus(body);
+    if (result.count === 0) {
+      throw new BadRequestException('No comments found to update status');
+    }
+    return result;
   }
 
   async deleteComments(body: DeleteCommentsDto) {

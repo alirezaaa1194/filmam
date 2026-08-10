@@ -314,6 +314,7 @@ function HeaderMenuEditForm({
           )}
         />
 
+        {watchMenuType === 'PAGE' && (
         <FormField
           control={form.control}
           name='href'
@@ -325,7 +326,6 @@ function HeaderMenuEditForm({
               <FormControl>
                 <Input
                   placeholder={t('header_menus.href_placeholder')}
-                  disabled={watchMenuType !== 'PAGE'}
                   className='col-span-4'
                   {...field}
                 />
@@ -334,6 +334,7 @@ function HeaderMenuEditForm({
             </FormItem>
           )}
         />
+      )}
 
         <FormField
           control={form.control}

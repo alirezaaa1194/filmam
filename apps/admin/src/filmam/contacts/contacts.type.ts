@@ -21,6 +21,11 @@ export type RejectContactPayloadType = {
   rejected_detail: string
 }
 
+export type UpdateContactsStatusPayloadType = {
+  contact_ids: number[]
+  status: ContactStatusValue
+}
+
 export const deleteContactsSchema = z.object({
   contact_ids: z.array(z.number()),
 })

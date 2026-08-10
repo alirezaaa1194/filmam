@@ -25,7 +25,7 @@ import {
   DeleteCommentsDto,
   GetAllCommentsDto,
   UpdateCommentDto,
-  UpdateCommentStatusDto,
+  UpdateCommentsStatusDto,
 } from './dto/comment.dto';
 import { CommentService } from './comment.service';
 import { RoleGuard } from '../auth/guards/role.guard';
@@ -51,6 +51,14 @@ export class CommentController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: CountResponseDto })
+  @Put('admin/status')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async updateCommentsStatus(@Body() body: UpdateCommentsStatusDto) {
+    return await this.commentService.updateCommentsStatus(body);
+  }
+
+  @ApiBearerAuth()
   @ApiOkResponse({ type: CommentResponseDto })
   @Put('admin/:commentId')
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -59,17 +67,6 @@ export class CommentController {
     @Param('commentId', ParseIntPipe) commentId: number,
   ) {
     return await this.commentService.updateComment(commentId, body);
-  }
-
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: CommentResponseDto })
-  @Put('admin/status/:commentId')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  async updateCommentStatus(
-    @Body() body: UpdateCommentStatusDto,
-    @Param('commentId', ParseIntPipe) commentId: number,
-  ) {
-    return await this.commentService.updateCommentStatus(commentId, body);
   }
 
   @ApiBearerAuth()

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ConfigDrawer, Header, ProfileDropdown, Search, ThemeSwitch } from '@/utilities/components'
+import { NotificationDropdown } from '@/utilities/components/notificationDropdown/notificationDropdown'
 
 
 
@@ -32,6 +33,7 @@ function RouteComponent() {
       <Header fixed className='border-b'>
         <Search className='me-auto' />
         <ThemeSwitch />
+        <NotificationDropdown />
         <ConfigDrawer />
         <ProfileDropdown />
       </Header>

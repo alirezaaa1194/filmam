@@ -2,6 +2,7 @@ import { type ColumnDef } from '@tanstack/react-table'
 import i18n from '@/i18n'
 import { Badge, Checkbox, DataTableColumnHeader, LongText } from '@/utilities/components'
 import { Cn } from '@/scripts'
+import { CommentBodyCell } from '../commentBodyCell/commentBodyCell.index'
 import { DataTableRowActions } from '../dataTableRowActions/dataTableRowActions.index'
 import { commentStatusBadge, formatCommentCreatedAt } from '../comments.data'
 import type { Comment } from '../comments.type'
@@ -37,9 +38,7 @@ export const commentsColumns: ColumnDef<Comment>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={i18n.t('comments.body')} />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-52 ps-3'>{row.getValue('body')}</LongText>
-    ),
+    cell: ({ row }) => <CommentBodyCell row={row} />,
     meta: {
       className: Cn(
         'drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)]',

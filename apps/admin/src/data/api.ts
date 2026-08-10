@@ -29,8 +29,7 @@ export const __AppApis = {
     adminAll: `${base}/comment/admin/all`,
     adminById: (commentId: number) => `${base}/comment/admin/${commentId}`,
     adminUpdate: (commentId: number) => `${base}/comment/admin/${commentId}`,
-    adminUpdateStatus: (commentId: number) =>
-      `${base}/comment/admin/status/${commentId}`,
+    adminUpdateStatus: `${base}/comment/admin/status`,
     adminDelete: `${base}/comment/admin`,
     byMovie: (movieSlug: string) => `${base}/comment/movie/${movieSlug}`,
     byEpisode: (episodeSlug: string) =>
@@ -44,6 +43,7 @@ export const __AppApis = {
       `${base}/contact/admin/answer/${contactId}`,
     adminReject: (contactId: number) =>
       `${base}/contact/admin/reject/${contactId}`,
+    adminUpdateStatus: `${base}/contact/admin/status`,
     adminDelete: `${base}/contact/admin`,
   },
   country: {

@@ -22,7 +22,7 @@ import {
 } from '@/utilities/components'
 import Uploader from '@/utilities/components/uploader/uploader.index'
 import { Cn } from '@/scripts'
-import { moviesSelectApi } from '../../movies/movies.data'
+import { moviesSeriesSelectApi } from '../../movies/movies.data'
 import {
   getLanguageDirection,
   getLanguageFontClass,
@@ -128,7 +128,7 @@ export function SeasonForm({
                   <AsyncSelect
                     className='col-span-4'
                     queryKey={['seasons', 'movies-options']}
-                    api={moviesSelectApi}
+                    api={moviesSeriesSelectApi}
                     getOptionId={(movie) => String(movie.id)}
                     getOptionLabel={(movie) => movie.title}
                     initialLabels={initialLabels?.movies}

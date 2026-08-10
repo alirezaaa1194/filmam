@@ -6,6 +6,7 @@ import {
   DeleteContactsDto,
   GetAllContactsDto,
   RejectContactDto,
+  UpdateContactsStatusDto,
 } from '../dto/contact.dto';
 import { ContactStatus } from '../../generated/prisma';
 import { TransactionType } from '../../common/types/types';
@@ -20,6 +21,22 @@ export class ContactRepository {
   async deleteContacts(body: DeleteContactsDto) {
     return await prisma.contact.deleteMany({
       where: { id: { in: body.contact_ids } },
+    });
+  }
+
+  async updateContactsStatus(
+    body: UpdateContactsStatusDto,
+    tx?: TransactionType,
+  ) {
+    const data =
+      body.status === ContactStatus.ANSWERED
+        ? { status: body.status, answer_message: body.answer_message }
+        : body.status === ContactStatus.REJECTED
+          ? { status: body.status, rejected_detail: body.rejected_detail }
+          : { status: body.status };
+    return await (tx || prisma).contact.updateMany({
+      where: { id: { in: body.contact_ids }, status: ContactStatus.PENDING },
+      data,
     });
   }
 

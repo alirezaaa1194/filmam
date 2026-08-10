@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Button,
   ConfigDrawer,
   EmptyState,
   Header,
@@ -20,7 +21,7 @@ import {
   TabsTrigger,
   ThemeSwitch,
 } from '@/utilities/components'
-import { ChartColumn, Clock, Eye, Film, Users } from 'lucide-react'
+import { ChartColumn, Clock, ExternalLink, Eye, Film, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { AppApis } from '@/data'
 import { Api } from '@/scripts'
@@ -67,6 +68,16 @@ export function Dashboard() {
           ) : (
             <Skeleton className='h-9 w-48' />
           )}
+          <Button asChild variant='outline' size='sm'>
+            <a
+              href='https://filmamapp.ir'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <ExternalLink className='size-4' />
+              {t('dashboard.view_site')}
+            </a>
+          </Button>
         </div>
 
         <Tabs

@@ -13,7 +13,6 @@
     "knip": "knip"
   },
   "dependencies": {
-    "@clerk/react": "^6.12.8",
     "@hookform/resolvers": "^5.4.3",
     "@noble/hashes": "^1.8.0",
     "@radix-ui/react-alert-dialog": "^1.1.23",
@@ -47,7 +46,6 @@
     "i18next-browser-languagedetector": "^8.2.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^1.27.0",
-    "radix-ui": "^1.6.7",
     "react": "^19.2.8",
     "react-day-picker": "10.0.1",
     "react-dom": "^19.2.8",
@@ -65,7 +63,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@faker-js/faker": "^10.5.0",
     "@tanstack/eslint-plugin-query": "^5.101.4",
     "@tanstack/react-query-devtools": "^5.101.4",
     "@tanstack/react-router-devtools": "^1.167.0",

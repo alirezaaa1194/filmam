@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Bell } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Button,
   DropdownMenu,
@@ -15,6 +16,7 @@ import { NotificationType } from '@/types'
 
 export function NotificationDropdown() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { data, isPending } = useQuery({
     queryKey: ['notification'],
     queryFn: () =>
@@ -49,12 +51,16 @@ export function NotificationDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         {data?.comments > 0 ? (
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => navigate({ to: '/comments' })}
+          >
             {t('notifications.dropdown.comments', { count: data.comments })}
           </DropdownMenuItem>
         ) : null}
         {data.contacts ? (
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => navigate({ to: '/contacts' })}
+          >
             {t('notifications.dropdown.contacts', { count: data.contacts })}
           </DropdownMenuItem>
         ) : null}

@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/utilities/components'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { sectionFilterKeys } from '../headerMenus.data'
 import type { HeaderMenuFilterItem } from '../headerMenus.type'
@@ -78,8 +79,9 @@ export function FiltersEditor({ filters, onChange }: FiltersEditorProps) {
             className='size-9 shrink-0 text-destructive hover:text-destructive'
             onClick={() => removeFilter(index)}
             aria-label={t('header_menus.remove_filter')}
+            title={t('header_menus.remove_filter')}
           >
-            <span className='sr-only'>{t('header_menus.remove_filter')}</span>
+            <X className='size-4' />
           </Button>
         </div>
       ))}

@@ -16,7 +16,7 @@ export class SectionTranslationService {
   ) {
     const sectionTranslationsData = body.map((sectionTranslation) => {
       return {
-        language: sectionTranslation.lang,
+        language: sectionTranslation.language,
         title: sectionTranslation.title,
         description: sectionTranslation.description,
         section_id: sectionId,

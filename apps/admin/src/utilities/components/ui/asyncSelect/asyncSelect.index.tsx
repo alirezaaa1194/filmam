@@ -182,6 +182,7 @@ export function AsyncSelect<T>({
       )
     } else {
       onValueChange(value.includes(optionValue) ? [] : [optionValue])
+      setOpen(false)
     }
   }
 

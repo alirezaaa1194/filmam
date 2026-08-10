@@ -1,4 +1,3 @@
-// import { faker } from '@faker-js/faker'
 import { UserCheck, Users } from 'lucide-react'
 import i18n from '@/i18n'
 import { UserRoleEnum, type UserType } from '../../types'
@@ -29,8 +28,6 @@ export const blockDurations = [
   { labelKey: 'users.duration_1w', ms: 7 * 24 * 60 * 60 * 1000 },
   { labelKey: 'users.duration_1M', ms: 30 * 24 * 60 * 60 * 1000 },
 ] as const
-
-// faker.seed(67890)
 
 export const callTypes = new Map<string, string>([
   [
@@ -67,27 +64,3 @@ export function getRoleLabelKey(role: string) {
 export function getOppositeRole(role: string) {
   return role === UserRoleEnum.ADMIN ? UserRoleEnum.USER : UserRoleEnum.ADMIN
 }
-
-// export const users = Array.from({ length: 500 }, () => {
-//   const firstName = faker.person.firstName()
-//   const lastName = faker.person.lastName()
-//   return {
-//     id: faker.string.uuid(),
-//     firstName,
-//     lastName,
-//     username: faker.internet
-//       .username({ firstName, lastName })
-//       .toLocaleLowerCase(),
-//     email: faker.internet.email({ firstName }).toLocaleLowerCase(),
-//     phoneNumber: faker.phone.number({ style: 'international' }),
-//     status: faker.helpers.arrayElement([
-//       'active',
-//       'inactive',
-//       'invited',
-//       'suspended',
-//     ]),
-//     role: faker.helpers.arrayElement(['admin', 'manager']),
-//     createdAt: faker.date.past(),
-//     updatedAt: faker.date.recent(),
-//   }
-// })

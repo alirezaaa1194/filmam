@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLayout } from '@/context'
 import {
@@ -14,7 +13,7 @@ import { NavGroup } from '../navGroup/navGroup.index'
 export function AppSidebar() {
   const { t } = useTranslation()
   const { collapsible, variant } = useLayout()
-  const sidebarData = useMemo(() => getSidebarData(t), [t])
+  const sidebarData = getSidebarData(t)
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>

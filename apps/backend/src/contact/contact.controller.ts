@@ -16,6 +16,7 @@ import {
   DeleteContactsDto,
   GetAllContactsDto,
   RejectContactDto,
+  UpdateContactsStatusDto,
 } from './dto/contact.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { RoleGuard } from '../auth/guards/role.guard';
@@ -61,6 +62,14 @@ export class ContactController {
     @Param('contactId') contactId: number,
   ) {
     return await this.contactService.rejectContact(contactId, body);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: CountResponseDto })
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Put('admin/status')
+  async updateContactsStatus(@Body() body: UpdateContactsStatusDto) {
+    return await this.contactService.updateContactsStatus(body);
   }
 
   @ApiBearerAuth()

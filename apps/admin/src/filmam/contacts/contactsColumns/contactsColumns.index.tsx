@@ -2,6 +2,7 @@ import { type ColumnDef } from '@tanstack/react-table'
 import i18n from '@/i18n'
 import { Badge, Checkbox, DataTableColumnHeader, LongText } from '@/utilities/components'
 import { Cn } from '@/scripts'
+import { ContactMessageCell } from '../contactMessageCell/contactMessageCell.index'
 import { DataTableRowActions } from '../dataTableRowActions/dataTableRowActions.index'
 import { contactStatusBadge, formatContactCreatedAt } from '../contacts.data'
 import type { Contact } from '../contacts.type'
@@ -55,9 +56,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={i18n.t('contacts.message')} />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-52 ps-2'>{row.getValue('message')}</LongText>
-    ),
+    cell: ({ row }) => <ContactMessageCell row={row} />,
     enableSorting: false,
   },
   {

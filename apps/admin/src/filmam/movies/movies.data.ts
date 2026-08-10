@@ -64,6 +64,19 @@ export const genresSelectApi = makeApi<GenresApiResponseType['data'][number]>(
 export const moviesSelectApi = makeApi<MoviesApiResponseType['data'][number]>(
   AppApis.movie.all
 )
+export const moviesSeriesSelectApi: AsyncSelectApi<
+  MoviesApiResponseType['data'][number]
+> = (params) =>
+  Api<SelectPage<MoviesApiResponseType['data'][number]>>(AppApis.movie.all, {
+    method: 'GET',
+    query: {
+      page: params.page,
+      page_size: params.pageSize,
+      search: params.search || undefined,
+      sort: 'ASC',
+      type: 'SERIES',
+    },
+  })
 export const tagsSelectApi = makeApi<TagsApiResponseType['data'][number]>(
   AppApis.tag.all
 )

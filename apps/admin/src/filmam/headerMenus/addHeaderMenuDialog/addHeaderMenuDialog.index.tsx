@@ -232,6 +232,7 @@ export function AddHeaderMenuDialog({
                 )}
               />
 
+              {watchMenuType === 'PAGE' && (
               <FormField
                 control={form.control}
                 name='href'
@@ -243,7 +244,6 @@ export function AddHeaderMenuDialog({
                     <FormControl>
                       <Input
                         placeholder={t('header_menus.href_placeholder')}
-                        disabled={watchMenuType !== 'PAGE'}
                         className='col-span-4'
                         {...field}
                       />
@@ -252,6 +252,7 @@ export function AddHeaderMenuDialog({
                   </FormItem>
                 )}
               />
+            )}
 
               <FormField
                 control={form.control}

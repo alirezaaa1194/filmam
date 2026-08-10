@@ -10,6 +10,7 @@ import {
   DeleteContactsDto,
   GetAllContactsDto,
   RejectContactDto,
+  UpdateContactsStatusDto,
 } from './dto/contact.dto';
 import { UserService } from '../user/user.service';
 import { paginationCalculator } from '../lib/utils';
@@ -34,6 +35,20 @@ export class ContactService {
 
   async deleteContacts(body: DeleteContactsDto) {
     return await this.contactRepository.deleteContacts(body);
+  }
+
+  async updateContactsStatus(body: UpdateContactsStatusDto) {
+    if (body.status === ContactStatus.ANSWERED && !body.answer_message) {
+      throw new BadRequestException('answer_message is required to answer contacts');
+    }
+    if (body.status === ContactStatus.REJECTED && !body.rejected_detail) {
+      throw new BadRequestException('rejected_detail is required to reject contacts');
+    }
+    const result = await this.contactRepository.updateContactsStatus(body);
+    if (result.count === 0) {
+      throw new BadRequestException('No pending contacts found to update status');
+    }
+    return result;
   }
 
   async answerContact(contactId: number, body: AnswerContactDto) {

@@ -26,7 +26,7 @@ export class CreateSectionTranslationDto {
   })
   @IsString()
   @IsNotEmpty()
-  lang!: AppLanguage;
+  language!: AppLanguage;
 }
 
 

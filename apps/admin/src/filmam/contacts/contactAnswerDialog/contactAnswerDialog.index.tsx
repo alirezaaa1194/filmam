@@ -65,6 +65,7 @@ export function ContactAnswerDialog({
       toast.success(t('contacts.contact_answered'))
       onOpenChange(false)
       queryclient.invalidateQueries({ queryKey: ['contacts'] })
+      queryclient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (error: Response) => {
       toast.error(t(TranslateServerError(error.status)))
