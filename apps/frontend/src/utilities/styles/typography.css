@@ -1,0 +1,92 @@
+@theme {
+  --text-display-1: 64px;
+  --text-display-1--line-height: 1.4;
+  --text-display-2: 56px;
+  --text-display-2--line-height: 1.2;
+
+  --text-h-1: 44px;
+  --text-h-1--line-height: 1.4;
+  --text-h-2: 40px;
+  --text-h-2--line-height: 1.4;
+  --text-h-3: 32px;
+  --text-h-3--line-height: 1.4;
+  --text-h-4: 24px;
+  --text-h-4--line-height: 1.4;
+  --text-h-5: 20px;
+  --text-h-5--line-height: 1.4;
+  --text-h-6: 16px;
+  --text-h-6--line-height: 1.4;
+
+  --text-body-3xl: 44px;
+  --text-body-3xl--line-height: 1.4;
+  --text-body-2xl: 40px;
+  --text-body-2xl--line-height: 1.4;
+  --text-body-xlg: 32px;
+  --text-body-xlg--line-height: 1.4;
+  --text-body-md: 28px;
+  --text-body-md--line-height: 1.8;
+  --text-body-lg: 28px;
+  --text-body-lg--line-height: 1.8;
+  --text-body-smd: 24px;
+  --text-body-smd--line-height: 1.8;
+  --text-body: 20px;
+  --text-body--line-height: 1.8;
+  --text-body-s: 18px;
+  --text-body-s--line-height: 1.8;
+  --text-body-xs: 16px;
+  --text-body-xs--line-height: 1.8;
+  --text-body-xxs: 14px;
+  --text-body-xxs--line-height: 1.8;
+
+  --text-caption-lg: 14px;
+  --text-caption-lg--line-height: 1.8;
+  --text-caption-md: 12px;
+  --text-caption-md--line-height: 1.8;
+  --text-caption-sm: 10px;
+  --text-caption-sm--line-height: 1.8;
+
+  --text-button-xlg: 18px;
+  --text-button-xlg--line-height: 1.8;
+  --text-button-lg: 16px;
+  --text-button-lg--line-height: 1.8;
+  --text-button-md: 14px;
+  --text-button-md--line-height: 1.8;
+  --text-button-s: 12px;
+  --text-button-s--line-height: 1.8;
+
+  --text-mobile-h-1: 32px;
+  --text-mobile-h-1--line-height: 1.4;
+  --text-mobile-h-2: 24px;
+  --text-mobile-h-2--line-height: 1.4;
+  --text-mobile-h-3: 20px;
+  --text-mobile-h-3--line-height: 1.8;
+  --text-mobile-h-4: 18px;
+  --text-mobile-h-4--line-height: 1.4;
+  --text-mobile-h-5: 16px;
+  --text-mobile-h-5--line-height: 1.8;
+  --text-mobile-h-6: 14px;
+  --text-mobile-h-6--line-height: 1.8;
+
+  --text-mobile-body-xl: 20px;
+  --text-mobile-body-xl--line-height: 1.8;
+  --text-mobile-body-lg: 18px;
+  --text-mobile-body-lg--line-height: 1.8;
+  --text-mobile-body-md: 16px;
+  --text-mobile-body-md--line-height: 1.8;
+  --text-mobile-body-sm: 14px;
+  --text-mobile-body-sm--line-height: 1.8;
+
+  --text-mobile-button-lg: 16px;
+  --text-mobile-button-lg--line-height: 1.8;
+  --text-mobile-button-md: 14px;
+  --text-mobile-button-md--line-height: 1.8;
+  --text-mobile-button-s: 12px;
+  --text-mobile-button-s--line-height: 1.8;
+
+  --text-mobile-caption-lg: 14px;
+  --text-mobile-caption-lg--line-height: 1.8;
+  --text-mobile-caption-md: 12px;
+  --text-mobile-caption-md--line-height: 1.8;
+  --text-mobile-caption-sm: 10px;
+  --text-mobile-caption-sm--line-height: 1.8;
+}

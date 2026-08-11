@@ -1,0 +1,66 @@
+@theme {
+  --color-primary: #00925d;
+  --color-primary-shade-1: #008253;
+  --color-primary-shade-2: #007248;
+  --color-primary-shade-3: #00613e;
+  --color-primary-shade-4: #005134;
+  --color-primary-shade-5: #004129;
+  --color-primary-shade-6: #00311f;
+  --color-primary-shade-7: #002015;
+  --color-primary-shade-8: #00100a;
+  --color-primary-tint-1: #00ba77;
+  --color-primary-tint-2: #00e391;
+  --color-primary-tint-3: #0cffa7;
+  --color-primary-tint-4: #35ffb6;
+  --color-primary-tint-5: #5dffc4;
+  --color-primary-tint-6: #86ffd3;
+  --color-primary-tint-7: #aeffe2;
+  --color-primary-tint-8: #d7fff0;
+
+  --color-complementary: #920035;
+  --color-complementary-shade-1: #82002f;
+  --color-complementary-shade-2: #720029;
+  --color-complementary-shade-3: #610023;
+  --color-complementary-shade-4: #51001d;
+  --color-complementary-shade-5: #410018;
+  --color-complementary-shade-6: #310012;
+  --color-complementary-shade-7: #20000c;
+  --color-complementary-shade-8: #100006;
+  --color-complementary-tint-1: #ba0044;
+  --color-complementary-tint-2: #e30052;
+  --color-complementary-tint-3: #ff0c64;
+  --color-complementary-tint-4: #ff357e;
+  --color-complementary-tint-5: #ff5d98;
+  --color-complementary-tint-6: #ff86b2;
+  --color-complementary-tint-7: #ffaecb;
+  --color-complementary-tint-8: #ffd7e5;
+
+  --color-success: #00966d;
+  --color-success-light: #00ba88;
+  --color-success-bg: #bffeea;
+
+  --color-warning: #e2b93b;
+  --color-warning-light: #deb53a;
+  --color-warning-bg: #fff8e1;
+
+  --color-error: #c30000;
+  --color-error-light: #ed2e2e;
+  --color-error-bg: #fce8e8;
+
+  --color-black: #0c0c0c;
+  --color-white: #fdfdfd;
+  --color-gray-1: #fafafa;
+  --color-gray-2: #f9f9f9;
+  --color-gray-3: #ededed;
+  --color-gray-4: #e1e1e1;
+  --color-gray-5: #d9d9d9;
+  --color-gray-6: #cbcbcb;
+  --color-gray-7: #adadad;
+  --color-gray-8: #909090;
+  --color-gray-9: #717171;
+  --color-gray-10: #505050;
+  --color-gray-11: #353535;
+  --color-gray-12: #212121;
+  --color-gray-13: #121212;
+  --color-gray-14: #090909;
+}
