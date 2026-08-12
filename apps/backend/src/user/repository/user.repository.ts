@@ -7,6 +7,7 @@ import {
   CreateUserDto,
   UpdateUserInfoDto,
 } from '../dto/user.dto';
+import { TransactionType } from '../../common/types/types';
 
 @Injectable()
 export class UserRepository {
@@ -46,6 +47,10 @@ export class UserRepository {
 
   async getUsersCount() {
     return await prisma.user.count();
+  }
+
+  async findUsers(userIds: number[], tx: TransactionType) {
+    return await tx.user.findMany({ where: { id: { in: userIds } } });
   }
 
   async blockUsers(body: BlockUserDto) {

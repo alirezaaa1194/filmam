@@ -1,6 +1,6 @@
 import {
-  BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -18,6 +18,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { paginationCalculator } from '../lib/utils';
 import { UserRole } from '../generated/prisma';
+import { prisma } from '../lib/prisma';
 
 @Injectable()
 export class UserService {
@@ -81,17 +82,42 @@ export class UserService {
     return await this.userRepository.blockUser(userId, expireTime);
   }
 
-  async deleteUserAdmin(body: DeleteUsersDto) {
-    const deletedUsers = await this.userRepository.deleteUserAdmin(
-      body.users_ids,
-    );
-    if (deletedUsers.count === 0) {
-      throw new NotFoundException('User not found');
+  async deleteUserAdmin(body: DeleteUsersDto, adminId: number) {
+    const userIds = body.users_ids.filter((userId) => userId !== adminId);
+
+    if (!userIds.length) {
+      throw new ForbiddenException('You can not delete yourself!');
     }
-    return { message: 'Users deleted successfully' };
+
+    const result = await prisma.$transaction(async (tx) => {
+      const users = await this.userRepository.findUsers(userIds, tx);
+      if (userIds.length === 1 && users[0].role === UserRole.ADMIN) {
+        throw new ForbiddenException(
+          'You can not delete user by admin Role. first change role to user, then delete',
+        );
+      }
+      const deletedUsers = await this.userRepository.deleteUserAdmin(userIds);
+      if (deletedUsers.count === 0) {
+        throw new NotFoundException('User not found');
+      }
+      return { message: 'Users deleted successfully' };
+    });
+    return result;
   }
 
   async deleteUserAccount(userId: number) {
+    const userInfo = await this.userRepository.getUserById(userId);
+
+    if (!userInfo) {
+      throw new NotFoundException('User not found');
+    }
+
+    const adminsCount = await this.getAdminsCount();
+
+    if (userInfo.role === UserRole.ADMIN && adminsCount === 1) {
+      throw new ForbiddenException('Admins count can not be lower than one');
+    }
+
     return await this.userRepository.deleteUserAccount(userId);
   }
 
@@ -110,7 +136,7 @@ export class UserService {
     if (adminsCount > 1 || userNewRole === UserRole.ADMIN) {
       return await this.userRepository.changeUserRoleAdmin(userId, userNewRole);
     } else {
-      throw new BadRequestException('Admins count can not be lower than one');
+      throw new ForbiddenException('Admins count can not be lower than one');
     }
   }
 

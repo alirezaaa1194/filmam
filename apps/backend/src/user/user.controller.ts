@@ -70,8 +70,8 @@ export class UserController {
   @ApiOkResponse({ type: MessageResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('admin/delete-users')
-  async deleteUserAdmin(@Body() body: DeleteUsersDto) {
-    return await this.userService.deleteUserAdmin(body);
+  async deleteUserAdmin(@Req() req, @Body() body: DeleteUsersDto) {
+    return await this.userService.deleteUserAdmin(body, req.user.userId);
   }
 
   @ApiBearerAuth()
