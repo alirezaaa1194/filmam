@@ -1,0 +1,81 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { AppLanguagesEnum, MessageType } from "../types";
+import { Api, RemoveCookie } from ".";
+import { AppApis } from "../data";
+// import { useUserStore } from "../stores";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex } from "@noble/hashes/utils";
+
+export function __Cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function __Sleep(ms: number = 1000) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function __GetPageNumbers(currentPage: number, totalPages: number) {
+  const maxVisiblePages = 5;
+  const rangeWithDots: (number | string)[] = [];
+
+  if (totalPages <= maxVisiblePages) {
+    for (let i = 1; i <= totalPages; i++) {
+      rangeWithDots.push(i);
+    }
+  } else {
+    rangeWithDots.push(1);
+
+    if (currentPage <= 3) {
+      for (let i = 2; i <= 4; i++) {
+        rangeWithDots.push(i);
+      }
+      rangeWithDots.push("...", totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      rangeWithDots.push("...");
+      for (let i = totalPages - 3; i <= totalPages; i++) {
+        rangeWithDots.push(i);
+      }
+    } else {
+      rangeWithDots.push("...");
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        rangeWithDots.push(i);
+      }
+      rangeWithDots.push("...", totalPages);
+    }
+  }
+
+  return rangeWithDots;
+}
+
+export function __GetDisplayNameInitials(displayName: string): string {
+  const parts = displayName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+  const first = parts[0][0] ?? "";
+  const last = parts[parts.length - 1]?.[0] ?? "";
+  return (first + last).toUpperCase();
+}
+
+export async function __LogOut() {
+  // try {
+  //   await Api<MessageType>(AppApis.auth.logout, { method: "POST" });
+  // } catch {
+  //   // token may already be invalid/rotated
+  // }
+  // useUserStore.getState().setUser(null);
+
+  // RemoveCookie("accessToken");
+  // RemoveCookie("refreshToken");
+}
+
+export function __HashEmail(email: string) {
+  const normalized = email.trim().toLowerCase();
+
+  return bytesToHex(sha256(new TextEncoder().encode(normalized)));
+}
+
+export const __DefaultLanguage = AppLanguagesEnum.EN;
+export const __AppLanguages = [AppLanguagesEnum.FA, AppLanguagesEnum.AR, AppLanguagesEnum.EN];

@@ -1,0 +1,10 @@
+{
+  "Common": {
+    "language": "Language"
+  },
+  "HomePage": {
+    "title": "Welcome to Filmam",
+    "description": "Watch movies and series anytime, anywhere.",
+    "watchNow": "Watch now"
+  }
+}
