@@ -6,6 +6,8 @@ import { AppApis } from "../data";
 import { AppLanguagesEnum, UserType } from "../types";
 import Provider from "../providers/provider.index";
 
+export const instant = false;
+
 export const generateMetadata = async () => {
   const t = await getTranslations();
   return {
