@@ -18,7 +18,7 @@ import { UsersProvider } from './usersProvider/usersProvider.index'
 import { UsersTable } from './usersTable/usersTable.index'
 import { Api } from '../../scripts'
 import { AppApis } from '../../data'
-import type { UserType } from '../../types'
+import type { UsersApiResponseType } from '../../types'
 import { NotificationDropdown } from '../../utilities/components/notificationDropdown/notificationDropdown'
 
 const route = getRouteApi('/_authenticated/users/')
@@ -37,13 +37,16 @@ export function Users() {
       search.sort,
     ],
     queryFn: () =>
-      Api<UserType[]>(AppApis.user.adminAll, {
+      Api<UsersApiResponseType>(AppApis.user.adminAll, {
         method: 'GET',
         query: {
           page: search.page,
           page_size: search.pageSize,
           search: search.username || undefined,
-          blocked: search.blocked === 'blocked' ? true : undefined,
+          blocked:
+            search.blocked === 'all' || search.blocked === undefined
+              ? undefined
+              : search.blocked === 'blocked',
           sort: search.sort,
         },
       }),
@@ -71,7 +74,11 @@ export function Users() {
           </div>
           <UsersPrimaryButtons />
         </div>
-        <UsersTable data={data ?? []} isPending={isPending} />
+        <UsersTable
+          data={data?.data ?? []}
+          count={data?.count ?? 0}
+          isPending={isPending}
+        />
       </Main>
 
       <UsersDialogs />

@@ -65,9 +65,19 @@ export class UserService {
       page_size,
       search: query.search?.trim() || '',
       sort: query.sort || 'desc',
-      blocked: query.blocked || false,
+      blocked: query.blocked,
     };
-    return await this.userRepository.getAllUsersAdmin(allQuery);
+    const [users, usersCount] = await Promise.all([
+      this.userRepository.getAllUsersAdmin(allQuery),
+      this.userRepository.getAllUsersCount(allQuery),
+    ]);
+
+    return {
+      page: page + 1,
+      page_size,
+      count: usersCount,
+      data: users,
+    };
   }
 
   async changeUserPassword(email: string, newPassword: string) {
@@ -125,7 +135,11 @@ export class UserService {
     return await this.userRepository.getAdminsCount();
   }
 
-  async changeUserRoleAdmin(userId: number) {
+  async changeUserRoleAdmin(userId: number, adminId: number) {
+    if (userId === adminId) {
+      throw new ForbiddenException('You can not change your role!');
+    }
+
     const adminsCount = await this.getAdminsCount();
     const user = await this.getUserById(userId);
     if (!user) {

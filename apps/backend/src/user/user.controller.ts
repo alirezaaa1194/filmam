@@ -86,8 +86,8 @@ export class UserController {
   @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('admin/change-role/:userId')
-  async changeUserRoleAdmin(@Param('userId', ParseIntPipe) userId: number) {
-    return await this.userService.changeUserRoleAdmin(userId);
+  async changeUserRoleAdmin(@Req() req, @Param('userId', ParseIntPipe) userId: number) {
+    return await this.userService.changeUserRoleAdmin(userId, req.user.userId);
   }
 
   @ApiBearerAuth()

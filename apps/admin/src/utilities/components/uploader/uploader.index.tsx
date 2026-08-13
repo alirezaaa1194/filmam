@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { AppApis } from '@/data'
-import { Api, Cn, GetCookie, TranslateServerError } from '@/scripts'
+import { Api, Cn, TranslateServerError } from '@/scripts'
 import {
   MediaFileAcceptMap,
   type UploadType,
@@ -208,11 +208,9 @@ export default function Uploader({
     const xhr = new XMLHttpRequest()
     xhrRef.current = xhr
     xhr.timeout = 5 * 60 * 1000
+    xhr.withCredentials = true
 
-    const accessToken = GetCookie('accessToken')
     xhr.open('POST', AppApis.upload.fromFile)
-    if (accessToken)
-      xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
 
     const cleanup = (errorMessage?: string) => {
       if (xhrRef.current === xhr) xhrRef.current = null

@@ -18,7 +18,7 @@ import { __HandleServerError } from './handleServerError'
 import { __ShowSubmittedData } from './showSubmittedData'
 import { __TranslateServerError } from './translateServerError'
 import { __TimerParser } from './timerParser'
-import { __Api } from './api'
+import { __ClientCall } from './clientCall'
 
 export {
   __Cn as Cn,
@@ -40,4 +40,4 @@ export { __HandleServerError as HandleServerError }
 export { __ShowSubmittedData as ShowSubmittedData }
 export { __TranslateServerError as TranslateServerError }
 export { __TimerParser as TimerParser }
-export { __Api as Api }
+export { __ClientCall as ClientCall, __ClientCall as Api }

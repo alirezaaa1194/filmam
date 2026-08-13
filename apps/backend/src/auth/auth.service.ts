@@ -25,6 +25,15 @@ import { CreateUserDto } from '../user/dto/user.dto';
 import { OtpType, UserRole, AppLanguage } from '../generated/prisma';
 import { MailService } from '../mail/mail.service';
 import { UserRepository } from '../user/repository/user.repository';
+import { authCookieOptions } from './cookies.util';
+import type { Response as ExpressResponse } from 'express';
+
+export type AuthTokens = {
+  accessToken: string;
+  accessTokenExpiresIn: number;
+  refreshToken: string;
+  refreshTokenExpiresIn: number;
+};
 
 @Injectable()
 export class AuthService {
@@ -38,7 +47,7 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async jwtGenerator(userId: number, email: string) {
+  async jwtGenerator(userId: number, email: string): Promise<AuthTokens> {
     const payload = { sub: userId, email: email };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -74,6 +83,24 @@ export class AuthService {
       refreshToken,
       refreshTokenExpiresIn: refreshExp,
     };
+  }
+
+  setAuthCookies(res: ExpressResponse, tokens: AuthTokens) {
+    res.cookie(
+      'accessToken',
+      tokens.accessToken,
+      authCookieOptions(tokens.accessTokenExpiresIn),
+    );
+    res.cookie(
+      'refreshToken',
+      tokens.refreshToken,
+      authCookieOptions(tokens.refreshTokenExpiresIn),
+    );
+  }
+
+  clearAuthCookies(res: ExpressResponse) {
+    res.clearCookie('accessToken', authCookieOptions(0));
+    res.clearCookie('refreshToken', authCookieOptions(0));
   }
 
   async sendOtpEmail({
@@ -266,6 +293,7 @@ export class AuthService {
       if (user) {
         return await this.jwtGenerator(user.id, user.email);
       }
+      throw new UnauthorizedException('Invalid email or password');
     } else {
       throw new UnauthorizedException('OTP is not correct');
     }
@@ -542,6 +570,20 @@ export class AuthService {
       }
     } else {
       throw new NotFoundException('User not found');
+    }
+  }
+
+  async logoutByToken(refreshToken: string | null | undefined) {
+    if (!refreshToken) return;
+    try {
+      const payload = this.jwtService.decode(refreshToken) as {
+        sub?: number;
+      } | null;
+      if (payload?.sub) {
+        await this.logout(payload.sub, refreshToken);
+      }
+    } catch {
+      // token may already be invalid/expired — cookies are still cleared by the controller
     }
   }
 

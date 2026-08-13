@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { AppLanguagesEnum, MessageType } from '../types'
-import { Api, RemoveCookie } from '.'
+import { AppLanguagesEnum, type MessageType } from '../types'
+import { Api } from '.'
 import { AppApis } from '../data'
 import { useUserStore } from '../stores'
 import { sha256 } from '@noble/hashes/sha2'
@@ -66,9 +66,6 @@ export async function __LogOut() {
     // token may already be invalid/rotated
   }
   useUserStore.getState().setUser(null)
-
-  RemoveCookie('accessToken')
-  RemoveCookie('refreshToken')
 }
 
 export function __HashEmail(email: string) {

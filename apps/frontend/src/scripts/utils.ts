@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { AppLanguagesEnum, MessageType } from "../types";
-import { Api, RemoveCookie } from ".";
+import { ClientCall } from ".";
 import { AppApis } from "../data";
 // import { useUserStore } from "../stores";
 import { sha256 } from "@noble/hashes/sha2";
@@ -60,15 +60,12 @@ export function __GetDisplayNameInitials(displayName: string): string {
 }
 
 export async function __LogOut() {
-  // try {
-  //   await Api<MessageType>(AppApis.auth.logout, { method: "POST" });
-  // } catch {
-  //   // token may already be invalid/rotated
-  // }
+  try {
+    await ClientCall<MessageType>(AppApis.auth.logout, { method: "POST" });
+  } catch {
+    // token may already be invalid/rotated
+  }
   // useUserStore.getState().setUser(null);
-
-  // RemoveCookie("accessToken");
-  // RemoveCookie("refreshToken");
 }
 
 export function __HashEmail(email: string) {

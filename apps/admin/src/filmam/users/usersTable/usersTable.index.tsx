@@ -35,7 +35,7 @@ import {
   TableRow,
 } from '@/utilities/components'
 
-import { isUserBanned, roles } from '../users.data'
+import { roles } from '../users.data'
 import { DataTableBulkActions } from '../dataTableBulkActions/dataTableBulkActions.index'
 import { usersColumns as columns } from '../usersColumns/usersColumns.index'
 import { UsersTableSkeleton } from '../usersTableSkeleton/usersTableSkeleton.index'
@@ -44,10 +44,11 @@ const route = getRouteApi('/_authenticated/users/')
 
 type DataTableProps = {
   data: UserType[]
+  count: number
   isPending: boolean
 }
 
-export function UsersTable({ data, isPending }: DataTableProps) {
+export function UsersTable({ data, count, isPending }: DataTableProps) {
   const { t } = useTranslation()
   const search = route.useSearch()
   const navigate = route.useNavigate()
@@ -88,17 +89,17 @@ export function UsersTable({ data, isPending }: DataTableProps) {
     columnFilters: [{ columnId: 'role', searchKey: 'role', type: 'array' }],
   })
 
-  const tableData = useMemo(() => {
-    if (search.blocked !== 'unblocked') return data
-    return data.filter((user) => !isUserBanned(user.block_expires_at))
-  }, [data, search.blocked])
-
-  const pageCount =
-    tableData.length < pagination.pageSize ? pagination.pageIndex + 1 : -1
+  const pageCount = useMemo(
+    () =>
+      count > 0
+        ? Math.max(1, Math.ceil(count / pagination.pageSize))
+        : pagination.pageIndex + 1,
+    [count, pagination.pageSize, pagination.pageIndex]
+  )
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: tableData,
+    data,
     columns,
     state: {
       sorting,

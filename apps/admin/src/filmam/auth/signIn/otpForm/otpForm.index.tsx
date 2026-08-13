@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import {
   Api,
-  SetCookie,
   TranslateServerError,
   TimerParser,
   Cn,
@@ -32,7 +31,7 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
 import { toast } from 'sonner'
-import { type JWTTokenType } from '@/types'
+import { type MessageType } from '@/types'
 
 type OtpFormProps = {
   email: string
@@ -73,7 +72,7 @@ export function OtpForm({
       password: string
       otp: string
     }) =>
-      Api<JWTTokenType>(AppApis.auth.adminLoginVerify, {
+      Api<MessageType>(AppApis.auth.adminLoginVerify, {
         method: 'POST',
         body: {
           email,
@@ -81,10 +80,7 @@ export function OtpForm({
           otp,
         },
       }),
-    onSuccess: (data) => {
-      SetCookie('accessToken', data.accessToken, data.accessTokenExpiresIn)
-      SetCookie('refreshToken', data.refreshToken, data.refreshTokenExpiresIn)
-
+    onSuccess: () => {
       toast.success(t('auth.login_successful'))
       navigate({ to: '/' })
     },

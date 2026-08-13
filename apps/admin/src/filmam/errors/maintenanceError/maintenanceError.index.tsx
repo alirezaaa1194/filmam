@@ -10,8 +10,7 @@ export function MaintenanceError() {
         <h1 className='text-[7rem] leading-tight font-bold'>{t('errors.503_title')}</h1>
         <span className='font-medium'>{t('errors.503_desc')}</span>
         <p className='text-center text-muted-foreground'>
-          The site is not available at the moment. <br />
-          We'll be back online shortly.
+          {t('errors.503_message')}
         </p>
         <div className='mt-6 flex gap-4'>
           <Button variant='outline'>{t('errors.learn_more')}</Button>

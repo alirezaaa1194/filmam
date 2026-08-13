@@ -21,7 +21,7 @@ import { languageDirectionMap } from '@/utilities/config/direction'
 const languages = [
   { code: AppLanguagesEnum.EN, label: 'English' },
   { code: AppLanguagesEnum.FA, label: 'فارسی' },
-  { code: AppLanguagesEnum.AR, label: 'العربی' },
+  { code: AppLanguagesEnum.AR, label: 'العربية' },
 ]
 
 export function LanguageSwitcher() {

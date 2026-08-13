@@ -22,9 +22,7 @@ export function GeneralError({
           <h1 className='text-[7rem] leading-tight font-bold'>{t('errors.500_title')}</h1>
         )}
         <span className='font-medium'>{t('errors.500_desc')}</span>
-        <p className='text-center text-muted-foreground'>
-          We apologize for the inconvenience. <br /> Please try again later.
-        </p>
+        <p className='text-center text-muted-foreground'>{t('errors.500_message')}</p>
         {!minimal && (
           <div className='mt-6 flex gap-4'>
             <Button variant='outline' onClick={() => history.go(-1)}>

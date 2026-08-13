@@ -1,4 +1,4 @@
-import { UserType } from '.'
+import type { UserType } from '.'
 
 export interface __AuthUser {
   accountNo: string

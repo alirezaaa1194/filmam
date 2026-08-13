@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores'
 import { ConfirmDialog } from '@/utilities/components'
 import { useMutation } from '@tanstack/react-query'
 import { AppApis } from '@/data'
-import { Api, RemoveCookie, TranslateServerError } from '@/scripts'
+import { Api, TranslateServerError } from '@/scripts'
 import { type MessageType } from '@/types'
 import { toast } from 'sonner'
 interface SignOutDialogProps {
@@ -21,9 +21,6 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
     mutationFn: () => Api<MessageType>(AppApis.auth.logout, { method: 'POST' }),
     onSuccess: () => {
       setUser(null)
-
-      RemoveCookie('accessToken')
-      RemoveCookie('refreshToken')
 
       toast.success(t('profile.sign_out_success'))
 

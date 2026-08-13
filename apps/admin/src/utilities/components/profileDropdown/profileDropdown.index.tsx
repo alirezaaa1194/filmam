@@ -40,7 +40,7 @@ export function ProfileDropdown() {
                 alt={user.username}
               />
               <AvatarFallback>
-                {user.username.split(' ')[0][0].toUpperCase()}
+                {user.username.split(' ')[0][0].toUpperCase()}{' '}
                 {user.username.split(' ')[1][0].toUpperCase()}
               </AvatarFallback>
             </Avatar>

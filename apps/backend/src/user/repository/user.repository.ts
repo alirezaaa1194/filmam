@@ -67,35 +67,47 @@ export class UserRepository {
     });
   }
 
+  private buildUsersWhere(query: { search: string; blocked?: boolean }) {
+    return {
+      OR: [
+        {
+          username: {
+            contains: query.search,
+            mode: 'insensitive' as const,
+          },
+        },
+        {
+          email: {
+            contains: query.search,
+            mode: 'insensitive' as const,
+          },
+        },
+      ],
+      AND: {
+        ...(query.blocked === undefined
+          ? {}
+          : query.blocked
+            ? { block_expires_at: { gt: new Date() } }
+            : {
+                block_expires_at: {
+                  OR: [{ equals: null }, { lte: new Date() }],
+                },
+              }),
+      },
+    };
+  }
+
   async getAllUsersAdmin(query: {
     page: number;
     page_size: number;
     search: string;
     sort: 'asc' | 'desc';
-    blocked: boolean;
+    blocked?: boolean;
   }) {
     return await prisma.user.findMany({
       skip: query.page,
       take: query.page_size,
-      where: {
-        OR: [
-          {
-            username: {
-              contains: query.search,
-              mode: 'insensitive',
-            },
-          },
-          {
-            email: {
-              contains: query.search,
-              mode: 'insensitive',
-            },
-          },
-        ],
-        AND: {
-          ...(query.blocked ? { block_expires_at: { gt: new Date() } } : {}),
-        },
-      },
+      where: this.buildUsersWhere(query),
       select: {
         id: true,
         created_at: true,
@@ -110,6 +122,12 @@ export class UserRepository {
       orderBy: {
         created_at: query.sort,
       },
+    });
+  }
+
+  async getAllUsersCount(query: { search: string; blocked?: boolean }) {
+    return await prisma.user.count({
+      where: this.buildUsersWhere(query),
     });
   }
 

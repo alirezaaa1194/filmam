@@ -13,8 +13,7 @@ export function ForbiddenError() {
         <h1 className='text-[7rem] leading-tight font-bold'>{t('errors.403_title')}</h1>
         <span className='font-medium'>{t('errors.403_desc')}</span>
         <p className='text-center text-muted-foreground'>
-          You don't have necessary permission <br />
-          to view this resource.
+          {t('errors.403_message')}
         </p>
         <div className='mt-6 flex gap-4'>
           <Button variant='outline' onClick={() => history.go(-1)}>

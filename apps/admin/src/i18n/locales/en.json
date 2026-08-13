@@ -616,6 +616,11 @@
     "403_desc": "Access Forbidden",
     "503_title": "503",
     "503_desc": "Website is under maintenance!",
+    "500_message": "We apologize for the inconvenience. Please try again later.",
+    "404_message": "It seems like the page you're looking for does not exist or might have been removed.",
+    "401_message": "Please log in with the appropriate credentials to access this resource.",
+    "403_message": "You don't have necessary permission to view this resource.",
+    "503_message": "The site is not available at the moment. We'll be back online shortly.",
     "learn_more": "Learn more"
   },
   "profile": {

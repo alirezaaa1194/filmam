@@ -1,3 +1,5 @@
+import { AppLanguagesEnum } from '.'
+
 //      ----------------------- types -----------------------
 export type __PaginationType<T> = {
   page: number
@@ -966,7 +968,14 @@ export type __UserType = {
   google_id: string | null
   role: string
   block_expires_at: string | null
-  preferred_language: string
+  preferred_language: AppLanguagesEnum
+}
+
+export type __UsersApiResponseType = {
+  page: number
+  page_size: number
+  count: number
+  data: __UserType[]
 }
 
 export type __UserMovieActionType = {

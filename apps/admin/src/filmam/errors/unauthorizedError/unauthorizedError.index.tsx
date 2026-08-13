@@ -13,8 +13,7 @@ export function UnauthorisedError() {
         <h1 className='text-[7rem] leading-tight font-bold'>{t('errors.401_title')}</h1>
         <span className='font-medium'>{t('errors.401_desc')}</span>
         <p className='text-center text-muted-foreground'>
-          Please log in with the appropriate credentials <br /> to access this
-          resource.
+          {t('errors.401_message')}
         </p>
         <div className='mt-6 flex gap-4'>
           <Button variant='outline' onClick={() => history.go(-1)}>

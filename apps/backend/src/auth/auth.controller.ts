@@ -27,8 +27,12 @@ import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { MeResponseDto } from './dto/auth.response.dto';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { MessageResponseDto } from '../common/dto/response.dto';
-import { TokenResponseDto } from '../common/dto/response.dto';
 import { UserRole } from '../generated/prisma';
+import { getRefreshTokenFromRequest } from './cookies.util';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -48,18 +52,28 @@ export class AuthController {
     return await this.authService.login(loginDto, true);
   }
 
-  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiOkResponse({ type: MessageResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('login-verify')
-  async loginVerify(@Body() otpDto: LoginOtpDto) {
-    return await this.authService.verifyOtp(otpDto);
+  async loginVerify(
+    @Body() otpDto: LoginOtpDto,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const tokens = await this.authService.verifyOtp(otpDto);
+    this.authService.setAuthCookies(res, tokens);
+    return { message: 'Logged in successfully' };
   }
 
-  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiOkResponse({ type: MessageResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('admin/login-verify')
-  async adminLoginVerify(@Body() otpDto: LoginOtpDto) {
-    return await this.authService.verifyOtp(otpDto, true);
+  async adminLoginVerify(
+    @Body() otpDto: LoginOtpDto,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const tokens = await this.authService.verifyOtp(otpDto, true);
+    this.authService.setAuthCookies(res, tokens);
+    return { message: 'Logged in successfully' };
   }
 
   @ApiOkResponse({ type: MessageResponseDto })
@@ -69,10 +83,15 @@ export class AuthController {
     return await this.authService.signup(signupDto);
   }
 
-  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiOkResponse({ type: MessageResponseDto })
   @Post('signup-verify')
-  async signupVerify(@Body() signupOtpDto: SignupOtpDto) {
-    return await this.authService.verifyOtp(signupOtpDto);
+  async signupVerify(
+    @Body() signupOtpDto: SignupOtpDto,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const tokens = await this.authService.verifyOtp(signupOtpDto);
+    this.authService.setAuthCookies(res, tokens);
+    return { message: 'Signed up successfully' };
   }
 
   @ApiOkResponse({ type: MeResponseDto })
@@ -124,23 +143,33 @@ export class AuthController {
     return await this.authService.resetPassword(resetPasswordDto, true);
   }
 
-  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
-  async refreshToken(@Request() req) {
-    const refreshToken = req.headers.authorization?.replace('Bearer ', '');
-    return this.authService.refresh(req.user.userId, refreshToken);
+  async refreshToken(
+    @Request() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const refreshToken = getRefreshTokenFromRequest(req);
+    const { userId } = req.user as { userId: number; email: string };
+    const tokens = await this.authService.refresh(userId, refreshToken ?? '');
+    this.authService.setAuthCookies(res, tokens);
+    return { message: 'Token refreshed successfully' };
   }
 
   @ApiOkResponse({ type: MessageResponseDto })
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  @UseGuards(JwtRefreshGuard)
-  async logout(@Request() req) {
-    const refreshToken = req.headers.authorization?.replace('Bearer ', '');
-    return this.authService.logout(req.user.userId, refreshToken);
+  async logout(
+    @Req() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const refreshToken = getRefreshTokenFromRequest(req);
+    await this.authService.logoutByToken(refreshToken);
+    this.authService.clearAuthCookies(res);
+    return { message: 'Logged out successfully' };
   }
 
   @ApiOkResponse({ type: MessageResponseDto })
@@ -162,12 +191,12 @@ export class AuthController {
   @UseGuards(new (AuthGuard('google-admin'))({ session: false }))
   async googleAdminAuth() {}
 
-  @ApiBearerAuth()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res) {
     const user = req.user;
     const tokens = await this.authService.jwtGenerator(user.id, user.email);
+    this.authService.setAuthCookies(res, tokens);
     const state = (req.query.state as string) || '';
     const frontendUrls: Record<string, string> = {
       admin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -179,12 +208,7 @@ export class AuthController {
       <body>
         <script>
           window.opener.postMessage(
-            {
-              accessToken: "${tokens.accessToken}",
-              accessTokenExpiresIn: ${tokens.accessTokenExpiresIn},
-              refreshToken: "${tokens.refreshToken}",
-              refreshTokenExpiresIn: ${tokens.refreshTokenExpiresIn}
-            },
+            { success: true },
             "${frontendUrl}"
           );
           window.close();
@@ -223,17 +247,13 @@ export class AuthController {
     }
 
     const tokens = await this.authService.jwtGenerator(user.id, user.email);
+    this.authService.setAuthCookies(res, tokens);
     const html = `
     <html>
       <body>
         <script>
           window.opener.postMessage(
-            {
-              accessToken: "${tokens.accessToken}",
-              accessTokenExpiresIn: ${tokens.accessTokenExpiresIn},
-              refreshToken: "${tokens.refreshToken}",
-              refreshTokenExpiresIn: ${tokens.refreshTokenExpiresIn}
-            },
+            { success: true },
             "${frontendUrl}"
           );
           window.close();

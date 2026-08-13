@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LogIn } from 'lucide-react'
 import { toast } from 'sonner'
-import { Cn, Api, SetCookie, TranslateServerError } from '@/scripts'
+import { Cn, Api, TranslateServerError } from '@/scripts'
 import { useDirection } from '@/context'
 import {
   Button,
@@ -188,13 +188,7 @@ export function SignInForm({
                       new URL(AppApis.auth.googleAdmin).origin
                     )
                       return
-                    const {
-                      accessToken,
-                      accessTokenExpiresIn,
-                      refreshToken,
-                      refreshTokenExpiresIn,
-                      error,
-                    } = event.data
+                    const { success, error } = event.data
                     if (error) {
                       setIsGoogleLoading(false)
                       toast.error(
@@ -203,16 +197,10 @@ export function SignInForm({
                       window.removeEventListener('message', handleMessage)
                       return
                     }
-                    if (!accessToken || !refreshToken) {
+                    if (!success) {
                       setIsGoogleLoading(false)
                       return
                     }
-                    SetCookie('accessToken', accessToken, accessTokenExpiresIn)
-                    SetCookie(
-                      'refreshToken',
-                      refreshToken,
-                      refreshTokenExpiresIn
-                    )
                     setIsGoogleLoading(false)
                     window.removeEventListener('message', handleMessage)
                     navigate({ to: '/' })

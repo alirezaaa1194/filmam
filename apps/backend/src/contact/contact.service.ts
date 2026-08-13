@@ -15,8 +15,9 @@ import {
 import { UserService } from '../user/user.service';
 import { paginationCalculator } from '../lib/utils';
 import { prisma } from '../lib/prisma';
-import { ContactStatus } from '../generated/prisma';
+import { ContactStatus, AppLanguage } from '../generated/prisma';
 import { MailService } from '../mail/mail.service';
+import { defaultLang } from '../lib/utils';
 
 @Injectable()
 export class ContactService {
@@ -39,14 +40,20 @@ export class ContactService {
 
   async updateContactsStatus(body: UpdateContactsStatusDto) {
     if (body.status === ContactStatus.ANSWERED && !body.answer_message) {
-      throw new BadRequestException('answer_message is required to answer contacts');
+      throw new BadRequestException(
+        'answer_message is required to answer contacts',
+      );
     }
     if (body.status === ContactStatus.REJECTED && !body.rejected_detail) {
-      throw new BadRequestException('rejected_detail is required to reject contacts');
+      throw new BadRequestException(
+        'rejected_detail is required to reject contacts',
+      );
     }
     const result = await this.contactRepository.updateContactsStatus(body);
     if (result.count === 0) {
-      throw new BadRequestException('No pending contacts found to update status');
+      throw new BadRequestException(
+        'No pending contacts found to update status',
+      );
     }
     return result;
   }
@@ -60,31 +67,15 @@ export class ContactService {
         throw new BadRequestException('Contact was rejected previously');
       }
 
-      await this.mailService.sendEmail(
-        contact.user_email,
-        'پاسخ پشتیبانی',
-        `<div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #00925d; margin: 0;">فیلمام</h1>
-        <p style="color: #999;">فیلم و سریال</p>
-      </div>
-      
-      <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
-        <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
-          پاسخ پشتیبانی
-        </p>
-        <p style="color: #999;">${body.answer_message}</p>
-      </div>
-      
-      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-      
-      <p style="color: #999; font-size: 11px; text-align: center;">
-        اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.<br>
-        © 2026 فیلمام
-      </p>
-    </div>
-  `,
+      const user = await this.userService.getUserByEmail(contact.user_email);
+      const lang = user?.preferred_language ?? defaultLang;
+      const { subject, html } = this.getContactEmailContent(
+        'answer',
+        body.answer_message,
+        lang,
       );
+
+      await this.mailService.sendEmail(contact.user_email, subject, html);
 
       return await this.contactRepository.answerContact(contactId, body);
     } else {
@@ -100,35 +91,87 @@ export class ContactService {
         throw new BadRequestException('Cannot change a closed contact');
       }
 
-      await this.mailService.sendEmail(
-        contact.user_email,
-        'پاسخ پشتیبانی',
-        `<div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #00925d; margin: 0;">فیلمام</h1>
-        <p style="color: #999;">فیلم و سریال</p>
-      </div>
-      
-      <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
-        <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
-         پاسخ پشتیبانی - پیام شما رد شد
-        </p>
-        <p style="color: #999;">${body.rejected_detail}</p>
-      </div>
-      
-      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-      
-      <p style="color: #999; font-size: 11px; text-align: center;">
-        اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.<br>
-        © 2026 فیلمام
-      </p>
-    </div>
-  `,
+      const user = await this.userService.getUserByEmail(contact.user_email);
+      const lang = user?.preferred_language ?? defaultLang;
+      const { subject, html } = this.getContactEmailContent(
+        'reject',
+        body.rejected_detail,
+        lang,
       );
+
+      await this.mailService.sendEmail(contact.user_email, subject, html);
       return await this.contactRepository.rejectContact(contactId, body);
     } else {
       throw new NotFoundException('Contact not found');
     }
+  }
+
+  private getContactEmailContent(
+    type: 'answer' | 'reject',
+    message: string,
+    lang: AppLanguage,
+  ): { subject: string; html: string } {
+    const content = {
+      [AppLanguage.FA]: {
+        brand: 'فیلمام',
+        tagline: 'فیلم و سریال',
+        answerSubject: 'پاسخ پشتیبانی',
+        rejectSubject: 'پاسخ پشتیبانی - پیام شما رد شد',
+        answerBody: 'پاسخ پشتیبانی',
+        rejectBody: 'پاسخ پشتیبانی - پیام شما رد شد',
+        footer: 'اگر این ایمیل را درخواست نکرده‌اید، آن را نادیده بگیرید.',
+        copyright: '© ۲۰۲۶ فیلمام',
+      },
+      [AppLanguage.EN]: {
+        brand: 'Filmam',
+        tagline: 'Movies & Series',
+        answerSubject: 'Support Reply',
+        rejectSubject: 'Support Reply - Your Message Was Rejected',
+        answerBody: 'Support reply',
+        rejectBody: 'Support reply - your message was rejected',
+        footer: 'If you did not request this email, please ignore it.',
+        copyright: '© 2026 Filmam',
+      },
+      [AppLanguage.AR]: {
+        brand: 'فيلمام',
+        tagline: 'أفلام ومسلسلات',
+        answerSubject: 'رد الدعم',
+        rejectSubject: 'رد الدعم - تم رفض رسالتك',
+        answerBody: 'رد الدعم',
+        rejectBody: 'رد الدعم - تم رفض رسالتك',
+        footer: 'إذا لم تطلب هذا البريد الإلكتروني، يرجى تجاهله.',
+        copyright: '© ۲۰۲٦ فيلمام',
+      },
+    };
+
+    const c = content[lang] || content[defaultLang];
+    const isAnswer = type === 'answer';
+
+    return {
+      subject: isAnswer ? c.answerSubject : c.rejectSubject,
+      html: `
+    <div style="max-width: 500px; margin: 0 auto; padding: 30px; font-family: Tahoma, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #00925d; margin: 0;">${c.brand}</h1>
+        <p style="color: #999;">${c.tagline}</p>
+      </div>
+
+      <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; text-align: center;">
+        <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
+          ${isAnswer ? c.answerBody : c.rejectBody}
+        </p>
+        <p style="color: #999;">${message}</p>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+
+      <p style="color: #999; font-size: 11px; text-align: center;">
+        ${c.footer}<br>
+        ${c.copyright}
+      </p>
+    </div>
+  `,
+    };
   }
 
   async getContactDetail(contactId: number) {

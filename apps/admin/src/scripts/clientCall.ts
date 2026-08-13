@@ -1,40 +1,21 @@
-import { GetCookie, LogOut, SetCookie } from '@/scripts'
+import { LogOut } from '@/scripts'
 import { AppApis } from '../data'
 import i18n from '../i18n'
-import { ApiQueryType, JWTTokenType } from '../types'
+import type { ApiQueryType } from '../types'
 
 let refreshPromise: Promise<Response> | null = null
 
 async function refreshTokens(): Promise<Response> {
-  const refreshToken = GetCookie('refreshToken')
-  if (!refreshToken) {
-    return new Response(null, { status: 401 })
-  }
-  const response = await fetch(AppApis.auth.refresh, {
+  return fetch(AppApis.auth.refresh, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'content-type': 'application/json',
-      Authorization: `Bearer ${refreshToken}`,
     },
   })
-
-  if (response.ok) {
-    const refreshResponseData: JWTTokenType = await response.json()
-    SetCookie(
-      'accessToken',
-      refreshResponseData.accessToken,
-      refreshResponseData.accessTokenExpiresIn
-    )
-    SetCookie(
-      'refreshToken',
-      refreshResponseData.refreshToken,
-      refreshResponseData.refreshTokenExpiresIn
-    )
-  }
-  return response
 }
 
-export const __Api = async <T>(
+export const __ClientCall = async <T>(
   url: string,
   options: {
     method: 'GET' | 'POST' | 'DELETE' | 'PUT'
@@ -43,9 +24,6 @@ export const __Api = async <T>(
   },
   retry = true
 ): Promise<T> => {
-  const accessToken = GetCookie('accessToken')
-  const refreshToken = GetCookie('refreshToken')
-
   const currentLanguage = i18n.resolvedLanguage
   let queryString = ''
 
@@ -61,18 +39,18 @@ export const __Api = async <T>(
   }
   const response = await fetch(`${url}?lang=${currentLanguage}${queryString}`, {
     ...options,
+    credentials: 'include',
     body: options.body ? JSON.stringify(options.body) : undefined,
     headers: {
       'content-type': 'application/json',
-      Authorization: `Bearer ${url === AppApis.auth.logout ? refreshToken : accessToken}`,
     },
   })
 
   if (
     response.status === 401 &&
     retry &&
-    refreshToken &&
-    url !== AppApis.auth.logout
+    url !== AppApis.auth.logout &&
+    url !== AppApis.auth.refresh
   ) {
     if (!refreshPromise) {
       refreshPromise = refreshTokens().finally(() => {
@@ -83,7 +61,7 @@ export const __Api = async <T>(
     const refreshResponse = await refreshPromise
 
     if (refreshResponse.ok) {
-      return await __Api<T>(url, options, false)
+      return await __ClientCall<T>(url, options, false)
     }
 
     await LogOut()

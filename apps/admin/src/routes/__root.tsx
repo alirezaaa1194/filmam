@@ -6,13 +6,17 @@ import {
 } from '@tanstack/react-router'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { NavigationProgress, Toaster } from '@/utilities/components'
+import {
+  NavigationProgress,
+  LoadingScreen,
+  Toaster,
+} from '@/utilities/components'
 
 import { GeneralError } from '@/filmam/errors/generalError/generalError.index'
 import { NotFoundError } from '@/filmam/errors/notFoundError/notFoundError.index'
 import { __AppApis } from '../data/api'
 import { Api, SetCookie } from '../scripts'
-import { UserType } from '../types'
+import type { UserType } from '../types'
 import { useUserStore } from '../stores'
 import { changeLanguage } from 'i18next'
 import { languageDirectionMap } from '@/utilities/config/direction'
@@ -73,4 +77,5 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: NotFoundError,
   errorComponent: GeneralError,
+  pendingComponent: LoadingScreen,
 })

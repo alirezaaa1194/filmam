@@ -1,31 +1,93 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { localeCookieName, locales } from "@/i18n/config";
+import { useContext, useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { hasLocale, localeCookieName, locales } from "@/i18n/config";
+import { useLocaleContext } from "../../providers/locale-provider";
+import { UserContext } from "../../contexts";
+import { AppApis } from "../../data";
+import { __ClientCall as ClientCall } from "../../scripts/clientCall";
+import { __GetCookie as GetCookie, __SetCookie as SetCookie } from "../../scripts/cookies";
+import { AppLanguagesEnum } from "../../types";
+
+const flags: Record<AppLanguagesEnum, string> = {
+  [AppLanguagesEnum.FA]: "/flags/fa.svg",
+  [AppLanguagesEnum.EN]: "/flags/en.svg",
+  [AppLanguagesEnum.AR]: "/flags/ar.svg",
+};
+
+const languageLabels: Record<AppLanguagesEnum, string> = {
+  [AppLanguagesEnum.EN]: "English",
+  [AppLanguagesEnum.FA]: "فارسی",
+  [AppLanguagesEnum.AR]: "العربية",
+};
+
+const localeCookieMaxAge = 60 * 60 * 24 * 365;
 
 function LanguageSwitcher() {
-  const t = useTranslations("Common");
-  const locale = useLocale();
-  const router = useRouter();
+  const { locale, setLocale } = useLocaleContext();
+  const user = useContext(UserContext);
 
-  function handleChange(next: string) {
-    document.cookie = `${localeCookieName}=${next}; path=/; max-age=31536000; SameSite=Lax`;
-    router.refresh();
+  const { mutate } = useMutation({
+    mutationFn: (lang: AppLanguagesEnum) =>
+      ClientCall(AppApis.user.updateInfo, {
+        method: "PUT",
+        body: { ...user, preferred_language: lang },
+      }),
+  });
+
+  useEffect(() => {
+    if (!user || !hasLocale(user.preferred_language)) return;
+    if (GetCookie(localeCookieName)) return;
+
+    SetCookie(localeCookieName, user.preferred_language, localeCookieMaxAge);
+  }, [user]);
+
+  function handleSelect(lang: AppLanguagesEnum) {
+    if (lang === locale) return;
+
+    setLocale(lang);
+
+    if (user) {
+      mutate(lang);
+    }
   }
 
   return (
-    <select
-      value={locale}
-      onChange={(event) => handleChange(event.target.value)}
-      aria-label={t("language")}
-    >
-      {locales.map((item) => (
-        <option key={item} value={item}>
-          {item}
-        </option>
-      ))}
-    </select>
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="size-8 overflow-hidden rounded-full">
+          <img
+            src={flags[locale]}
+            alt={`${locale}-flag`}
+            className="size-full rounded-full object-cover"
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {locales.map((lang) => (
+          <DropdownMenuItem key={lang} className="gap-2" onSelect={() => handleSelect(lang)}>
+            <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full">
+              <img
+                src={flags[lang]}
+                alt={`${lang}-flag`}
+                className="size-full rounded-full object-cover"
+              />
+            </span>
+            <span>{languageLabels[lang]}</span>
+            <Check size={14} className={`ms-auto ${locale !== lang ? "hidden" : ""}`} />
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
