@@ -71,6 +71,7 @@ import {
   type __MovieAdminDetailType,
   type __MovieRecommendedType,
   type __MovieListItemType,
+  type __PaginationType,
   type __PushSubscriptionType,
   type __RoleTranslationType,
   type __RoleType,

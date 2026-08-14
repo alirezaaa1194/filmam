@@ -38,14 +38,12 @@ export function getRefreshTokenFromRequest(request): string | null {
 }
 
 export function authCookieOptions(maxAgeSeconds: number) {
+  const isProduction = process.env.NODE_ENV === 'production';
   return {
     httpOnly: true,
-    secure:
-      process.env.COOKIE_SECURE !== undefined
-        ? process.env.COOKIE_SECURE === "true"
-        : process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
+    secure: isProduction,
+    sameSite: isProduction ? ('lax' as const) : ('none' as const),
+    path: '/',
     maxAge: maxAgeSeconds * 1000,
   };
 }
