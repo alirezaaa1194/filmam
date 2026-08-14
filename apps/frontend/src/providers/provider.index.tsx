@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import LanguageSwitcher from "../components/language-switcher/language-switcher.index";
 import { UserContext } from "../contexts";
 import { AppLanguagesEnum, UserType } from "../types";
 import LocaleProvider from "./locale-provider";
+
+const ReactQueryDevtools = lazy(() =>
+  import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })),
+);
 
 function Provider({
   user,
@@ -39,7 +42,11 @@ function Provider({
         <LocaleProvider initialLocale={locale}>
           <LanguageSwitcher />
           {children}
-          <ReactQueryDevtools initialIsOpen={false} />
+          {process.env.NODE_ENV === "development" && (
+            <Suspense fallback={null}>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Suspense>
+          )}
         </LocaleProvider>
       </UserContext>
     </QueryClientProvider>

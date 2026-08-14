@@ -42,7 +42,7 @@ export function authCookieOptions(maxAgeSeconds: number) {
   return {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? ('lax' as const) : ('none' as const),
+    sameSite: 'lax' as const,
     path: '/',
     maxAge: maxAgeSeconds * 1000,
   };

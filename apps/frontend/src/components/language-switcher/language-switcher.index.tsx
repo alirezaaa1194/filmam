@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { hasLocale, localeCookieName, locales } from "@/i18n/config";
+import { locales } from "@/i18n/config";
 import { useLocaleContext } from "../../providers/locale-provider";
 import { UserContext } from "../../contexts";
 import { AppApis } from "../../data";
 import { __ClientCall as ClientCall } from "../../scripts/clientCall";
-import { __GetCookie as GetCookie, __SetCookie as SetCookie } from "../../scripts/cookies";
 import { AppLanguagesEnum } from "../../types";
 
 const flags: Record<AppLanguagesEnum, string> = {
@@ -30,8 +29,6 @@ const languageLabels: Record<AppLanguagesEnum, string> = {
   [AppLanguagesEnum.AR]: "العربية",
 };
 
-const localeCookieMaxAge = 60 * 60 * 24 * 365;
-
 function LanguageSwitcher() {
   const { locale, setLocale } = useLocaleContext();
   const user = useContext(UserContext);
@@ -43,13 +40,6 @@ function LanguageSwitcher() {
         body: { ...user, preferred_language: lang },
       }),
   });
-
-  useEffect(() => {
-    if (!user || !hasLocale(user.preferred_language)) return;
-    if (GetCookie(localeCookieName)) return;
-
-    SetCookie(localeCookieName, user.preferred_language, localeCookieMaxAge);
-  }, [user]);
 
   function handleSelect(lang: AppLanguagesEnum) {
     if (lang === locale) return;

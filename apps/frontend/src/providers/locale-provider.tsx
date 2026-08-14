@@ -2,10 +2,9 @@
 
 import { createContext, useContext, useState } from "react";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
-import { useRouter } from "next/navigation";
 import { getDir, localeCookieName, type Locale } from "@/i18n/config";
 import { setClientLocale } from "@/i18n/client-locale";
-import { __SetCookie as SetCookie } from "@/scripts/cookies";
+import { setCookie } from "@/app/actions/cookies";
 
 import en from "@/i18n/messages/en.json";
 import fa from "@/i18n/messages/fa.json";
@@ -41,25 +40,24 @@ function LocaleProvider({
     setClientLocale(initialLocale);
     return initialLocale;
   });
-  const router = useRouter();
 
   function setLocale(next: Locale) {
     if (next === locale) return;
 
     setLocaleState(next);
     setClientLocale(next);
-    SetCookie(localeCookieName, next, localeCookieMaxAge);
     document.documentElement.setAttribute("dir", getDir(next));
     document.documentElement.setAttribute("lang", next.toLowerCase());
-    router.refresh();
+
+    void setCookie(localeCookieName, next, localeCookieMaxAge);
   }
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale }}>
+    <LocaleContext value={{ locale, setLocale }}>
       <NextIntlClientProvider locale={locale} messages={messages[locale]}>
         {children}
       </NextIntlClientProvider>
-    </LocaleContext.Provider>
+    </LocaleContext>
   );
 }
 

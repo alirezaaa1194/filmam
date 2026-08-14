@@ -4,21 +4,7 @@ import { AppApis } from "../data";
 import { ApiQueryType, AppLanguagesEnum } from "../types";
 import { hasLocale } from "../i18n/config";
 import { __Refresh } from "./refresh";
-
-function buildUrl(url: string, locale: AppLanguagesEnum, query?: Record<string, unknown> | ApiQueryType) {
-  let queryString = "";
-  if (query) {
-    const queryParams = new URLSearchParams();
-    for (const key in query) {
-      const value = query[key as keyof ApiQueryType];
-      if (value !== undefined && value !== null) {
-        queryParams.append(key, String(value));
-      }
-    }
-    queryString = `&${queryParams.toString()}`;
-  }
-  return `${url}?lang=${locale}${queryString}`;
-}
+import { buildApiUrl } from "./buildUrl";
 
 export type ServerCallOptions = {
   method: "GET" | "POST" | "DELETE" | "PUT";
@@ -54,7 +40,7 @@ async function serverFetch<T>(
   cookieHeader: string,
   locale: AppLanguagesEnum,
 ): Promise<T> {
-  const response = await fetch(buildUrl(url, locale, options.query), {
+  const response = await fetch(buildApiUrl(url, locale, options.query), {
     method: options.method,
     body: options.body ? JSON.stringify(options.body) : undefined,
     headers: {

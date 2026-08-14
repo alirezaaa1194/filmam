@@ -2,23 +2,9 @@ import { getClientLocale } from "../i18n/client-locale";
 import { AppApis } from "../data";
 import { ApiQueryType, AppLanguagesEnum } from "../types";
 import { __Refresh } from "./refresh";
+import { buildApiUrl } from "./buildUrl";
 
 const LOGOUT_ROUTE = "/api/auth/logout";
-
-function buildUrl(url: string, locale: AppLanguagesEnum, query?: Record<string, unknown> | ApiQueryType) {
-  let queryString = "";
-  if (query) {
-    const queryParams = new URLSearchParams();
-    for (const key in query) {
-      const value = query[key as keyof ApiQueryType];
-      if (value !== undefined && value !== null) {
-        queryParams.append(key, String(value));
-      }
-    }
-    queryString = `&${queryParams.toString()}`;
-  }
-  return `${url}?lang=${locale}${queryString}`;
-}
 
 export type ClientCallOptions = {
   method: "GET" | "POST" | "DELETE" | "PUT";
@@ -51,7 +37,7 @@ export const __ClientCall = async <T>(
 ): Promise<T> => {
   const currentLanguage = options.locale ?? getClientLocale();
 
-  const response = await fetch(buildUrl(url, currentLanguage, options.query), {
+  const response = await fetch(buildApiUrl(url, currentLanguage, options.query), {
     method: options.method,
     credentials: "include",
     body: options.body ? JSON.stringify(options.body) : undefined,
