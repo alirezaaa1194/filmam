@@ -1,7 +1,7 @@
 "use client";
 import { lazy, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import LanguageSwitcher from "../components/languageSwitcher/languageSwitcher.index";
+import LanguageSwitcher from "../utilities/components/languageSwitcher/languageSwitcher.index";
 import { UserContext } from "../contexts";
 import { AppLanguagesEnum, UserType } from "../types";
 import LocaleProvider from "./localeProvider";

@@ -152,7 +152,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: ExpressResponse,
   ) {
     const refreshToken = getRefreshTokenFromRequest(req);
-    const { userId } = req.user as { userId: number; email: string };
+    const { userId } = (req as ExpressRequest & { user: { userId: number; email: string } }).user;
     const tokens = await this.authService.refresh(userId, refreshToken ?? '');
     this.authService.setAuthCookies(res, tokens);
     return { message: 'Token refreshed successfully' };

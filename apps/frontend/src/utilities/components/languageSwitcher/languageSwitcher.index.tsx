@@ -1,15 +1,13 @@
 "use client";
 
 import { useContext } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/utilities/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/utilities/components/ui/dropdown-menu";
 import { locales } from "@/i18n/config";
-import { useLocaleContext, UserContext } from "../../contexts";
-import { AppApis } from "../../data";
-import { ClientCall } from "../../scripts/client";
-import { AppLanguagesEnum } from "../../types";
+import { useLocaleContext, UserContext } from "@/contexts";
+import { __ChangeLocale as ChangeLocale } from "@/scripts/cookies";
+import { AppLanguagesEnum } from "@/types";
 import Image from "next/image";
 
 const flags: Record<AppLanguagesEnum, string> = {
@@ -34,22 +32,11 @@ function LanguageSwitcher() {
   const { locale, setLocale } = useLocaleContext();
   const user = useContext(UserContext);
 
-  const { mutate } = useMutation({
-    mutationFn: (lang: AppLanguagesEnum) =>
-      ClientCall(AppApis.user.updateInfo, {
-        method: "PUT",
-        body: { ...user, preferred_language: lang },
-      }),
-  });
-
   function handleSelect(lang: AppLanguagesEnum) {
     if (lang === locale) return;
 
     setLocale(lang);
-
-    if (user) {
-      mutate(lang);
-    }
+    void ChangeLocale(user, lang);
   }
 
   return (
