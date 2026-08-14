@@ -1,9 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { AppLanguagesEnum, MessageType } from "../types";
-import { ClientCall } from ".";
+import { __ClientCall as ClientCall } from "./clientCall";
 import { AppApis } from "../data";
-// import { useUserStore } from "../stores";
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex } from "@noble/hashes/utils";
 

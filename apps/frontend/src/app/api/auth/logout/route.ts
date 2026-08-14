@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { AppApis } from "@/data";
+import { localeCookieName } from "@/i18n/config";
 
 export async function POST() {
   const cookieStore = await cookies();
@@ -23,6 +24,8 @@ export async function POST() {
   backendResponse.headers
     .getSetCookie()
     .forEach((cookie) => response.headers.append("set-cookie", cookie));
+
+  response.cookies.delete(localeCookieName);
 
   return response;
 }

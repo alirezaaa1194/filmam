@@ -1,24 +1,14 @@
 "use client";
-import { lazy, Suspense, useState } from "react";
+import { lazy, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import LanguageSwitcher from "../components/language-switcher/language-switcher.index";
+import LanguageSwitcher from "../components/languageSwitcher/languageSwitcher.index";
 import { UserContext } from "../contexts";
 import { AppLanguagesEnum, UserType } from "../types";
-import LocaleProvider from "./locale-provider";
+import LocaleProvider from "./localeProvider";
 
-const ReactQueryDevtools = lazy(() =>
-  import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })),
-);
+const ReactQueryDevtools = lazy(() => import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })));
 
-function Provider({
-  user,
-  locale,
-  children,
-}: {
-  user: UserType | null;
-  locale: AppLanguagesEnum;
-  children: React.ReactNode;
-}) {
+function Provider({ user, locale, children }: { user: UserType | null; locale: AppLanguagesEnum; children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -42,11 +32,7 @@ function Provider({
         <LocaleProvider initialLocale={locale}>
           <LanguageSwitcher />
           {children}
-          {process.env.NODE_ENV === "development" && (
-            <Suspense fallback={null}>
-              <ReactQueryDevtools initialIsOpen={false} />
-            </Suspense>
-          )}
+          <ReactQueryDevtools initialIsOpen={false} />
         </LocaleProvider>
       </UserContext>
     </QueryClientProvider>

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "../utilities/styles/colors.css";
 @import "../utilities/styles/typography.css";
+@import "../utilities/styles/fonts.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 

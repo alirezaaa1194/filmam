@@ -19,6 +19,8 @@ export async function POST() {
   const response = NextResponse.json(data, {
     status: backendResponse.status,
   });
+  console.log(backendResponse.headers);
+  
 
   backendResponse.headers
     .getSetCookie()

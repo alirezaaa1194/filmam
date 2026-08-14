@@ -1,4 +1,4 @@
-const REFRESH_ROUTE = "/api/auth/refresh";
+const REFRESH_ROUTE =  `${process.env.NEXT_PUBLIC_FILMAM_FRONTEND_URL}/api/auth/refresh`;
 
 let refreshPromise: Promise<Response> | null = null;
 

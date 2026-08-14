@@ -1,6 +1,6 @@
 import { AppLanguagesEnum } from "../types";
 
-export const locales = [AppLanguagesEnum.FA, AppLanguagesEnum.AR, AppLanguagesEnum.EN];
+export const locales = [AppLanguagesEnum.EN, AppLanguagesEnum.FA, AppLanguagesEnum.AR];
 
 export type Locale = AppLanguagesEnum;
 

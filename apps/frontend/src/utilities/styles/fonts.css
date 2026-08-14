@@ -1,0 +1,145 @@
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/en/Inter-VariableFont_opsz_wght.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/en/Inter-Italic-VariableFont_opsz_wght.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebthinfanum.woff") format("woff");
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanweblightfanum.woff") format("woff");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebregularfanum.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebmediumfanum.woff") format("woff");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebboldfanum.woff") format("woff");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebextraboldfanum.woff") format("woff");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebblackfanum.woff") format("woff");
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/fa/iranyekanwebextrablackfanum.woff") format("woff");
+  font-weight: 950;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-ExtraLight.woff2") format("woff2");
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSansArabic";
+  src: url("/fonts/ar/IBMPlexSansArabic-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root,
+html {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+html:lang(fa) {
+  --font-sans: "IranYekan", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+html:lang(ar) {
+  --font-sans: "IBMPlexSansArabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-en {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-fa {
+  font-family: "IranYekan", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-ar {
+  font-family: "IBMPlexSansArabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
