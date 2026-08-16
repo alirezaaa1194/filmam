@@ -54,7 +54,7 @@ export async function __ChangeLocale(user: UserType | null, locale: Locale): Pro
   if (!user) return;
 
   try {
-    await ServerCall(AppApis.user.updateInfo, {
+     ServerCall(AppApis.user.updateInfo, {
       method: "PUT",
       body: { ...user, preferred_language: locale },
       locale,

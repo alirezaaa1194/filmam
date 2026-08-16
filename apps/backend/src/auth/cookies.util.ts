@@ -42,6 +42,7 @@ export function authCookieOptions(maxAgeSeconds: number) {
   return {
     httpOnly: true,
     secure: isProduction,
+    ...(isProduction ? { domain: '.filmamapp.ir' } : {}),
     sameSite: 'lax' as const,
     path: '/',
     maxAge: maxAgeSeconds * 1000,
