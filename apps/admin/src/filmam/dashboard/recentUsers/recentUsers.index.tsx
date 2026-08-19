@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/utilities/components'
 import { type UserType } from '@/types'
 import { HashEmail } from '@/scripts'
-export function RecentSales({ data }: { data: UserType[] }) {
+export function RecentUsers({ data }: { data: UserType[] }) {
   return (
     <div className='space-y-8'>
       {data.map((user) => {
@@ -10,7 +10,7 @@ export function RecentSales({ data }: { data: UserType[] }) {
           .split(/\s+/)
           .filter(Boolean)
           .map((part) => part[0])
-          .join('')
+          .join('‌')
           .slice(0, 2)
           .toUpperCase()
         return (

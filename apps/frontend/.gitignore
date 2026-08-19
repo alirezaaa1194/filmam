@@ -40,5 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# next-intl generated message types
-src/i18n/messages/*.d.json.ts
+
+tasks.md

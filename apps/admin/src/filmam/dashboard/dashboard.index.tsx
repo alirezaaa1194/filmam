@@ -21,7 +21,14 @@ import {
   TabsTrigger,
   ThemeSwitch,
 } from '@/utilities/components'
-import { ChartColumn, Clock, ExternalLink, Eye, Film, Users } from 'lucide-react'
+import {
+  ChartColumn,
+  Clock,
+  ExternalLink,
+  Eye,
+  Film,
+  Users,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { AppApis } from '@/data'
 import { Api } from '@/scripts'
@@ -30,8 +37,8 @@ import { NotificationDropdown } from '@/utilities/components/notificationDropdow
 import { Analytics } from './analytics/analytics.index'
 import { GrowthRate } from './growthRate/growthRate.index'
 import { Overview } from './overview/overview.index'
-import { RecentSales } from './recentSales/recentSales.index'
 import { formatNumber } from './dashboard.script'
+import { RecentUsers } from './recentUsers/recentUsers.index'
 
 export function Dashboard() {
   const { t, i18n } = useTranslation()
@@ -115,7 +122,10 @@ export function Dashboard() {
                 <CardContent>
                   {ready ? (
                     <div className='text-2xl font-bold'>
-                      {formatNumber(data?.cards_data.total_views ?? 0, i18n.resolvedLanguage)}
+                      {formatNumber(
+                        data?.cards_data.total_views ?? 0,
+                        i18n.resolvedLanguage
+                      )}
                     </div>
                   ) : (
                     <Skeleton className='h-8 w-20' />
@@ -148,7 +158,10 @@ export function Dashboard() {
                 <CardContent>
                   {ready ? (
                     <div className='text-2xl font-bold'>
-                      {formatNumber(data?.cards_data.total_users ?? 0, i18n.resolvedLanguage)}
+                      {formatNumber(
+                        data?.cards_data.total_users ?? 0,
+                        i18n.resolvedLanguage
+                      )}
                     </div>
                   ) : (
                     <Skeleton className='h-8 w-20' />
@@ -182,7 +195,10 @@ export function Dashboard() {
                   {ready ? (
                     <>
                       <div className='text-2xl font-bold'>
-                        {formatNumber(data?.cards_data.total_content ?? 0, i18n.resolvedLanguage)}
+                        {formatNumber(
+                          data?.cards_data.total_content ?? 0,
+                          i18n.resolvedLanguage
+                        )}
                       </div>
                       <div className='flex w-full items-center gap-1'>
                         <p className='text-xs text-muted-foreground'>
@@ -227,7 +243,10 @@ export function Dashboard() {
                 <CardContent>
                   {ready ? (
                     <div className='text-2xl font-bold'>
-                      {formatNumber(data?.cards_data.total_watch_times ?? 0, i18n.resolvedLanguage)}
+                      {formatNumber(
+                        data?.cards_data.total_watch_times ?? 0,
+                        i18n.resolvedLanguage
+                      )}
                     </div>
                   ) : (
                     <Skeleton className='h-8 w-20' />
@@ -278,7 +297,7 @@ export function Dashboard() {
                 <CardContent>
                   {ready ? (
                     data?.recent_users?.length ? (
-                      <RecentSales data={data.recent_users} />
+                      <RecentUsers data={data.recent_users} />
                     ) : (
                       <EmptyState
                         icon={Users}
