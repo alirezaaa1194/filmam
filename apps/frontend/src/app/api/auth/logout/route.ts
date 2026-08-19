@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { AppApis } from "@/data";
-import { localeCookieName } from "@/i18n/config";
+
+const localeCookieName = "locale";
 
 export async function POST() {
   const cookieStore = await cookies();

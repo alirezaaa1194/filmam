@@ -11,7 +11,7 @@ export function RecentUsers({ data }: { data: UserType[] }) {
           .filter(Boolean)
           .map((part) => part[0])
           .join('‌')
-          .slice(0, 2)
+          .slice(0, 3)
           .toUpperCase()
         return (
           <div key={user.id} className='flex items-center gap-4'>
