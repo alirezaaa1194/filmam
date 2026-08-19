@@ -14,6 +14,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="#00925D" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/logo.svg" />
       </head>
       <body>
         <Provider user={user} locale={locale}>

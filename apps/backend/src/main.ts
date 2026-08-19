@@ -41,6 +41,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
+      'https://www.filmamapp.ir',
       'https://filmamapp.ir',
       'https://admin.filmamapp.ir',
       'http://localhost:3000',

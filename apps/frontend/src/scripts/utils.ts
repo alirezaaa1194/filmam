@@ -51,4 +51,4 @@ export function __GetDir(locale: AppLanguagesEnum) {
 }
 
 export const __DefaultLanguage = AppLanguagesEnum.EN;
-export const __AppLanguages = [AppLanguagesEnum.FA, AppLanguagesEnum.AR, AppLanguagesEnum.EN];
+export const __AppLanguages = [AppLanguagesEnum.EN, AppLanguagesEnum.FA, AppLanguagesEnum.AR];
