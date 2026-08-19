@@ -38,11 +38,11 @@ export function getRefreshTokenFromRequest(request): string | null {
 }
 
 export function authCookieOptions(maxAgeSeconds: number) {
-  const isProduction = process.env.NODE_ENV === 'production';
+  // const isProduction = process.env.NODE_ENV === 'production';
   return {
     httpOnly: true,
-    secure: isProduction,
-    ...(isProduction ? { domain: '.filmamapp.ir' } : {}),
+    // secure: isProduction,
+    // ...(isProduction ? { domain: '.filmamapp.ir' } : {}),
     sameSite: 'lax' as const,
     path: '/',
     maxAge: maxAgeSeconds * 1000,
