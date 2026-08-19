@@ -1,76 +1,53 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { AppLanguagesEnum, MessageType } from "../types";
-import { __ClientCall as ClientCall } from "./clientCall";
-import { AppApis } from "../data";
+import { AppLanguagesEnum, ApiQueryType } from "../types";
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex } from "@noble/hashes/utils";
 
-export function __Cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-export function __Sleep(ms: number = 1000) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export function __GetPageNumbers(currentPage: number, totalPages: number) {
-  const maxVisiblePages = 5;
-  const rangeWithDots: (number | string)[] = [];
-
-  if (totalPages <= maxVisiblePages) {
-    for (let i = 1; i <= totalPages; i++) {
-      rangeWithDots.push(i);
-    }
-  } else {
-    rangeWithDots.push(1);
-
-    if (currentPage <= 3) {
-      for (let i = 2; i <= 4; i++) {
-        rangeWithDots.push(i);
-      }
-      rangeWithDots.push("...", totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      rangeWithDots.push("...");
-      for (let i = totalPages - 3; i <= totalPages; i++) {
-        rangeWithDots.push(i);
-      }
-    } else {
-      rangeWithDots.push("...");
-      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-        rangeWithDots.push(i);
-      }
-      rangeWithDots.push("...", totalPages);
-    }
-  }
-
-  return rangeWithDots;
-}
-
-export function __GetDisplayNameInitials(displayName: string): string {
-  const parts = displayName.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-  const first = parts[0][0] ?? "";
-  const last = parts[parts.length - 1]?.[0] ?? "";
-  return (first + last).toUpperCase();
-}
-
-export async function __LogOut() {
-  try {
-    await ClientCall<MessageType>(AppApis.auth.logout, { method: "POST" });
-  } catch {
-    // token may already be invalid/rotated
-  }
-  // useUserStore.getState().setUser(null);
-}
-
 export function __HashEmail(email: string) {
   const normalized = email.trim().toLowerCase();
-
   return bytesToHex(sha256(new TextEncoder().encode(normalized)));
+}
+
+export function __TimerParser(timer: number) {
+  const timerMinute = Math.floor(timer / 60);
+  const timerSecond = timer % 60;
+  return `${timerMinute.toString().padStart(2, "0")}:${timerSecond.toString().padStart(2, "0")}`;
+}
+
+export function __BuildApiUrl(url: string, locale: AppLanguagesEnum, query?: Record<string, unknown> | ApiQueryType): string {
+  const searchParams = new URLSearchParams({ lang: locale });
+  if (query) {
+    for (const [key, value] of Object.entries(query)) {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    }
+  }
+  return `${url}?${searchParams.toString()}`;
+}
+
+const errorMap: Record<number, string> = {
+  400: "errors.bad_request",
+  401: "errors.unauthorized",
+  403: "errors.forbidden",
+  404: "errors.not_found",
+  409: "errors.conflict",
+  413: "errors.payload_too_large",
+  429: "errors.too_many_requests",
+  500: "errors.internal_server_error",
+};
+
+export function __TranslateServerError(status: number): string {
+  return errorMap[status] || "errors.unknown";
+}
+
+export function __GetDir(locale: AppLanguagesEnum) {
+  const directions = {
+    [AppLanguagesEnum.FA]: "rtl",
+    [AppLanguagesEnum.AR]: "rtl",
+    [AppLanguagesEnum.EN]: "ltr",
+  };
+
+  return directions[locale];
 }
 
 export const __DefaultLanguage = AppLanguagesEnum.EN;

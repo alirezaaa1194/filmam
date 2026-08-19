@@ -1,13 +1,7 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+"use client"
+import { useLocale } from "../hooks";
 
 export default function Test() {
-  const t = useTranslations("Layout");
-  return (
-    <>
-      <h1>{t("title")}</h1>
-      <p>{t("description")}</p>
-    </>
-  );
+  const { t } = useLocale();
+  return <>{t("Common.language")}</>;
 }

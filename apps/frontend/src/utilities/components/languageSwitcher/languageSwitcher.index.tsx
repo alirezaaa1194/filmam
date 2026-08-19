@@ -1,14 +1,17 @@
 "use client";
 
-import { useContext } from "react";
+import { use } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/utilities/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/utilities/components/ui/dropdown-menu";
-import { locales } from "@/i18n/config";
-import { useLocaleContext, UserContext } from "@/contexts";
-import { __ChangeLocale as ChangeLocale } from "@/scripts/cookies";
 import { AppLanguagesEnum } from "@/types";
 import Image from "next/image";
+import { useLocale } from "@/hooks";
+import { UserContext } from "@/contexts";
+import { SetCookie } from "@/scripts/server";
+import { AppLanguages } from "@/scripts";
+import { ClientCall } from "@/scripts/client";
+import { AppApis } from "@/data";
 
 const flags: Record<AppLanguagesEnum, string> = {
   [AppLanguagesEnum.FA]: "/flags/fa.svg",
@@ -29,14 +32,16 @@ const languageFonts: Record<AppLanguagesEnum, string> = {
 };
 
 function LanguageSwitcher() {
-  const { locale, setLocale } = useLocaleContext();
-  const user = useContext(UserContext);
+  const { locale, setLocale } = useLocale();
+  const user = use(UserContext);
 
   function handleSelect(lang: AppLanguagesEnum) {
     if (lang === locale) return;
 
-    setLocale(lang);
-    void ChangeLocale(user, lang);
+    setLocale(lang as AppLanguagesEnum);
+    SetCookie("locale", lang);
+    // router.refresh();
+    ClientCall(AppApis.user.updateInfo, { method: "PUT", body: { ...user, preferred_language: lang } });
   }
 
   return (
@@ -47,7 +52,7 @@ function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {locales.map((lang) => (
+        {AppLanguages.map((lang) => (
           <DropdownMenuItem key={lang} className="gap-2" onSelect={() => handleSelect(lang)}>
             <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full">
               <Image src={flags[lang]} alt={`${lang}-flag`} width={20} height={20} className="size-full rounded-full object-cover" />

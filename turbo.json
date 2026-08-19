@@ -5,6 +5,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "src/generated/**"],
       "env": [
+        "NODE_ENV",
         "PORT",
         "DATABASE_URL",
         "DIRECT_DATABASE_URL",
