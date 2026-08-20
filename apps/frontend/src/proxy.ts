@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AppApis } from "./data";
-import { ParseSetCookie } from "./scripts/server";
+import { ParseSetCookie, DefaultLanguage } from "./scripts";
 
 export async function proxy(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
 
   if (accessToken) {
     return NextResponse.next();
+  }
+
+  const response = NextResponse.next();
+
+  if (!req.cookies.has("locale")) {
+    response.cookies.set("locale", DefaultLanguage);
   }
 
   const refreshResponse = await fetch(AppApis.auth.refresh, {
@@ -16,8 +22,6 @@ export async function proxy(req: NextRequest) {
     },
     cache: "no-store",
   });
-
-  const response = NextResponse.next();
 
   if (!refreshResponse.ok) {
     return response;

@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import { use } from "react";
 import { LocaleContext } from "../contexts";
 import { AppLanguagesEnum } from "../types";
 import { FA } from "@/i18n/fa";
 import { EN } from "../i18n/en";
 import { AR } from "../i18n/ar";
+import { GetDir } from "../scripts";
 
 const translations = {
   [AppLanguagesEnum.FA]: FA,
@@ -22,10 +23,11 @@ function getNestedValue(object: Record<string, any>, path: string) {
 
 export function __UseLocale() {
   const { locale, setLocale } = use(LocaleContext);
+  const dir = GetDir(locale);
 
   function t(key: NestedKeys<typeof EN>) {
     return getNestedValue(translations[locale], key);
   }
 
-  return { locale, setLocale, t };
+  return { locale, setLocale, dir, t };
 }

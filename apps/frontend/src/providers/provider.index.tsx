@@ -1,11 +1,10 @@
 "use client";
 import { lazy, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import LanguageSwitcher from "../utilities/components/languageSwitcher/languageSwitcher.index";
 import { UserContext } from "../contexts";
 import { AppLanguagesEnum, UserType } from "../types";
 import LocaleProvider from "./localeProvider";
-import { SetCookie } from "../scripts/server";
+import { SetCookie } from "@/scripts/server/actions";
 
 const ReactQueryDevtools = lazy(() => import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })));
 
@@ -37,7 +36,6 @@ function Provider({ user, locale, children }: { user: UserType | null; locale: A
     <QueryClientProvider client={queryClient}>
       <UserContext value={user}>
         <LocaleProvider initialLocale={locale}>
-          <LanguageSwitcher />
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
         </LocaleProvider>

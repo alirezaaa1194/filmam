@@ -1,0 +1,54 @@
+"use client";
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/utilities/components/ui/dropdown-menu";
+import { Button } from "@/utilities/components/ui/button";
+import { ArchiveMinus, UserOctagon, I24Support, ArrowDown2, LogoutCurve, User } from "iconsax-react";
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { UserType } from "@/types";
+import Link from "next/link";
+import { useLocale } from "@/hooks";
+
+export function ProfileDropdown({ user }: { user: UserType }) {
+  const [open, setOpen] = useState(false);
+  const { dir } = useLocale();
+  return (
+    <div className="hidden lg:block">
+      <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="!bg-complementary rounded-full border border-complementary-tint-2 w-[72] h-8 cursor-pointer flex items-center gap-1 !shadow-complementary-tint-2">
+            <UserOctagon className="size-5 fill-complementary-shade-5" variant="Bold" />
+            <ArrowDown2 className={`size-5 stroke-complementary-shade-5 transition-all ${open ? "rotate-180" : ""}`} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align={`${dir === "rtl" ? "start" : "end"}`} className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+          <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
+            <span className="text-white text-body-xxs">{user.username}</span>
+            <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
+              <User className="!stroke-white size-5" />
+            </span>
+          </Link>
+          <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
+            <span className="text-white text-body-xxs">لیست علاقه مندی</span>
+            <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
+              <ArchiveMinus className="!stroke-white size-5" />
+            </span>
+          </Link>
+          <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
+            <span className="text-white text-body-xxs">پشتیبانی</span>
+            <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
+              <I24Support className="!stroke-white size-5" />
+            </span>
+          </Link>
+          <Separator className="bg-gray-12" />
+          <div className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md cursor-pointer" dir={dir === "rtl" ? "ltr" : "rtl"}>
+            <span className="text-complementary-tint-2 text-body-xxs">خروج</span>
+            <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
+              <LogoutCurve className="!stroke-complementary-tint-2 size-5" />
+            </span>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}

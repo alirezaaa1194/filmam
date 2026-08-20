@@ -1130,6 +1130,19 @@ export type __CookieOptionsType = {
   sameSite?: "lax" | "strict" | "none";
 };
 
+export type __MenuItemType = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  menu_type: __MenuTypeEnum;
+  href: string | null;
+  order: number;
+  parent_id: number | null;
+  title: string;
+  filter: string | null;
+  children: __MenuItemType[];
+};
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {
@@ -1146,4 +1159,9 @@ export enum __UserRoleEnum {
 export enum __SortTypeEnum {
   ASC = "ASC",
   DESC = "DESC",
+}
+
+export enum __MenuTypeEnum {
+  PAGE = "PAGE",
+  FILTER = "FILTER",
 }

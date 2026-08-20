@@ -1,8 +1,8 @@
 "use client";
 
-import { DefaultLanguage, BuildApiUrl } from ".";
+import { BuildApiUrl, DefaultLanguage } from "../index";
 import { AppApis } from "@/data";
-import { type MessageType, ApiCallOptionsType } from "@/types";
+import { MessageType, ApiCallOptionsType } from "@/types";
 
 export async function ClientCall<T>(url: string, options: ApiCallOptionsType, retry = true): Promise<T> {
   const currentLanguage = options.locale || DefaultLanguage;
