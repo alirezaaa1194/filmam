@@ -21,7 +21,7 @@ export function ProfileDropdown({ user }: { user: UserType }) {
             <ArrowDown2 className={`size-5 stroke-complementary-shade-5 transition-all ${open ? "rotate-180" : ""}`} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={`${dir === "rtl" ? "end" : "start"}`} className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+        <DropdownMenuContent align="end" className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
           <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-white text-body-xxs">{user.username}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
