@@ -11,7 +11,7 @@ import { useLocale } from "@/hooks";
 
 export function ProfileDropdown({ user }: { user: UserType }) {
   const [open, setOpen] = useState(false);
-  const { dir } = useLocale();
+  const { dir, t } = useLocale();
   return (
     <div className="hidden lg:block">
       <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
@@ -21,7 +21,7 @@ export function ProfileDropdown({ user }: { user: UserType }) {
             <ArrowDown2 className={`size-5 stroke-complementary-shade-5 transition-all ${open ? "rotate-180" : ""}`} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={`${dir === "rtl" ? "start" : "end"}`} className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+        <DropdownMenuContent align={`${dir === "rtl" ? "end" : "start"}`} className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
           <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-white text-body-xxs">{user.username}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
@@ -29,20 +29,20 @@ export function ProfileDropdown({ user }: { user: UserType }) {
             </span>
           </Link>
           <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
-            <span className="text-white text-body-xxs">لیست علاقه مندی</span>
+            <span className="text-white text-body-xxs">{t("Header.wishlist")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
               <ArchiveMinus className="!stroke-white size-5" />
             </span>
           </Link>
           <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
-            <span className="text-white text-body-xxs">پشتیبانی</span>
+            <span className="text-white text-body-xxs">{t("Header.support")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
               <I24Support className="!stroke-white size-5" />
             </span>
           </Link>
           <Separator className="bg-gray-12" />
           <div className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md cursor-pointer" dir={dir === "rtl" ? "ltr" : "rtl"}>
-            <span className="text-complementary-tint-2 text-body-xxs">خروج</span>
+            <span className="text-complementary-tint-2 text-body-xxs">{t("Header.logout")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
               <LogoutCurve className="!stroke-complementary-tint-2 size-5" />
             </span>

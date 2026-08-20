@@ -13,4 +13,12 @@ export const AR:typeof EN = {
       }
     }
   },
+  Header: {
+    login: "تسجيل الدخول",
+    searchPlaceholder: "بحث...",
+    wishlist: "قائمة المفضلة",
+    support: "الدعم",
+    logout: "تسجيل الخروج",
+    loginToAccount: "تسجيل الدخول للحساب",
+  },
 };

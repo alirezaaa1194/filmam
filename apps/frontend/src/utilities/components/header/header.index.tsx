@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import DesktopNav from "./nav/desktop/desktopNav.index";
 import { ProfileDropdown } from "./profileDropdown/profileDropdown.index";
-import { GetLocale, GetUser, ServerCall } from "@/scripts/server";
+import { GetLocale, GetUser, GetTranslation, ServerCall } from "@/scripts/server";
 import { Button } from "../ui/button";
 import SearchInput from "./searchInput/searchInput.index";
 import LanguageSwitcher from "@/utilities/components/languageSwitcher/languageSwitcher.index";
@@ -13,6 +13,7 @@ import { AppApis } from "@/data";
 async function Header({ absolute }: { absolute: boolean }) {
   const user = await GetUser();
   const locale = await GetLocale(user);
+  const { t } = await GetTranslation();
   const menuData = await ServerCall<MenuItemType[]>(AppApis.headerMenu.publicAll, { method: "GET", locale });
 
   return (
@@ -33,7 +34,7 @@ async function Header({ absolute }: { absolute: boolean }) {
             <ProfileDropdown user={user} />
           ) : (
             <Link href="/">
-              <Button className="w-20 h-8 rounded-md cursor-pointer text-button-s">ورود</Button>
+              <Button className="w-20 h-8 rounded-md cursor-pointer text-button-s">{t("Header.login")}</Button>
             </Link>
           )}
         </div>

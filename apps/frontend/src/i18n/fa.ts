@@ -13,4 +13,12 @@ export const FA: typeof EN = {
       },
     },
   },
+  Header: {
+    login: "ورود",
+    searchPlaceholder: "جستجو...",
+    wishlist: "لیست علاقه مندی",
+    support: "پشتیبانی",
+    logout: "خروج",
+    loginToAccount: "ورود به حساب",
+  },
 };

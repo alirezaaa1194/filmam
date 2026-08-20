@@ -16,7 +16,7 @@ function SidebarItem({ menuItem }: { menuItem: MenuItemType }) {
         <AccordionContent className="px-3">
           {menuItem.children.map((menuItemChild, j) => (
             <>
-              <Link key={menuItemChild.id} href={menuItemChild.menu_type === MenuTypeEnum.PAGE ? `${menuItemChild.href}` : `/movies${menuItemChild.filter}`} className="block py-2">
+              <Link key={menuItemChild.id} href={menuItemChild.menu_type === MenuTypeEnum.PAGE ? `${menuItemChild.href}` : `/movies${menuItemChild.filter}`} className="block py-2 last:py-0">
                 {menuItemChild.title}
               </Link>
               {j + 1 !== menuItem.children.length ? <Separator className="bg-gray-12" /> : null}

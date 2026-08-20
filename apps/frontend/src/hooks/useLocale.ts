@@ -25,8 +25,8 @@ export function __UseLocale() {
   const { locale, setLocale } = use(LocaleContext);
   const dir = GetDir(locale);
 
-  function t(key: NestedKeys<typeof EN>) {
-    return getNestedValue(translations[locale], key);
+  function t(key: NestedKeys<typeof EN>): string {
+    return getNestedValue(translations[locale], key) as unknown as string;
   }
 
   return { locale, setLocale, dir, t };

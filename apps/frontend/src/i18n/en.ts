@@ -11,4 +11,12 @@ export const EN = {
       },
     },
   },
+  Header: {
+    login: "Login",
+    searchPlaceholder: "Search...",
+    wishlist: "Wishlist",
+    support: "Support",
+    logout: "Logout",
+    loginToAccount: "Login to account",
+  },
 };

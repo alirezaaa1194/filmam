@@ -87,14 +87,14 @@ export function __ParseSetCookie(setCookie: string) {
   return { name, value, options };
 }
 
-export function __GetDir(locale: AppLanguagesEnum) {
+export function __GetDir(locale: AppLanguagesEnum): "ltr" | "rtl" {
   const directions = {
     [AppLanguagesEnum.FA]: "rtl",
     [AppLanguagesEnum.AR]: "rtl",
     [AppLanguagesEnum.EN]: "ltr",
   };
 
-  return directions[locale];
+  return directions[locale] as "rtl" | "ltr";
 }
 
 export const __DefaultLanguage = AppLanguagesEnum.EN;
