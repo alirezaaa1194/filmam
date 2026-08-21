@@ -7,6 +7,7 @@ import LocaleProvider from "./localeProvider";
 import { SetCookie } from "@/scripts/server/actions";
 import { DirectionProvider } from "radix-ui/direction";
 import { GetDir } from "../scripts";
+import LayoutProvider from "./layoutProvider";
 
 const ReactQueryDevtools = lazy(() => import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })));
 
@@ -38,7 +39,9 @@ function Provider({ user, locale, children }: { user: UserType | null; locale: A
     <QueryClientProvider client={queryClient}>
       <UserContext value={user}>
         <LocaleProvider initialLocale={locale}>
-          <DirectionProvider dir={GetDir(locale)}>{children}</DirectionProvider>
+          <DirectionProvider dir={GetDir(locale)}>
+            <LayoutProvider>{children}</LayoutProvider>
+          </DirectionProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </LocaleProvider>
       </UserContext>

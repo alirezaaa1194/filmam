@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import Test from "../features/test.index";
 import { GetTranslation } from "../scripts/server/translation";
 import Image from "next/image";
 import pic from "@/assets/images/Image.png";
+import LayoutProvider from "../providers/layoutProvider";
+import Header from "../utilities/components/header/header.index";
+import Footer from "../utilities/components/footer/footer.index";
 export async function generateMetadata() {
   const { t } = await GetTranslation();
 
@@ -12,17 +13,9 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const { t } = await GetTranslation();
-
   return (
-    <div>
+    <LayoutProvider header={<Header absolute />} footer={<Footer />}>
       <Image src={pic} alt="test" />
-      {/* Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi eius corrupti mollitia quisquam odio quis? Laudantium, est nulla. Consectetur consequuntur obcaecati explicabo, officiis magnam quisquam odit accusantium, neque voluptatibus, velit accusamus inventore mollitia exercitationem dolore similique sequi. Sequi deleniti molestiae beatae delectus distinctio at odit magni, recusandae placeat quidem laborum?
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi eius corrupti mollitia quisquam odio quis? Laudantium, est nulla. Consectetur consequuntur obcaecati explicabo, officiis magnam quisquam odit accusantium, neque voluptatibus, velit accusamus inventore mollitia exercitationem dolore similique sequi. Sequi deleniti molestiae beatae delectus distinctio at odit magni, recusandae placeat quidem laborum?
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi eius corrupti mollitia quisquam odio quis? Laudantium, est nulla. Consectetur consequuntur obcaecati explicabo, officiis magnam quisquam odit accusantium, neque voluptatibus, velit accusamus inventore mollitia exercitationem dolore similique sequi. Sequi deleniti molestiae beatae delectus distinctio at odit magni, recusandae placeat quidem laborum?
-      {t("Layout.description")}
-      <br />
-      <Test /> */}
-    </div>
+    </LayoutProvider>
   );
 }

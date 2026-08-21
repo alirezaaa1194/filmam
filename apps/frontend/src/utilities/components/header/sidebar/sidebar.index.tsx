@@ -3,12 +3,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/
 import { HambergerMenu } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
-import { MenuItemType, MenuTypeEnum, UserType } from "@/types";
+import { UserType } from "@/types";
 import { Separator } from "@/components/ui/separator";
-import SidebarItem from "./sidebarItem/sidebarItem.index";
 import { useLocale } from "@/hooks";
+import { PropsWithChildren } from "react";
+import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";
 
-function Sidebar({ menuData, user }: { menuData: MenuItemType[]; user: UserType | null }) {
+function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }>) {
   const { t, dir } = useLocale();
   const side = dir === "rtl" ? "right" : "left";
   return (
@@ -24,21 +25,7 @@ function Sidebar({ menuData, user }: { menuData: MenuItemType[]; user: UserType 
               <Image src="/logo-text.svg" alt="filmam" width={91} height={26} className="w-[68px] h-[20px] lg:w-[91px] lg:h-[26px]" />
             </Link>
           </SheetHeader>
-          {menuData.map((menuItem, i) =>
-            menuItem.children.length ? (
-              <>
-                <SidebarItem key={menuItem.id} menuItem={menuItem} />
-                {i + 1 !== menuData.length ? <Separator className="bg-gray-12" /> : null}
-              </>
-            ) : (
-              <>
-                <Link key={menuItem.id} href={menuItem.menu_type === MenuTypeEnum.PAGE ? `${menuItem.href}` : `/movies${menuItem.filter}`} className="block py-2">
-                  {menuItem.title}
-                </Link>
-                {i + 1 !== menuData.length ? <Separator className="bg-gray-12" /> : null}
-              </>
-            ),
-          )}
+          {children}
           <Separator className="!h-[2px] bg-gray-10 my-6" />
           {user ? (
             <div className="flex flex-col gap-2 text-body-xs">
@@ -53,6 +40,8 @@ function Sidebar({ menuData, user }: { menuData: MenuItemType[]; user: UserType 
           ) : (
             <Link href="/">{t("Header.loginToAccount")}</Link>
           )}
+          <Separator className="!h-[2px] bg-gray-10 my-6" />
+          <LanguageSwitcher />
         </SheetContent>
       </Sheet>
     </div>

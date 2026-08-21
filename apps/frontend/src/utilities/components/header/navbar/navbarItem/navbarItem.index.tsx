@@ -2,7 +2,7 @@ import { MenuItemType, MenuTypeEnum } from "@/types";
 import { ArrowDown2 } from "iconsax-react";
 import Link from "next/link";
 
-function DesktopNavItem({ menuItem }: { menuItem: MenuItemType }) {
+function NavbarItem({ menuItem }: { menuItem: MenuItemType }) {
   return (
     <div className="relative group">
       <Link href={menuItem.menu_type === MenuTypeEnum.PAGE ? `${menuItem.href}` : `/movies${menuItem.filter}`} className="flex items-center gap-2 text-body-xs">
@@ -23,4 +23,4 @@ function DesktopNavItem({ menuItem }: { menuItem: MenuItemType }) {
   );
 }
 
-export default DesktopNavItem;
+export default NavbarItem;

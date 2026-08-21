@@ -1118,6 +1118,7 @@ export type __ApiCallOptionsType = {
   body?: unknown;
   query?: Record<string, unknown> | __ApiQueryType;
   locale?: AppLanguagesEnum;
+  ghostMode?: boolean;
 };
 
 export type __CookieOptionsType = {

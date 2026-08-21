@@ -97,5 +97,15 @@ export function __GetDir(locale: AppLanguagesEnum): "ltr" | "rtl" {
   return directions[locale] as "rtl" | "ltr";
 }
 
+const localeYearMap: Record<AppLanguagesEnum, string> = {
+  [AppLanguagesEnum.FA]: "fa-IR",
+  [AppLanguagesEnum.EN]: "en-US",
+  [AppLanguagesEnum.AR]: "ar",
+};
+
+export function __GetLocaleYear(locale: AppLanguagesEnum): string {
+  return new Intl.DateTimeFormat(localeYearMap[locale], { year: "numeric" }).format(new Date());
+}
+
 export const __DefaultLanguage = AppLanguagesEnum.EN;
 export const __AppLanguages = [AppLanguagesEnum.EN, AppLanguagesEnum.FA, AppLanguagesEnum.AR];

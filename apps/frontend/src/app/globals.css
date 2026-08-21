@@ -14,4 +14,13 @@
   --radius-3xl: 2rem;
 
   --max-width-layout-max: 1440px;
+
+  --spacing-layout-x-space: 48px;
+
+}
+
+@media (max-width: 640px) {
+  :root {
+    --spacing-layout-x-space: 20px;
+  }
 }
