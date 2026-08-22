@@ -7,21 +7,23 @@ import LoginForm from "./loginForm/loginForm.index";
 import SignupForm from "./signupForm/signupForm.index";
 import ForgetPasswordForm from "./forgetPasswordForm/forgetPasswordForm.index";
 export type AuthModeType = "Login" | "Signup" | "ForgetPassword" | null;
-function AuthModal({ authMode }: { authMode: AuthModeType }) {
+function AuthModal() {
   const { t } = useLocale();
-  const [mode, setMode] = useState<AuthModeType>(authMode);
+  const [mode, setMode] = useState<AuthModeType>(null);
 
   return (
     <Dialog
       open={mode !== null}
       onOpenChange={(open) => {
         if (!open) {
-          setMode("Login");
+          setMode(null);
         }
       }}
     >
       <DialogTrigger>
-        <Button className="w-20 h-8 rounded-md cursor-pointer text-button-s hidden lg:block">{t("Header.login")}</Button>
+        <Button onClick={() => setMode("Login")} className="w-20 h-8 rounded-md cursor-pointer text-button-s hidden lg:block">
+          {t("Header.login")}
+        </Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col items-center">{mode === "Login" ? <LoginForm setMode={setMode} /> : mode === "Signup" ? <SignupForm setMode={setMode} /> : mode === "ForgetPassword" ? <ForgetPasswordForm setMode={setMode} /> : null}</DialogContent>
     </Dialog>

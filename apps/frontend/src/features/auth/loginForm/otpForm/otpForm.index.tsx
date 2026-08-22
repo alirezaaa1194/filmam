@@ -29,7 +29,7 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
       start();
       toast.success("ورود با موفقیت انجام شد");
       setMode(null)
-      router.refresh();
+      // router.refresh();
     },
     onError: (error: Response) => {
       toast.error(TranslateServerError(error.status));

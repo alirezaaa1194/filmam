@@ -33,7 +33,7 @@ async function Header({ absolute }: { absolute: boolean }) {
           <div className="hidden lg:flex">
             <LanguageSwitcher />
           </div>
-          {user ? <ProfileDropdown user={user} /> : <AuthModal authMode="Login" />}
+          {user ? <ProfileDropdown user={user} /> : <AuthModal />}
         </div>
       </div>
     </header>
