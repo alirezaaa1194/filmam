@@ -6,13 +6,14 @@ import { useState } from "react";
 import LoginForm from "./loginForm/loginForm.index";
 import SignupForm from "./signupForm/signupForm.index";
 import ForgetPasswordForm from "./forgetPasswordForm/forgetPasswordForm.index";
-export type AuthModeType = "Login" | "Signup" | "ForgetPassword";
+export type AuthModeType = "Login" | "Signup" | "ForgetPassword" | null;
 function AuthModal({ authMode }: { authMode: AuthModeType }) {
   const { t } = useLocale();
   const [mode, setMode] = useState<AuthModeType>(authMode);
 
   return (
     <Dialog
+      open={mode !== null}
       onOpenChange={(open) => {
         if (!open) {
           setMode("Login");

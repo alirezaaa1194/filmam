@@ -16,7 +16,7 @@ type LoginFormValues = {
   password: string;
   otp: string;
 };
-function LoginOtpForm({ setStep, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
+function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
   const { control, handleSubmit, getValues, setError } = useFormContext<LoginFormValues>();
   const email = getValues("email");
   const password = getValues("password");
@@ -28,6 +28,7 @@ function LoginOtpForm({ setStep, start, reset, timer }: { setStep: (step: "Email
       setStep("Otp");
       start();
       toast.success("ورود با موفقیت انجام شد");
+      setMode(null)
       router.refresh();
     },
     onError: (error: Response) => {

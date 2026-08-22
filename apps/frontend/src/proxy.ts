@@ -30,12 +30,12 @@ export async function proxy(req: NextRequest) {
   const isDevelopment = process.env.NODE_ENV !== "production";
 
   for (const setCookie of refreshResponse.headers.getSetCookie()) {
-    const { name, value, options } = await ParseSetCookie(setCookie);
+    const { name, value, options } = ParseSetCookie(setCookie);
 
-    if (isDevelopment) {
+    // if (isDevelopment) {
       delete options.domain;
       options.secure = false;
-    }
+    // }
 
     response.cookies.set(name, value, options);
   }
