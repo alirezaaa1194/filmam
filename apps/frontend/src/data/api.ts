@@ -11,6 +11,7 @@ export const __AppApis = {
     refresh: `${base}/auth/refresh`,
     changePassword: `${base}/auth/change-password`,
     forgetPassword: `${base}/auth/forget-password`,
+    resetPassword: `${base}/auth/reset-password`,
     google: `${base}/auth/google`,
     googleCallback: `${base}/auth/google/callback`,
     cleanupOtp: `${base}/auth/internal/cleanup-otp`,

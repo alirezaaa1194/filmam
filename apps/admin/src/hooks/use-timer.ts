@@ -8,7 +8,14 @@ export default function __UseTimer(time: number) {
     stop()
     setTimer(time)
     timerRef.current = setInterval(() => {
-      setTimer((prev) => prev - 1)
+      setTimer((prev) => {
+        if (prev <= 1) {
+          stop()
+          return 0
+        }
+
+        return prev - 1
+      })
     }, 1000)
   }
 

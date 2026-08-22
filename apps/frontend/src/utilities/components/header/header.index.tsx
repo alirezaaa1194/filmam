@@ -8,6 +8,7 @@ import LanguageSwitcher from "@/utilities/components/languageSwitcher/languageSw
 import Sidebar from "./sidebar/sidebar.index";
 import MobileNavbar from "./sidebar/navbar/navbar.index";
 import DesktopNavbar from "./navbar/navbar.index";
+import AuthModal from "../../../features/auth/auth.index";
 
 async function Header({ absolute }: { absolute: boolean }) {
   const user = await GetUser();
@@ -32,13 +33,7 @@ async function Header({ absolute }: { absolute: boolean }) {
           <div className="hidden lg:flex">
             <LanguageSwitcher />
           </div>
-          {user ? (
-            <ProfileDropdown user={user} />
-          ) : (
-            <Link href="/">
-              <Button className="w-20 h-8 rounded-md cursor-pointer text-button-s hidden lg:block">{t("Header.login")}</Button>
-            </Link>
-          )}
+          {user ? <ProfileDropdown user={user} /> : <AuthModal authMode="Login" />}
         </div>
       </div>
     </header>

@@ -109,7 +109,7 @@ export class AuthService {
     otpType,
   }: {
     userId?: number;
-    userEmail?: string;
+    userEmail: string;
     otpType: OtpType;
   }) {
     let user: UserType | null = null;
@@ -119,7 +119,7 @@ export class AuthService {
       user = await this.userService.getUserByEmail(userEmail);
     }
 
-    if (!user) {
+    if (otpType !== 'SIGNUP' && !user) {
       throw new NotFoundException('User not found');
     }
 
@@ -138,7 +138,7 @@ export class AuthService {
       otp,
       otpType,
       userId: user?.id,
-      userEmail: user.email,
+      userEmail: userEmail,
     });
 
     if (user) {
@@ -347,6 +347,7 @@ export class AuthService {
           if (comparedPassword) {
             return await this.sendOtpEmail({
               userId: user.id,
+              userEmail: user.email,
               otpType: OtpType.LOGIN,
             });
           } else {
