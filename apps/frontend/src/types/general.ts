@@ -1146,6 +1146,15 @@ export type __MenuItemType = {
 
 export type __AuthModeType = __AuthModeEnum | null;
 
+export type __ConfirmModalValueType = {
+  title: string;
+  description: string;
+  showHeader?: boolean;
+  submitText?: string;
+  cancelText?: string;
+  callback?: () => void | Promise<unknown>;
+};
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {

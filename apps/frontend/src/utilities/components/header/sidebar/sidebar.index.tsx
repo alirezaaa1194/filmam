@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AuthModeEnum, UserType } from "@/types";
 import { Separator } from "@/components/ui/separator";
-import { useLocale } from "@/hooks";
+import { useLocale, useLogOut } from "@/hooks";
 import { PropsWithChildren, use, useState } from "react";
 import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";
 import { AuthModalContext } from "../../../../contexts/authModal";
@@ -15,6 +15,8 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
   const side = dir === "rtl" ? "right" : "left";
   const [openSheet, setOpenSheet] = useState(false);
   const { setAuthMode } = use(AuthModalContext);
+  const { setConfirm, mutate } = useLogOut();
+
   return (
     <div className="block lg:hidden">
       <Sheet open={openSheet} onOpenChange={setOpenSheet}>
@@ -38,7 +40,15 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
               <Separator className="bg-gray-12" />
               <Link href="/">{t("Header.support")}</Link>
               <Separator className="bg-gray-12" />
-              <button className="text-complementary-tint-2 text-start cursor-pointer">{t("Header.logout")}</button>
+              <button
+                className="text-complementary-tint-2 text-start cursor-pointer"
+                onClick={() => {
+                  setOpenSheet(false);
+                  setConfirm({ title: "خروج", description: "آیا میخواهید از حساب خود خارج شود؟", callback: mutate });
+                }}
+              >
+                {t("Header.logout")}
+              </button>
             </div>
           ) : (
             <button

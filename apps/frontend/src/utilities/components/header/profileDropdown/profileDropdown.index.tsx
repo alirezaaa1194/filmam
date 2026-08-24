@@ -7,11 +7,13 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { UserType } from "@/types";
 import Link from "next/link";
-import { useLocale } from "@/hooks";
+import { useLocale, useLogOut } from "@/hooks";
 
 export function ProfileDropdown({ user }: { user: UserType }) {
   const [open, setOpen] = useState(false);
   const { dir, t } = useLocale();
+  const { setConfirm, mutate } = useLogOut();
+
   return (
     <div className="hidden lg:block">
       <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
@@ -41,12 +43,12 @@ export function ProfileDropdown({ user }: { user: UserType }) {
             </span>
           </Link>
           <Separator className="bg-gray-12" />
-          <div className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md cursor-pointer" dir={dir === "rtl" ? "ltr" : "rtl"}>
+          <button onClick={() => setConfirm({ title: "خروج", description: "آیا میخواهید از حساب خود خارج شود؟", callback: mutate })} className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md cursor-pointer" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-complementary-tint-2 text-body-xxs">{t("Header.logout")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
               <LogoutCurve className="!stroke-complementary-tint-2 size-5" />
             </span>
-          </div>
+          </button>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

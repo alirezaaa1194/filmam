@@ -10,6 +10,7 @@ import { GetDir } from "../scripts";
 import LayoutProvider from "./layoutProvider";
 import { Toaster } from "../components/ui/sonner";
 import AuthModalProvider from "./authModalProvider";
+import ConfirmModalProvider from "./confirmModalProvider";
 
 const ReactQueryDevtools = lazy(() => import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })));
 
@@ -42,12 +43,14 @@ function Provider({ user, locale, children }: { user: UserType | null; locale: A
       <UserContext value={user}>
         <LocaleProvider initialLocale={locale}>
           <AuthModalProvider>
-            <DirectionProvider dir={GetDir(locale)}>
-              <LayoutProvider>
-                {children}
-                <Toaster />
-              </LayoutProvider>
-            </DirectionProvider>
+            <ConfirmModalProvider>
+              <DirectionProvider dir={GetDir(locale)}>
+                <LayoutProvider>
+                  {children}
+                  <Toaster />
+                </LayoutProvider>
+              </DirectionProvider>
+            </ConfirmModalProvider>
           </AuthModalProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </LocaleProvider>
