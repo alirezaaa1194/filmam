@@ -1,19 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ProfileDropdown } from "./profileDropdown/profileDropdown.index";
-import { GetLocale, GetUser, GetTranslation } from "@/scripts/server";
-import { Button } from "../ui/button";
+import { GetLocale, GetUser } from "@/scripts/server";
 import SearchInput from "./searchInput/searchInput.index";
 import LanguageSwitcher from "@/utilities/components/languageSwitcher/languageSwitcher.index";
 import Sidebar from "./sidebar/sidebar.index";
 import MobileNavbar from "./sidebar/navbar/navbar.index";
 import DesktopNavbar from "./navbar/navbar.index";
-import AuthModal from "../../../features/auth/auth.index";
+import HeaderLoginButton from "./loginButton/loginButton.index";
 
 async function Header({ absolute }: { absolute: boolean }) {
   const user = await GetUser();
   const locale = await GetLocale(user);
-  const { t } = await GetTranslation();
 
   return (
     <header className={`w-full lg:py-12 lg:px-24 ${absolute ? "absolute top-0" : ""}`}>
@@ -33,7 +31,7 @@ async function Header({ absolute }: { absolute: boolean }) {
           <div className="hidden lg:flex">
             <LanguageSwitcher />
           </div>
-          {user ? <ProfileDropdown user={user} /> : <AuthModal />}
+          {user ? <ProfileDropdown user={user} /> : <HeaderLoginButton />}
         </div>
       </div>
     </header>

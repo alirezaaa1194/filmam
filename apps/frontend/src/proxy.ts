@@ -27,15 +27,13 @@ export async function proxy(req: NextRequest) {
     return response;
   }
 
-  const isDevelopment = process.env.NODE_ENV !== "production";
+  const isProduction = process.env.NODE_ENV === "production";
 
   for (const setCookie of refreshResponse.headers.getSetCookie()) {
     const { name, value, options } = ParseSetCookie(setCookie);
 
-    // if (isDevelopment) {
-      delete options.domain;
-      options.secure = false;
-    // }
+    delete options.domain;
+    options.secure = isProduction;
 
     response.cookies.set(name, value, options);
   }

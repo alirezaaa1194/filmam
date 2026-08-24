@@ -9,6 +9,7 @@ import { DirectionProvider } from "radix-ui/direction";
 import { GetDir } from "../scripts";
 import LayoutProvider from "./layoutProvider";
 import { Toaster } from "../components/ui/sonner";
+import AuthModalProvider from "./authModalProvider";
 
 const ReactQueryDevtools = lazy(() => import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })));
 
@@ -40,12 +41,14 @@ function Provider({ user, locale, children }: { user: UserType | null; locale: A
     <QueryClientProvider client={queryClient}>
       <UserContext value={user}>
         <LocaleProvider initialLocale={locale}>
-          <DirectionProvider dir={GetDir(locale)}>
-            <LayoutProvider>
-              {children}
-              <Toaster />
-            </LayoutProvider>
-          </DirectionProvider>
+          <AuthModalProvider>
+            <DirectionProvider dir={GetDir(locale)}>
+              <LayoutProvider>
+                {children}
+                <Toaster />
+              </LayoutProvider>
+            </DirectionProvider>
+          </AuthModalProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </LocaleProvider>
       </UserContext>

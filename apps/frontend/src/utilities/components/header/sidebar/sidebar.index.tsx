@@ -6,15 +6,18 @@ import Link from "next/link";
 import { UserType } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { useLocale } from "@/hooks";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, use, useState } from "react";
 import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";
+import { AuthModalContext } from "../../../../contexts/authModal";
 
 function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }>) {
   const { t, dir } = useLocale();
   const side = dir === "rtl" ? "right" : "left";
+  const [openSheet, setOpenSheet] = useState(false);
+  const { setAuthMode } = use(AuthModalContext);
   return (
     <div className="block lg:hidden">
-      <Sheet>
+      <Sheet open={openSheet} onOpenChange={setOpenSheet}>
         <SheetTrigger className="cursor-pointer">
           <HambergerMenu className="size-5 stroke-white" />
         </SheetTrigger>
@@ -38,7 +41,15 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
               <button className="text-complementary-tint-2 text-start cursor-pointer">{t("Header.logout")}</button>
             </div>
           ) : (
-            <Link href="/">{t("Header.loginToAccount")}</Link>
+            <button
+              onClick={() => {
+                setOpenSheet(false);
+                setAuthMode("Login");
+              }}
+              className="cursor-pointer text-start"
+            >
+              {t("Header.loginToAccount")}
+            </button>
           )}
           <Separator className="!h-[2px] bg-gray-10 my-6" />
           <LanguageSwitcher />

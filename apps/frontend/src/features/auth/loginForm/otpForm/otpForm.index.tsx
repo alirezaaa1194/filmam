@@ -26,10 +26,9 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
     mutationFn: (value: { email: string; password: string; otp: string }) => ClientCall(AppApis.auth.loginVerify, { method: "POST", body: value }),
     onSuccess: () => {
       setStep("Otp");
-      start();
       toast.success("ورود با موفقیت انجام شد");
       setMode(null)
-      // router.refresh();
+      router.refresh();
     },
     onError: (error: Response) => {
       toast.error(TranslateServerError(error.status));
