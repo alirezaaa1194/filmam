@@ -4,10 +4,19 @@ import { BuildApiUrl, DefaultLanguage } from "../index";
 import { AppApis } from "@/data";
 import { MessageType, ApiCallOptionsType } from "@/types";
 
+const API_ORIGIN = process.env.NEXT_PUBLIC_FILMAM_SERVER_URL ?? "";
+
+function SameOriginUrl(url: string): string {
+  if (API_ORIGIN && url.startsWith(API_ORIGIN)) {
+    return `/api${url.slice(API_ORIGIN.length)}`;
+  }
+  return url;
+}
+
 export async function ClientCall<T>(url: string, options: ApiCallOptionsType, retry = true): Promise<T> {
   const currentLanguage = options.locale || DefaultLanguage;
 
-  const response = await fetch(BuildApiUrl(url, currentLanguage, options.query), {
+  const response = await fetch(BuildApiUrl(SameOriginUrl(url), currentLanguage, options.query), {
     method: options.method,
     credentials: "include",
     body: options.body ? JSON.stringify(options.body) : undefined,
@@ -40,7 +49,7 @@ let refreshPromise: Promise<Response> | null = null;
 
 export async function Refresh(): Promise<Response> {
   if (!refreshPromise) {
-    refreshPromise = fetch(AppApis.auth.refresh, {
+    refreshPromise = fetch(BuildApiUrl(SameOriginUrl(AppApis.auth.refresh), DefaultLanguage), {
       method: "POST",
       credentials: "include",
     }).finally(() => {
