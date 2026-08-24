@@ -1,4 +1,4 @@
-import { AuthModeType } from "../../auth.index";
+import { AuthModeType } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";

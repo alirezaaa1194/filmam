@@ -1,4 +1,4 @@
-import { AuthModeType } from "../../auth.index";
+import { AuthModeEnum, AuthModeType } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
     onSuccess: () => {
       start();
       setValue("otp", "");
-      setMode("Login");
+      setMode(AuthModeEnum.LOGIN);
       toast.success("رمز عبور با موفقیت تغییر کرد");
     },
     onError: (error: Response) => {
