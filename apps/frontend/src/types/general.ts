@@ -1144,6 +1144,8 @@ export type __MenuItemType = {
   children: __MenuItemType[];
 };
 
+export type __AuthModeType = __AuthModeEnum | null;
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {
@@ -1165,4 +1167,10 @@ export enum __SortTypeEnum {
 export enum __MenuTypeEnum {
   PAGE = "PAGE",
   FILTER = "FILTER",
+}
+
+export enum __AuthModeEnum {
+  LOGIN = "Login",
+  SIGNUP = "Signup",
+  FORGET_PASSWORD = "ForgetPassword",
 }

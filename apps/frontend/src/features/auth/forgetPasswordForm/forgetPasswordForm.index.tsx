@@ -1,4 +1,3 @@
-import { AuthModeType } from "../auth.index";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
@@ -6,6 +5,7 @@ import { useState } from "react";
 import { useTimer } from "@/hooks";
 import ForgetEmailForm from "./emailForm/emailForm.index";
 import ForgetOtpForm from "./otpForm/otpForm.index";
+import { AuthModeType } from "../../../types";
 
 export const ForgetPasswordSchema = z
   .object({
@@ -18,42 +18,42 @@ export const ForgetPasswordSchema = z
     otp: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-  // فقط وقتی password وارد شده، validate کن
-  if (data.newPassword !== undefined && data.newPassword !== "") {
-    if (data.newPassword.length < 8) {
-      ctx.addIssue({
-        code: "custom",
-        message: "رمز عبور حداقل 8 کاراکتر",
-        path: ["newPassword"],
-      });
+    // فقط وقتی password وارد شده، validate کن
+    if (data.newPassword !== undefined && data.newPassword !== "") {
+      if (data.newPassword.length < 8) {
+        ctx.addIssue({
+          code: "custom",
+          message: "رمز عبور حداقل 8 کاراکتر",
+          path: ["newPassword"],
+        });
+      }
+
+      if (!data.confirmPassword) {
+        ctx.addIssue({
+          code: "custom",
+          message: "لطفا تکرار رمز عبور را وارد کنید",
+          path: ["confirmPassword"],
+        });
+      } else if (data.newPassword !== data.confirmPassword) {
+        ctx.addIssue({
+          code: "custom",
+          message: "رمزهای عبور یکسان نیستند",
+          path: ["confirmPassword"],
+        });
+      }
     }
 
-    if (!data.confirmPassword) {
-      ctx.addIssue({
-        code: "custom",
-        message: "لطفا تکرار رمز عبور را وارد کنید",
-        path: ["confirmPassword"],
-      });
-    } else if (data.newPassword !== data.confirmPassword) {
-      ctx.addIssue({
-        code: "custom",
-        message: "رمزهای عبور یکسان نیستند",
-        path: ["confirmPassword"],
-      });
+    // فقط وقتی OTP وارد شده validate کن
+    if (data.otp !== undefined && data.otp !== "") {
+      if (data.otp.length !== 5) {
+        ctx.addIssue({
+          code: "custom",
+          message: "کد تایید باید 5 رقمی باشد",
+          path: ["otp"],
+        });
+      }
     }
-  }
-
-  // فقط وقتی OTP وارد شده validate کن
-  if (data.otp !== undefined && data.otp !== "") {
-    if (data.otp.length !== 5) {
-      ctx.addIssue({
-        code: "custom",
-        message: "کد تایید باید 5 رقمی باشد",
-        path: ["otp"],
-      });
-    }
-  }
-});
+  });
 
 export type ForgetPasswordFormValues = {
   email: string;

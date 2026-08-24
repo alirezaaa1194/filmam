@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { AuthModalContext, AuthModeType } from "../contexts/authModal";
+import { AuthModalContext } from "../contexts/authModal";
 import AuthModal from "../features/auth/auth.index";
+import { AuthModeType } from "../types";
 
 function AuthModalProvider({ children }: { children: React.ReactNode }) {
   const [authMode, setAuthMode] = useState<AuthModeType>(null);

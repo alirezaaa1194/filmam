@@ -1,4 +1,3 @@
-import { AuthModeType } from "../auth.index";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
@@ -6,6 +5,7 @@ import LoginEmailForm from "./emailForm/emailForm.index";
 import { useState } from "react";
 import LoginOtpForm from "./otpForm/otpForm.index";
 import { useTimer } from "@/hooks";
+import { AuthModeType } from "../../../types";
 
 export const LoginSchema = z
   .object({

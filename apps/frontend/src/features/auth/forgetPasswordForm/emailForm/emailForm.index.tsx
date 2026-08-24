@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { useLocale } from "@/hooks";
-import { AuthModeType } from "../../auth.index";
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import { ForgetPasswordFormValues } from "../forgetPasswordForm.index";
+import { AuthModeEnum, AuthModeType } from "../../../../types";
 
 function ForgetEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void }) {
   const { dir } = useLocale();
@@ -58,7 +58,7 @@ function ForgetEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" 
       <button
         className="cursor-pointer mt-4 self-center text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode("Login");
+          setMode(AuthModeEnum.LOGIN);
         }}
       >
         میخواهید وارد شوید؟

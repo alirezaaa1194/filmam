@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { useLocale } from "@/hooks";
-import { AuthModeType } from "../../auth.index";
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import { LoginFormValues } from "../loginForm.index";
+import { AuthModeEnum, AuthModeType } from "../../../../types";
 
 function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void }) {
   const { dir } = useLocale();
@@ -67,7 +67,7 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
         type="button"
         className="cursor-pointer mt-2 text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode("ForgetPassword");
+          setMode(AuthModeEnum.FORGET_PASSWORD);
         }}
       >
         رمز عبور خود را فراموش کرده اید؟
@@ -80,7 +80,7 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
       <button
         className="cursor-pointer mt-4 self-center text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode("Signup");
+          setMode(AuthModeEnum.SIGNUP);
         }}
       >
         حساب ندارید؟ ثبت نام کنید

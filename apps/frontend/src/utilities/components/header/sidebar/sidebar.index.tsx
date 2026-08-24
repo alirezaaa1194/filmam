@@ -3,7 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/
 import { HambergerMenu } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
-import { UserType } from "@/types";
+import { AuthModeEnum, UserType } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { useLocale } from "@/hooks";
 import { PropsWithChildren, use, useState } from "react";
@@ -44,7 +44,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
             <button
               onClick={() => {
                 setOpenSheet(false);
-                setAuthMode("Login");
+                setAuthMode(AuthModeEnum.LOGIN);
               }}
               className="cursor-pointer text-start"
             >
