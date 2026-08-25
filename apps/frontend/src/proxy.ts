@@ -30,7 +30,10 @@ export async function proxy(req: NextRequest) {
   for (const setCookie of refreshResponse.headers.getSetCookie()) {
     const { name, value, options } = ParseSetCookie(setCookie);
 
-    delete options.domain;
+    if (!isProduction) {
+      delete options.domain;
+    }
+
     options.secure = isProduction;
 
     response.cookies.set(name, value, options);
