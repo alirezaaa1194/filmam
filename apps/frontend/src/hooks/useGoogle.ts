@@ -6,15 +6,14 @@ function __UseGoogle() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   function handleGoogleLogin() {
-    // window.location.href = AppApis.auth.googleFrontend;
-    const popup = window.open(AppApis.auth.googleAdmin, "google-oauth", "width=500,height=600");
+    const popup = window.open(AppApis.auth.googleFrontend, "google-oauth", "width=500,height=600");
     if (!popup) {
       setIsGoogleLoading(false);
       toast.error("auth.popup_blocked");
       return;
     }
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== new URL(AppApis.auth.googleAdmin).origin) return;
+      if (event.origin !== new URL(AppApis.auth.googleFrontend).origin) return;
       const { success, error } = event.data;
       if (error) {
         setIsGoogleLoading(false);
