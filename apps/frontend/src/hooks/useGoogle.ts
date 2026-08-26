@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { AppApis } from "../data";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { AuthModalContext } from "../contexts/authModal";
 
 function __UseGoogle() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
+  const { setAuthMode } = use(AuthModalContext);
 
   function handleGoogleLogin() {
     const popup = window.open(AppApis.auth.googleFrontend, "google-oauth", "width=500,height=600");
@@ -29,6 +31,7 @@ function __UseGoogle() {
       }
       setIsGoogleLoading(false);
       window.removeEventListener("message", handleMessage);
+      setAuthMode(null)
       router.refresh();
     };
     window.addEventListener("message", handleMessage);
