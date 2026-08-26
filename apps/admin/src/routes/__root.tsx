@@ -74,7 +74,7 @@ export const Route = createRootRouteWithContext<{
             location.pathname !== '/sign-in' &&
             location.pathname !== '/forgot-password'
           ) {
-            throw redirect({
+            return redirect({
               to: '/sign-in',
             })
           }

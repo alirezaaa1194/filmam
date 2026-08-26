@@ -11,6 +11,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import { SignupFormValues } from "../signupForm.index";
+import googleIcon from "@/assets/icons/google.svg";
+import Image from "next/image";
 
 function SignupEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void }) {
   const { dir, locale } = useLocale();
@@ -44,7 +46,7 @@ function SignupEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" 
               <FieldLabel htmlFor="signup-form-username" className="text-h-6">
                 نام کاربری
               </FieldLabel>
-              <Input {...field} id="signup-form-username" aria-invalid={fieldState.invalid} autoFocus placeholder="نام کاربری خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-md`} dir="ltr" />
+              <Input {...field} id="signup-form-username" aria-invalid={fieldState.invalid} autoFocus placeholder="نام کاربری خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -57,7 +59,7 @@ function SignupEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" 
               <FieldLabel htmlFor="signup-form-email" className="text-h-6">
                 ایمیل
               </FieldLabel>
-              <Input {...field} id="signup-form-email" aria-invalid={fieldState.invalid} placeholder="ایمیل خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-md`} dir="ltr" />
+              <Input {...field} id="signup-form-email" aria-invalid={fieldState.invalid} placeholder="ایمیل خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -70,16 +72,21 @@ function SignupEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" 
               <FieldLabel htmlFor="signup-form-password" className="text-h-6">
                 رمز عبور
               </FieldLabel>
-              <Input type="password" {...field} id="signup-form-password" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-md`} dir="ltr" />
+              <Input type="password" {...field} id="signup-form-password" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
         />
       </FieldGroup>
 
-      <Button type="submit" className="w-full h-12 cursor-pointer mt-12 rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending}>
-        {isPending ? <Spinner /> : null} ارسال کد تایید
-      </Button>
+      <div className="w-full mt-12 flex items-center gap-2">
+        <Button type="submit" className="flex-1 h-12 cursor-pointer rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending}>
+          {isPending ? <Spinner /> : null} ارسال کد تایید
+        </Button>
+        <Button className="shrink-0 w-12 h-12 cursor-pointer rounded-md bg-white hover:bg-gray-6" disabled={isPending}>
+          <Image src={googleIcon} alt="google-oauth" width={24} height={24} className="size-6" />
+        </Button>
+      </div>
 
       <button
         className="cursor-pointer mt-4 self-center text-body-xxs transition-all text-warning hover:text-warning/80"

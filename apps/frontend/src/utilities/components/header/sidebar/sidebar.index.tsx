@@ -18,7 +18,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
   const { setConfirm, mutate } = useLogOut();
 
   return (
-    <div className="block lg:hidden">
+    <div className="block lg:hidden size-5">
       <Sheet open={openSheet} onOpenChange={setOpenSheet}>
         <SheetTrigger className="cursor-pointer">
           <HambergerMenu className="size-5 stroke-white" />

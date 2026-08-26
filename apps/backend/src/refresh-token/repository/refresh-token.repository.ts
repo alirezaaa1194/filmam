@@ -13,6 +13,11 @@ export class RefreshTokenRepository {
       },
     });
   }
+
+  async deleteUserAllTokens(userId: number) {
+    return await prisma.refreshToken.deleteMany({ where: { user_id: userId } });
+  }
+
   async deleteCurrentToken(tokenId: number) {
     return await prisma.refreshToken.delete({
       where: {

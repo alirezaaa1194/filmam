@@ -511,6 +511,8 @@ export class AuthService {
       if (comparedOtp) {
         await this.otpService.expireUserCurrentOtp(otpInfo.id);
 
+        await this.refreshTokenService.deleteUserAllTokens(user.id)
+
         try {
           const hashedNewPassword = await bcrypt.hash(new_password, 10);
           await this.userService.changeUserPassword(email, hashedNewPassword);

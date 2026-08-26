@@ -108,7 +108,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
               <FieldLabel htmlFor="login-form-password" className="text-h-6">
                 رمز عبور
               </FieldLabel>
-              <Input type="password" {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-md`} dir="ltr" />
+              <Input type="password" {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -118,10 +118,10 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="login-form-password" className="text-h-6">
+              <FieldLabel htmlFor="login-form-confirmPassword" className="text-h-6">
                 تکرار رمز عبور
               </FieldLabel>
-              <Input type="password" {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-md`} dir="ltr" />
+              <Input type="password" {...field} id="login-form-confirmPassword" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -134,7 +134,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
               <FieldLabel htmlFor="otp-form-otp" className="text-h-6">
                 کد تایید
               </FieldLabel>
-              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder="-----" className={`h-12 border border-gray-10 text-white transition-all ring-0! text-center! tracking-[2rem] ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left rounded-lg`} dir="ltr" />
+              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder="-----" className={`h-12 border border-gray-10 text-white transition-all ring-0! text-center! tracking-[2rem] ps-8 ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -143,7 +143,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
 
       <Button
         type="button"
-        className="w-full h-12 cursor-pointer mt-12 rounded-md bg-transparent! border border-gray-9 hover:text-gray-9"
+        className="w-full h-12 cursor-pointer mt-12 rounded-lg bg-transparent! border border-gray-9 hover:text-gray-9"
         disabled={isPending || forgetIsPending || timer > 0}
         onClick={() => {
           forgetMutate({ email: getValues("email") });

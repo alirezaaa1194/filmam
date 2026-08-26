@@ -7,6 +7,9 @@ export class RefreshTokenService {
   async deleteUserExpiredTokens(userId: number) {
     return await this.refreshTokenRepository.deleteUserExpiredTokens(userId);
   }
+  async deleteUserAllTokens(userId: number) {
+    return await this.refreshTokenRepository.deleteUserAllTokens(userId);
+  }
   async deleteCurrentToken(tokenId: number) {
     return await this.refreshTokenRepository.deleteCurrentToken(tokenId);
   }

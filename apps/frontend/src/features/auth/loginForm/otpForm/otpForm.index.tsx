@@ -69,7 +69,7 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
               <FieldLabel htmlFor="otp-form-otp" className="text-h-6">
                 کد تایید
               </FieldLabel>
-              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder="-----" className={`h-12 border border-gray-10 text-white transition-all ring-0! text-center! tracking-[2rem] ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left rounded-md`} dir="ltr" />
+              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder="-----" className={`h-12 border border-gray-10 text-white transition-all ring-0! text-center! tracking-[2rem] ps-8 ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left rounded-lg`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -78,7 +78,7 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
 
       <Button
         type="button"
-        className="w-full h-12 cursor-pointer mt-12 rounded-md bg-transparent! border border-gray-9 hover:text-gray-9"
+        className="w-full h-12 cursor-pointer mt-12 rounded-lg bg-transparent! border border-gray-9 hover:text-gray-9"
         disabled={isPending || loginIsPending || timer > 0}
         onClick={() => {
           loginMutate({ email: getValues("email"), password: getValues("password") });
