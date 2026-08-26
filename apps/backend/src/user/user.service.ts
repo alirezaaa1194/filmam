@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
 import { GoogleAuthDto } from '../auth/dto/google-auth.dto';
-
 import {
   BlockUserDto,
   ChangeUserPasswordAdminDto,
@@ -19,17 +18,18 @@ import * as bcrypt from 'bcrypt';
 import { paginationCalculator } from '../lib/utils';
 import { UserRole } from '../generated/prisma';
 import { prisma } from '../lib/prisma';
+import { TransactionType } from '../common/types/types';
 
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async getUserByEmail(userEmail: string) {
-    return await this.userRepository.getUserByEmail(userEmail);
+  async getUserByEmail(userEmail: string, tx?: TransactionType) {
+    return await this.userRepository.getUserByEmail(userEmail, tx);
   }
 
-  async getUserById(userId: number) {
-    const user = await this.userRepository.getUserById(userId);
+  async getUserById(userId: number, tx?: TransactionType) {
+    const user = await this.userRepository.getUserById(userId, tx);
     if (user) {
       const { password, ...otherUserData } = user;
       return otherUserData;
@@ -38,20 +38,23 @@ export class UserService {
     }
   }
 
-  async signupUser(userInfo: CreateUserDto | GoogleAuthDto) {
+  async signupUser(
+    userInfo: CreateUserDto | GoogleAuthDto,
+    tx?: TransactionType,
+  ) {
     const usersCount = await this.userRepository.getUsersCount();
     const userRole = usersCount ? UserRole.USER : UserRole.ADMIN;
-    return await this.userRepository.createUser(userInfo, userRole);
+    return await this.userRepository.createUser(userInfo, userRole, tx);
   }
 
-  async createUserAdmin(userInfo: CreateUserDto) {
+  async createUserAdmin(userInfo: CreateUserDto, tx?: TransactionType) {
     const { email, password } = userInfo;
-    const user = await this.getUserByEmail(email);
+    const user = await this.getUserByEmail(email, tx);
     if (user) {
       throw new ConflictException('User with this email already exists');
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
-      return await this.signupUser({ ...userInfo, password: hashedPassword });
+      return await this.signupUser({ ...userInfo, password: hashedPassword }, tx);
     }
   }
 
@@ -80,16 +83,28 @@ export class UserService {
     };
   }
 
-  async changeUserPassword(email: string, newPassword: string) {
-    return await this.userRepository.changeUserPassword(email, newPassword);
+  async changeUserPassword(
+    email: string,
+    newPassword: string,
+    tx?: TransactionType,
+  ) {
+    return await this.userRepository.changeUserPassword(
+      email,
+      newPassword,
+      tx,
+    );
   }
 
   async blockUsers(body: BlockUserDto) {
     return await this.userRepository.blockUsers(body);
   }
 
-  async blockUser(userId: number, expireTime: Date | null) {
-    return await this.userRepository.blockUser(userId, expireTime);
+  async blockUser(
+    userId: number,
+    expireTime: Date | null,
+    tx?: TransactionType,
+  ) {
+    return await this.userRepository.blockUser(userId, expireTime, tx);
   }
 
   async deleteUserAdmin(body: DeleteUsersDto, adminId: number) {

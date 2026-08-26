@@ -16,6 +16,7 @@ import { appLanguages, defaultLang } from '../../lib/utils';
 import { HeaderMenuFilter } from '../../header-menu-filter/dto/header-menu-filter.dto';
 import { CommonQueryParamsDto } from '../../common/dto/query-param.dto';
 import { RequiredTranslations } from '../../common/decorators/required-translations.decorator';
+import { MenuType } from '../../common/enums';
 
 export class CreateHeaderMenuDto {
   @ApiProperty({
@@ -76,7 +77,16 @@ export class DeleteHeaderMenuDto {
   menu_ids!: number[];
 }
 
-export class GetAllHeaderMenusAdminDto extends CommonQueryParamsDto {}
+export class GetAllHeaderMenusAdminDto extends CommonQueryParamsDto {
+  @ApiPropertyOptional({
+    name: 'type',
+    required: false,
+    enum: MenuType,
+  })
+  @IsOptional()
+  @IsEnum(MenuType)
+  type?: MenuType;
+}
 
 export class GetAllHeaderMenusPublicDto {
   @ApiPropertyOptional({
@@ -89,5 +99,3 @@ export class GetAllHeaderMenusPublicDto {
   @IsOptional()
   lang?: AppLanguage;
 }
-
-

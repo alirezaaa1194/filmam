@@ -26,6 +26,8 @@ import { OtpType, UserRole, AppLanguage } from '../generated/prisma';
 import { MailService } from '../mail/mail.service';
 import { UserRepository } from '../user/repository/user.repository';
 import { authCookieOptions } from './cookies.util';
+import { prisma } from '../lib/prisma';
+import { TransactionType } from '../common/types/types';
 import type { Response as ExpressResponse } from 'express';
 
 export type AuthTokens = {
@@ -47,7 +49,7 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async jwtGenerator(userId: number, email: string): Promise<AuthTokens> {
+  async jwtGenerator(userId: number, email: string, tx?: TransactionType): Promise<AuthTokens> {
     const payload = { sub: userId, email: email };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -65,10 +67,11 @@ export class AuthService {
       .update(refreshToken)
       .digest('hex');
 
-    await this.refreshTokenService.deleteUserExpiredTokens(userId);
+    await this.refreshTokenService.deleteUserExpiredTokens(userId, tx);
     await this.refreshTokenService.createRefreshToken(
       hashedRefreshToken,
       userId,
+      tx,
     );
 
     const now = Math.floor(Date.now() / 1000);
@@ -111,38 +114,32 @@ export class AuthService {
     userId?: number;
     userEmail: string;
     otpType: OtpType;
-  }) {
+  }, tx?: TransactionType) {
     let user: UserType | null = null;
     if (userId) {
-      user = await this.userRepository.getUserById(userId);
+      user = await this.userRepository.getUserById(userId, tx);
     } else if (userEmail) {
-      user = await this.userService.getUserByEmail(userEmail);
+      user = await this.userService.getUserByEmail(userEmail, tx);
     }
 
     if (otpType !== 'SIGNUP' && !user) {
       throw new NotFoundException('User not found');
     }
 
-    // const recentOtp = await this.otpService.getUserRecentOtp({
-    //   userId: user?.id,
-    //   otpType: otpType,
-    // });
-
-    // if (!recentOtp) {
     const otp = randomInt(10000, 99999);
     await this.otpService.deleteUserValidOTPs({
       userId: user?.id,
       otpType: otpType,
-    });
+    }, tx);
     await this.otpService.createOtp({
       otp,
       otpType,
       userId: user?.id,
       userEmail: userEmail,
-    });
+    }, tx);
 
     if (user) {
-      await this.loginRequestService.createLoginRequest(user.id);
+      await this.loginRequestService.createLoginRequest(user.id, tx);
     }
 
     const lang = user?.preferred_language ?? AppLanguage.FA;
@@ -159,17 +156,6 @@ export class AuthService {
     }
 
     return { message: 'OTP sent successfully' };
-    // }
-    // else {
-    //   const remainingSeconds = Math.ceil(
-    //     (recentOtp.created_at.getTime() + 2 * 60 * 1000 - Date.now()) / 1000,
-    //   );
-
-    //   throw new HttpException(
-    //     `Previous OTP is still valid. Try again in ${remainingSeconds} seconds.`,
-    //     HttpStatus.TOO_MANY_REQUESTS,
-    //   );
-    // }
   }
 
   private getEmailContent(
@@ -247,133 +233,140 @@ export class AuthService {
   }
 
   async verifyOtp(otpDto: LoginOtpDto | SignupOtpDto, adminOnly?: boolean) {
-    const { email, otp } = otpDto;
-    let user = await this.userService.getUserByEmail(email);
+    return await prisma.$transaction(async (tx) => {
+      const { email, otp } = otpDto;
+      let user = await this.userService.getUserByEmail(email, tx);
 
-    if (adminOnly && user?.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('This route is for admin');
-    }
+      if (adminOnly && user?.role !== UserRole.ADMIN) {
+        throw new ForbiddenException('This route is for admin');
+      }
 
-    const otpInfo = await this.otpService.getUserValidOtp({
-      ...(user ? { userId: user.id } : { userEmail: email }),
-    });
-    if (!otpInfo) {
-      throw new UnauthorizedException('OTP not found or expired');
-    }
+      const otpInfo = await this.otpService.getUserValidOtp({
+        ...(user ? { userId: user.id } : { userEmail: email }),
+      }, tx);
+      if (!otpInfo) {
+        throw new UnauthorizedException('OTP not found or expired');
+      }
 
-    const otpType = otpInfo.type;
+      const otpType = otpInfo.type;
 
-    await this.otpService.incrementOtpAttempts(otpInfo.id);
-    if (otpInfo.otp_attempts + 1 >= 5) {
-      await this.otpService.expireUserCurrentOtp(otpInfo.id);
-      throw new UnauthorizedException('OTP not found or expired');
-    }
+      await this.otpService.incrementOtpAttempts(otpInfo.id, tx);
+      if (otpInfo.otp_attempts + 1 >= 5) {
+        await this.otpService.expireUserCurrentOtp(otpInfo.id, tx);
+        throw new UnauthorizedException('OTP not found or expired');
+      }
 
-    const comparedOtp = await bcrypt.compare(
-      otp.toString(),
-      otpInfo.hashed_otp,
-    );
+      const comparedOtp = await bcrypt.compare(
+        otp.toString(),
+        otpInfo.hashed_otp,
+      );
 
-    if (comparedOtp) {
-      await this.otpService.expireUserCurrentOtp(otpInfo.id);
-      if (!user && otpType === OtpType.SIGNUP) {
-        if (!('username' in otpDto) || !('password' in otpDto)) {
-          throw new BadRequestException('Invalid signup data');
+      if (comparedOtp) {
+        await this.otpService.expireUserCurrentOtp(otpInfo.id, tx);
+        if (!user && otpType === OtpType.SIGNUP) {
+          if (!('username' in otpDto) || !('password' in otpDto)) {
+            throw new BadRequestException('Invalid signup data');
+          }
+          const hashedPassword = await bcrypt.hash(otpDto.password, 10);
+          user = await this.userService.signupUser({
+            username: otpDto.username,
+            email,
+            password: hashedPassword,
+            preferred_language: otpDto.preferred_language,
+          }, tx);
+        } else if (!user && otpType === OtpType.LOGIN) {
+          throw new UnauthorizedException('Invalid email or password');
         }
-        const hashedPassword = await bcrypt.hash(otpDto.password, 10);
-        user = await this.userService.signupUser({
-          username: otpDto.username,
-          email,
-          password: hashedPassword,
-          preferred_language: otpDto.preferred_language,
-        });
-      } else if (!user && otpType === OtpType.LOGIN) {
+        if (user) {
+          return await this.jwtGenerator(user.id, user.email, tx);
+        }
         throw new UnauthorizedException('Invalid email or password');
+      } else {
+        throw new UnauthorizedException('OTP is not correct');
       }
-      if (user) {
-        return await this.jwtGenerator(user.id, user.email);
-      }
-      throw new UnauthorizedException('Invalid email or password');
-    } else {
-      throw new UnauthorizedException('OTP is not correct');
-    }
+    });
   }
 
   async login(loginDto: LoginDto, adminOnly?: boolean) {
-    const { email, password } = loginDto;
-    const user = await this.userService.getUserByEmail(email);
+    return await prisma.$transaction(async (tx) => {
+      const { email, password } = loginDto;
+      const user = await this.userService.getUserByEmail(email, tx);
 
-    if (adminOnly && user?.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('This route is for admin');
-    }
+      if (adminOnly && user?.role !== UserRole.ADMIN) {
+        throw new ForbiddenException('This route is for admin');
+      }
 
-    if (user) {
-      if (
-        user.role !== UserRole.ADMIN &&
-        user.block_expires_at &&
-        new Date(user.block_expires_at) > new Date()
-      ) {
-        const userBlockedTime =
-          (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
-        throw new HttpException(
-          `Too many login attempts, try again after ${userBlockedTime} seconds`,
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      } else {
-        const getUserRecentLoggedInRequestsCounts =
-          await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
-            user.id,
-          );
-
+      if (user) {
         if (
           user.role !== UserRole.ADMIN &&
-          getUserRecentLoggedInRequestsCounts >= 5
+          user.block_expires_at &&
+          new Date(user.block_expires_at) > new Date()
         ) {
-          const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
-          await this.userService.blockUser(user.id, oneHourNextTime);
           const userBlockedTime =
-            (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
-            1000;
+            (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
           throw new HttpException(
             `Too many login attempts, try again after ${userBlockedTime} seconds`,
             HttpStatus.TOO_MANY_REQUESTS,
           );
-        }
-        if (user.password) {
-          const comparedPassword = await bcrypt.compare(
-            password,
-            user.password,
-          );
-          if (comparedPassword) {
-            return await this.sendOtpEmail({
-              userId: user.id,
-              userEmail: user.email,
-              otpType: OtpType.LOGIN,
-            });
+        } else {
+          const getUserRecentLoggedInRequestsCounts =
+            await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
+              user.id,
+              tx,
+            );
+
+          if (
+            user.role !== UserRole.ADMIN &&
+            getUserRecentLoggedInRequestsCounts >= 5
+          ) {
+            const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
+            await this.userService.blockUser(user.id, oneHourNextTime, tx);
+            const userBlockedTime =
+              (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
+              1000;
+            throw new HttpException(
+              `Too many login attempts, try again after ${userBlockedTime} seconds`,
+              HttpStatus.TOO_MANY_REQUESTS,
+            );
+          }
+          if (user.password) {
+            const comparedPassword = await bcrypt.compare(
+              password,
+              user.password,
+            );
+            if (comparedPassword) {
+              return await this.sendOtpEmail({
+                userId: user.id,
+                userEmail: user.email,
+                otpType: OtpType.LOGIN,
+              }, tx);
+            } else {
+              throw new UnauthorizedException('Invalid email or password');
+            }
           } else {
             throw new UnauthorizedException('Invalid email or password');
           }
-        } else {
-          throw new UnauthorizedException('Invalid email or password');
         }
+      } else {
+        throw new UnauthorizedException('Invalid email or password');
       }
-    } else {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+    });
   }
 
   async signup(signupDto: CreateUserDto) {
-    const { email } = signupDto;
-    const user = await this.userService.getUserByEmail(email);
+    return await prisma.$transaction(async (tx) => {
+      const { email } = signupDto;
+      const user = await this.userService.getUserByEmail(email, tx);
 
-    if (user) {
-      throw new ConflictException('User with this email already exists');
-    } else {
-      return await this.sendOtpEmail({
-        userEmail: email,
-        otpType: OtpType.SIGNUP,
-      });
-    }
+      if (user) {
+        throw new ConflictException('User with this email already exists');
+      } else {
+        return await this.sendOtpEmail({
+          userEmail: email,
+          otpType: OtpType.SIGNUP,
+        }, tx);
+      }
+    });
   }
 
   async me(userInfo: { userId: number; email: string }) {
@@ -391,189 +384,200 @@ export class AuthService {
     currentPassword: string | null,
     newPassword: string,
   ) {
-    const user = await this.userService.getUserByEmail(email);
-    if (user) {
-      if (user.password && currentPassword) {
-        const comparedPassword = await bcrypt.compare(
-          currentPassword,
-          user.password,
-        );
-        if (comparedPassword) {
-          const compareCurrentAndNewPassword = await bcrypt.compare(
-            newPassword,
+    return await prisma.$transaction(async (tx) => {
+      const user = await this.userService.getUserByEmail(email, tx);
+      if (user) {
+        if (user.password && currentPassword) {
+          const comparedPassword = await bcrypt.compare(
+            currentPassword,
             user.password,
           );
-          if (compareCurrentAndNewPassword) {
-            throw new ConflictException(
-              'New password is equal to current password',
+          if (comparedPassword) {
+            const compareCurrentAndNewPassword = await bcrypt.compare(
+              newPassword,
+              user.password,
             );
+            if (compareCurrentAndNewPassword) {
+              throw new ConflictException(
+                'New password is equal to current password',
+              );
+            } else {
+              await this.refreshTokenService.deleteUserAllTokens(user.id, tx);
+
+              const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+              await this.userService.changeUserPassword(email, hashedNewPassword, tx);
+              return {
+                message: 'Password changed successfully',
+              };
+            }
           } else {
-            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-            await this.userService.changeUserPassword(email, hashedNewPassword);
-            return {
-              message: 'Password changed successfully',
-            };
+            throw new BadRequestException('Invalid current password');
           }
         } else {
-          throw new BadRequestException('Invalid current password');
+          const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+          await this.userService.changeUserPassword(email, hashedNewPassword, tx);
+          return {
+            message: 'Password changed successfully',
+          };
         }
       } else {
-        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-        await this.userService.changeUserPassword(email, hashedNewPassword);
-        return {
-          message: 'Password changed successfully',
-        };
+        throw new NotFoundException('User not found');
       }
-    } else {
-      throw new NotFoundException('User not found');
-    }
+    });
   }
 
   async forgetPassword(email: string, adminOnly?: boolean) {
-    const user = await this.userService.getUserByEmail(email);
+    return await prisma.$transaction(async (tx) => {
+      const user = await this.userService.getUserByEmail(email, tx);
 
-    if (adminOnly && user?.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('This Route is for admin');
-    }
+      if (adminOnly && user?.role !== UserRole.ADMIN) {
+        throw new ForbiddenException('This Route is for admin');
+      }
 
-    if (user) {
-      if (
-        user.role !== UserRole.ADMIN &&
-        user.block_expires_at &&
-        new Date(user.block_expires_at) > new Date()
-      ) {
-        const userBlockedTime =
-          (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
-        throw new HttpException(
-          `Too many login attempts, try again after ${userBlockedTime} seconds`,
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      } else {
-        const getUserRecentLoggedInRequestsCounts =
-          await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
-            user.id,
-          );
-
+      if (user) {
         if (
           user.role !== UserRole.ADMIN &&
-          getUserRecentLoggedInRequestsCounts >= 5
+          user.block_expires_at &&
+          new Date(user.block_expires_at) > new Date()
         ) {
-          const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
-          await this.userService.blockUser(user.id, oneHourNextTime);
           const userBlockedTime =
-            (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
-            1000;
+            (new Date(user.block_expires_at).getTime() - Date.now()) / 1000;
           throw new HttpException(
             `Too many login attempts, try again after ${userBlockedTime} seconds`,
             HttpStatus.TOO_MANY_REQUESTS,
           );
         } else {
-          await this.loginRequestService.createLoginRequest(user.id);
-          return await this.sendOtpEmail({
-            userEmail: email,
-            otpType: OtpType.FORGET_PASSWORD,
-          });
+          const getUserRecentLoggedInRequestsCounts =
+            await this.loginRequestService.getUserRecentLoggedInRequestsCounts(
+              user.id,
+              tx,
+            );
+
+          if (
+            user.role !== UserRole.ADMIN &&
+            getUserRecentLoggedInRequestsCounts >= 5
+          ) {
+            const oneHourNextTime = new Date(Date.now() + 60 * 60 * 1000);
+            await this.userService.blockUser(user.id, oneHourNextTime, tx);
+            const userBlockedTime =
+              (new Date(Date.now() + 60 * 60 * 1000).getTime() - Date.now()) /
+              1000;
+            throw new HttpException(
+              `Too many login attempts, try again after ${userBlockedTime} seconds`,
+              HttpStatus.TOO_MANY_REQUESTS,
+            );
+          } else {
+            await this.loginRequestService.createLoginRequest(user.id, tx);
+            return await this.sendOtpEmail({
+              userEmail: email,
+              otpType: OtpType.FORGET_PASSWORD,
+            }, tx);
+          }
         }
+      } else {
+        throw new UnauthorizedException('Invalid email or password');
       }
-    } else {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+    });
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto, adminOnly?: boolean) {
-    const { email, new_password, otp } = resetPasswordDto;
-    const user = await this.userService.getUserByEmail(email);
+    return await prisma.$transaction(async (tx) => {
+      const { email, new_password, otp } = resetPasswordDto;
+      const user = await this.userService.getUserByEmail(email, tx);
 
-    if (adminOnly && user?.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('This Route is for admin');
-    }
-
-    if (user) {
-      const otpInfo = await this.otpService.getUserValidOtp({
-        userEmail: email,
-      });
-
-      if (!otpInfo) {
-        throw new UnauthorizedException('OTP not found or expired');
-      }
-      await this.otpService.incrementOtpAttempts(otpInfo.id);
-
-      if (otpInfo.otp_attempts + 1 >= 5) {
-        await this.otpService.expireUserCurrentOtp(otpInfo.id);
-        throw new UnauthorizedException('OTP not found or expired');
+      if (adminOnly && user?.role !== UserRole.ADMIN) {
+        throw new ForbiddenException('This Route is for admin');
       }
 
-      const comparedOtp = await bcrypt.compare(
-        otp.toString(),
-        otpInfo.hashed_otp,
-      );
+      if (user) {
+        const otpInfo = await this.otpService.getUserValidOtp({
+          userEmail: email,
+        }, tx);
 
-      if (comparedOtp) {
-        await this.otpService.expireUserCurrentOtp(otpInfo.id);
+        if (!otpInfo) {
+          throw new UnauthorizedException('OTP not found or expired');
+        }
+        await this.otpService.incrementOtpAttempts(otpInfo.id, tx);
 
-        await this.refreshTokenService.deleteUserAllTokens(user.id)
+        if (otpInfo.otp_attempts + 1 >= 5) {
+          await this.otpService.expireUserCurrentOtp(otpInfo.id, tx);
+          throw new UnauthorizedException('OTP not found or expired');
+        }
 
-        try {
+        const comparedOtp = await bcrypt.compare(
+          otp.toString(),
+          otpInfo.hashed_otp,
+        );
+
+        if (comparedOtp) {
+          await this.otpService.expireUserCurrentOtp(otpInfo.id, tx);
+
+          await this.refreshTokenService.deleteUserAllTokens(user.id, tx);
+
           const hashedNewPassword = await bcrypt.hash(new_password, 10);
-          await this.userService.changeUserPassword(email, hashedNewPassword);
+          await this.userService.changeUserPassword(email, hashedNewPassword, tx);
           return {
             message: 'Password has been reset successfully',
           };
-        } catch {
-          throw new InternalServerErrorException();
+        } else {
+          throw new UnauthorizedException('OTP is not correct');
         }
       } else {
-        throw new UnauthorizedException('OTP is not correct');
+        throw new UnauthorizedException('Invalid email or password');
       }
-    } else {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+    });
   }
 
   async refresh(userId: number, userToken: string) {
-    const user = await this.userRepository.getUserById(userId);
-    if (user) {
-      const userRefreshTokens = await this.refreshTokenService.getValidTokens(
-        user.id,
-      );
-      const hashedUserToken = createHash('sha256')
-        .update(userToken)
-        .digest('hex');
-      const mainToken = userRefreshTokens.find(
-        (token) => token.hashed_refresh === hashedUserToken,
-      );
+    return await prisma.$transaction(async (tx) => {
+      const user = await this.userRepository.getUserById(userId, tx);
+      if (user) {
+        const userRefreshTokens = await this.refreshTokenService.getValidTokens(
+          user.id,
+          tx,
+        );
+        const hashedUserToken = createHash('sha256')
+          .update(userToken)
+          .digest('hex');
+        const mainToken = userRefreshTokens.find(
+          (token) => token.hashed_refresh === hashedUserToken,
+        );
 
-      if (mainToken) {
-        return await this.jwtGenerator(user.id, user.email);
+        if (mainToken) {
+          return await this.jwtGenerator(user.id, user.email, tx);
+        } else {
+          throw new UnauthorizedException('Invalid token');
+        }
       } else {
-        throw new UnauthorizedException('Invalid token');
+        throw new NotFoundException('User not found');
       }
-    } else {
-      throw new NotFoundException('User not found');
-    }
+    });
   }
 
   async logout(userId: number, refreshToken: string) {
-    const user = await this.userRepository.getUserById(userId);
-    if (user) {
-      const userRefreshTokens = await this.refreshTokenService.getValidTokens(
-        user.id,
-      );
-      const hashedUserToken = createHash('sha256')
-        .update(refreshToken)
-        .digest('hex');
-      const mainToken = userRefreshTokens.find(
-        (token) => token.hashed_refresh === hashedUserToken,
-      );
-      if (mainToken) {
-        await this.refreshTokenService.deleteCurrentToken(mainToken.id);
-        return { message: 'Logged out successfully' };
+    return await prisma.$transaction(async (tx) => {
+      const user = await this.userRepository.getUserById(userId, tx);
+      if (user) {
+        const userRefreshTokens = await this.refreshTokenService.getValidTokens(
+          user.id,
+          tx,
+        );
+        const hashedUserToken = createHash('sha256')
+          .update(refreshToken)
+          .digest('hex');
+        const mainToken = userRefreshTokens.find(
+          (token) => token.hashed_refresh === hashedUserToken,
+        );
+        if (mainToken) {
+          await this.refreshTokenService.deleteCurrentToken(mainToken.id, tx);
+          return { message: 'Logged out successfully' };
+        } else {
+          throw new UnauthorizedException('Invalid token');
+        }
       } else {
-        throw new UnauthorizedException('Invalid token');
+        throw new NotFoundException('User not found');
       }
-    } else {
-      throw new NotFoundException('User not found');
-    }
+    });
   }
 
   async logoutByToken(refreshToken: string | null | undefined) {
@@ -594,9 +598,11 @@ export class AuthService {
     if (secret !== process.env.CRON_SECRET) {
       throw new UnauthorizedException('Secret key is not correct');
     }
-    await this.otpService.deleteExpiredOTPs();
-    await this.loginRequestService.deleteExpiredLoginRequests();
-    await this.refreshTokenService.deleteExpiredTokens();
-    return { message: 'Expired data cleaned up' };
+    return await prisma.$transaction(async (tx) => {
+      await this.otpService.deleteExpiredOTPs(tx);
+      await this.loginRequestService.deleteExpiredLoginRequests(tx);
+      await this.refreshTokenService.deleteExpiredTokens(tx);
+      return { message: 'Expired data cleaned up' };
+    });
   }
 }

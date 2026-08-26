@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { TransactionType } from '../../common/types/types';
-import {
-  CreateHeaderMenuDto,
-} from '../dto/header-menu.dto';
+import { CreateHeaderMenuDto } from '../dto/header-menu.dto';
 import { prisma } from '../../lib/prisma';
 import { AppLanguage } from '../../generated/prisma';
+import { MenuType } from '../../common/enums';
 
 @Injectable()
 export class HeaderMenuRepository {
@@ -43,12 +42,13 @@ export class HeaderMenuRepository {
     });
   }
 
-  async getAllHeaderMenusAdmin(query: {
+  async getAllHeaderMenusAdmin2(query: {
     page: number;
     page_size: number;
     search: string;
     sort_type: 'asc' | 'desc';
     lang: AppLanguage;
+    only_parents?: boolean;
   }) {
     return await prisma.headerMenu.findMany({
       skip: query.page,
@@ -58,6 +58,40 @@ export class HeaderMenuRepository {
         filters: true,
       },
       where: {
+        ...(query.only_parents && { parent_id: null }),
+        translations: {
+          some: {
+            title: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+      orderBy: {
+        created_at: query.sort_type,
+      },
+    });
+  }
+  async getAllHeaderMenusAdmin(query: {
+    page: number;
+    page_size: number;
+    search: string;
+    sort_type: 'asc' | 'desc';
+    lang: AppLanguage;
+    type?: MenuType;
+  }) {
+    return await prisma.headerMenu.findMany({
+      skip: query.page,
+      take: query.page_size,
+      include: {
+        translations: { where: { language: query.lang } },
+        filters: true,
+      },
+      where: {
+        ...(query.type
+          ? { parent_id: query.type === 'CHILD' ? { not: null } : null }
+          : {}),
         translations: {
           some: {
             title: {

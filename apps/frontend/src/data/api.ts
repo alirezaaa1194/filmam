@@ -13,6 +13,8 @@ export const __AppApis = {
     forgetPassword: `${base}/auth/forget-password`,
     resetPassword: `${base}/auth/reset-password`,
     google: `${base}/auth/google`,
+    googleFrontend: `${base}/auth/google/frontend`,
+    googleAdmin: `${base}/auth/google/admin`,
     googleCallback: `${base}/auth/google/callback`,
     cleanupOtp: `${base}/auth/internal/cleanup-otp`,
   },

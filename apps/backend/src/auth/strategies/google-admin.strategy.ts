@@ -3,6 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { prisma } from '../../lib/prisma';
 import { UserService } from '../../user/user.service';
+import { TransactionType } from '../../common/types/types';
+import { defaultLang } from '../../lib/utils';
 
 @Injectable()
 export class AuthAdminStrategy extends PassportStrategy(
@@ -20,23 +22,26 @@ export class AuthAdminStrategy extends PassportStrategy(
   }
 
   async validate(_accessToken: string, _refreshToken: string, profile: any) {
-    let user = await this.userService.getUserByEmail(profile.emails[0].value);
+    return await prisma.$transaction(async (tx: TransactionType) => {
+      let user = await this.userService.getUserByEmail(profile.emails[0].value, tx);
 
-    if (!user) {
-      user = await this.userService.signupUser({
-        email: profile.emails[0].value,
-        google_id: profile.id,
-        username: profile.displayName,
-      });
-    }
+      if (!user) {
+        user = await this.userService.signupUser({
+          email: profile.emails[0].value,
+          google_id: profile.id,
+          username: profile.displayName,
+          preferred_language: defaultLang,
+        }, tx);
+      }
 
-    if (!user.google_id) {
-      user = await prisma.user.update({
-        data: { google_id: profile.id },
-        where: { id: user.id },
-      });
-    }
+      if (!user.google_id) {
+        user = await tx.user.update({
+          data: { google_id: profile.id },
+          where: { id: user.id },
+        });
+      }
 
-    return user;
+      return user;
+    });
   }
 }

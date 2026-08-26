@@ -116,6 +116,7 @@ export class HeaderMenuService {
       search: query.search?.trim() ?? '',
       sort_type: query.sort === SortType.ASC ? 'asc' : 'desc',
       lang: query.lang || defaultLang,
+      type: query.type,
     });
 
     const normalizedHeaderMenus = headerMenus.map((headerMenu) => {

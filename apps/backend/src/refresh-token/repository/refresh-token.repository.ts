@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '../../lib/prisma';
+import { TransactionType } from '../../common/types/types';
 
 @Injectable()
 export class RefreshTokenRepository {
-  async deleteUserExpiredTokens(userId: number) {
-    return await prisma.refreshToken.deleteMany({
+  async deleteUserExpiredTokens(userId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.refreshToken.deleteMany({
       where: {
         user_id: userId,
         expires_at: {
@@ -14,12 +16,16 @@ export class RefreshTokenRepository {
     });
   }
 
-  async deleteUserAllTokens(userId: number) {
-    return await prisma.refreshToken.deleteMany({ where: { user_id: userId } });
+  async deleteUserAllTokens(userId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.refreshToken.deleteMany({
+      where: { user_id: userId },
+    });
   }
 
-  async deleteCurrentToken(tokenId: number) {
-    return await prisma.refreshToken.delete({
+  async deleteCurrentToken(tokenId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.refreshToken.delete({
       where: {
         id: tokenId,
       },
@@ -29,13 +35,16 @@ export class RefreshTokenRepository {
     hashed_refresh: string,
     user_id: number,
     expires_at: Date,
+    tx?: TransactionType,
   ) {
-    return await prisma.refreshToken.create({
+    const client = tx ?? prisma;
+    return await client.refreshToken.create({
       data: { hashed_refresh, user_id, expires_at },
     });
   }
-  async getValidTokens(userId: number) {
-    return await prisma.refreshToken.findMany({
+  async getValidTokens(userId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.refreshToken.findMany({
       where: {
         user_id: userId,
         expires_at: {
@@ -44,8 +53,9 @@ export class RefreshTokenRepository {
       },
     });
   }
-  async deleteExpiredTokens() {
-    return await prisma.refreshToken.deleteMany({
+  async deleteExpiredTokens(tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.refreshToken.deleteMany({
       where: {
         expires_at: {
           lte: new Date(),

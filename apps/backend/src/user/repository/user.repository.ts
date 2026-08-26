@@ -14,30 +14,39 @@ export class UserRepository {
   async createUser(
     userInfo: CreateUserDto | GoogleAuthDto,
     userRole: UserRole,
+    tx?: TransactionType,
   ) {
-    return await prisma.user.create({
+    const client = tx ?? prisma;
+    return await client.user.create({
       data: { ...userInfo, role: userRole },
     });
   }
 
-  async getUserByEmail(userEmail: string) {
-    return await prisma.user.findUnique({
+  async getUserByEmail(userEmail: string, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.user.findUnique({
       where: {
         email: userEmail,
       },
     });
   }
 
-  async getUserById(userId: number) {
-    return await prisma.user.findUnique({
+  async getUserById(userId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.user.findUnique({
       where: {
         id: userId,
       },
     });
   }
 
-  async changeUserPassword(userEmail: string, newPassword: string) {
-    return await prisma.user.update({
+  async changeUserPassword(
+    userEmail: string,
+    newPassword: string,
+    tx?: TransactionType,
+  ) {
+    const client = tx ?? prisma;
+    return await client.user.update({
       data: {
         password: newPassword,
       },
@@ -60,8 +69,13 @@ export class UserRepository {
     });
   }
 
-  async blockUser(userId: number, expireTime: Date | null) {
-    return await prisma.user.update({
+  async blockUser(
+    userId: number,
+    expireTime: Date | null,
+    tx?: TransactionType,
+  ) {
+    const client = tx ?? prisma;
+    return await client.user.update({
       data: { block_expires_at: expireTime },
       where: { id: userId, role: { not: UserRole.ADMIN } },
     });

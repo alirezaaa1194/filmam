@@ -3,7 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/
 import { HambergerMenu } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
-import { AuthModeEnum, UserType } from "@/types";
+import { AuthModeEnum, UserRoleEnum, UserType } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { useLocale, useLogOut } from "@/hooks";
 import { PropsWithChildren, use, useState } from "react";
@@ -40,6 +40,12 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
               <Separator className="bg-gray-12" />
               <Link href="/">{t("Header.support")}</Link>
               <Separator className="bg-gray-12" />
+              {user.role === UserRoleEnum.ADMIN ? (
+                <>
+                  <Link href="https://admin.filmamapp.ir">پنل مدیریت</Link>
+                  <Separator className="bg-gray-12" />
+                </>
+              ) : null}
               <button
                 className="text-complementary-tint-2 text-start cursor-pointer"
                 onClick={() => {

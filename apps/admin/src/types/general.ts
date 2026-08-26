@@ -1136,3 +1136,8 @@ export enum __SortTypeEnum {
   ASC = 'ASC',
   DESC = 'DESC',
 }
+
+export enum __MenuTypeEnum {
+  CHILD = 'CHILD',
+  PARENT = 'PARENT',
+}

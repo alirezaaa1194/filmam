@@ -35,7 +35,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Api, Cn, TranslateServerError } from '@/scripts'
 import { AppApis } from '../../../data'
-import { AppLanguagesEnum } from '../../../types'
+import { AppLanguagesEnum, MenuTypeEnum } from '../../../types'
 import { FiltersEditor } from '../filtersEditor/filtersEditor.index'
 import {
   getLanguageDirection,
@@ -302,6 +302,7 @@ export function AddHeaderMenuDialog({
                                 page_size: params.pageSize,
                                 search: params.search || undefined,
                                 sort: 'ASC',
+                                type: MenuTypeEnum.PARENT,
                               },
                             }
                           )

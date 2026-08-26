@@ -110,6 +110,7 @@ import {
   __AppLanguagesEnum,
   __UserRoleEnum,
   __SortTypeEnum,
+  __MenuTypeEnum,
 } from './general'
 
 export type { __NavigateFn as NavigateFn }
@@ -224,4 +225,5 @@ export type { __ApiQueryType as ApiQueryType }
 export { __AppLanguagesEnum as AppLanguagesEnum }
 export { __SortTypeEnum as SortTypeEnum }
 export { __UserRoleEnum as UserRoleEnum }
+export { __MenuTypeEnum as MenuTypeEnum }
 export { __MediaFileAcceptMap as MediaFileAcceptMap } from './general'

@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Api, Cn, TranslateServerError } from '@/scripts'
 import { AppApis } from '../../../data'
-import { AppLanguagesEnum } from '../../../types'
+import { AppLanguagesEnum, MenuTypeEnum } from '../../../types'
 import { FiltersEditor } from '../filtersEditor/filtersEditor.index'
 import {
   getLanguageDirection,
@@ -315,26 +315,26 @@ function HeaderMenuEditForm({
         />
 
         {watchMenuType === 'PAGE' && (
-        <FormField
-          control={form.control}
-          name='href'
-          render={({ field }) => (
-            <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-              <FormLabel className='col-span-2 text-end'>
-                {t('header_menus.href')}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={t('header_menus.href_placeholder')}
-                  className='col-span-4'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className='col-span-4 col-start-3' />
-            </FormItem>
-          )}
-        />
-      )}
+          <FormField
+            control={form.control}
+            name='href'
+            render={({ field }) => (
+              <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                <FormLabel className='col-span-2 text-end'>
+                  {t('header_menus.href')}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={t('header_menus.href_placeholder')}
+                    className='col-span-4'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className='col-span-4 col-start-3' />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
@@ -385,6 +385,7 @@ function HeaderMenuEditForm({
                           search: params.search || undefined,
                           lang: i18n.resolvedLanguage,
                           sort: 'ASC',
+                          type: MenuTypeEnum.PARENT,
                         },
                       }
                     )

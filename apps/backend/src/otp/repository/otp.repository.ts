@@ -1,23 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { OtpType } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
+import { TransactionType } from '../../common/types/types';
 
 @Injectable()
 export class OtpRepository {
-  async createOtp({
-    userId,
-    userEmail,
-    otpType,
-    hashedOtp,
-    expiresAt,
-  }: {
-    userId?: number;
-    userEmail?: string;
-    otpType: OtpType;
-    hashedOtp: string;
-    expiresAt: Date;
-  }) {
-    return await prisma.otp.create({
+  async createOtp(
+    {
+      userId,
+      userEmail,
+      otpType,
+      hashedOtp,
+      expiresAt,
+    }: {
+      userId?: number;
+      userEmail?: string;
+      otpType: OtpType;
+      hashedOtp: string;
+      expiresAt: Date;
+    },
+    tx?: TransactionType,
+  ) {
+    const client = tx ?? prisma;
+    return await client.otp.create({
       data: {
         user_id: userId,
         user_email: userEmail,
@@ -27,14 +32,18 @@ export class OtpRepository {
       },
     });
   }
-  async getUserValidOtp({
-    userId,
-    userEmail,
-  }: {
-    userId?: number;
-    userEmail?: string;
-  }) {
-    return await prisma.otp.findFirst({
+  async getUserValidOtp(
+    {
+      userId,
+      userEmail,
+    }: {
+      userId?: number;
+      userEmail?: string;
+    },
+    tx?: TransactionType,
+  ) {
+    const client = tx ?? prisma;
+    return await client.otp.findFirst({
       where: {
         ...(userId ? { user_id: userId } : { user_email: userEmail }),
         used_at: null,
@@ -44,18 +53,22 @@ export class OtpRepository {
       },
     });
   }
-  async getUserRecentOtp({
-    userId,
-    userEmail,
-    twoMinutesAgoTime,
-    otpType,
-  }: {
-    userId?: number;
-    userEmail?: string;
-    twoMinutesAgoTime: Date;
-    otpType: OtpType;
-  }) {
-    return await prisma.otp.findFirst({
+  async getUserRecentOtp(
+    {
+      userId,
+      userEmail,
+      twoMinutesAgoTime,
+      otpType,
+    }: {
+      userId?: number;
+      userEmail?: string;
+      twoMinutesAgoTime: Date;
+      otpType: OtpType;
+    },
+    tx?: TransactionType,
+  ) {
+    const client = tx ?? prisma;
+    return await client.otp.findFirst({
       where: {
         ...(userId ? { user_id: userId } : { user_email: userEmail }),
         type: otpType,
@@ -66,16 +79,20 @@ export class OtpRepository {
       },
     });
   }
-  async deleteUserValidOTPs({
-    userId,
-    userEmail,
-    otpType,
-  }: {
-    userId?: number;
-    userEmail?: string;
-    otpType: OtpType;
-  }) {
-    await prisma.otp.updateMany({
+  async deleteUserValidOTPs(
+    {
+      userId,
+      userEmail,
+      otpType,
+    }: {
+      userId?: number;
+      userEmail?: string;
+      otpType: OtpType;
+    },
+    tx?: TransactionType,
+  ) {
+    const client = tx ?? prisma;
+    await client.otp.updateMany({
       data: {
         used_at: new Date(),
       },
@@ -89,14 +106,16 @@ export class OtpRepository {
       },
     });
   }
-  async incrementOtpAttempts(otpId: number) {
-    return await prisma.otp.update({
+  async incrementOtpAttempts(otpId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.otp.update({
       data: { otp_attempts: { increment: 1 } },
       where: { id: otpId },
     });
   }
-  async expireUserCurrentOtp(otpId: number) {
-    return await prisma.otp.update({
+  async expireUserCurrentOtp(otpId: number, tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.otp.update({
       data: {
         used_at: new Date(),
       },
@@ -105,8 +124,9 @@ export class OtpRepository {
       },
     });
   }
-  async deleteExpiredOTPs() {
-    return await prisma.otp.deleteMany({
+  async deleteExpiredOTPs(tx?: TransactionType) {
+    const client = tx ?? prisma;
+    return await client.otp.deleteMany({
       where: {
         OR: [
           {
