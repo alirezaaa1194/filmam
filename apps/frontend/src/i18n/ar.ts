@@ -1,17 +1,12 @@
 import { EN } from "./en";
 
-export const AR:typeof EN = {
+export const AR: typeof EN = {
   Common: {
     language: "اللغة",
   },
   Layout: {
     title: "فيلمام",
     description: "شاهد الأفلام والمسلسلات في أي وقت ومن أي مكان.",
-    test1:{
-      test2:{
-        test3:"التست 2"
-      }
-    }
   },
   Header: {
     login: "تسجيل الدخول",
@@ -32,5 +27,60 @@ export const AR:typeof EN = {
     copyright:
       "الخدمات المقدمة في فيلمام تمتلك التراخيص اللازمة من الجهات المختصة، وأي استغلال أو سوء استخدام لمحتوى فيلمام يعرض للمتابعة القانونية.",
     startYear: "2018",
+  },
+  Auth: {
+    title: {
+      login: "تسجيل الدخول",
+      signup: "إنشاء حساب",
+      forgetPassword: "نسيت كلمة المرور",
+    },
+    fields: {
+      username: "اسم المستخدم",
+      email: "البريد الإلكتروني",
+      password: "كلمة المرور",
+      confirmPassword: "تأكيد كلمة المرور",
+      otp: "رمز التحقق",
+    },
+    placeholders: {
+      username: "أدخل اسم المستخدم",
+      email: "أدخل بريدك الإلكتروني",
+      password: "أدخل كلمة المرور",
+      confirmPassword: "أعد إدخال كلمة المرور",
+      otp: "-----",
+    },
+    validation: {
+      usernameRequired: "يرجى إدخال اسم المستخدم",
+      emailInvalid: "يرجى إدخال بريد إلكتروني صالح",
+      passwordRequired: "يرجى إدخال كلمة المرور",
+      passwordMinLength: "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      confirmPasswordRequired: "يرجى إعادة إدخال كلمة المرور",
+      passwordsDoNotMatch: "كلمات المرور غير متطابقة",
+      otpRequired: "يرجى إدخال رمز التحقق",
+      otpLength: "يجب أن يكون رمز التحقق 5 أرقام",
+    },
+    buttons: {
+      sendCode: "إرسال رمز التحقق",
+      resend: "إعادة الإرسال",
+      resendIn: "إعادة إرسال الرمز خلال",
+      seconds: "ثانية",
+      login: "تسجيل الدخول",
+      signup: "إنشاء حساب",
+    },
+    links: {
+      forgotPassword: "نسيت كلمة المرور؟",
+      noAccount: "ليس لديك حساب؟ أنشئ حسابًا",
+      haveAccount: "لديك حساب بالفعل؟ سجل الدخول",
+      wrongEmail: "أدخلت بريدًا خاطئًا؟",
+    },
+    toasts: {
+      otpSent: "تم إرسال رمز التحقق بنجاح",
+      loginSuccess: "تم تسجيل الدخول بنجاح",
+      passwordChanged: "تم تغيير كلمة المرور بنجاح",
+    },
+  },
+  Errors: {
+    adminOnly: "هذا الإجراء متاح فقط للمسؤولين",
+    popupBlocked: "تم حظر النافذة المنبثقة بواسطة المتصفح",
+    timeout: "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى",
   },
 };

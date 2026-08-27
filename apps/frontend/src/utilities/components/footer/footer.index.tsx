@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AparatIcon from "@/assets/icons/aparat.svg";
 import TelegramIcon from "@/assets/icons/telegram.svg";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import { useLocale } from "@/hooks";
 import { GetLocaleYear } from "@/scripts";
 

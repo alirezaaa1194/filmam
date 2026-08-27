@@ -1,10 +1,10 @@
 "use client";
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/utilities/components/ui/sheet/sheet.index";
 import { HambergerMenu } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthModeEnum, UserRoleEnum, UserType } from "@/types";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import { useLocale, useLogOut } from "@/hooks";
 import { PropsWithChildren, use, useState } from "react";
 import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";

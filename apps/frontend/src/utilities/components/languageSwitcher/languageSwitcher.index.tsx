@@ -2,8 +2,8 @@
 
 import { use, useTransition } from "react";
 import { Check } from "lucide-react";
-import { Button } from "@/utilities/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/utilities/components/ui/dropdown-menu";
+import { Button } from "@/utilities/components/ui/button/button.index";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/utilities/components/ui/dropdownMenu/dropdownMenu.index";
 import { AppLanguagesEnum } from "@/types";
 import Image from "next/image";
 import { useLocale } from "@/hooks";
@@ -14,8 +14,7 @@ import { ClientCall } from "@/scripts/client";
 import { AppApis } from "@/data";
 import { useRouter } from "next/navigation";
 import { ArrowDown2 } from "iconsax-react";
-import { Spinner } from "../../../components/ui/spinner";
-import { spawn } from "child_process";
+import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
 
 const flags: Record<AppLanguagesEnum, string> = {
   [AppLanguagesEnum.FA]: "/flags/fa.svg",

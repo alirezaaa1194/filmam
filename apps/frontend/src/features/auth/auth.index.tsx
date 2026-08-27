@@ -1,5 +1,5 @@
 "use client";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/utilities/components/ui/dialog/dialog.index";
 import { use } from "react";
 import LoginForm from "./loginForm/loginForm.index";
 import SignupForm from "./signupForm/signupForm.index";

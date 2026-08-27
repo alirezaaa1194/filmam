@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "shadcn:add": "node scripts/shadcn-add.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

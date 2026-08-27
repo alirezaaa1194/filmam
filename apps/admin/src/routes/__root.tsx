@@ -77,20 +77,6 @@ export const Route = createRootRouteWithContext<{
         })
       }
     } catch (err) {
-      // catch (err) {
-      //   if (err instanceof Response) {
-      //     if (err.status === 401 || err.status === 403 || err.status === 404) {
-      //       if (
-      //         location.pathname !== '/sign-in' &&
-      //         location.pathname !== '/forgot-password'
-      //       ) {
-      //         return redirect({
-      //           to: '/sign-in',
-      //         })
-      //       }
-      //     }
-      //   }
-      // }
       if (err instanceof Response) {
         if (
           [401, 403, 404].includes(err.status) &&
@@ -102,7 +88,9 @@ export const Route = createRootRouteWithContext<{
           })
         }
 
-        return
+        if (location.pathname === '/sign-in' || location.pathname === '/forgot-password') {
+          return
+        }
       }
 
       throw err

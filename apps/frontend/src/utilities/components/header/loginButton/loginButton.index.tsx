@@ -1,10 +1,10 @@
 "use client";
 
 import { use } from "react";
-import { Button } from "../../ui/button";
-import { AuthModalContext } from "../../../../contexts/authModal";
-import { useLocale } from "../../../../hooks";
-import { AuthModeEnum } from "../../../../types";
+import { Button } from "@/utilities/components/ui/button/button.index";
+import { AuthModalContext } from "@/contexts/authModal";
+import { useLocale } from "@/hooks";
+import { AuthModeEnum } from "@/types";
 
 function HeaderLoginButton() {
   const { setAuthMode } = use(AuthModalContext);

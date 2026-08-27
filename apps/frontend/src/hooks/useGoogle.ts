@@ -3,12 +3,14 @@ import { AppApis } from "../data";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { AuthModalContext } from "../contexts/authModal";
+import { useLocale } from ".";
 
 function __UseGoogle() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const router = useRouter();
   const { setAuthMode } = use(AuthModalContext);
+  const { t } = useLocale();
 
   const popupRef = useRef<Window | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -52,7 +54,7 @@ function __UseGoogle() {
       if (error) {
         cleanup();
         setAuthMode(null);
-        toast.error("auth.admin_only");
+        toast.error(t("Errors.adminOnly"));
         return;
       }
 
@@ -77,7 +79,7 @@ function __UseGoogle() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [cleanup, router, setAuthMode]);
+  }, [cleanup, router, setAuthMode, t]);
 
   const handleGoogleLogin = useCallback(() => {
     if (isGoogleLoading) {
@@ -94,7 +96,7 @@ function __UseGoogle() {
 
     if (!popup) {
       setIsGoogleLoading(false);
-      toast.error("auth.popup_blocked");
+      toast.error(t("Errors.popupBlocked"));
       return;
     }
 
@@ -113,9 +115,9 @@ function __UseGoogle() {
 
     timeoutRef.current = setTimeout(() => {
       cleanup();
-      toast.error("auth.timeout");
+      toast.error(t("Errors.timeout"));
     }, 120_000);
-  }, [cleanup, isGoogleLoading, setAuthMode]);
+  }, [cleanup, isGoogleLoading, setAuthMode, t]);
 
   return {
     handleGoogleLogin,

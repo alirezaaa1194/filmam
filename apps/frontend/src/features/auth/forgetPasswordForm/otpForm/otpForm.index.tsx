@@ -1,14 +1,15 @@
 import { AuthModeEnum, AuthModeType } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
+import { Button } from "@/utilities/components/ui/button/button.index";
 import { useMutation } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
 import { AppApis } from "@/data";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/utilities/components/ui/input/input.index";
+import { PasswordInput } from "@/utilities/components/ui/passwordInput/passwordInput.index";
 import { useLocale } from "@/hooks";
 import { ForgetPasswordSchema } from "../forgetPasswordForm.index";
 import z from "zod";
@@ -16,7 +17,7 @@ import z from "zod";
 export type ForgetPasswordFormValues = z.infer<typeof ForgetPasswordSchema>;
 
 function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
-  const { dir } = useLocale();
+  const { t } = useLocale();
   const { control, handleSubmit, getValues, setError, setValue } = useFormContext<ForgetPasswordFormValues>();
 
   const { mutate, isPending } = useMutation({
@@ -24,7 +25,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
     onSuccess: () => {
       setStep("Otp");
       start();
-      toast.success("کد تایید با موفقیت ارسال شد");
+      toast.success(t("Auth.toasts.otpSent"));
     },
     onError: (error: Response) => {
       toast.error(TranslateServerError(error.status));
@@ -37,7 +38,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
       start();
       setValue("otp", "");
       setMode(AuthModeEnum.LOGIN);
-      toast.success("رمز عبور با موفقیت تغییر کرد");
+      toast.success(t("Auth.toasts.passwordChanged"));
     },
     onError: (error: Response) => {
       toast.error(TranslateServerError(error.status));
@@ -50,13 +51,13 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
     if (!data.newPassword) {
       setError("newPassword", {
         type: "manual",
-        message: "لطفا رمز عبور را وارد کنید",
+        message: t("Auth.validation.passwordRequired"),
       });
       isValid = false;
     } else if (data.newPassword.length < 8) {
       setError("newPassword", {
         type: "manual",
-        message: "رمز عبور حداقل 8 کاراکتر",
+        message: t("Auth.validation.passwordMinLength"),
       });
       isValid = false;
     }
@@ -64,13 +65,13 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
     if (!data.confirmPassword) {
       setError("confirmPassword", {
         type: "manual",
-        message: "لطفا تکرار رمز عبور را وارد کنید",
+        message: t("Auth.validation.confirmPasswordRequired"),
       });
       isValid = false;
     } else if (data.newPassword !== data.confirmPassword) {
       setError("confirmPassword", {
         type: "manual",
-        message: "رمزهای عبور یکسان نیستند",
+        message: t("Auth.validation.passwordsDoNotMatch"),
       });
       isValid = false;
     }
@@ -78,13 +79,13 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
     if (!data.otp) {
       setError("otp", {
         type: "manual",
-        message: "لطفا کد تایید را وارد کنید",
+        message: t("Auth.validation.otpRequired"),
       });
       isValid = false;
     } else if (data.otp.length !== 5) {
       setError("otp", {
         type: "manual",
-        message: "کد تایید باید 5 رقمی باشد",
+        message: t("Auth.validation.otpLength"),
       });
       isValid = false;
     }
@@ -98,17 +99,17 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
     }
   };
   return (
-    <form id="otp-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-start">
+    <form id="otp-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-start w-full">
       <FieldGroup>
         <Controller
           name="newPassword"
           control={control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="login-form-password" className="text-h-6">
-                رمز عبور
+            <Field data-invalid={fieldState.invalid} className="w-full">
+              <FieldLabel htmlFor="login-form-password" className="text-h-6 max-md:text-mobile-h-6">
+                {t("Auth.fields.password")}
               </FieldLabel>
-              <Input type="password" {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
+              <PasswordInput {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.password")} autoComplete="off" className="text-body-xxs" dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -117,11 +118,11 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
           name="confirmPassword"
           control={control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="login-form-confirmPassword" className="text-h-6">
-                تکرار رمز عبور
+            <Field data-invalid={fieldState.invalid} className="w-full">
+              <FieldLabel htmlFor="login-form-confirmPassword" className="text-h-6 max-md:text-mobile-h-6">
+                {t("Auth.fields.confirmPassword")}
               </FieldLabel>
-              <Input type="password" {...field} id="login-form-confirmPassword" aria-invalid={fieldState.invalid} placeholder="رمز عبور خود را وارد کنید" autoComplete="off" className={`h-12 border border-gray-10 text-white transition-all ring-0! ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left ${dir === "rtl" ? "placeholder:text-right" : "placeholder:text-left"} rounded-lg`} dir="ltr" />
+              <PasswordInput {...field} id="login-form-confirmPassword" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.confirmPassword")} autoComplete="off" className="text-body-xxs" dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -130,11 +131,11 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
           name="otp"
           control={control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="otp-form-otp" className="text-h-6">
-                کد تایید
+            <Field data-invalid={fieldState.invalid} className="w-full">
+              <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
+                {t("Auth.fields.otp")}
               </FieldLabel>
-              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder="-----" className={`h-12 border border-gray-10 text-white transition-all ring-0! text-center! tracking-[2rem] ps-8 ${fieldState.invalid ? "border-error" : "focus:border-primary"} text-body-xxs text-left rounded-lg`} dir="ltr" />
+              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -151,17 +152,17 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
       >
         {timer > 0 ? (
           <div className="flex items-center">
-            ارسال مجدد کد تا
+            {t("Auth.buttons.resendIn")}
             <span className="block w-8">{timer}</span>
-            ثانیه دیگر
+            {t("Auth.buttons.seconds")}
           </div>
         ) : (
-          <>{forgetIsPending ? <Spinner /> : null} ارسال مجدد</>
+          <>{forgetIsPending ? <Spinner /> : null} {t("Auth.buttons.resend")}</>
         )}
       </Button>
 
       <Button type="submit" className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending}>
-        {isPending ? <Spinner /> : null} ورود
+        {isPending ? <Spinner /> : null} {t("Auth.buttons.login")}
       </Button>
 
       <button
@@ -171,7 +172,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
           setStep("Email");
         }}
       >
-        ایمیل را اشتباه وارد کرده اید؟
+        {t("Auth.links.wrongEmail")}
       </button>
     </form>
   );

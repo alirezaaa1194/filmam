@@ -1,7 +1,7 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/utilities/components/ui/accordion/accordion.index";
 import { MenuItemType, MenuTypeEnum } from "@/types";
 import { ArrowDown2 } from "iconsax-react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import Link from "next/link";
 import { Fragment } from "react/jsx-runtime";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/utilities/components/ui/dropdown-menu";
-import { Button } from "@/utilities/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/utilities/components/ui/dropdownMenu/dropdownMenu.index";
+import { Button } from "@/utilities/components/ui/button/button.index";
 import { ArchiveMinus, UserOctagon, I24Support, ArrowDown2, LogoutCurve, User, Setting2 } from "iconsax-react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import { useState } from "react";
 import { UserRoleEnum, UserType } from "@/types";
 import Link from "next/link";

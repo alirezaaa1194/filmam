@@ -2,7 +2,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { AppLanguagesEnum, MenuItemType, MenuTypeEnum } from "@/types";
 import { ServerCall } from "@/scripts/server";
 import { AppApis } from "@/data";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import Link from "next/link";
 import NavbarItem from "./navbarItem/navbarItem.index";
 import { Fragment } from "react/jsx-runtime";

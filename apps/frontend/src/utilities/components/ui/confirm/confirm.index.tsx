@@ -1,31 +1,31 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Dialog as DialogPrimitive } from "radix-ui";
+import * as React from "react"
+import { Dialog as DialogPrimitive } from "radix-ui"
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/utilities/components/ui/button";
-import { CloseCircle } from "iconsax-react";
-import Image from "next/image";
+import { cn } from "@/lib/utils"
+import { Button } from "@/utilities/components/ui/button/button.index"
+import { CloseCircle } from "iconsax-react"
+import Image from "next/image"
 
 function Confirm({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="Confirm" {...props} />;
+  return <DialogPrimitive.Root data-slot="Confirm" {...props} />
 }
 
 function ConfirmTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="Confirm-trigger" {...props} />;
+  return <DialogPrimitive.Trigger data-slot="Confirm-trigger" {...props} />
 }
 
 function ConfirmPortal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="Confirm-portal" {...props} />;
+  return <DialogPrimitive.Portal data-slot="Confirm-portal" {...props} />
 }
 
 function ConfirmClose({ ...props }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="Confirm-close" {...props} />;
+  return <DialogPrimitive.Close data-slot="Confirm-close" {...props} />
 }
 
 function ConfirmOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return <DialogPrimitive.Overlay data-slot="Confirm-overlay" className={cn("fixed inset-0 isolate z-50 bg-black/90 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0", className)} {...props} />;
+  return <DialogPrimitive.Overlay data-slot="Confirm-overlay" className={cn("fixed inset-0 isolate z-50 bg-black/90 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0", className)} {...props} />
 }
 
 function ConfirmContent({
@@ -35,8 +35,8 @@ function ConfirmContent({
   showHeader = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  showCloseButton?: boolean;
-  showHeader?: boolean;
+  showCloseButton?: boolean
+  showHeader?: boolean
 }) {
   return (
     <ConfirmPortal>
@@ -60,11 +60,11 @@ function ConfirmContent({
         {children}
       </DialogPrimitive.Content>
     </ConfirmPortal>
-  );
+  )
 }
 
 function ConfirmHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="Confirm-header" className={cn("flex flex-col gap-2", className)} {...props} />;
+  return <div data-slot="Confirm-header" className={cn("flex flex-col gap-2", className)} {...props} />
 }
 
 function ConfirmFooter({
@@ -73,7 +73,7 @@ function ConfirmFooter({
   children,
   ...props
 }: React.ComponentProps<"div"> & {
-  showCloseButton?: boolean;
+  showCloseButton?: boolean
 }) {
   return (
     <div data-slot="Confirm-footer" className={cn("-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end", className)} {...props}>
@@ -84,15 +84,15 @@ function ConfirmFooter({
         </DialogPrimitive.Close>
       )}
     </div>
-  );
+  )
 }
 
 function ConfirmTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
-  return <DialogPrimitive.Title data-slot="Confirm-title" className={cn("text-base leading-none font-medium", className)} {...props} />;
+  return <DialogPrimitive.Title data-slot="Confirm-title" className={cn("text-base leading-none font-medium", className)} {...props} />
 }
 
 function ConfirmDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>) {
-  return <DialogPrimitive.Description data-slot="Confirm-description" className={cn("text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground", className)} {...props} />;
+  return <DialogPrimitive.Description data-slot="Confirm-description" className={cn("text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground", className)} {...props} />
 }
 
-export { Confirm, ConfirmClose, ConfirmContent, ConfirmDescription, ConfirmFooter, ConfirmHeader, ConfirmOverlay, ConfirmPortal, ConfirmTitle, ConfirmTrigger };
+export { Confirm, ConfirmClose, ConfirmContent, ConfirmDescription, ConfirmFooter, ConfirmHeader, ConfirmOverlay, ConfirmPortal, ConfirmTitle, ConfirmTrigger }

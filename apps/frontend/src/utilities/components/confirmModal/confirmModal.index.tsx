@@ -1,10 +1,7 @@
 import { use, useState } from "react";
-import { Confirm, ConfirmContent } from "../../../components/ui/confirm";
-import { ConfirmModalContext } from "../../../contexts/confirm";
-import { Button } from "../ui/button";
-import { Spinner } from "../../../components/ui/spinner";
-import { Separator } from "../../../components/ui/separator";
+import { ConfirmModalContext } from "@/contexts/confirm";
 import { InfoCircle } from "iconsax-react";
+import { Button, Confirm, ConfirmContent, Separator, Spinner } from "../ui";
 
 function ConfirmModal() {
   const { confirm, setConfirm } = use(ConfirmModalContext);
