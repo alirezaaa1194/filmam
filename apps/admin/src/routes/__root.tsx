@@ -67,7 +67,11 @@ export const Route = createRootRouteWithContext<{
         return redirect({
           to: '/',
         })
-      } else {
+      } else if (
+        (location.pathname === '/sign-in' ||
+          location.pathname === '/forgot-password') &&
+        user.role !== UserRoleEnum.ADMIN
+      ) {
         return redirect({
           to: '/sign-in',
         })

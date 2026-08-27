@@ -78,10 +78,10 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
       </button>
 
       <div className="w-full mt-12 flex items-center gap-2">
-        <Button type="submit" className="flex-1 h-12 cursor-pointer rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending || isGoogleLoading}>
+        <Button type="submit" className="flex-1 transition-all h-12 cursor-pointer rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending || isGoogleLoading}>
           {isPending ? <Spinner /> : null} ارسال کد تایید
         </Button>
-        <Button type="button" className="shrink-0 min-w-12 h-12 cursor-pointer rounded-md bg-white hover:bg-gray-6" disabled={isPending || isGoogleLoading} onClick={handleGoogleLogin}>
+        <Button type="button" className="shrink-0 transition-all min-w-12 h-12 cursor-pointer rounded-md bg-white hover:bg-gray-6" disabled={isPending || isGoogleLoading} onClick={handleGoogleLogin}>
           {isGoogleLoading ? <Spinner /> : null}
           <Image src={googleIcon} alt="google-oauth" width={24} height={24} className="size-6" />
         </Button>
