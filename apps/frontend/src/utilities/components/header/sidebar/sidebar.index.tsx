@@ -15,7 +15,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
   const side = dir === "rtl" ? "right" : "left";
   const [openSheet, setOpenSheet] = useState(false);
   const { setAuthMode } = use(AuthModalContext);
-  const { setConfirm, mutate } = useLogOut();
+  const { setConfirm, mutate, isRefreshing } = useLogOut();
 
   return (
     <div className="block lg:hidden size-5">
@@ -50,7 +50,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
                 className="text-complementary-tint-2 text-start cursor-pointer"
                 onClick={() => {
                   setOpenSheet(false);
-                  setConfirm({ title: "خروج", description: "آیا میخواهید از حساب خود خارج شود؟", callback: mutate });
+                  setConfirm({ title: "خروج", description: "آیا میخواهید از حساب خود خارج شود؟", callback: mutate, isRefreshing });
                 }}
               >
                 {t("Header.logout")}

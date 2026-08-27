@@ -39,7 +39,7 @@ function ConfirmModal() {
           <p className="text-gray-7 lg:text-[#fff] text-body-xxs lg:text-button-md mt-2 lg:mt-8">{confirm?.description}</p>
           <div className="mt-4 lg:mt-12 flex gap-3 w-full">
             <Button className="flex-1 h-12 rounded-md cursor-pointer bg-primary border border-success text-body-xxs" onClick={handleConfirm} disabled={isPending}>
-              {isPending ? <Spinner /> : null} {confirm?.submitText ?? "بله"}
+              {isPending || confirm?.isRefreshing ? <Spinner /> : null} {confirm?.submitText ?? "بله"}
             </Button>
             <Button
               onClick={() => {

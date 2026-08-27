@@ -10,7 +10,7 @@ function HeaderLoginButton() {
   const { setAuthMode } = use(AuthModalContext);
   const { t } = useLocale();
   return (
-    <Button onClick={() => setAuthMode(AuthModeEnum.LOGIN)} className="w-20 h-8 rounded-md cursor-pointer text-button-s hidden lg:block">
+    <Button onClick={() => setAuthMode(AuthModeEnum.LOGIN)} className="min-w-20 h-8 rounded-md cursor-pointer text-button-s hidden lg:block">
       {t("Header.login")}
     </Button>
   );

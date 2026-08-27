@@ -1153,6 +1153,7 @@ export type __ConfirmModalValueType = {
   submitText?: string;
   cancelText?: string;
   callback?: () => void | Promise<unknown>;
+  isRefreshing: boolean;
 };
 
 //      ----------------------- enums -----------------------

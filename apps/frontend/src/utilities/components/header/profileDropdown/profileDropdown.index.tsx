@@ -12,7 +12,7 @@ import { useLocale, useLogOut } from "@/hooks";
 export function ProfileDropdown({ user }: { user: UserType }) {
   const [open, setOpen] = useState(false);
   const { dir, t } = useLocale();
-  const { setConfirm, mutate } = useLogOut();
+  const { setConfirm, mutate, isRefreshing } = useLogOut();
 
   return (
     <div className="hidden lg:block">
@@ -53,7 +53,7 @@ export function ProfileDropdown({ user }: { user: UserType }) {
               <Separator className="bg-gray-12" />
             </>
           ) : null}
-          <button onClick={() => setConfirm({ title: "خروج", description: "آیا میخواهید از حساب خود خارج شود؟", callback: mutate })} className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md cursor-pointer" dir={dir === "rtl" ? "ltr" : "rtl"}>
+          <button onClick={() => setConfirm({ title: "خروج", description: "آیا میخواهید از حساب خود خارج شود؟", callback: mutate, isRefreshing })} className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md cursor-pointer" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-complementary-tint-2 text-body-xxs">{t("Header.logout")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
               <LogoutCurve className="!stroke-complementary-tint-2 size-5" />

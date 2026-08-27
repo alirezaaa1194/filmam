@@ -25,7 +25,6 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; password: string; otp: string }) => ClientCall(AppApis.auth.loginVerify, { method: "POST", body: value }),
     onSuccess: () => {
-      setStep("Otp");
       toast.success("ورود با موفقیت انجام شد");
       setMode(null)
       router.refresh();

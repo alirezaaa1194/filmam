@@ -1,4 +1,4 @@
-import { use } from "react";
+import { use, useTransition } from "react";
 import { ConfirmModalContext } from "../contexts/confirm";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -9,16 +9,19 @@ import { toast } from "sonner";
 function __UseLogOut() {
   const { setConfirm } = use(ConfirmModalContext);
   const router = useRouter();
+  const [isRefreshing, startTransition] = useTransition();
 
   const { mutateAsync } = useMutation({
     mutationFn: () => ClientCall(AppApis.auth.logout, { method: "POST" }),
     onSuccess: () => {
       toast.success("با موفقیت خارج شدید");
-      router.refresh();
+      startTransition(() => {
+        router.refresh();
+      });
     },
   });
 
-  return { setConfirm, mutate: mutateAsync };
+  return { setConfirm, mutate: mutateAsync, isRefreshing };
 }
 
 export default __UseLogOut;
