@@ -12,8 +12,9 @@ function __UseGoogle() {
   const listenerRef = useRef<((event: MessageEvent) => void) | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const checkClosedRef = useRef<NodeJS.Timeout | null>(null);
+  const isSuccessRef = useRef<boolean>(false); // ← اضافه شد
 
-  const cleanup = useCallback(() => {
+  const cleanup = useCallback((showError: boolean = false) => {
     // Remove message listener
     if (listenerRef.current) {
       window.removeEventListener("message", listenerRef.current);
@@ -40,12 +41,18 @@ function __UseGoogle() {
 
     // Reset loading state
     setIsGoogleLoading(false);
+
+    // Show error only if not success and not already cleaned
+    if (showError && !isSuccessRef.current) {
+      toast.error("Login window was closed.");
+    }
   }, []);
 
   const handleGoogleLogin = useCallback(() => {
     // Prevent multiple clicks
     if (isGoogleLoading) return;
     setIsGoogleLoading(true);
+    isSuccessRef.current = false; // ← reset success flag
 
     // Open popup
     const popup = window.open(AppApis.auth.googleFrontend, "google-oauth", "width=500,height=600,menubar=no,toolbar=no,location=no,status=no");
@@ -66,20 +73,20 @@ function __UseGoogle() {
       const { success, error } = event.data;
 
       if (error) {
-        cleanup();
+        isSuccessRef.current = false;
+        cleanup(false);
         setAuthMode(null);
         toast.error(error === "admin_only" ? "auth.admin_only" : "Authentication failed");
         return;
       }
 
       if (success) {
-        cleanup();
+        isSuccessRef.current = true; // ← set success flag
+        cleanup(false);
         setAuthMode(null);
-        // Refresh to update session
         router.refresh();
-        // Close modal after successful login
-        setAuthMode(null);
         toast.success("Successfully logged in!");
+        return;
       }
     };
 
@@ -91,18 +98,14 @@ function __UseGoogle() {
       if (popupRef.current && !popupRef.current.closed) {
         popupRef.current.close();
       }
-      cleanup();
+      cleanup(true);
       toast.error("Login timed out. Please try again.");
     }, 120000);
 
     // Check if popup closed by user
     checkClosedRef.current = setInterval(() => {
       if (popupRef.current?.closed) {
-        cleanup();
-        // Don't show error if login was successful (handled by message)
-        if (!listenerRef.current) {
-          toast.error("Login window was closed.");
-        }
+        cleanup(true); // ← show error if closed
       }
     }, 500);
 
@@ -118,7 +121,7 @@ function __UseGoogle() {
   // Cleanup on component unmount
   useEffect(() => {
     return () => {
-      cleanup();
+      cleanup(false);
     };
   }, [cleanup]);
 
