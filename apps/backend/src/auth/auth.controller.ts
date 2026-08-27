@@ -198,18 +198,18 @@ export class AuthController {
     const tokens = await this.authService.jwtGenerator(user.id, user.email);
     this.authService.setAuthCookies(res, tokens);
     const state = (req.query.state as string) || '';
-    const frontendUrls: Record<string, string> = {
-      admin: process.env.FRONTEND_URL || 'http://localhost:5173',
-      frontend: process.env.FILMAM_URL || 'http://localhost:3000',
+    const adminPanelUrls: Record<string, string> = {
+      admin: process.env.ADMIN_PANEL_URL || 'http://localhost:5173',
+      frontend: process.env.FRONTEND_URL || 'http://localhost:3000',
     };
-    const frontendUrl = frontendUrls[state] || frontendUrls.admin;
+    const adminPanelUrl = adminPanelUrls[state] || adminPanelUrls.admin;
     const html = `
     <html>
       <body>
         <script>
           window.opener.postMessage(
             { success: true },
-            "${frontendUrl}"
+            "${adminPanelUrl}"
           );
           window.close();
         </script>
@@ -225,7 +225,7 @@ export class AuthController {
   @UseGuards(AuthGuard('google-admin'))
   async googleAdminAuthRedirect(@Req() req, @Res() res) {
     const user = req.user;
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const adminPanelUrl = process.env.ADMIN_PANEL_URL || 'http://localhost:5173';
 
     if (user.role !== UserRole.ADMIN) {
       const html = `
@@ -234,7 +234,7 @@ export class AuthController {
         <script>
           window.opener.postMessage(
             { error: "Only admin users can access the admin panel" },
-            "${frontendUrl}"
+            "${adminPanelUrl}"
           );
           window.close();
         </script>
@@ -254,7 +254,7 @@ export class AuthController {
         <script>
           window.opener.postMessage(
             { success: true },
-            "${frontendUrl}"
+            "${adminPanelUrl}"
           );
           window.close();
         </script>

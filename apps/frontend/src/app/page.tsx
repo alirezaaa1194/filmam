@@ -14,8 +14,8 @@ export async function generateMetadata() {
 
 export default async function HomePage() {
   return (
-    <LayoutProvider header={<Header absolute />} footer={<Footer />}>
-      <Image src={pic} alt="test" />
+    <LayoutProvider header={<Header absolute={true} />} footer={<Footer />}>
+      <Image src={pic} alt="test" className="w-full" />
     </LayoutProvider>
   );
 }

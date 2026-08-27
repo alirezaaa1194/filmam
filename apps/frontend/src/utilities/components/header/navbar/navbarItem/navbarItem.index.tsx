@@ -10,9 +10,9 @@ function NavbarItem({ menuItem }: { menuItem: MenuItemType }) {
       </Link>
       {menuItem.children.length ? (
         <div className="py-6 absolute opacity-0 invisible transition-all delay-[.001ms] group-hover:opacity-100 group-hover:visible">
-          <div className="w-[184px] bg-gray-13 rounded-lg border border-gray-12 p-3 grid grid-cols-2">
+          <div className="w-[210px] bg-gray-13 rounded-lg border border-gray-12 p-3 flex flex-wrap justify-between content-start gap-y-2">
             {menuItem.children.map((menuItemChild) => (
-              <Link key={menuItemChild.id} href={menuItemChild.menu_type === MenuTypeEnum.PAGE ? `${menuItemChild.href}` : `/movies${menuItemChild.filter}`} className="col-span-1 hover:bg-gray-11 block py-1 px-2 rounded-sm transition-all delay-[.001ms] text-body-xxs truncate">
+              <Link key={menuItemChild.id} href={menuItemChild.menu_type === MenuTypeEnum.PAGE ? `${menuItemChild.href}` : `/movies${menuItemChild.filter}`} className="text-gray-7 hover:text-primary transition-all delay-[.001ms] text-body-xxs truncate">
                 {menuItemChild.title}
               </Link>
             ))}

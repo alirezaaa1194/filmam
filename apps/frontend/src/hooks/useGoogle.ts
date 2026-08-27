@@ -12,11 +12,17 @@ function __UseGoogle() {
 
   const popupRef = useRef<Window | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const cleanup = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
+    }
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
     if (popupRef.current && !popupRef.current.closed) {
@@ -54,7 +60,6 @@ function __UseGoogle() {
         cleanup();
         setAuthMode(null);
 
-        // اجازه بده state های قبلی settle شوند
         router.refresh();
       }
     };
@@ -66,6 +71,10 @@ function __UseGoogle() {
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+      }
+
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
   }, [cleanup, router, setAuthMode]);
@@ -91,11 +100,22 @@ function __UseGoogle() {
 
     popupRef.current = popup;
 
+    intervalRef.current = setInterval(() => {
+      if (popupRef.current?.closed) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        cleanup();
+        setAuthMode(null);
+      }
+    }, 500);
+
     timeoutRef.current = setTimeout(() => {
       cleanup();
       toast.error("auth.timeout");
     }, 120_000);
-  }, [cleanup, isGoogleLoading]);
+  }, [cleanup, isGoogleLoading, setAuthMode]);
 
   return {
     handleGoogleLogin,

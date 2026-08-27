@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/logo.svg" />
       </head>
-      <body className="bg-black text-white max-w-layout-max mx-auto relative">
+      <body className="bg-black text-white relative">
         <Provider user={user} locale={locale}>
           {children}
         </Provider>
