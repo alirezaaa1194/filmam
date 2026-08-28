@@ -68,7 +68,7 @@ function LanguageSwitcher() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[208px] w-full lg:w-auto lg:mt-5 p-3 !bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+      <DropdownMenuContent align="end" className="min-w-[208px] lg:min-w-[130px] w-full lg:w-auto lg:mt-5 p-3 !bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
         {AppLanguages.map((lang) => (
           <DropdownMenuItem key={lang} className="cursor-pointer flex items-center justify-start gap-2 rounded-md transition-all w-full hover:bg-gray-12! focus:bg-gray-12! data-[highlighted]:bg-gray-12! focus:text-white! data-[highlighted]:text-white!" onSelect={() => handleSelect(lang)} dir={dir}>
             <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full">
