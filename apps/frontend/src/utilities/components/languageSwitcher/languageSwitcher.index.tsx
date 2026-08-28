@@ -29,9 +29,9 @@ const languageLabels: Record<AppLanguagesEnum, string> = {
 };
 
 const languageFonts: Record<AppLanguagesEnum, string> = {
-  [AppLanguagesEnum.EN]: "font-en",
-  [AppLanguagesEnum.FA]: "font-fa",
-  [AppLanguagesEnum.AR]: "font-ar",
+  [AppLanguagesEnum.EN]: "var(--font-en)",
+  [AppLanguagesEnum.FA]: "var(--font-fa)",
+  [AppLanguagesEnum.AR]: "var(--font-ar)",
 };
 
 function LanguageSwitcher() {
@@ -68,13 +68,15 @@ function LanguageSwitcher() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="lg:mt-5 p-3 !bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+      <DropdownMenuContent align="end" className="min-w-[208px] w-full lg:w-auto lg:mt-5 p-3 !bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
         {AppLanguages.map((lang) => (
           <DropdownMenuItem key={lang} className="cursor-pointer flex items-center justify-start gap-2 rounded-md transition-all w-full hover:bg-gray-12! focus:bg-gray-12! data-[highlighted]:bg-gray-12! focus:text-white! data-[highlighted]:text-white!" onSelect={() => handleSelect(lang)} dir={dir}>
             <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full">
               <Image src={flags[lang]} alt={`${lang}-flag`} width={20} height={20} className="size-full rounded-full object-cover" />
             </span>
-            <span className={`${languageFonts[lang]} text-white!`}>{languageLabels[lang]}</span>
+            <span style={{ fontFamily: languageFonts[lang] }} className="text-white!">
+              {languageLabels[lang]}
+            </span>
             <Check size={14} className={`ms-auto text-white! ${locale !== lang ? "hidden" : ""}`} color="white" />
           </DropdownMenuItem>
         ))}

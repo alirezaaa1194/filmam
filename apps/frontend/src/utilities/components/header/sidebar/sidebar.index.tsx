@@ -18,7 +18,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
   const { setConfirm, mutate, isRefreshing } = useLogOut();
 
   return (
-    <div className="block lg:hidden size-5">
+    <div className="block lg:hidden size-5 relative">
       <Sheet open={openSheet} onOpenChange={setOpenSheet}>
         <SheetTrigger className="cursor-pointer">
           <HambergerMenu className="size-5 stroke-white" />
@@ -42,7 +42,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
               <Separator className="bg-gray-12" />
               {user.role === UserRoleEnum.ADMIN ? (
                 <>
-                  <Link href="https://admin.filmamapp.ir">پنل مدیریت</Link>
+                  <Link href="https://admin.filmamapp.ir">{t("Header.adminPanel")}</Link>
                   <Separator className="bg-gray-12" />
                 </>
               ) : null}

@@ -1,128 +1,19 @@
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/en/Inter-VariableFont_opsz_wght.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
+@theme inline {
+  --font-en: var(--font-en), ui-sans-serif, system-ui, sans-serif;
+  --font-fa: var(--font-fa), ui-sans-serif, system-ui, sans-serif;
+  --font-ar: var(--font-ar), ui-sans-serif, system-ui, sans-serif;
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/en/Inter-Italic-VariableFont_opsz_wght.woff2") format("woff2");
-  font-style: italic;
-  font-weight: 100 900;
-  font-display: swap;
+@utility font-en {
+  font-family: var(--font-en), ui-sans-serif, system-ui, sans-serif;
 }
 
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebthinfanum.woff") format("woff");
-  font-weight: 100;
-  font-display: swap;
+@utility font-fa {
+  font-family: var(--font-fa), ui-sans-serif, system-ui, sans-serif;
 }
 
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanweblightfanum.woff") format("woff");
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebregularfanum.woff") format("woff");
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebmediumfanum.woff") format("woff");
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebboldfanum.woff") format("woff");
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebextraboldfanum.woff") format("woff");
-  font-weight: 800;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebblackfanum.woff") format("woff");
-  font-weight: 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IranYekan";
-  src: url("/fonts/fa/iranyekanwebextrablackfanum.woff") format("woff");
-  font-weight: 950;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-Thin.woff2") format("woff2");
-  font-weight: 100;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-ExtraLight.woff2") format("woff2");
-  font-weight: 200;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-Light.woff2") format("woff2");
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-SemiBold.woff2") format("woff2");
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "IBMPlexSansArabic";
-  src: url("/fonts/ar/IBMPlexSansArabic-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-display: swap;
-}
-
-@theme {
-  --font-en: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-fa: "IranYekan", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-ar: "IBMPlexSansArabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+@utility font-ar {
+  font-family: var(--font-ar), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root,

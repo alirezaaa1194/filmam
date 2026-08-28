@@ -6,6 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Label } from "@/utilities/components/ui/label/label.index"
 import { Separator } from "@/utilities/components/ui/separator/separator.index"
+import { useLocale } from "@/hooks"
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -181,6 +182,7 @@ function FieldError({
 }: React.ComponentProps<"div"> & {
   errors?: Array<{ message?: string } | undefined>
 }) {
+  const { t } = useLocale();
   const content = useMemo(() => {
     if (children) {
       return children
@@ -190,8 +192,17 @@ function FieldError({
       return null
     }
 
+    const translatedErrors = errors.map((error) => {
+      if (!error?.message) return error;
+      const translated = t(error.message as never);
+      if (translated) {
+        return { ...error, message: translated };
+      }
+      return error;
+    });
+
     const uniqueErrors = [
-      ...new Map(errors.map((error) => [error?.message, error])).values(),
+      ...new Map(translatedErrors.map((error) => [error?.message, error])).values(),
     ]
 
     if (uniqueErrors?.length == 1) {
@@ -206,7 +217,7 @@ function FieldError({
         )}
       </ul>
     )
-  }, [children, errors])
+  }, [children, errors, t])
 
   if (!content) {
     return null

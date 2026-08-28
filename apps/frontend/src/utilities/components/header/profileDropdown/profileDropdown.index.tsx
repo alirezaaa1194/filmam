@@ -45,7 +45,7 @@ export function ProfileDropdown({ user }: { user: UserType }) {
           {user.role === UserRoleEnum.ADMIN ? (
             <>
               <Link href="https://admin.filmamapp.ir" target="_blank" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
-                <span className="text-white text-body-xxs">پنل مدیریت</span>
+                <span className="text-white text-body-xxs">{t("Header.adminPanel")}</span>
                 <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
                   <Setting2 className="!stroke-white size-5" />
                 </span>

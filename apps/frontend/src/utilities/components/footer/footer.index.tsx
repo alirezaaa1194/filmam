@@ -15,9 +15,9 @@ function Footer() {
   const descriptionParts = t("Footer.description").split("--");
 
   return (
-    <footer className="flex flex-col py-12 px-layout-x-space border-t border-t-gray-11 max-w-layout-max mx-auto">
-      <div className="flex flex-col gap-4">
-        <Link href="/" className="flex items-center gap-1">
+    <footer className="flex flex-col py-12 px-layout-x-space border-t border-t-gray-11 w-full">
+      <div className="flex flex-col gap-4 max-w-layout-max lg:mx-auto">
+        <Link href="/" className="flex items-center gap-1 w-fit">
           <Image src="/logo.svg" alt="filmam" width={32} height={32} className="size-6 lg:size-8" />
           <Image src="/logo-text.svg" alt="filmam" width={91} height={26} className="w-[68px] h-[20px] lg:w-[91px] lg:h-[26px]" />
         </Link>

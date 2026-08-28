@@ -18,6 +18,7 @@ import Image from "next/image";
 function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void }) {
   const { t, dir } = useLocale();
   const form = useFormContext<LoginFormValues>();
+  const isMobile = useIsMobile();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; password: string }) => ClientCall(AppApis.auth.login, { method: "POST", body: value }),
@@ -37,7 +38,6 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
     form.setValue("otp", "");
     mutate({ email: data.email, password: data.password });
   }
-  const isMobile = useIsMobile();
 
   return (
     <form id="login-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start w-full">
@@ -50,7 +50,7 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
               <FieldLabel htmlFor="login-form-email" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.email")}
               </FieldLabel>
-              <Input {...field} id="login-form-email" aria-invalid={fieldState.invalid} autoFocus={!isMobile} placeholder={t("Auth.placeholders.email")} autoComplete="off" className={`text-body-xxs ${dir === "rtl" ? "placeholder:text-right" : "platext-left"}`} dir="ltr" />
+              <Input {...field} id="login-form-email" aria-invalid={fieldState.invalid} autoFocus={!isMobile} placeholder={t("Auth.placeholders.email")} autoComplete="off" className={`text-body-xxs ${dir === "rtl" ? "[&::placeholder]:text-right" : "[&::placeholder]:text-left"}`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -63,7 +63,7 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
               <FieldLabel htmlFor="login-form-password" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.password")}
               </FieldLabel>
-              <PasswordInput {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.password")} autoComplete="off" className="text-body-xxs" dir="ltr" />
+              <PasswordInput {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.password")} autoComplete="off" className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -79,13 +79,29 @@ function LoginEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" |
         {t("Auth.links.forgotPassword")}
       </button>
 
-      <div className="w-full mt-12 flex items-center gap-2">
-        <Button type="submit" className="flex-1 transition-all h-12 cursor-pointer rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending || isGoogleLoading}>
-          {isPending ? <Spinner /> : null} {t("Auth.buttons.sendCode")}
+      <div className="w-full mt-12 flex items-stretch gap-2">
+        <Button
+          type="submit"
+          className="flex-1 min-w-0 transition-[flex-grow,opacity] duration-300 ease-in-out h-12 cursor-pointer rounded-md disabled:bg-gray-3 disabled:text-gray-7"
+          disabled={isPending || isGoogleLoading}
+        >
+          <span className="inline-flex items-center justify-center gap-2 truncate">
+            {isPending ? <Spinner className="text-white" /> : null}
+            <span>{t("Auth.buttons.sendCode")}</span>
+          </span>
         </Button>
-        <Button type="button" className="shrink-0 transition-all min-w-12 h-12 cursor-pointer rounded-md bg-white hover:bg-gray-6" disabled={isPending || isGoogleLoading} onClick={handleGoogleLogin}>
-          {isGoogleLoading ? <Spinner /> : null}
-          <Image src={googleIcon} alt="google-oauth" width={24} height={24} className="size-6" />
+        <Button
+          type="button"
+          className="w-12 shrink-0 transition-[width,background-color,opacity] duration-300 ease-in-out h-12 cursor-pointer rounded-md bg-white text-gray-13 hover:bg-gray-6 disabled:opacity-50 disabled:bg-gray-3"
+          disabled={isPending || isGoogleLoading}
+          onClick={handleGoogleLogin}
+          aria-label="Continue with Google"
+        >
+          {isGoogleLoading ? (
+            <Spinner className="text-gray-13" />
+          ) : (
+            <Image src={googleIcon} alt="google-oauth" width={24} height={24} className="size-6" />
+          )}
         </Button>
       </div>
 

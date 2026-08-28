@@ -15,6 +15,7 @@ export const FA: typeof EN = {
     support: "پشتیبانی",
     logout: "خروج",
     loginToAccount: "ورود به حساب",
+    adminPanel: "پنل مدیریت",
   },
   Footer: {
     description:

@@ -1,14 +1,14 @@
 import { type QueryClient } from '@tanstack/react-query'
 import {
-  createRootRouteWithContext,
   Outlet,
+  createRootRouteWithContext,
   redirect,
 } from '@tanstack/react-router'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import {
-  NavigationProgress,
   LoadingScreen,
+  NavigationProgress,
   Toaster,
 } from '@/utilities/components'
 
@@ -40,17 +40,21 @@ export const Route = createRootRouteWithContext<{
     )
   },
   beforeLoad: async ({ location }) => {
+    const publicPaths = ['/sign-in', '/forgot-password']
+    const isPublicPath = publicPaths.includes(location.pathname)
+
+    if (isPublicPath) {
+      return
+    }
+
     try {
       const user = await Api<UserType>(__AppApis.auth.me, { method: 'GET' })
 
       if (user.role !== UserRoleEnum.ADMIN) {
-        return redirect({
-          to: '/sign-in',
-        })
+        throw redirect({ to: '/sign-in' })
       }
 
       useUserStore.getState().setUser(user)
-
       changeLanguage(user.preferred_language)
 
       const dir = languageDirectionMap[user.preferred_language]
@@ -59,37 +63,11 @@ export const Route = createRootRouteWithContext<{
         document.documentElement.setAttribute('dir', dir)
       }
 
-      if (
-        (location.pathname === '/sign-in' ||
-          location.pathname === '/forgot-password') &&
-        user.role === UserRoleEnum.ADMIN
-      ) {
-        return redirect({
-          to: '/',
-        })
-      } else if (
-        (location.pathname === '/sign-in' ||
-          location.pathname === '/forgot-password') &&
-        user.role !== UserRoleEnum.ADMIN
-      ) {
-        return redirect({
-          to: '/sign-in',
-        })
-      }
+      return { user }
     } catch (err) {
       if (err instanceof Response) {
-        if (
-          [401, 403, 404].includes(err.status) &&
-          location.pathname !== '/sign-in' &&
-          location.pathname !== '/forgot-password'
-        ) {
-          throw redirect({
-            to: '/sign-in',
-          })
-        }
-
-        if (location.pathname === '/sign-in' || location.pathname === '/forgot-password') {
-          return
+        if ([401, 403, 404].includes(err.status)) {
+          throw redirect({ to: '/sign-in' })
         }
       }
 

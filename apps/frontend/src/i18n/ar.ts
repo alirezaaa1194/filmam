@@ -15,6 +15,7 @@ export const AR: typeof EN = {
     support: "الدعم",
     logout: "تسجيل الخروج",
     loginToAccount: "تسجيل الدخول للحساب",
+    adminPanel: "لوحة الإدارة",
   },
   Footer: {
     description:

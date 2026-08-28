@@ -19,7 +19,7 @@ type SignupFormValues = {
 };
 function SignupOtpForm({ setStep, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
   const { locale, t } = useLocale();
-  const { control, handleSubmit, getValues, setError } = useFormContext<SignupFormValues>();
+  const { control, handleSubmit, getValues, setError, clearErrors } = useFormContext<SignupFormValues>();
   const email = getValues("email");
   const password = getValues("password");
   const username = getValues("username");
@@ -70,7 +70,24 @@ function SignupOtpForm({ setStep, start, reset, timer }: { setStep: (step: "Emai
               <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.otp")}
               </FieldLabel>
-              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
+              <Input
+                {...field}
+                id="otp-form-otp"
+                autoFocus
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={5}
+                placeholder={t("Auth.placeholders.otp")}
+                className="text-body-xxs text-center! tracking-[2rem] ps-8"
+                dir="ltr"
+                onChange={(event) => {
+                  field.onChange(event);
+                  if (fieldState.error) {
+                    clearErrors("otp");
+                  }
+                }}
+              />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}

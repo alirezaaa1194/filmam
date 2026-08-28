@@ -13,7 +13,7 @@ import { ForgetPasswordFormValues } from "../forgetPasswordForm.index";
 import { AuthModeEnum, AuthModeType } from "../../../../types";
 
 function ForgetEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void }) {
-  const { t } = useLocale();
+  const { t, dir } = useLocale();
   const form = useFormContext<ForgetPasswordFormValues>();
 
   const { mutate, isPending } = useMutation({
@@ -44,7 +44,7 @@ function ForgetEmailForm({ setStep, setMode, start }: { setStep: (step: "Email" 
               <FieldLabel htmlFor="forget-form-email" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.email")}
               </FieldLabel>
-              <Input {...field} id="forget-form-email" aria-invalid={fieldState.invalid} autoFocus placeholder={t("Auth.placeholders.email")} autoComplete="off" className="text-body-xxs" dir="ltr" />
+              <Input {...field} id="forget-form-email" aria-invalid={fieldState.invalid} autoFocus placeholder={t("Auth.placeholders.email")} autoComplete="off" className={`text-body-xxs ${dir === "rtl" ? "[&::placeholder]:text-right" : "[&::placeholder]:text-left"}`} dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}

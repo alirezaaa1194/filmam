@@ -17,8 +17,8 @@ import z from "zod";
 export type ForgetPasswordFormValues = z.infer<typeof ForgetPasswordSchema>;
 
 function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
-  const { t } = useLocale();
-  const { control, handleSubmit, getValues, setError, setValue } = useFormContext<ForgetPasswordFormValues>();
+  const { t, dir } = useLocale();
+  const { control, handleSubmit, getValues, setError, setValue, clearErrors } = useFormContext<ForgetPasswordFormValues>();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; newPassword: string; otp: string }) => ClientCall(AppApis.auth.resetPassword, { method: "PUT", body: { email: value.email, new_password: value.newPassword, otp: value.otp } }),
@@ -109,7 +109,21 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
               <FieldLabel htmlFor="login-form-password" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.password")}
               </FieldLabel>
-              <PasswordInput {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.password")} autoComplete="off" className="text-body-xxs" dir="ltr" />
+              <PasswordInput
+                {...field}
+                id="login-form-password"
+                aria-invalid={fieldState.invalid}
+                placeholder={t("Auth.placeholders.password")}
+                autoComplete="off"
+                className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`}
+                dir="ltr"
+                onChange={(event) => {
+                  field.onChange(event);
+                  if (fieldState.error) {
+                    clearErrors("newPassword");
+                  }
+                }}
+              />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -122,7 +136,21 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
               <FieldLabel htmlFor="login-form-confirmPassword" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.confirmPassword")}
               </FieldLabel>
-              <PasswordInput {...field} id="login-form-confirmPassword" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.confirmPassword")} autoComplete="off" className="text-body-xxs" dir="ltr" />
+              <PasswordInput
+                {...field}
+                id="login-form-confirmPassword"
+                aria-invalid={fieldState.invalid}
+                placeholder={t("Auth.placeholders.confirmPassword")}
+                autoComplete="off"
+                className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`}
+                dir="ltr"
+                onChange={(event) => {
+                  field.onChange(event);
+                  if (fieldState.error) {
+                    clearErrors("confirmPassword");
+                  }
+                }}
+              />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
@@ -135,7 +163,24 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (st
               <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.otp")}
               </FieldLabel>
-              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
+              <Input
+                {...field}
+                id="otp-form-otp"
+                autoFocus
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={5}
+                placeholder={t("Auth.placeholders.otp")}
+                className="text-body-xxs text-center! tracking-[2rem] ps-8"
+                dir="ltr"
+                onChange={(event) => {
+                  field.onChange(event);
+                  if (fieldState.error) {
+                    clearErrors("otp");
+                  }
+                }}
+              />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}

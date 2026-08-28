@@ -13,6 +13,7 @@ export const EN = {
     support: "Support",
     logout: "Logout",
     loginToAccount: "Login to account",
+    adminPanel: "Admin panel",
   },
   Footer: {
     description:

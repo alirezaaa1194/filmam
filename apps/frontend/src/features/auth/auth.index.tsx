@@ -18,7 +18,7 @@ function AuthModal() {
         }
       }}
     >
-      <DialogContent className="flex flex-col items-center">{authMode === "Login" ? <LoginForm setMode={setAuthMode} /> : authMode === "Signup" ? <SignupForm setMode={setAuthMode} /> : authMode === "ForgetPassword" ? <ForgetPasswordForm setMode={setAuthMode} /> : null}</DialogContent>
+      <DialogContent className="flex flex-col items-center">{authMode === "Login" || null ? <LoginForm setMode={setAuthMode} /> : authMode === "Signup" ? <SignupForm setMode={setAuthMode} /> : authMode === "ForgetPassword" ? <ForgetPasswordForm setMode={setAuthMode} /> : null}</DialogContent>
     </Dialog>
   );
 }
