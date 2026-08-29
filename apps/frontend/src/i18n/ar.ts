@@ -51,11 +51,11 @@ export const AR: typeof EN = {
       usernameRequired: "يرجى إدخال اسم المستخدم",
       emailInvalid: "يرجى إدخال بريد إلكتروني صالح",
       passwordRequired: "يرجى إدخال كلمة المرور",
-      passwordMinLength: "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      passwordMinLength: "يجب أن تتكون كلمة المرور من ٨ أحرف على الأقل",
       confirmPasswordRequired: "يرجى إعادة إدخال كلمة المرور",
       passwordsDoNotMatch: "كلمات المرور غير متطابقة",
       otpRequired: "يرجى إدخال رمز التحقق",
-      otpLength: "يجب أن يكون رمز التحقق 5 أرقام",
+      otpLength: "يجب أن يتكون رمز التحقق من ٥ أرقام",
     },
     buttons: {
       sendCode: "إرسال رمز التحقق",

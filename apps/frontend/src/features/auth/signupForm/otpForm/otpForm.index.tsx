@@ -35,8 +35,7 @@ function SignupOtpForm({
   timer: number;
 }) {
   const { locale, t } = useLocale();
-  const { control, handleSubmit, getValues, setError, clearErrors } =
-    useFormContext<SignupFormValues>();
+  const { control, handleSubmit, getValues } = useFormContext<SignupFormValues>();
   const email = getValues("email");
   const password = getValues("password");
   const username = getValues("username");
@@ -83,14 +82,10 @@ function SignupOtpForm({
   });
 
   const onSubmit = (data: SignupFormValues) => {
-    if (!data.otp || data.otp.length !== 5) {
-      setError("otp", {
-        type: "manual",
-        message: t("Auth.validation.otpLength"),
-      });
+    if (data.otp.length !== 5) {
       return;
     }
-    mutate({ email, password, username, otp: data.otp || "" });
+    mutate({ email, password, username, otp: data.otp });
   };
 
   return (
@@ -103,6 +98,7 @@ function SignupOtpForm({
         <Controller
           name="otp"
           control={control}
+          shouldUnregister
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -122,12 +118,6 @@ function SignupOtpForm({
                 placeholder={t("Auth.placeholders.otp")}
                 className="text-body-xxs text-center! tracking-[2rem] ps-8"
                 dir="ltr"
-                onChange={(event) => {
-                  field.onChange(event);
-                  if (fieldState.error) {
-                    clearErrors("otp");
-                  }
-                }}
               />
               {fieldState.invalid && (
                 <FieldError

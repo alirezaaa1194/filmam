@@ -49,11 +49,11 @@ export const EN = {
       usernameRequired: "Please enter your username",
       emailInvalid: "Please enter a valid email",
       passwordRequired: "Please enter your password",
-      passwordMinLength: "Password must be at least 8 characters",
+      passwordMinLength: "Password must be at least 8 characters long",
       confirmPasswordRequired: "Please re-enter your password",
       passwordsDoNotMatch: "Passwords do not match",
       otpRequired: "Please enter the verification code",
-      otpLength: "Verification code must be 5 digits",
+      otpLength: "Verification code must be 5 digits long",
     },
     buttons: {
       sendCode: "Send verification code",

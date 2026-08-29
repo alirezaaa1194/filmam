@@ -35,7 +35,7 @@ function ForgetOtpForm({
   timer: number;
 }) {
   const { t, dir } = useLocale();
-  const { control, handleSubmit, getValues, setError, setValue, clearErrors } =
+  const { control, handleSubmit, getValues, setValue } =
     useFormContext<ForgetPasswordFormValues>();
 
   const { mutate, isPending } = useMutation({
@@ -73,57 +73,23 @@ function ForgetOtpForm({
   });
 
   const onSubmit = (data: ForgetPasswordFormValues) => {
-    let isValid = true;
-
-    if (!data.newPassword) {
-      setError("newPassword", {
-        type: "manual",
-        message: t("Auth.validation.passwordRequired"),
-      });
-      isValid = false;
-    } else if (data.newPassword.length < 8) {
-      setError("newPassword", {
-        type: "manual",
-        message: t("Auth.validation.passwordMinLength"),
-      });
-      isValid = false;
+    if (!data.newPassword || !data.confirmPassword || !data.otp) {
+      return;
     }
 
-    if (!data.confirmPassword) {
-      setError("confirmPassword", {
-        type: "manual",
-        message: t("Auth.validation.confirmPasswordRequired"),
-      });
-      isValid = false;
-    } else if (data.newPassword !== data.confirmPassword) {
-      setError("confirmPassword", {
-        type: "manual",
-        message: t("Auth.validation.passwordsDoNotMatch"),
-      });
-      isValid = false;
+    if (
+      data.newPassword.length < 8 ||
+      data.newPassword !== data.confirmPassword ||
+      data.otp.length !== 5
+    ) {
+      return;
     }
 
-    if (!data.otp) {
-      setError("otp", {
-        type: "manual",
-        message: t("Auth.validation.otpRequired"),
-      });
-      isValid = false;
-    } else if (data.otp.length !== 5) {
-      setError("otp", {
-        type: "manual",
-        message: t("Auth.validation.otpLength"),
-      });
-      isValid = false;
-    }
-
-    if (isValid) {
-      mutate({
-        email: data.email,
-        newPassword: data.newPassword!,
-        otp: data.otp!,
-      });
-    }
+    mutate({
+      email: data.email,
+      newPassword: data.newPassword,
+      otp: data.otp,
+    });
   };
   return (
     <form
@@ -135,6 +101,7 @@ function ForgetOtpForm({
         <Controller
           name="newPassword"
           control={control}
+          shouldUnregister
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -151,12 +118,6 @@ function ForgetOtpForm({
                 autoComplete="off"
                 className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`}
                 dir="ltr"
-                onChange={(event) => {
-                  field.onChange(event);
-                  if (fieldState.error) {
-                    clearErrors("newPassword");
-                  }
-                }}
               />
               {fieldState.invalid && (
                 <FieldError
@@ -170,6 +131,7 @@ function ForgetOtpForm({
         <Controller
           name="confirmPassword"
           control={control}
+          shouldUnregister
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -186,12 +148,6 @@ function ForgetOtpForm({
                 autoComplete="off"
                 className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`}
                 dir="ltr"
-                onChange={(event) => {
-                  field.onChange(event);
-                  if (fieldState.error) {
-                    clearErrors("confirmPassword");
-                  }
-                }}
               />
               {fieldState.invalid && (
                 <FieldError
@@ -205,6 +161,7 @@ function ForgetOtpForm({
         <Controller
           name="otp"
           control={control}
+          shouldUnregister
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -224,12 +181,6 @@ function ForgetOtpForm({
                 placeholder={t("Auth.placeholders.otp")}
                 className="text-body-xxs text-center! tracking-[2rem] ps-8"
                 dir="ltr"
-                onChange={(event) => {
-                  field.onChange(event);
-                  if (fieldState.error) {
-                    clearErrors("otp");
-                  }
-                }}
               />
               {fieldState.invalid && (
                 <FieldError
