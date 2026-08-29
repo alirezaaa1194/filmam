@@ -1,5 +1,8 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { AuthModeEnum, AuthModeType } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import {
   Field,
   FieldError,
@@ -16,10 +19,23 @@ import { TranslateServerError } from "@/scripts";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { PasswordInput } from "@/utilities/components/ui/passwordInput/passwordInput.index";
 import { useLocale } from "@/hooks";
-import { ForgetPasswordSchema } from "../forgetPasswordForm.index";
-import z from "zod";
 
-export type ForgetPasswordFormValues = z.infer<typeof ForgetPasswordSchema>;
+const ForgetOtpSchema = z
+  .object({
+    newPassword: z.string().min(8, "Auth.validation.passwordMinLength"),
+    confirmPassword: z.string(),
+    otp: z.string().length(5, "Auth.validation.otpLength"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Auth.validation.passwordsDoNotMatch",
+    path: ["confirmPassword"],
+  });
+
+type ForgetOtpFormValues = {
+  newPassword: string;
+  confirmPassword: string;
+  otp: string;
+};
 
 function ForgetOtpForm({
   setStep,
@@ -27,16 +43,26 @@ function ForgetOtpForm({
   start,
   reset,
   timer,
+  email,
 }: {
   setStep: (step: "Email" | "Otp") => void;
   setMode: (mode: AuthModeType) => void;
   start: () => void;
   reset: () => void;
   timer: number;
+  email: string;
 }) {
   const { t, dir } = useLocale();
-  const { control, handleSubmit, getValues, setValue } =
-    useFormContext<ForgetPasswordFormValues>();
+  const form = useForm<ForgetOtpFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      newPassword: "",
+      confirmPassword: "",
+      otp: "",
+    },
+    resolver: zodResolver(ForgetOtpSchema),
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; newPassword: string; otp: string }) =>
@@ -63,7 +89,7 @@ function ForgetOtpForm({
       ClientCall(AppApis.auth.forgetPassword, { method: "POST", body: value }),
     onSuccess: () => {
       start();
-      setValue("otp", "");
+      form.reset();
       setMode(AuthModeEnum.LOGIN);
       toast.success(t("Auth.toasts.passwordChanged"));
     },
@@ -72,36 +98,24 @@ function ForgetOtpForm({
     },
   });
 
-  const onSubmit = (data: ForgetPasswordFormValues) => {
-    if (!data.newPassword || !data.confirmPassword || !data.otp) {
-      return;
-    }
-
-    if (
-      data.newPassword.length < 8 ||
-      data.newPassword !== data.confirmPassword ||
-      data.otp.length !== 5
-    ) {
-      return;
-    }
-
+  const onSubmit = (data: ForgetOtpFormValues) => {
     mutate({
-      email: data.email,
+      email,
       newPassword: data.newPassword,
       otp: data.otp,
     });
   };
+
   return (
     <form
       id="otp-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col items-start w-full"
     >
       <FieldGroup>
         <Controller
           name="newPassword"
-          control={control}
-          shouldUnregister
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -130,8 +144,7 @@ function ForgetOtpForm({
         />
         <Controller
           name="confirmPassword"
-          control={control}
-          shouldUnregister
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -160,8 +173,7 @@ function ForgetOtpForm({
         />
         <Controller
           name="otp"
-          control={control}
-          shouldUnregister
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -198,7 +210,7 @@ function ForgetOtpForm({
         className="w-full h-12 cursor-pointer mt-12 rounded-lg bg-transparent! border border-gray-9 hover:text-gray-9"
         disabled={isPending || forgetIsPending || timer > 0}
         onClick={() => {
-          forgetMutate({ email: getValues("email") });
+          forgetMutate({ email });
         }}
       >
         {timer > 0 ? (

@@ -1,5 +1,8 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { AuthModeType } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
 import { Button } from "@/utilities/components/ui/button/button.index";
 import { useMutation } from "@tanstack/react-query";
@@ -12,16 +15,24 @@ import { Input } from "@/utilities/components/ui/input/input.index";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/hooks";
 
-type LoginFormValues = {
-  email: string;
-  password: string;
+const LoginOtpSchema = z.object({
+  otp: z.string().length(5, "Auth.validation.otpLength"),
+});
+
+type LoginOtpFormValues = {
   otp: string;
 };
-function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
-  const { control, handleSubmit, getValues, setError } = useFormContext<LoginFormValues>();
+
+function LoginOtpForm({ setStep, setMode, start, reset, timer, email, password }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number; email: string; password: string }) {
+  const form = useForm<LoginOtpFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      otp: "",
+    },
+    resolver: zodResolver(LoginOtpSchema),
+  });
   const { t } = useLocale();
-  const email = getValues("email");
-  const password = getValues("password");
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
@@ -32,7 +43,7 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
       router.refresh();
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status));
+      toast.error(t(TranslateServerError(error.status)));
     },
   });
 
@@ -44,47 +55,22 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
       toast.success(t("Auth.toasts.otpSent"));
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status));
+      toast.error(t(TranslateServerError(error.status)));
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    // if (data.otp.length !== 5) {
-    //   return;
-    // }
-
-    if (data.otp.length !== 5) {
-      // خطا رو به فرم اضافه کن
-      setError("otp", {
-        type: "manual",
-        message: "باید ۵ رقم باشد",
-      });
-      return;
-    }
+  const onSubmit = (data: LoginOtpFormValues) => {
     mutate({ email, password, otp: data.otp });
   };
 
   return (
-    <form id="otp-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-start">
+    <form id="otp-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start">
       <FieldGroup>
         <Controller
           name="otp"
-          control={control}
-          // rules={{ required: true, minLength: 5 }}
-          shouldUnregister
+          control={form.control}
           render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="w-full"
-              onChange={(e) => {
-                // فقط مقدار رو آپدیت کن، ولی اعتبارسنجی رو اجرا نکن
-                field.onChange(e);
-              }}
-              onBlur={() => {
-                // موقع از دست دادن فوکوس اعتبارسنجی کن (اختیاری)
-                field.onBlur();
-              }}
-            >
+            <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.otp")}
               </FieldLabel>
@@ -100,10 +86,7 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
         className="w-full h-12 cursor-pointer mt-12 rounded-lg bg-transparent! border border-gray-9 hover:text-gray-9"
         disabled={isPending || loginIsPending || timer > 0}
         onClick={() => {
-          loginMutate({
-            email: getValues("email"),
-            password: getValues("password"),
-          });
+          loginMutate({ email, password });
         }}
       >
         {timer > 0 ? (

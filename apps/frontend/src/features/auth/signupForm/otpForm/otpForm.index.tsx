@@ -1,5 +1,8 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { AuthModeType } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import {
   Field,
   FieldError,
@@ -16,29 +19,41 @@ import { TranslateServerError } from "@/scripts";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { useLocale } from "@/hooks";
 
-type SignupFormValues = {
-  username: string;
-  email: string;
-  password: string;
+const SignupOtpSchema = z.object({
+  otp: z.string().length(5, "Auth.validation.otpLength"),
+});
+
+type SignupOtpFormValues = {
   otp: string;
 };
+
 function SignupOtpForm({
   setStep,
   start,
   reset,
   timer,
+  email,
+  password,
+  username,
 }: {
   setStep: (step: "Email" | "Otp") => void;
   setMode: (mode: AuthModeType) => void;
   start: () => void;
   reset: () => void;
   timer: number;
+  email: string;
+  password: string;
+  username: string;
 }) {
   const { locale, t } = useLocale();
-  const { control, handleSubmit, getValues } = useFormContext<SignupFormValues>();
-  const email = getValues("email");
-  const password = getValues("password");
-  const username = getValues("username");
+  const form = useForm<SignupOtpFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      otp: "",
+    },
+    resolver: zodResolver(SignupOtpSchema),
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: {
@@ -81,24 +96,20 @@ function SignupOtpForm({
     },
   });
 
-  const onSubmit = (data: SignupFormValues) => {
-    if (data.otp.length !== 5) {
-      return;
-    }
+  const onSubmit = (data: SignupOtpFormValues) => {
     mutate({ email, password, username, otp: data.otp });
   };
 
   return (
     <form
       id="otp-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col items-start"
     >
       <FieldGroup>
         <Controller
           name="otp"
-          control={control}
-          shouldUnregister
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
               <FieldLabel
@@ -135,11 +146,7 @@ function SignupOtpForm({
         className="w-full h-12 cursor-pointer mt-12 rounded-lg bg-transparent! border border-gray-9 hover:text-gray-9"
         disabled={isPending || loginIsPending || timer > 0}
         onClick={() => {
-          loginMutate({
-            email: getValues("email"),
-            username: getValues("username"),
-            password: getValues("password"),
-          });
+          loginMutate({ email, password, username });
         }}
       >
         {timer > 0 ? (

@@ -1,6 +1,9 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { useLocale } from "@/hooks";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import {
   Field,
   FieldError,
@@ -14,20 +17,36 @@ import { AppApis } from "@/data";
 import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
-import { ForgetPasswordFormValues } from "../forgetPasswordForm.index";
 import { AuthModeEnum, AuthModeType } from "../../../../types";
+
+const ForgetEmailSchema = z.object({
+  email: z.email("Auth.validation.emailInvalid"),
+});
+
+type ForgetEmailFormValues = {
+  email: string;
+};
 
 function ForgetEmailForm({
   setStep,
   setMode,
   start,
+  onSubmit,
 }: {
   setStep: (step: "Email" | "Otp") => void;
   setMode: (mode: AuthModeType) => void;
   start: () => void;
+  onSubmit: (values: ForgetEmailFormValues) => void;
 }) {
   const { t, dir } = useLocale();
-  const form = useFormContext<ForgetPasswordFormValues>();
+  const form = useForm<ForgetEmailFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+    },
+    resolver: zodResolver(ForgetEmailSchema),
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string }) =>
@@ -42,15 +61,15 @@ function ForgetEmailForm({
     },
   });
 
-  function onSubmit(data: ForgetPasswordFormValues) {
-    form.setValue("otp", "");
+  function handleSubmit(data: ForgetEmailFormValues) {
+    onSubmit(data);
     mutate({ email: data.email });
   }
 
   return (
     <form
       id="forget-form"
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(handleSubmit)}
       className="flex flex-col items-start w-full"
     >
       <FieldGroup>

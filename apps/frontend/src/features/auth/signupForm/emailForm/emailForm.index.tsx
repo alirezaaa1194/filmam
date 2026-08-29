@@ -1,8 +1,11 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { PasswordInput } from "@/utilities/components/ui/passwordInput/passwordInput.index";
 import { useGoogle, useIsMobile, useLocale } from "@/hooks";
 import { AuthModeEnum, AuthModeType } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import {
   Field,
   FieldError,
@@ -16,21 +19,43 @@ import { AppApis } from "@/data";
 import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
-import { SignupFormValues } from "../signupForm.index";
 import googleIcon from "@/assets/icons/google.svg";
 import Image from "next/image";
+
+export const SignupEmailSchema = z.object({
+  username: z.string().min(1, "Auth.validation.usernameRequired"),
+  email: z.email("Auth.validation.emailInvalid"),
+  password: z.string().min(8, "Auth.validation.passwordMinLength"),
+});
+
+export type SignupEmailFormValues = {
+  username: string;
+  email: string;
+  password: string;
+};
 
 function SignupEmailForm({
   setStep,
   setMode,
   start,
+  onSubmit,
 }: {
   setStep: (step: "Email" | "Otp") => void;
   setMode: (mode: AuthModeType) => void;
   start: () => void;
+  onSubmit: (values: SignupEmailFormValues) => void;
 }) {
   const { locale, t, dir } = useLocale();
-  const form = useFormContext<SignupFormValues>();
+  const form = useForm<SignupEmailFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(SignupEmailSchema),
+  });
   const isMobile = useIsMobile();
 
   const { mutate, isPending } = useMutation({
@@ -55,8 +80,8 @@ function SignupEmailForm({
 
   const { handleGoogleLogin, isGoogleLoading } = useGoogle();
 
-  function onSubmit(data: SignupFormValues) {
-    form.setValue("otp", "");
+  function handleSubmit(data: SignupEmailFormValues) {
+    onSubmit(data);
     mutate({
       email: data.email,
       password: data.password,
@@ -67,7 +92,7 @@ function SignupEmailForm({
   return (
     <form
       id="signup-form"
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(handleSubmit)}
       className="flex flex-col items-start w-full"
     >
       <FieldGroup>
