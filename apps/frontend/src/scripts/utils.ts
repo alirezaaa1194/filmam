@@ -1,6 +1,8 @@
 import { AppLanguagesEnum, ApiQueryType, CookieOptionsType } from "../types";
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex } from "@noble/hashes/utils";
+import { EN } from "../i18n/en";
+import { NestedKeys } from "./server";
 
 export function __HashEmail(email: string) {
   const normalized = email.trim().toLowerCase();
@@ -13,11 +15,7 @@ export function __TimerParser(timer: number) {
   return `${timerMinute.toString().padStart(2, "0")}:${timerSecond.toString().padStart(2, "0")}`;
 }
 
-export function __BuildApiUrl(
-  url: string,
-  locale: AppLanguagesEnum,
-  query?: Record<string, unknown> | ApiQueryType,
-): string {
+export function __BuildApiUrl(url: string, locale: AppLanguagesEnum, query?: Record<string, unknown> | ApiQueryType): string {
   const searchParams = new URLSearchParams({ lang: locale });
   if (query) {
     for (const [key, value] of Object.entries(query)) {
@@ -29,7 +27,9 @@ export function __BuildApiUrl(
   return `${url}?${searchParams.toString()}`;
 }
 
-const errorMap: Record<number, string> = {
+type TranslationKey = NestedKeys<typeof EN>;
+
+const errorMap: Record<number, TranslationKey> = {
   400: "errors.bad_request",
   401: "errors.unauthorized",
   403: "errors.forbidden",
@@ -40,7 +40,7 @@ const errorMap: Record<number, string> = {
   500: "errors.internal_server_error",
 };
 
-export function __TranslateServerError(status: number): string {
+export function __TranslateServerError(status: number): TranslationKey {
   return errorMap[status] || "errors.unknown";
 }
 
@@ -113,9 +113,5 @@ export function __GetLocaleYear(locale: AppLanguagesEnum): string {
   }).format(new Date());
 }
 
-export const __DefaultLanguage = AppLanguagesEnum.EN;
-export const __AppLanguages = [
-  AppLanguagesEnum.EN,
-  AppLanguagesEnum.FA,
-  AppLanguagesEnum.AR,
-];
+export const __DefaultLanguage = AppLanguagesEnum.FA;
+export const __AppLanguages = [AppLanguagesEnum.EN, AppLanguagesEnum.FA, AppLanguagesEnum.AR];

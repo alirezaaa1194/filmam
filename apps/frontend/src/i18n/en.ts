@@ -16,15 +16,13 @@ export const EN = {
     adminPanel: "Admin panel",
   },
   Footer: {
-    description:
-      "Filmam offers you online streaming of your favorite movies and series. Previewing movies and series, quick search, and a complete archive of the most popular movies and series are among Filmam's features, making it the most up-to-date website for watching movies and series. -- Filmam has provided this opportunity for its users to watch their favorite series and movies online in the fastest possible time and with just a few clicks.",
+    description: "Filmam offers you online streaming of your favorite movies and series. Previewing movies and series, quick search, and a complete archive of the most popular movies and series are among Filmam's features, making it the most up-to-date website for watching movies and series. -- Filmam has provided this opportunity for its users to watch their favorite series and movies online in the fastest possible time and with just a few clicks.",
     followUs: "Follow us on social media",
     thousandsOfMoviesAndSeries: "Thousands of movies and series",
     animationsForKids: "The most exciting animations for kids",
     halfPriceTraffic: "Half-price traffic",
     support24h: "24-hour support to guide you",
-    copyright:
-      "Services provided in Filmam have the necessary licenses from the relevant authorities, and any exploitation or misuse of Filmam's content will be legally prosecuted.",
+    copyright: "Services provided in Filmam have the necessary licenses from the relevant authorities, and any exploitation or misuse of Filmam's content will be legally prosecuted.",
     startYear: "2018",
   },
   Auth: {
@@ -75,11 +73,26 @@ export const EN = {
       otpSent: "Verification code sent successfully",
       loginSuccess: "Logged in successfully",
       passwordChanged: "Password changed successfully",
+      logoutSuccess: "Logged out successfully",
     },
   },
-  Errors: {
-    adminOnly: "This action is only available for admins",
-    popupBlocked: "Popup was blocked by your browser",
-    timeout: "Request timed out. Please try again",
+  confirm: {
+    logout: {
+      title: "Logout",
+      description: "Are you sure you want to log out of your account?",
+      submitTitle: "Yes",
+      cancelTitle: "No",
+    },
+  },
+  errors: {
+    bad_request: "Something went wrong. Please check your input.",
+    unauthorized: "Invalid credentials or session expired. Please try again.",
+    forbidden: "You don't have permission to perform this action.",
+    not_found: "The requested resource was not found.",
+    payload_too_large: "The file is too large to upload.",
+    conflict: "This request conflicts with existing data.",
+    too_many_requests: "Too many requests. Please try again later.",
+    internal_server_error: "An internal server error occurred. Please try again later.",
+    unknown: "An unexpected error occurred. Please try again.",
   },
 };

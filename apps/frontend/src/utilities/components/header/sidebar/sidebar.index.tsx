@@ -1,10 +1,5 @@
 "use client";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "@/utilities/components/ui/sheet/sheet.index";
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/utilities/components/ui/sheet/sheet.index";
 import { HambergerMenu } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,10 +10,7 @@ import { PropsWithChildren, use, useState } from "react";
 import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";
 import { AuthModalContext } from "../../../../contexts/authModal";
 
-function Sidebar({
-  user,
-  children,
-}: PropsWithChildren<{ user: UserType | null }>) {
+function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }>) {
   const { t, dir } = useLocale();
   const side = dir === "rtl" ? "right" : "left";
   const [openSheet, setOpenSheet] = useState(false);
@@ -31,27 +23,11 @@ function Sidebar({
         <SheetTrigger className="cursor-pointer">
           <HambergerMenu className="size-5 stroke-white" />
         </SheetTrigger>
-        <SheetContent
-          side={side}
-          className="bg-gray-13 !border-0 !max-w-[256px] gap-0 px-6"
-          showCloseButton={false}
-        >
+        <SheetContent side={side} className="bg-gray-13 !border-0 !max-w-[256px] gap-0 px-6" showCloseButton={false}>
           <SheetHeader className="pt-4 pb-6 px-[30px]">
             <Link href="/" className="flex items-center gap-1">
-              <Image
-                src="/logo.svg"
-                alt="filmam"
-                width={32}
-                height={32}
-                className="size-6 lg:size-8"
-              />
-              <Image
-                src="/logo-text.svg"
-                alt="filmam"
-                width={91}
-                height={26}
-                className="w-[68px] h-[20px] lg:w-[91px] lg:h-[26px]"
-              />
+              <Image src="/logo.svg" alt="filmam" width={32} height={32} className="size-6 lg:size-8" />
+              <Image src="/logo-text.svg" alt="filmam" width={91} height={26} className="w-[68px] h-[20px] lg:w-[91px] lg:h-[26px]" />
             </Link>
           </SheetHeader>
           {children}
@@ -66,9 +42,7 @@ function Sidebar({
               <Separator className="bg-gray-12" />
               {user.role === UserRoleEnum.ADMIN ? (
                 <>
-                  <Link href="https://admin.filmamapp.ir">
-                    {t("Header.adminPanel")}
-                  </Link>
+                  <Link href="https://admin.filmamapp.ir">{t("Header.adminPanel")}</Link>
                   <Separator className="bg-gray-12" />
                 </>
               ) : null}
@@ -77,8 +51,8 @@ function Sidebar({
                 onClick={() => {
                   setOpenSheet(false);
                   setConfirm({
-                    title: "خروج",
-                    description: "آیا میخواهید از حساب خود خارج شود؟",
+                    title: t("confirm.logout.title"),
+                    description: t("confirm.logout.description"),
                     callback: mutate,
                     isRefreshing,
                   });

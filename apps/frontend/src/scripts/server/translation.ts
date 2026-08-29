@@ -1,11 +1,16 @@
 import "server-only";
-
 import { cookies } from "next/headers";
 import { AppLanguagesEnum, UserType } from "../../types";
 import { DefaultLanguage } from "../index";
 import { FA } from "../../i18n/fa";
 import { EN } from "../../i18n/en";
 import { AR } from "../../i18n/ar";
+
+export type NestedKeys<T> = {
+  [K in keyof T & string]: T[K] extends Record<string, unknown> ? `${K}.${NestedKeys<T[K]>}` : K;
+}[keyof T & string];
+
+export type TranslationKey = NestedKeys<typeof EN>;
 
 export async function GetTranslation() {
   const locale = (await cookies()).get("locale")?.value || DefaultLanguage;
@@ -16,18 +21,7 @@ export async function GetTranslation() {
     [AppLanguagesEnum.AR]: AR,
   } as const;
 
-  type NestedKeys<T> = {
-    [K in keyof T & string]: T[K] extends Record<string, unknown>
-      ? `${K}.${NestedKeys<T[K]>}`
-      : K;
-  }[keyof T & string];
-
-  type TranslationKey = NestedKeys<typeof FA>;
-
-  function getNestedValue<T extends Record<string, unknown>>(
-    object: T,
-    path: string,
-  ): string {
+  function getNestedValue<T extends Record<string, unknown>>(object: T, path: string): string {
     let result: unknown = object;
 
     for (const key of path.split(".")) {
@@ -50,9 +44,7 @@ export async function GetTranslation() {
   return { t };
 }
 
-export async function GetLocale(
-  user: UserType | null,
-): Promise<AppLanguagesEnum> {
+export async function GetLocale(user: UserType | null): Promise<AppLanguagesEnum> {
   let locale = null;
 
   if (user) {
