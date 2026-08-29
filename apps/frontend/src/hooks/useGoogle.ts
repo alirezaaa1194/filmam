@@ -52,7 +52,7 @@ function __UseGoogle() {
       if (error) {
         cleanup();
         setAuthMode(null);
-        toast.error(t("Errors.adminOnly"));
+        toast.error(t("errors.adminOnly"));
         return;
       }
 
@@ -86,15 +86,11 @@ function __UseGoogle() {
 
     setIsGoogleLoading(true);
 
-    const popup = window.open(
-      AppApis.auth.googleFrontend,
-      "google-oauth",
-      "width=500,height=600",
-    );
+    const popup = window.open(AppApis.auth.googleFrontend, "google-oauth", "width=500,height=600");
 
     if (!popup) {
       setIsGoogleLoading(false);
-      toast.error(t("Errors.popupBlocked"));
+      toast.error(t("errors.popupBlocked"));
       return;
     }
 
@@ -113,7 +109,7 @@ function __UseGoogle() {
 
     timeoutRef.current = setTimeout(() => {
       cleanup();
-      toast.error(t("Errors.timeout"));
+      toast.error(t("errors.timeout"));
     }, 120_000);
   }, [cleanup, isGoogleLoading, setAuthMode, t]);
 

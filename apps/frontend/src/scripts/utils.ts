@@ -30,14 +30,14 @@ export function __BuildApiUrl(url: string, locale: AppLanguagesEnum, query?: Rec
 type TranslationKey = NestedKeys<typeof EN>;
 
 const errorMap: Record<number, TranslationKey> = {
-  400: "errors.bad_request",
+  400: "errors.badRequest",
   401: "errors.unauthorized",
   403: "errors.forbidden",
-  404: "errors.not_found",
+  404: "errors.notFound",
   409: "errors.conflict",
-  413: "errors.payload_too_large",
-  429: "errors.too_many_requests",
-  500: "errors.internal_server_error",
+  413: "errors.payloadTooLarge",
+  429: "errors.tooManyRequests",
+  500: "errors.internalServerError",
 };
 
 export function __TranslateServerError(status: number): TranslationKey {
