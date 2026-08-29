@@ -3,12 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AuthModeEnum, AuthModeType } from "@/types";
 import { Controller } from "react-hook-form";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/utilities/components/ui/field/field.index";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
 import { Button } from "@/utilities/components/ui/button/button.index";
 import { useMutation } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
@@ -37,21 +32,7 @@ type ForgetOtpFormValues = {
   otp: string;
 };
 
-function ForgetOtpForm({
-  setStep,
-  setMode,
-  start,
-  reset,
-  timer,
-  email,
-}: {
-  setStep: (step: "Email" | "Otp") => void;
-  setMode: (mode: AuthModeType) => void;
-  start: () => void;
-  reset: () => void;
-  timer: number;
-  email: string;
-}) {
+function ForgetOtpForm({ setStep, setMode, start, reset, timer, email }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number; email: string }) {
   const { t, dir } = useLocale();
   const form = useForm<ForgetOtpFormValues>({
     mode: "onSubmit",
@@ -85,8 +66,7 @@ function ForgetOtpForm({
   });
 
   const { mutate: forgetMutate, isPending: forgetIsPending } = useMutation({
-    mutationFn: (value: { email: string }) =>
-      ClientCall(AppApis.auth.forgetPassword, { method: "POST", body: value }),
+    mutationFn: (value: { email: string }) => ClientCall(AppApis.auth.forgetPassword, { method: "POST", body: value }),
     onSuccess: () => {
       start();
       form.reset();
@@ -107,38 +87,18 @@ function ForgetOtpForm({
   };
 
   return (
-    <form
-      id="otp-form"
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="flex flex-col items-start w-full"
-    >
+    <form id="otp-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start w-full">
       <FieldGroup>
         <Controller
           name="newPassword"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
-              <FieldLabel
-                htmlFor="login-form-password"
-                className="text-h-6 max-md:text-mobile-h-6"
-              >
+              <FieldLabel htmlFor="login-form-password" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.password")}
               </FieldLabel>
-              <PasswordInput
-                {...field}
-                id="login-form-password"
-                aria-invalid={fieldState.invalid}
-                placeholder={t("Auth.placeholders.password")}
-                autoComplete="off"
-                className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`}
-                dir="ltr"
-              />
-              {fieldState.invalid && (
-                <FieldError
-                  errors={[fieldState.error]}
-                  className="text-error! text-body-xxs"
-                />
-              )}
+              <PasswordInput {...field} id="login-form-password" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.password")} autoComplete="off" className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} dir="ltr" />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
         />
@@ -147,27 +107,11 @@ function ForgetOtpForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
-              <FieldLabel
-                htmlFor="login-form-confirmPassword"
-                className="text-h-6 max-md:text-mobile-h-6"
-              >
+              <FieldLabel htmlFor="login-form-confirmPassword" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.confirmPassword")}
               </FieldLabel>
-              <PasswordInput
-                {...field}
-                id="login-form-confirmPassword"
-                aria-invalid={fieldState.invalid}
-                placeholder={t("Auth.placeholders.confirmPassword")}
-                autoComplete="off"
-                className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`}
-                dir="ltr"
-              />
-              {fieldState.invalid && (
-                <FieldError
-                  errors={[fieldState.error]}
-                  className="text-error! text-body-xxs"
-                />
-              )}
+              <PasswordInput {...field} id="login-form-confirmPassword" aria-invalid={fieldState.invalid} placeholder={t("Auth.placeholders.confirmPassword")} autoComplete="off" className={`text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} dir="ltr" />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
         />
@@ -176,30 +120,11 @@ function ForgetOtpForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
-              <FieldLabel
-                htmlFor="otp-form-otp"
-                className="text-h-6 max-md:text-mobile-h-6"
-              >
+              <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.otp")}
               </FieldLabel>
-              <Input
-                {...field}
-                id="otp-form-otp"
-                autoFocus
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={5}
-                placeholder={t("Auth.placeholders.otp")}
-                className="text-body-xxs text-center! tracking-[2rem] ps-8"
-                dir="ltr"
-              />
-              {fieldState.invalid && (
-                <FieldError
-                  errors={[fieldState.error]}
-                  className="text-error! text-body-xxs"
-                />
-              )}
+              <Input {...field} id="otp-form-otp" aria-invalid={fieldState.invalid} autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
         />
@@ -226,11 +151,7 @@ function ForgetOtpForm({
         )}
       </Button>
 
-      <Button
-        type="submit"
-        className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7"
-        disabled={isPending}
-      >
+      <Button type="submit" className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending}>
         {isPending ? <Spinner /> : null} {t("Auth.buttons.login")}
       </Button>
 

@@ -27,14 +27,14 @@ export type LoginEmailFormValues = {
   password: string;
 };
 
-function LoginEmailForm({ setStep, setMode, start, onSubmit }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; onSubmit: (values: LoginEmailFormValues) => void }) {
+function LoginEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; onSubmit: (values: LoginEmailFormValues) => void; defaultValues: LoginEmailFormValues }) {
   const { t, dir } = useLocale();
   const form = useForm<LoginEmailFormValues>({
     mode: "onSubmit",
     reValidateMode: "onChange",
     defaultValues: {
-      email: "",
-      password: "",
+      email: defaultValues.email,
+      password: defaultValues.password,
     },
     resolver: zodResolver(LoginEmailSchema),
   });
@@ -107,7 +107,7 @@ function LoginEmailForm({ setStep, setMode, start, onSubmit }: { setStep: (step:
           </span>
         </Button>
         <Button type="button" className="w-12 shrink-0 transition-[width,background-color,opacity] duration-300 ease-in-out h-12 cursor-pointer rounded-md bg-white text-gray-13 hover:bg-gray-6 disabled:opacity-50 disabled:bg-gray-3" disabled={isPending || isGoogleLoading} onClick={handleGoogleLogin} aria-label="Continue with Google">
-          {isGoogleLoading ? <Spinner className="text-gray-13" /> : <Image src={googleIcon} alt="google-oauth" width={24} height={24} className="size-6" />}
+          {isGoogleLoading ? <Spinner /> : <Image src={googleIcon} alt="google-oauth" width={24} height={24} className="size-6" />}
         </Button>
       </div>
 

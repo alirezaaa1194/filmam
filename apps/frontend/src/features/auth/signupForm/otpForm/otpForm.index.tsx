@@ -121,6 +121,7 @@ function SignupOtpForm({
               <Input
                 {...field}
                 id="otp-form-otp"
+                aria-invalid={fieldState.invalid}
                 autoFocus
                 type="text"
                 inputMode="numeric"

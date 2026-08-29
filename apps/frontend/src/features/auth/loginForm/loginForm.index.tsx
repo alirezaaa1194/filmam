@@ -9,7 +9,7 @@ function LoginForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
   const [credentials, setCredentials] = useState<{
     email: string;
     password: string;
-  } | null>(null);
+  }>({ email: "", password: "" });
   const { t } = useLocale();
   const { timer, start, reset } = useTimer(120);
 
@@ -23,6 +23,7 @@ function LoginForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
           setMode={setMode}
           setStep={setStep}
           start={start}
+          defaultValues={credentials}
           onSubmit={(values) => setCredentials(values)}
         />
       ) : (
@@ -32,8 +33,8 @@ function LoginForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
           start={start}
           reset={reset}
           timer={timer}
-          email={credentials?.email ?? ""}
-          password={credentials?.password ?? ""}
+          email={credentials.email}
+          password={credentials.password}
         />
       )}
     </div>

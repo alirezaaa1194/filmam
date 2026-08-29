@@ -10,7 +10,7 @@ function SignupForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
     email: string;
     password: string;
     username: string;
-  } | null>(null);
+  }>({ email: "", password: "", username: "" });
   const { t } = useLocale();
   const { timer, start, reset } = useTimer(120);
 
@@ -24,6 +24,7 @@ function SignupForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
           setMode={setMode}
           setStep={setStep}
           start={start}
+          defaultValues={credentials}
           onSubmit={(values) => setCredentials(values)}
         />
       ) : (
@@ -33,9 +34,9 @@ function SignupForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
           start={start}
           reset={reset}
           timer={timer}
-          email={credentials?.email ?? ""}
-          password={credentials?.password ?? ""}
-          username={credentials?.username ?? ""}
+          email={credentials.email}
+          password={credentials.password}
+          username={credentials.username}
         />
       )}
     </div>

@@ -32,18 +32,20 @@ function ForgetEmailForm({
   setMode,
   start,
   onSubmit,
+  defaultValues,
 }: {
   setStep: (step: "Email" | "Otp") => void;
   setMode: (mode: AuthModeType) => void;
   start: () => void;
   onSubmit: (values: ForgetEmailFormValues) => void;
+  defaultValues: ForgetEmailFormValues;
 }) {
   const { t, dir } = useLocale();
   const form = useForm<ForgetEmailFormValues>({
     mode: "onSubmit",
     reValidateMode: "onChange",
     defaultValues: {
-      email: "",
+      email: defaultValues.email,
     },
     resolver: zodResolver(ForgetEmailSchema),
   });

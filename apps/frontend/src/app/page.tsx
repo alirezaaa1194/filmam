@@ -1,9 +1,8 @@
 import { GetTranslation } from "../scripts/server/translation";
-import Image from "next/image";
-import pic from "@/assets/images/Image.png";
 import LayoutProvider from "../providers/layoutProvider";
 import Header from "../utilities/components/header/header.index";
 import Footer from "../utilities/components/footer/footer.index";
+import HomePageComp from "../features/home/home.index";
 export async function generateMetadata() {
   const { t } = await GetTranslation();
 
@@ -15,7 +14,7 @@ export async function generateMetadata() {
 export default async function HomePage() {
   return (
     <LayoutProvider header={<Header absolute={true} />} footer={<Footer />}>
-      <Image src={pic} alt="test" className="w-full" />
+      <HomePageComp />
     </LayoutProvider>
   );
 }

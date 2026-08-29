@@ -24,6 +24,7 @@ function ForgetPasswordForm({
           setMode={setMode}
           setStep={setStep}
           start={start}
+          defaultValues={{ email }}
           onSubmit={(value) => setEmail(value.email)}
         />
       ) : (

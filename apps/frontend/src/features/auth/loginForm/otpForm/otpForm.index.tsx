@@ -74,7 +74,7 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer, email, password }
               <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.otp")}
               </FieldLabel>
-              <Input {...field} id="otp-form-otp" autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
+              <Input {...field} id="otp-form-otp" aria-invalid={fieldState.invalid} autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
