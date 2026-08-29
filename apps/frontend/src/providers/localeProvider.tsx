@@ -3,13 +3,16 @@ import { LocaleContext } from "../contexts";
 import { AppLanguagesEnum } from "../types";
 import { GetDir } from "../scripts";
 
-function LocaleProvider({ children, initialLocale }: PropsWithChildren<{ initialLocale: AppLanguagesEnum }>) {
+function LocaleProvider({
+  children,
+  initialLocale,
+}: PropsWithChildren<{ initialLocale: AppLanguagesEnum }>) {
   const [locale, setLocale] = useState<AppLanguagesEnum>(initialLocale);
 
   useEffect(() => {
     setLocale(initialLocale);
   }, [initialLocale]);
-  
+
   return (
     <LocaleContext value={{ locale, setLocale }}>
       <div dir={GetDir(locale)}>{children}</div>

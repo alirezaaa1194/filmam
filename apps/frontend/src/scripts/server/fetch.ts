@@ -6,7 +6,12 @@ import { AppApis } from "../../data";
 import { AppLanguagesEnum, ApiCallOptionsType, UserType } from "../../types";
 import { BuildApiUrl } from "../index";
 
-async function ServerFetch<T>(url: string, options: ApiCallOptionsType, cookieHeader: string | null, locale: AppLanguagesEnum): Promise<T> {
+async function ServerFetch<T>(
+  url: string,
+  options: ApiCallOptionsType,
+  cookieHeader: string | null,
+  locale: AppLanguagesEnum,
+): Promise<T> {
   const response = await fetch(BuildApiUrl(url, locale, options.query), {
     method: options.method,
     body: options.body ? JSON.stringify(options.body) : undefined,
@@ -25,7 +30,10 @@ async function ServerFetch<T>(url: string, options: ApiCallOptionsType, cookieHe
   return data as T;
 }
 
-export async function ServerCall<T>(url: string, options: ApiCallOptionsType): Promise<T> {
+export async function ServerCall<T>(
+  url: string,
+  options: ApiCallOptionsType,
+): Promise<T> {
   if (!options.ghostMode) {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
@@ -57,10 +65,17 @@ export async function ServerCall<T>(url: string, options: ApiCallOptionsType): P
   }
 }
 
-export const GetUser = cache(async (locale: AppLanguagesEnum = AppLanguagesEnum.EN): Promise<UserType | null> => {
-  try {
-    return await ServerCall<UserType>(AppApis.auth.me, { method: "GET", locale });
-  } catch {
-    return null;
-  }
-});
+export const GetUser = cache(
+  async (
+    locale: AppLanguagesEnum = AppLanguagesEnum.EN,
+  ): Promise<UserType | null> => {
+    try {
+      return await ServerCall<UserType>(AppApis.auth.me, {
+        method: "GET",
+        locale,
+      });
+    } catch {
+      return null;
+    }
+  },
+);

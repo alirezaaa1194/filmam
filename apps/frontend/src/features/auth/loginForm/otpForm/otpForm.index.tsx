@@ -1,6 +1,11 @@
 import { AuthModeType } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/utilities/components/ui/field/field.index";
 import { Button } from "@/utilities/components/ui/button/button.index";
 import { useMutation } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
@@ -17,15 +22,29 @@ type LoginFormValues = {
   password: string;
   otp: string;
 };
-function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number }) {
-  const { control, handleSubmit, getValues, setError, clearErrors } = useFormContext<LoginFormValues>();
+function LoginOtpForm({
+  setStep,
+  setMode,
+  start,
+  reset,
+  timer,
+}: {
+  setStep: (step: "Email" | "Otp") => void;
+  setMode: (mode: AuthModeType) => void;
+  start: () => void;
+  reset: () => void;
+  timer: number;
+}) {
+  const { control, handleSubmit, getValues, setError, clearErrors } =
+    useFormContext<LoginFormValues>();
   const { t } = useLocale();
   const email = getValues("email");
   const password = getValues("password");
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (value: { email: string; password: string; otp: string }) => ClientCall(AppApis.auth.loginVerify, { method: "POST", body: value }),
+    mutationFn: (value: { email: string; password: string; otp: string }) =>
+      ClientCall(AppApis.auth.loginVerify, { method: "POST", body: value }),
     onSuccess: () => {
       toast.success(t("Auth.toasts.loginSuccess"));
       setMode(null);
@@ -37,7 +56,8 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
   });
 
   const { mutate: loginMutate, isPending: loginIsPending } = useMutation({
-    mutationFn: (value: { email: string; password: string }) => ClientCall(AppApis.auth.login, { method: "POST", body: value }),
+    mutationFn: (value: { email: string; password: string }) =>
+      ClientCall(AppApis.auth.login, { method: "POST", body: value }),
     onSuccess: () => {
       setStep("Otp");
       start();
@@ -60,14 +80,21 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
   };
 
   return (
-    <form id="otp-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-start">
+    <form
+      id="otp-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col items-start"
+    >
       <FieldGroup>
         <Controller
           name="otp"
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
-              <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
+              <FieldLabel
+                htmlFor="otp-form-otp"
+                className="text-h-6 max-md:text-mobile-h-6"
+              >
                 {t("Auth.fields.otp")}
               </FieldLabel>
               <Input
@@ -88,7 +115,12 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
                   }
                 }}
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
+              {fieldState.invalid && (
+                <FieldError
+                  errors={[fieldState.error]}
+                  className="text-error! text-body-xxs"
+                />
+              )}
             </Field>
           )}
         />
@@ -99,7 +131,10 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
         className="w-full h-12 cursor-pointer mt-12 rounded-lg bg-transparent! border border-gray-9 hover:text-gray-9"
         disabled={isPending || loginIsPending || timer > 0}
         onClick={() => {
-          loginMutate({ email: getValues("email"), password: getValues("password") });
+          loginMutate({
+            email: getValues("email"),
+            password: getValues("password"),
+          });
         }}
       >
         {timer > 0 ? (
@@ -115,7 +150,11 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer }: { setStep: (ste
         )}
       </Button>
 
-      <Button type="submit" className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending}>
+      <Button
+        type="submit"
+        className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7"
+        disabled={isPending}
+      >
         {isPending ? <Spinner /> : null} {t("Auth.buttons.login")}
       </Button>
 

@@ -60,7 +60,11 @@ export type ForgetPasswordFormValues = {
   otp?: string;
 };
 
-function ForgetPasswordForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
+function ForgetPasswordForm({
+  setMode,
+}: {
+  setMode: (mode: AuthModeType) => void;
+}) {
   const [step, setStep] = useState<"Email" | "Otp">("Email");
   const { t } = useLocale();
   const form = useForm<ForgetPasswordFormValues>({
@@ -79,8 +83,20 @@ function ForgetPasswordForm({ setMode }: { setMode: (mode: AuthModeType) => void
   return (
     <FormProvider {...form}>
       <div className="w-full p-6">
-        <h5 className="text-h-5 text-white text-center mb-8">{t("Auth.title.forgetPassword")}</h5>
-        {step === "Email" ? <ForgetEmailForm setMode={setMode} setStep={setStep} start={start} /> : <ForgetOtpForm setMode={setMode} setStep={setStep} start={start} reset={reset} timer={timer} />}
+        <h5 className="text-h-5 text-white text-center mb-8">
+          {t("Auth.title.forgetPassword")}
+        </h5>
+        {step === "Email" ? (
+          <ForgetEmailForm setMode={setMode} setStep={setStep} start={start} />
+        ) : (
+          <ForgetOtpForm
+            setMode={setMode}
+            setStep={setStep}
+            start={start}
+            reset={reset}
+            timer={timer}
+          />
+        )}
       </div>
     </FormProvider>
   );

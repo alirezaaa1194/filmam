@@ -3,7 +3,12 @@
 import { use, useTransition } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/utilities/components/ui/button/button.index";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/utilities/components/ui/dropdownMenu/dropdownMenu.index";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/utilities/components/ui/dropdownMenu/dropdownMenu.index";
 import { AppLanguagesEnum } from "@/types";
 import Image from "next/image";
 import { useLocale } from "@/hooks";
@@ -45,7 +50,10 @@ function LanguageSwitcher() {
 
     setLocale(lang as AppLanguagesEnum);
     SetCookie("locale", lang);
-    ClientCall(AppApis.user.updateInfo, { method: "PUT", body: { ...user, preferred_language: lang } });
+    ClientCall(AppApis.user.updateInfo, {
+      method: "PUT",
+      body: { ...user, preferred_language: lang },
+    });
     startTransition(() => {
       router.refresh();
     });
@@ -54,10 +62,22 @@ function LanguageSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="w-full! lg:w-auto! group">
-        <Button variant="ghost" size="icon" className="w-full flex items-center justify-between gap-2 lg:size-8 lg:overflow-hidden lg:rounded-full !bg-transparent cursor-pointer lg:!bg-gray-12 lg:hover:bg-gray-11 lg:aria-expanded:bg-gray-11 relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-full flex items-center justify-between gap-2 lg:size-8 lg:overflow-hidden lg:rounded-full !bg-transparent cursor-pointer lg:!bg-gray-12 lg:hover:bg-gray-11 lg:aria-expanded:bg-gray-11 relative"
+        >
           <span className="flex items-center justify-start gap-2">
-            <Image width={32} height={32} src={flags[locale]} alt={`${locale}-flag`} className="size-6 lg:size-8 lg:!bg-gray-12 rounded-full object-cover" />
-            <span className="text-white! text-body-xs lg:hidden">{languageLabels[locale]}</span>
+            <Image
+              width={32}
+              height={32}
+              src={flags[locale]}
+              alt={`${locale}-flag`}
+              className="size-6 lg:size-8 lg:!bg-gray-12 rounded-full object-cover"
+            />
+            <span className="text-white! text-body-xs lg:hidden">
+              {languageLabels[locale]}
+            </span>
           </span>
           {isPending ? (
             <span className="lg:flex items-center justify-center lg:rounded-full lg:w-full lg:h-full bg-black/50 lg:absolute">
@@ -68,16 +88,37 @@ function LanguageSwitcher() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[208px] lg:min-w-[130px] w-full lg:w-auto lg:mt-5 p-3 !bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+      <DropdownMenuContent
+        align="end"
+        className="min-w-[208px] lg:min-w-[130px] w-full lg:w-auto lg:mt-5 p-3 !bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2"
+      >
         {AppLanguages.map((lang) => (
-          <DropdownMenuItem key={lang} className="cursor-pointer flex items-center justify-start gap-2 rounded-md transition-all w-full hover:bg-gray-12! focus:bg-gray-12! data-[highlighted]:bg-gray-12! focus:text-white! data-[highlighted]:text-white!" onSelect={() => handleSelect(lang)} dir={dir}>
+          <DropdownMenuItem
+            key={lang}
+            className="cursor-pointer flex items-center justify-start gap-2 rounded-md transition-all w-full hover:bg-gray-12! focus:bg-gray-12! data-[highlighted]:bg-gray-12! focus:text-white! data-[highlighted]:text-white!"
+            onSelect={() => handleSelect(lang)}
+            dir={dir}
+          >
             <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full">
-              <Image src={flags[lang]} alt={`${lang}-flag`} width={20} height={20} className="size-full rounded-full object-cover" />
+              <Image
+                src={flags[lang]}
+                alt={`${lang}-flag`}
+                width={20}
+                height={20}
+                className="size-full rounded-full object-cover"
+              />
             </span>
-            <span style={{ fontFamily: languageFonts[lang] }} className="text-white!">
+            <span
+              style={{ fontFamily: languageFonts[lang] }}
+              className="text-white!"
+            >
               {languageLabels[lang]}
             </span>
-            <Check size={14} className={`ms-auto text-white! ${locale !== lang ? "hidden" : ""}`} color="white" />
+            <Check
+              size={14}
+              className={`ms-auto text-white! ${locale !== lang ? "hidden" : ""}`}
+              color="white"
+            />
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

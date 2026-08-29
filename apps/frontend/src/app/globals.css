@@ -16,7 +16,6 @@
   --max-width-layout-max: 1780px;
 
   --spacing-layout-x-space: 48px;
-
 }
 
 @media (max-width: 640px) {

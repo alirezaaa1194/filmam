@@ -37,9 +37,7 @@ function __UseGoogle() {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      const expectedOrigin = new URL(
-        AppApis.auth.googleFrontend
-      ).origin;
+      const expectedOrigin = new URL(AppApis.auth.googleFrontend).origin;
 
       if (event.origin !== expectedOrigin) {
         return;
@@ -91,7 +89,7 @@ function __UseGoogle() {
     const popup = window.open(
       AppApis.auth.googleFrontend,
       "google-oauth",
-      "width=500,height=600"
+      "width=500,height=600",
     );
 
     if (!popup) {

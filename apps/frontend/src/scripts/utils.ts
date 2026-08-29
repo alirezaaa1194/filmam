@@ -13,7 +13,11 @@ export function __TimerParser(timer: number) {
   return `${timerMinute.toString().padStart(2, "0")}:${timerSecond.toString().padStart(2, "0")}`;
 }
 
-export function __BuildApiUrl(url: string, locale: AppLanguagesEnum, query?: Record<string, unknown> | ApiQueryType): string {
+export function __BuildApiUrl(
+  url: string,
+  locale: AppLanguagesEnum,
+  query?: Record<string, unknown> | ApiQueryType,
+): string {
   const searchParams = new URLSearchParams({ lang: locale });
   if (query) {
     for (const [key, value] of Object.entries(query)) {
@@ -104,8 +108,14 @@ const localeYearMap: Record<AppLanguagesEnum, string> = {
 };
 
 export function __GetLocaleYear(locale: AppLanguagesEnum): string {
-  return new Intl.DateTimeFormat(localeYearMap[locale], { year: "numeric" }).format(new Date());
+  return new Intl.DateTimeFormat(localeYearMap[locale], {
+    year: "numeric",
+  }).format(new Date());
 }
 
 export const __DefaultLanguage = AppLanguagesEnum.EN;
-export const __AppLanguages = [AppLanguagesEnum.EN, AppLanguagesEnum.FA, AppLanguagesEnum.AR];
+export const __AppLanguages = [
+  AppLanguagesEnum.EN,
+  AppLanguagesEnum.FA,
+  AppLanguagesEnum.AR,
+];

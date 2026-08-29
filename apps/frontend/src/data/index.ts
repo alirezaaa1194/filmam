@@ -1,3 +1,3 @@
-import { __AppApis } from './api'
+import { __AppApis } from "./api";
 
-export { __AppApis as AppApis }
+export { __AppApis as AppApis };

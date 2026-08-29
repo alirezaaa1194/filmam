@@ -9,7 +9,10 @@ async function Navbar({ locale }: { locale: AppLanguagesEnum }) {
   cacheLife({ stale: 1800, revalidate: 1800 });
   cacheTag(`menu-data-${locale}`);
 
-  const menuData = await ServerCall<MenuItemType[]>(AppApis.headerMenu.publicAll, { method: "GET", locale, ghostMode: true });
+  const menuData = await ServerCall<MenuItemType[]>(
+    AppApis.headerMenu.publicAll,
+    { method: "GET", locale, ghostMode: true },
+  );
 
   return (
     <div className="hidden lg:flex items-center gap-8">

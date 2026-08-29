@@ -14,7 +14,9 @@ const translations = {
 } as const;
 
 type NestedKeys<T> = {
-  [K in keyof T & string]: T[K] extends Record<string, unknown> ? `${K}.${NestedKeys<T[K]>}` : K;
+  [K in keyof T & string]: T[K] extends Record<string, unknown>
+    ? `${K}.${NestedKeys<T[K]>}`
+    : K;
 }[keyof T & string];
 
 function getNestedValue(object: Record<string, any>, path: string) {

@@ -20,7 +20,8 @@ export const __AppApis = {
   },
   comment: {
     byMovie: (movieSlug: string) => `${base}/comment/movie/${movieSlug}`,
-    byEpisode: (episodeSlug: string) => `${base}/comment/episode/${episodeSlug}`,
+    byEpisode: (episodeSlug: string) =>
+      `${base}/comment/episode/${episodeSlug}`,
     vote: (commentId: number) => `${base}/comment/vote/${commentId}`,
   },
   contact: {
@@ -58,7 +59,8 @@ export const __AppApis = {
     all: `${base}/role/all`,
   },
   season: {
-    episodesBySlug: (seasonSlug: string) => `${base}/season/${seasonSlug}/episodes`,
+    episodesBySlug: (seasonSlug: string) =>
+      `${base}/season/${seasonSlug}/episodes`,
   },
   section: {
     publicAll: `${base}/section/public/all`,
@@ -72,7 +74,8 @@ export const __AppApis = {
   },
   userMovie: {
     all: `${base}/user-movie/all`,
-    movieActions: (entityId: number) => `${base}/user-movie/movie_actions/${entityId}`,
+    movieActions: (entityId: number) =>
+      `${base}/user-movie/movie_actions/${entityId}`,
     deleteAction: (actionId: number) => `${base}/user-movie/${actionId}`,
   },
 };

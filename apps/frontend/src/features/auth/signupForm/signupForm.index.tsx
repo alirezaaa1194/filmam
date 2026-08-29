@@ -49,8 +49,20 @@ function SignupForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
   return (
     <FormProvider {...form}>
       <div className="w-full p-6">
-        <h5 className="text-h-5 text-white text-center mb-8">{t("Auth.title.signup")}</h5>
-        {step === "Email" ? <SignupEmailForm setMode={setMode} setStep={setStep} start={start} /> : <SignupOtpForm setMode={setMode} setStep={setStep} start={start} reset={reset} timer={timer} />}
+        <h5 className="text-h-5 text-white text-center mb-8">
+          {t("Auth.title.signup")}
+        </h5>
+        {step === "Email" ? (
+          <SignupEmailForm setMode={setMode} setStep={setStep} start={start} />
+        ) : (
+          <SignupOtpForm
+            setMode={setMode}
+            setStep={setStep}
+            start={start}
+            reset={reset}
+            timer={timer}
+          />
+        )}
       </div>
     </FormProvider>
   );

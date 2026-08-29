@@ -5,11 +5,22 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/utilities/components/ui/button/button.index";
 import { cn } from "@/lib/utils";
 
-type PasswordInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
+type PasswordInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "type"
+> & {
   ref?: React.Ref<HTMLInputElement>;
 };
 
-export function PasswordInput({ className, disabled, ref, value, defaultValue, onChange, ...props }: PasswordInputProps) {
+export function PasswordInput({
+  className,
+  disabled,
+  ref,
+  value,
+  defaultValue,
+  onChange,
+  ...props
+}: PasswordInputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
   const [internalValue, setInternalValue] = React.useState<string>(() => {
     if (value !== undefined) return String(value);
@@ -51,7 +62,9 @@ export function PasswordInput({ className, disabled, ref, value, defaultValue, o
           onClick={() => setShowPassword((prev) => !prev)}
         >
           {showPassword ? <Eye /> : <EyeOff />}
-          <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+          <span className="sr-only">
+            {showPassword ? "Hide password" : "Show password"}
+          </span>
         </Button>
       ) : null}
     </div>

@@ -17,12 +17,17 @@ export async function GetTranslation() {
   } as const;
 
   type NestedKeys<T> = {
-    [K in keyof T & string]: T[K] extends Record<string, unknown> ? `${K}.${NestedKeys<T[K]>}` : K;
+    [K in keyof T & string]: T[K] extends Record<string, unknown>
+      ? `${K}.${NestedKeys<T[K]>}`
+      : K;
   }[keyof T & string];
 
   type TranslationKey = NestedKeys<typeof FA>;
 
-  function getNestedValue<T extends Record<string, unknown>>(object: T, path: string): string {
+  function getNestedValue<T extends Record<string, unknown>>(
+    object: T,
+    path: string,
+  ): string {
     let result: unknown = object;
 
     for (const key of path.split(".")) {
@@ -45,7 +50,9 @@ export async function GetTranslation() {
   return { t };
 }
 
-export async function GetLocale(user: UserType | null): Promise<AppLanguagesEnum> {
+export async function GetLocale(
+  user: UserType | null,
+): Promise<AppLanguagesEnum> {
   let locale = null;
 
   if (user) {
