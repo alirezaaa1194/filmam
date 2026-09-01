@@ -12,5 +12,8 @@
   },
   "devDependencies": {
     "turbo": "^2.8.10"
+  },
+  "dependencies": {
+    "swiper": "^14.2.0"
   }
 }

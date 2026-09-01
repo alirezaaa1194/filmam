@@ -55,7 +55,7 @@ function SignupEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: {
       toast.success(t("Auth.toasts.otpSent"));
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status));
+      toast.error(t(TranslateServerError(error.status)));
     },
   });
 

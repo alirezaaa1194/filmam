@@ -1,12 +1,15 @@
 "use client";
-import Image from "next/image";
-import pic from "@/assets/images/Image.png";
+import HeroSectionComp from "@/utilities/components/sections/hero/hero.index";
+import RecentWatchSectionComp from "../../utilities/components/sections/recentWatch/recentWatch.index";
+import NormalSliderSectionComp from "../../utilities/components/sections/normal/normal.index";
 
 function HomePageComp() {
   return (
-    <div>
-      <Image src={pic} alt="test" className="w-full" />
-    </div>
+    <main className="pb-10">
+      <HeroSectionComp />
+      <RecentWatchSectionComp />
+      <NormalSliderSectionComp />
+    </main>
   );
 }
 

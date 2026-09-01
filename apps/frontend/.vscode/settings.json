@@ -1,0 +1,12 @@
+{
+  "typescript.preferences.importPathPreferences": {
+    "@/*": ["*"],
+    "@/types": ["*"],
+    "@/types/*": ["*"]
+  },
+  "javascript.preferences.importPathPreferences": {
+    "@/*": ["*"],
+    "@/types": ["*"],
+    "@/types/*": ["*"]
+  }
+}

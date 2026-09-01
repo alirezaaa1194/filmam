@@ -3,12 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AuthModeType } from "@/types";
 import { Controller } from "react-hook-form";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/utilities/components/ui/field/field.index";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
 import { Button } from "@/utilities/components/ui/button/button.index";
 import { useMutation } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
@@ -27,24 +22,7 @@ type SignupOtpFormValues = {
   otp: string;
 };
 
-function SignupOtpForm({
-  setStep,
-  start,
-  reset,
-  timer,
-  email,
-  password,
-  username,
-}: {
-  setStep: (step: "Email" | "Otp") => void;
-  setMode: (mode: AuthModeType) => void;
-  start: () => void;
-  reset: () => void;
-  timer: number;
-  email: string;
-  password: string;
-  username: string;
-}) {
+function SignupOtpForm({ setStep, start, reset, timer, email, password, username }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number; email: string; password: string; username: string }) {
   const { locale, t } = useLocale();
   const form = useForm<SignupOtpFormValues>({
     mode: "onSubmit",
@@ -56,12 +34,7 @@ function SignupOtpForm({
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (value: {
-      email: string;
-      password: string;
-      username: string;
-      otp: string;
-    }) =>
+    mutationFn: (value: { email: string; password: string; username: string; otp: string }) =>
       ClientCall(AppApis.auth.signupVerify, {
         method: "POST",
         body: { ...value, preferred_language: locale },
@@ -72,16 +45,12 @@ function SignupOtpForm({
       toast.success(t("Auth.toasts.otpSent"));
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status));
+      toast.error(t(TranslateServerError(error.status)));
     },
   });
 
   const { mutate: loginMutate, isPending: loginIsPending } = useMutation({
-    mutationFn: (value: {
-      email: string;
-      password: string;
-      username: string;
-    }) =>
+    mutationFn: (value: { email: string; password: string; username: string }) =>
       ClientCall(AppApis.auth.signup, {
         method: "POST",
         body: { ...value, preferred_language: locale },
@@ -92,7 +61,7 @@ function SignupOtpForm({
       toast.success(t("Auth.toasts.otpSent"));
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status));
+      toast.error(t(TranslateServerError(error.status)));
     },
   });
 
@@ -101,42 +70,18 @@ function SignupOtpForm({
   };
 
   return (
-    <form
-      id="otp-form"
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="flex flex-col items-start"
-    >
+    <form id="otp-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start">
       <FieldGroup>
         <Controller
           name="otp"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="w-full">
-              <FieldLabel
-                htmlFor="otp-form-otp"
-                className="text-h-6 max-md:text-mobile-h-6"
-              >
+              <FieldLabel htmlFor="otp-form-otp" className="text-h-6 max-md:text-mobile-h-6">
                 {t("Auth.fields.otp")}
               </FieldLabel>
-              <Input
-                {...field}
-                id="otp-form-otp"
-                aria-invalid={fieldState.invalid}
-                autoFocus
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={5}
-                placeholder={t("Auth.placeholders.otp")}
-                className="text-body-xxs text-center! tracking-[2rem] ps-8"
-                dir="ltr"
-              />
-              {fieldState.invalid && (
-                <FieldError
-                  errors={[fieldState.error]}
-                  className="text-error! text-body-xxs"
-                />
-              )}
+              <Input {...field} id="otp-form-otp" aria-invalid={fieldState.invalid} autoFocus type="text" inputMode="numeric" pattern="[0-9]*" maxLength={5} placeholder={t("Auth.placeholders.otp")} className="text-body-xxs text-center! tracking-[2rem] ps-8" dir="ltr" />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-error! text-body-xxs" />}
             </Field>
           )}
         />
@@ -163,11 +108,7 @@ function SignupOtpForm({
         )}
       </Button>
 
-      <Button
-        type="submit"
-        className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7"
-        disabled={isPending}
-      >
+      <Button type="submit" className="w-full h-12 cursor-pointer mt-4 rounded-md disabled:bg-gray-3 disabled:text-gray-7" disabled={isPending}>
         {isPending ? <Spinner /> : null} {t("Auth.buttons.signup")}
       </Button>
 

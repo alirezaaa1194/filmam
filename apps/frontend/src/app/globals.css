@@ -15,14 +15,14 @@
 
   --max-width-layout-max: 1780px;
 
-  --spacing-layout-x-space: 48px;
+  --spacing-layout-x-space: 96px;
 }
 
 *::selection {
   @apply bg-primary text-white;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   :root {
     --spacing-layout-x-space: 20px;
   }

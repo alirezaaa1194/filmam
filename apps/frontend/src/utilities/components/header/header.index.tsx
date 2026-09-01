@@ -15,10 +15,10 @@ async function Header({ absolute }: { absolute: boolean }) {
 
   return (
     <header
-      className={`w-full max-w-layout-max h-fit lg:py-12 lg:px-24 mx-auto ${absolute ? "absolute inset-0" : ""}`}
+      className={`w-full max-w-layout-max h-fit lg:py-12 lg:px-24 mx-auto ${absolute ? "absolute inset-0 z-10" : ""}`}
     >
       <div
-        className={`w-full h-12 lg:h-14 flex items-center justify-between gap-10 ${!absolute ? "bg-black " : ""} lg:bg-black/70 lg:rounded-lg lg:border lg:border-gray-12 lg:backdrop-blur-lg px-5 py-2 lg:p-3`}
+        className={`w-full h-12 lg:h-14 flex items-center justify-between gap-10 ${!absolute ? "bg-black " : ""} lg:bg-black/30 lg:rounded-lg lg:border lg:border-gray-12 lg:backdrop-blur-[15px] px-5 py-2 lg:p-3`}
       >
         <div className="flex items-center gap-3 lg:gap-20">
           <Sidebar user={user}>

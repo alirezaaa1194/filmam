@@ -74,7 +74,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer, email }: { setSt
       toast.success(t("Auth.toasts.passwordChanged"));
     },
     onError: (error: Response) => {
-      toast.error(TranslateServerError(error.status));
+      toast.error(t(TranslateServerError(error.status)));
     },
   });
 
