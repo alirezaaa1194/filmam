@@ -3,32 +3,30 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import pic1 from "@/assets/images/Image1.png";
 import pic2 from "@/assets/images/Image2.png";
 import pic3 from "@/assets/images/Image3.png";
-import "./hero.style.css";
+import "../hero/hero.style.css";
 import "swiper/css";
 import "swiper/css/effect-fade";
-import "swiper/css/pagination";
 
-import { EffectFade, Pagination, Autoplay } from "swiper/modules";
+import { EffectFade, Autoplay } from "swiper/modules";
 import { Add, ArchiveAdd, Play, VideoPlay } from "iconsax-react";
 import Link from "next/link";
-import HeroSectionContentComp from "./sectionContent/sectionContent.index";
 import { Button } from "../../ui";
+import HeroSectionContentComp from "../hero/sectionContent/sectionContent.index";
+import SectionHeaderComp from "../sectionHeader/sectionHeader.index";
 
-function HeroSectionComp() {
+function HeroLikeSectionComp() {
   return (
-    <section className="min-h-[240px]!">
+    <section className="min-h-[240px]! mt-8 lg:mt-12 relative">
+      <SectionHeaderComp title="تازه های منتشر شده" address="/" absolute />
       <Swiper
         slidesPerView={1}
-        modules={[EffectFade, Pagination, Autoplay]}
+        modules={[EffectFade, Autoplay]}
         effect={"fade"}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
         }}
         loop={true}
-        pagination={{
-          clickable: true,
-        }}
         className="!min-h-[240px] [&_.swiper-wrapper]:!min-h-[240px] [&_.swiper-slide]:!min-h-[240px]"
       >
         <SwiperSlide className="select-none">
@@ -40,10 +38,6 @@ function HeroSectionComp() {
                   مشاهده
                 </Button>
               </Link>
-              <Button className="hidden lg:flex items-center px-4 gap-2 min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-white text-button-s! lg:text-button-xlg! bg-gray-11 hover:bg-gray-11/80">
-                <VideoPlay variant="Outline" className="fill-white size-4 lg:size-6" />
-                مشاهده تریلر
-              </Button>
               <Button variant="outline" className="flex items-center px-0 lg:px-4 gap-2 lg:min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-gray-7 text-button-s! lg:text-button-xlg! border-transparent bg-none lg:border-gray-5! lg:hover:bg-gray-5/10">
                 <Add variant="Outline" className="fill-gray-7 size-4 lg:size-6 hidden lg:block" />
                 <ArchiveAdd variant="Outline" className="fill-white size-6 block lg:hidden" />
@@ -61,10 +55,6 @@ function HeroSectionComp() {
                   مشاهده
                 </Button>
               </Link>
-              <Button className="hidden lg:flex items-center px-4 gap-2 min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-white text-button-s! lg:text-button-xlg! bg-gray-11 hover:bg-gray-11/80">
-                <VideoPlay variant="Outline" className="fill-white size-4 lg:size-6" />
-                مشاهده تریلر
-              </Button>
               <Button variant="outline" className="flex items-center px-0 lg:px-4 gap-2 lg:min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-gray-7 text-button-s! lg:text-button-xlg! border-transparent bg-none lg:border-gray-5! lg:hover:bg-gray-5/10">
                 <Add variant="Outline" className="fill-gray-7 size-4 lg:size-6 hidden lg:block" />
                 <ArchiveAdd variant="Outline" className="fill-white size-6 block lg:hidden" />
@@ -82,10 +72,6 @@ function HeroSectionComp() {
                   مشاهده
                 </Button>
               </Link>
-              <Button className="hidden lg:flex items-center px-4 gap-2 min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-white text-button-s! lg:text-button-xlg! bg-gray-11 hover:bg-gray-11/80">
-                <VideoPlay variant="Outline" className="fill-white size-4 lg:size-6" />
-                مشاهده تریلر
-              </Button>
               <Button variant="outline" className="flex items-center px-0 lg:px-4 gap-2 lg:min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-gray-7 text-button-s! lg:text-button-xlg! border-transparent bg-none lg:border-gray-5! lg:hover:bg-gray-5/10">
                 <Add variant="Outline" className="fill-gray-7 size-4 lg:size-6 hidden lg:block" />
                 <ArchiveAdd variant="Outline" className="fill-white size-6 block lg:hidden" />
@@ -99,4 +85,4 @@ function HeroSectionComp() {
   );
 }
 
-export default HeroSectionComp;
+export default HeroLikeSectionComp;

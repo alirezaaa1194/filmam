@@ -21,7 +21,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { MovieService } from './movie.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { MovieFilterInput } from './entity/movie.entity';
 import { Public } from '../common/decorators/public.decorator';
 import { CountResponseDto } from '../common/dto/response.dto';
 import {
@@ -30,6 +29,7 @@ import {
   MovieRecommendedResponseDto,
   PaginatedMoviesDto,
 } from './dto/movie.response.dto';
+import { MovieFilterInput } from './type/movie.type';
 
 @Controller('movie')
 export class MovieController {

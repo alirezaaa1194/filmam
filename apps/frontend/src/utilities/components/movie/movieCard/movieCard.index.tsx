@@ -4,7 +4,7 @@ import Image from "next/image";
 
 function MovieCardComp() {
   return (
-    <div className="relative rounded-md lg:rounded-xl overflow-hidden select-none h-[300px] xl:h-[370px]">
+    <div className="relative rounded-xl overflow-hidden select-none h-[300px] xl:h-[370px]">
       <span className="absolute top-[6px] start-[6px] text-white text-caption-sm lg:text-caption-md px-2 bg-black/30 backdrop-blur-[5px] rounded-md">سریال</span>
       <Image draggable={false} src={pic4} alt="test" className="w-full h-full object-cover" />
       <div className="absolute bottom-0 left-0 w-full bg-black/30 backdrop-blur-[10px] flex items-center justify-center xl:justify-between p-3">

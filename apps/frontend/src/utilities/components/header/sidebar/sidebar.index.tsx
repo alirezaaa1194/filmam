@@ -23,7 +23,7 @@ function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }
         <SheetTrigger className="cursor-pointer">
           <HambergerMenu className="size-5 stroke-white" />
         </SheetTrigger>
-        <SheetContent side={side} className="bg-gray-13 !border-0 !max-w-[256px] gap-0 px-6" showCloseButton={false}>
+        <SheetContent side={side} className="bg-gray-13 !border-0 !max-w-[256px] gap-0 px-6 overflow-y-auto pb-4 scrollbar-none" showCloseButton={false}>
           <SheetHeader className="pt-4 pb-6 px-[30px]">
             <Link href="/" className="flex items-center gap-1">
               <Image src="/logo.svg" alt="filmam" width={32} height={32} className="size-6 lg:size-8" />

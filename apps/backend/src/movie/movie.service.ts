@@ -18,7 +18,6 @@ import {
   normalizeMovieDetail,
   paginationCalculator,
 } from '../lib/utils';
-import { MovieFilterInput } from './entity/movie.entity';
 import { SortType, SortByType } from '../common/enums';
 import { MovieCountryService } from '../movie-country/movie-country.service';
 import { MovieLanguageService } from '../movie-language/movie-language.service';
@@ -27,6 +26,7 @@ import { prisma } from '../lib/prisma';
 import { SectionService } from '../section/section.service';
 import { TransactionType } from '../common/types/types';
 import { TfIdf } from '../lib/tfidf';
+import { MovieFilterInput } from './type/movie.type';
 
 @Injectable()
 export class MovieService {

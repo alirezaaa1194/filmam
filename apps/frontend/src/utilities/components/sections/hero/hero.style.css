@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import '../../../../app/globals.css';
 
 .swiper-pagination {
   @apply w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! bottom-2! lg:bottom-[52px]!;
