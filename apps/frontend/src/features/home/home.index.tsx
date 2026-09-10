@@ -4,6 +4,7 @@ import RecentWatchSectionComp from "../../utilities/components/sections/recentWa
 import NormalSliderSectionComp from "../../utilities/components/sections/normal/normal.index";
 import HeroLikeSectionComp from "../../utilities/components/sections/heroLike/heroLike.index";
 import KidsSectionComp from "../../utilities/components/sections/kids/kids.index";
+import PuzzleSectionComp from "../../utilities/components/sections/puzzle/puzzle.index";
 
 function HomePageComp() {
   return (
@@ -13,6 +14,7 @@ function HomePageComp() {
       <NormalSliderSectionComp />
       <HeroLikeSectionComp />
       <KidsSectionComp />
+      <PuzzleSectionComp />
     </main>
   );
 }

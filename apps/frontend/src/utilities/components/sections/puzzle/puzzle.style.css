@@ -1,0 +1,15 @@
+@import "../../../../app/globals.css";
+
+.puzzle-section .swiper-pagination {
+  @apply flex items-center w-fit! start-auto! end-auto! inset-e-3! bottom-5!;
+}
+
+.puzzle-section .swiper-pagination-bullet {
+  @apply size-2! lg:size-4! mx-1! first:ms-0! last:me-0! transition-all!;
+  background-color: var(--color-gray-11) !important;
+  opacity: 100% !important;
+}
+
+.puzzle-section .swiper-pagination-bullet-active {
+  background-color: var(--color-primary) !important;
+}

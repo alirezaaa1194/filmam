@@ -13,11 +13,15 @@ import { Add, ArchiveAdd, Play, VideoPlay } from "iconsax-react";
 import Link from "next/link";
 import HeroSectionContentComp from "./sectionContent/sectionContent.index";
 import { Button } from "../../ui";
+import { useLocale } from "../../../../hooks";
 
 function HeroSectionComp() {
+  const { dir } = useLocale();
+
   return (
-    <section className="min-h-[240px]!">
+    <section className="hero-section min-h-[240px]!">
       <Swiper
+        key={dir}
         slidesPerView={1}
         modules={[EffectFade, Pagination, Autoplay]}
         effect={"fade"}

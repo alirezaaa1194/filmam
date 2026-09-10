@@ -1,15 +1,15 @@
 @import '../../../../app/globals.css';
 
-.hero-section .swiper-pagination {
-  @apply w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! bottom-2! lg:bottom-[52px]!;
+.kids-section .swiper-pagination {
+  @apply flex items-center w-fit! start-0! end-0! mx-auto! -bottom-10! lg:-bottom-12!;
 }
 
-.hero-section .swiper-pagination-bullet {
+.kids-section .swiper-pagination-bullet {
   @apply size-2! lg:size-4! mx-1! first:ms-0! last:me-0! transition-all!;
   background-color: var(--color-gray-11) !important;
   opacity: 100% !important;
 }
 
-.hero-section .swiper-pagination-bullet-active {
+.kids-section .swiper-pagination-bullet-active {
   background-color: var(--color-primary) !important;
 }

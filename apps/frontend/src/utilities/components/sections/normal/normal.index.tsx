@@ -5,11 +5,13 @@ import "swiper/css";
 import { useEffect, useState } from "react";
 import MovieCardComp from "../../movie/movieCard/movieCard.index";
 import { FreeMode } from "swiper/modules";
+import { useLocale } from "@/hooks";
 
 function NormalSliderSectionComp() {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { dir } = useLocale();
 
   useEffect(() => {
     setMounted(true);
@@ -22,15 +24,16 @@ function NormalSliderSectionComp() {
   return (
     <section className="flex flex-col gap-4 lg:gap-6 mt-8 lg:mt-12 max-w-layout-max mx-auto">
       <SectionHeaderComp title="تازه های منتشر شده" address="/" />
-      <div className="ps-layout-x-space relative">
+      <div className="relative">
         <div className={`absolute top-0 left-0 w-10 lg:w-28 z-10 h-full bg-[linear-gradient(-90deg,rgba(12,12,12,0)_0%,rgba(12,12,12,0.72)_50%,rgba(12,12,12,1)_100%)] transition-all ${isEnd ? "opacity-0 invisible" : ""}`}></div>
-        <div className={`absolute top-0 right-layout-x-space w-10 lg:w-28 z-10 h-full bg-[linear-gradient(90deg,rgba(12,12,12,0)_0%,rgba(12,12,12,0.72)_50%,rgba(12,12,12,1)_100%)] transition-all ${isBeginning ? "opacity-0 invisible" : ""}`}></div>
+        <div className={`absolute top-0 right-0 w-10 lg:w-28 z-10 h-full bg-[linear-gradient(90deg,rgba(12,12,12,0)_0%,rgba(12,12,12,0.72)_50%,rgba(12,12,12,1)_100%)] transition-all ${isBeginning ? "opacity-0 invisible" : ""}`}></div>
         <Swiper
+          key={dir}
           freeMode={true}
           modules={[FreeMode]}
           observer={true}
           observeParents={true}
-          className={`w-full rounded-md lg:rounded-xl pe-layout-x-space! transition-opacity duration-300 ${mounted ? "opacity-100" : "opacity-0"}`}
+          className={`w-full px-layout-x-space! transition-opacity duration-300 ${mounted ? "opacity-100" : "opacity-0"}`}
           breakpoints={{
             0: {
               slidesPerView: 1.82,

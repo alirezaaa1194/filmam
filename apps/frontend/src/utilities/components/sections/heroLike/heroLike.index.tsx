@@ -8,17 +8,21 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 
 import { EffectFade, Autoplay } from "swiper/modules";
-import { Add, ArchiveAdd, Play, VideoPlay } from "iconsax-react";
+import { Add, ArchiveAdd, Play } from "iconsax-react";
 import Link from "next/link";
 import { Button } from "../../ui";
 import HeroSectionContentComp from "../hero/sectionContent/sectionContent.index";
 import SectionHeaderComp from "../sectionHeader/sectionHeader.index";
+import { useLocale } from "../../../../hooks";
 
 function HeroLikeSectionComp() {
+  const { dir } = useLocale();
+
   return (
     <section className="min-h-[240px]! mt-8 lg:mt-12 relative">
       <SectionHeaderComp title="تازه های منتشر شده" address="/" absolute />
       <Swiper
+        key={dir}
         slidesPerView={1}
         modules={[EffectFade, Autoplay]}
         effect={"fade"}
