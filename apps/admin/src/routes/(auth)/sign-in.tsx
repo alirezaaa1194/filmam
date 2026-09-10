@@ -19,7 +19,7 @@ export const Route = createFileRoute('/(auth)/sign-in')({
     })
 
     if (user?.role === UserRoleEnum.ADMIN) {
-      throw redirect({ to: '/' })
+      return redirect({ to: '/' })
     }
   } catch (err) {
     if (err instanceof Response) {
