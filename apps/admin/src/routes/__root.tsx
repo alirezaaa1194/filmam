@@ -2,7 +2,6 @@ import { type QueryClient } from '@tanstack/react-query'
 import {
   Outlet,
   createRootRouteWithContext,
-  redirect,
 } from '@tanstack/react-router'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
@@ -15,11 +14,6 @@ import {
 import { GeneralError } from '@/filmam/errors/generalError/generalError.index'
 import { NotFoundError } from '@/filmam/errors/notFoundError/notFoundError.index'
 import { __AppApis } from '../data/api'
-import { Api, SetCookie } from '../scripts'
-import { UserRoleEnum, type UserType } from '../types'
-import { useUserStore } from '../stores'
-import { changeLanguage } from 'i18next'
-import { languageDirectionMap } from '@/utilities/config/direction'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
