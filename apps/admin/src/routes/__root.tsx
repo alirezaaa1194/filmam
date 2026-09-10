@@ -39,41 +39,41 @@ export const Route = createRootRouteWithContext<{
       </>
     )
   },
-  beforeLoad: async ({ location }) => {
-    const publicPaths = ['/sign-in', '/forgot-password']
-    const isPublicPath = publicPaths.includes(location.pathname)
+  // beforeLoad: async ({ location }) => {
+  //   const publicPaths = ['/sign-in', '/forgot-password']
+  //   const isPublicPath = publicPaths.includes(location.pathname)
 
-    if (isPublicPath) {
-      return
-    }
+  //   if (isPublicPath) {
+  //     return
+  //   }
 
-    try {
-      const user = await Api<UserType>(__AppApis.auth.me, { method: 'GET' })
+  //   try {
+  //     const user = await Api<UserType>(__AppApis.auth.me, { method: 'GET' })
 
-      if (user.role !== UserRoleEnum.ADMIN) {
-        throw redirect({ to: '/sign-in' })
-      }
+  //     if (user.role !== UserRoleEnum.ADMIN) {
+  //       throw redirect({ to: '/sign-in' })
+  //     }
 
-      useUserStore.getState().setUser(user)
-      changeLanguage(user.preferred_language)
+  //     useUserStore.getState().setUser(user)
+  //     changeLanguage(user.preferred_language)
 
-      const dir = languageDirectionMap[user.preferred_language]
-      if (dir) {
-        SetCookie('dir', dir, 60 * 60 * 24 * 365)
-        document.documentElement.setAttribute('dir', dir)
-      }
+  //     const dir = languageDirectionMap[user.preferred_language]
+  //     if (dir) {
+  //       SetCookie('dir', dir, 60 * 60 * 24 * 365)
+  //       document.documentElement.setAttribute('dir', dir)
+  //     }
 
-      return { user }
-    } catch (err) {
-      if (err instanceof Response) {
-        if ([401, 403, 404].includes(err.status)) {
-          throw redirect({ to: '/sign-in' })
-        }
-      }
+  //     return { user }
+  //   } catch (err) {
+  //     if (err instanceof Response) {
+  //       if ([401, 403, 404].includes(err.status)) {
+  //         throw redirect({ to: '/sign-in' })
+  //       }
+  //     }
 
-      throw err
-    }
-  },
+  //     throw err
+  //   }
+  // },
   notFoundComponent: NotFoundError,
   errorComponent: GeneralError,
   pendingComponent: LoadingScreen,

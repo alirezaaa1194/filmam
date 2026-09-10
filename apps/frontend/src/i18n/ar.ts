@@ -3,6 +3,7 @@ import { EN } from "./en";
 export const AR: typeof EN = {
   Common: {
     language: "اللغة",
+    viewAll: "عرض الكل",
   },
   Layout: {
     title: "فيلمام",

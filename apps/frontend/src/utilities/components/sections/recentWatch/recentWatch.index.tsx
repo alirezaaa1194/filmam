@@ -24,7 +24,7 @@ function RecentWatchSectionComp() {
   };
 
   return (
-    <section className="flex flex-col gap-2 lg:gap-6 mt-4 lg:mt-6 max-w-layout-max mx-auto">
+    <section className="flex flex-col gap-4 lg:gap-6 mt-4 lg:mt-6 max-w-layout-max mx-auto">
       <SectionHeaderComp title="ادامه تماشا" address="/" />
       <div className="relative">
         <div className={`absolute top-0 left-0 w-10 lg:w-28 z-10 h-full bg-[linear-gradient(-90deg,rgba(12,12,12,0)_0%,rgba(12,12,12,0.72)_50%,rgba(12,12,12,1)_100%)] transition-all ${isEnd ? "opacity-0 invisible" : ""}`}></div>

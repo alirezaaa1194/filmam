@@ -1,6 +1,7 @@
 export const EN = {
   Common: {
     language: "Language",
+    viewAll: "View all",
   },
   Layout: {
     title: "Filmam",

@@ -3,6 +3,7 @@ import { EN } from "./en";
 export const FA: typeof EN = {
   Common: {
     language: "زبان",
+    viewAll: "مشاهده همه",
   },
   Layout: {
     title: "فیلمام",
@@ -81,7 +82,7 @@ export const FA: typeof EN = {
   confirm: {
     logout: {
       title: "خروج",
-      description: "آیا میخواهید از حساب خود خارج شود؟",
+      description: "آیا میخواهید از حساب خود خارج شوید؟",
       submitTitle: "بله",
       cancelTitle: "خیر",
     },

@@ -44,7 +44,7 @@ function PuzzleSectionComp() {
             </SwiperSlide>
           </Swiper>
         </div>
-        <div className="w-full h-full xl:max-w-[535px] grid grid-cols-2 gap-y-6 gap-x-3">
+        <div className="w-full h-full xl:max-w-[535px] grid grid-cols-2 gap-y-3 lg:gap-y-6 gap-x-3">
           <PuzzleMovieItemComp />
           <PuzzleMovieItemComp />
           <PuzzleMovieItemComp />

@@ -11,7 +11,7 @@ import { useLocale } from "../../../../hooks";
 
 function KidsSectionComp() {
   const [mounted, setMounted] = useState(false);
-  const { dir } = useLocale();
+  const { dir, t } = useLocale();
 
   useEffect(() => {
     setMounted(true);
@@ -124,7 +124,7 @@ function KidsSectionComp() {
         <p className="hidden lg:block text-white text-body-xs truncate">پلتفرم فیلمام با فراهم ‌کردن فضای امن برای کودکان، به آن‌ها امکان می‌دهد تا بدون هیچ نگرانی از محتوای نامناسب، بهترین انیمیشن‌ها را ببینند و از آنها لذت ببرند.</p>
         <Link href="/" className="w-full lg:w-fit">
           <Button className="flex items-center gap-2 whitespace-nowrap transition-all text-caption-md lg:text-body-xxs cursor-pointer rounded-md px-4 h-8 text-button-s w-full lg:w-fit">
-            مشاهده همه <ArrowLeft variant="Outline" className={`fill-white size-5 transition-all ${dir === "ltr" ? "rotate-180" : ""}`} />
+            {t("Common.viewAll")} <ArrowLeft variant="Outline" className={`fill-white size-5 transition-all ${dir === "ltr" ? "rotate-180" : ""}`} />
           </Button>
         </Link>
       </div>
