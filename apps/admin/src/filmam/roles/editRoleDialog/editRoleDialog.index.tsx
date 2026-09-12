@@ -110,7 +110,7 @@ function RoleEditForm({
       .string()
       .min(1, t('roles.slug_required'))
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t('roles.slug_invalid')),
-    type: z.enum(['CREATOR', 'ACTOR']),
+    type: z.enum(['CREATOR', 'ACTOR', 'DIRECTOR', 'PRESENTER']),
     translations: z.array(
       z.object({
         lang: z.enum(AppLanguagesEnum),
