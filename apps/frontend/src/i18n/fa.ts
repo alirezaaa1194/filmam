@@ -28,6 +28,16 @@ export const FA: typeof EN = {
     copyright: "خدمات ارائه شده در فیلمام، داراى مجوزهاى لازم از مراجع مربوطه است وهر گونه بهره بردارى و سوء استفاده از محتواى فیلمام، پيگرد قانونى دارد.",
     startYear: "۱۳۹۷",
   },
+  RecentWatch: {
+    series: "سریال",
+    season: "فصل",
+    episode: "قسمت",
+  },
+  Hero: {
+    watch: "مشاهده",
+    watchTrailer: "مشاهده تریلر",
+    addToWishlist: "اضافه به لیست علاقه مندی",
+  },
   Auth: {
     title: {
       login: "ورود",

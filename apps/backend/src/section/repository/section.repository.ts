@@ -52,10 +52,29 @@ export class SectionRepository {
                 language: lang,
               },
             },
+            genres: {
+              include: {
+                genre: {
+                  include: {
+                    translations: {
+                      where: {
+                        language: lang,
+                      },
+                    },
+                  },
+                },
+              },
+            },
             files: {
               select: {
                 upload: true,
                 type: true,
+              },
+            },
+            _count: {
+              select: {
+                seasons: true,
+                episodes: true,
               },
             },
           },
@@ -175,7 +194,7 @@ export class SectionRepository {
         },
       },
       orderBy: {
-        order: sort === 'ASC' ? 'asc' : 'desc',
+        order: sort === 'ASC' ? 'asc' : 'asc',
       },
     });
   }

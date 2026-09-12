@@ -344,6 +344,9 @@ export class SectionService {
             if (sectionMovie.entity_type === CommentEntityType.MOVIE) {
               return normalizeMovieDetail({
                 ...sectionMovie.movie,
+                view_mode: sectionMovie.view_mode,
+                season_count: sectionMovie.movie._count.seasons,
+                episode_count: sectionMovie.movie._count.episodes,
                 entity_type: sectionMovie.entity_type,
               });
             } else if (
@@ -589,13 +592,14 @@ export class SectionService {
                     ...(sectionAgeLimit.length > 1
                       ? {
                           age_limit: {
-                            gte: +sectionAgeLimit[0],
-                            lt: +sectionAgeLimit[sectionAgeLimit.length - 1],
+                            gte: +sectionAgeLimit[0].filter_value,
+                            lt: +sectionAgeLimit[sectionAgeLimit.length - 1]
+                              .filter_value,
                           },
                         }
                       : {
                           age_limit: {
-                            lte: +sectionAgeLimit[0],
+                            lte: +sectionAgeLimit[0].filter_value,
                           },
                         }),
                   }
@@ -817,7 +821,8 @@ export class SectionService {
     };
   }
 
-  async getSectionDetailAdmin(sectionId: number, lang?: AppLanguage) {    const section = await this.sectionRepository.getSectionDetailAdmin(
+  async getSectionDetailAdmin(sectionId: number, lang?: AppLanguage) {
+    const section = await this.sectionRepository.getSectionDetailAdmin(
       sectionId,
       lang || defaultLang,
     );

@@ -1,20 +1,19 @@
-"use client";
-import HeroSectionComp from "@/utilities/components/sections/hero/hero.index";
-import RecentWatchSectionComp from "../../utilities/components/sections/recentWatch/recentWatch.index";
-import NormalSliderSectionComp from "../../utilities/components/sections/normal/normal.index";
-import HeroLikeSectionComp from "../../utilities/components/sections/heroLike/heroLike.index";
-import KidsSectionComp from "../../utilities/components/sections/kids/kids.index";
-import PuzzleSectionComp from "../../utilities/components/sections/puzzle/puzzle.index";
+import { dehydrate, HydrationBoundary, noop } from "@tanstack/react-query";
+import { getQueryClient } from "../../lib/getQueryClient";
+import { GetLocale, ServerCall } from "../../scripts/server";
+import HomeSectionsComp from "./sections/sections.index";
+import { sectionsInfiniteOptions } from "./home.script";
 
-function HomePageComp() {
+async function HomePageComp() {
+  const locale = await GetLocale();
+  const queryClient = getQueryClient();
+  await queryClient.infiniteQuery(sectionsInfiniteOptions(locale, ServerCall)).catch(noop);
+
   return (
     <main className="pb-10">
-      <HeroSectionComp />
-      <RecentWatchSectionComp />
-      <NormalSliderSectionComp />
-      <HeroLikeSectionComp />
-      <KidsSectionComp />
-      <PuzzleSectionComp />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <HomeSectionsComp />
+      </HydrationBoundary>
     </main>
   );
 }

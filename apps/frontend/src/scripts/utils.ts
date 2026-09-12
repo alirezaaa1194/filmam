@@ -9,12 +9,17 @@ export function __HashEmail(email: string) {
   return bytesToHex(sha256(new TextEncoder().encode(normalized)));
 }
 
-export function __TimerParser(timer: number) {
-  const timerMinute = Math.floor(timer / 60);
-  const timerSecond = timer % 60;
-  return `${timerMinute.toString().padStart(2, "0")}:${timerSecond.toString().padStart(2, "0")}`;
-}
+export function __TimerParser(timer: number, showHours = false) {
+  const hours = Math.floor(timer / 3600);
+  const minutes = Math.floor((timer % 3600) / 60);
+  const seconds = timer % 60;
 
+  if (showHours) {
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+  }
+
+  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
 export function __BuildApiUrl(url: string, locale: AppLanguagesEnum, query?: Record<string, unknown> | ApiQueryType): string {
   const searchParams = new URLSearchParams({ lang: locale });
   if (query) {

@@ -19,7 +19,7 @@ function HeroSectionContentComp({ title, description, options, imageUrl, childre
         </div>
         {children}
       </div>
-      <Image src={imageUrl} alt={title} className="w-full min-h-[240px] h-full object-cover" />
+      <Image src={imageUrl} alt={title} className="w-full h-[240px] xl:h-screen! object-cover object-top bg-gray-11" width={800} height={240} />
     </>
   );
 }

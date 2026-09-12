@@ -724,6 +724,8 @@ enum SourceType {
 enum RoleType {
   CREATOR
   ACTOR
+  DIRECTOR
+  PRESENTER
 }
 
 enum SectionSelectionMode {

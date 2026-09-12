@@ -36,7 +36,15 @@ export const callTypes = new Map<string, string>([
   ],
   [
     'ACTOR',
-    'bg-neutral-200/60 text-neutral-800 border-neutral-300 dark:bg-neutral-800/60 dark:text-neutral-300 dark:border-neutral-600',
+    'bg-rose-100/60 text-rose-900 border-rose-300 dark:bg-rose-500/20 dark:text-rose-200 dark:border-rose-500',
+  ],
+  [
+    'DIRECTOR',
+    'bg-amber-100/60 text-amber-900 border-amber-300 dark:bg-amber-500/20 dark:text-amber-200 dark:border-amber-500',
+  ],
+  [
+    'PRESENTER',
+    'bg-sky-100/60 text-sky-900 border-sky-300 dark:bg-sky-500/20 dark:text-sky-200 dark:border-sky-500',
   ],
 ])
 

@@ -1,6 +1,14 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { UserMovieRepository } from './repository/user-movie.repository';
-import { CommentEntityType, UserMovieType, UserRole } from '../generated/prisma';
+import {
+  CommentEntityType,
+  UserMovieType,
+  UserRole,
+} from '../generated/prisma';
 import { GetAllUserMovieDto } from '../user/dto/user.dto';
 import {
   defaultLang,
@@ -404,7 +412,7 @@ export class UserMovieService {
       let normalizedEpisode: {} | null = null;
 
       if (episode) {
-        const { translations, files, ...otherEpisodeData } = episode;
+        const { translations, files, season, ...otherEpisodeData } = episode;
 
         const episodeFiles = files.map((file) => {
           return {
@@ -419,6 +427,7 @@ export class UserMovieService {
         const episodesTranslation = translations[0];
         normalizedEpisode = {
           ...otherEpisodeData,
+          season_order:season.order,
           title: episodesTranslation.title,
           files: episodeFiles,
         };
@@ -504,7 +513,10 @@ export class UserMovieService {
   }
 
   async getUserMoviesByMovieAndType(movieId: number, type: UserMovieType) {
-    return await this.userMovieRepository.findUserMoviesByMovieAndType(movieId, type);
+    return await this.userMovieRepository.findUserMoviesByMovieAndType(
+      movieId,
+      type,
+    );
   }
 
   async getUserWatchEpisodes(userId: number) {

@@ -28,6 +28,16 @@ export const AR: typeof EN = {
     copyright: "الخدمات المقدمة في فيلمام تمتلك التراخيص اللازمة من الجهات المختصة، وأي استغلال أو سوء استخدام لمحتوى فيلمام يعرض للمتابعة القانونية.",
     startYear: "2018",
   },
+  RecentWatch: {
+    series: "مسلسل",
+    season: "موسم",
+    episode: "حلقة",
+  },
+  Hero: {
+    watch: "شاهد",
+    watchTrailer: "شاهد المقطع الدعائي",
+    addToWishlist: "إضافة إلى المفضلة",
+  },
   Auth: {
     title: {
       login: "تسجيل الدخول",

@@ -1,4 +1,8 @@
-import { AppLanguage, CommentEntityType, UserMovieType } from '../../generated/prisma';
+import {
+  AppLanguage,
+  CommentEntityType,
+  UserMovieType,
+} from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { UpdateUserMoviesDto } from '../dto/user-movie.dto';
 import { GetUserMovieByTypeBodyType } from '../type/user-movie.type';
@@ -147,6 +151,7 @@ export class UserMovieRepository {
                 language: lang,
               },
             },
+            season: true,
             files: {
               select: {
                 upload: true,
@@ -272,7 +277,12 @@ export class UserMovieRepository {
     });
   }
 
-  async groupTopMovies(types: UserMovieType[], start: Date, end: Date, take: number) {
+  async groupTopMovies(
+    types: UserMovieType[],
+    start: Date,
+    end: Date,
+    take: number,
+  ) {
     return prisma.userMovie.groupBy({
       by: ['movie_id'],
       where: {

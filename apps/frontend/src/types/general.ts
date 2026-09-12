@@ -15,84 +15,6 @@ export type __JWTTokenType = {
   refreshTokenExpiresIn: number;
 };
 
-export type __MessageType = {
-  message: string;
-};
-
-export type __CardsDataType = {
-  total_views: number;
-  view_growth_rate: number;
-  total_users: number;
-  users_growth_rate: number;
-  total_content: number;
-  total_series: number;
-  total_cinematic: number;
-  movies_growth_rate: number;
-  total_watch_times: number;
-  watch_progress_growth: number;
-};
-
-export type __MonthlyWatchDataType = {
-  month: number;
-  total: number;
-};
-
-export type __RecentUserType = {
-  id: number;
-  created_at: string;
-  block_expires_at?: string | null;
-  email: string;
-  username: string;
-  role: string;
-};
-
-export type __OverviewStatsType = {
-  cards_data: __CardsDataType;
-  current_year_watch_data: __MonthlyWatchDataType[];
-  recent_users: __RecentUserType[];
-};
-
-export type __AnalyticsCardsDataType = {
-  total_plays: number;
-  total_plays_growth: number;
-  unique_viewers: number;
-  unique_viewers_growth: number;
-  completion_rate: number;
-  completion_rate_growth: number;
-  avg_watch_time: number;
-  avg_watch_time_growth: number;
-};
-
-export type __WeeklyChartDataType = {
-  day: number;
-  total_plays: number;
-  unique_viewers: number;
-};
-
-export type __TopMovieType = {
-  id: number;
-  title: string;
-  plays_count: number;
-};
-
-export type __TopGenreType = {
-  id: number;
-  name: string;
-  plays_count: number;
-};
-
-export type __AnalyticsStatsType = {
-  cards_data: __AnalyticsCardsDataType;
-  current_week_chart_data: __WeeklyChartDataType[];
-  top_movies: __TopMovieType[];
-  top_genres: __TopGenreType[];
-};
-
-export type __SummaryStatsType = {
-  comments: number;
-  contacts: number;
-};
-
 export type __CommentUserType = {
   id: number;
   username: string;
@@ -292,9 +214,7 @@ export type __EpisodeListItemType = {
   dislikes_count: number;
   watches_count: number;
   title: string;
-  movie_title: string;
-  season_title: string;
-  movie_season_count: number;
+  season_order: number;
   files: __EpisodeFileType[];
 };
 
@@ -503,7 +423,7 @@ export type __MovieFileType = {
   width?: string;
   height?: string;
   duration?: string;
-  type: string;
+  type: __FileTypeEnum;
   intro_start_time?: number;
   intro_duration?: number;
   outro_duration?: number;
@@ -517,6 +437,13 @@ export type __MovieRoleType = {
   type: string;
   name: string;
 };
+
+export enum __RoleTypeEnum {
+  CREATOR = "CREATOR",
+  ACTOR = "ACTOR",
+  DIRECTOR = "DIRECTOR",
+  PRESENTER = "PRESENTER",
+}
 
 export type __MovieFactorType = {
   id: number;
@@ -698,7 +625,7 @@ export type __MovieListItemType = {
   id: number;
   created_at: string;
   updated_at: string;
-  type: string;
+  type: __MovieTypeEnum;
   slug: string;
   age_limit?: number;
   released_year: number;
@@ -713,7 +640,13 @@ export type __MovieListItemType = {
   factors?: __MovieFactorType[];
   genres?: __MovieGenreType[];
   files: __MovieFileType[];
+  view_mode?: __PuzzleSectionMovieViewModeEnum;
 };
+
+export enum __PuzzleSectionMovieViewModeEnum {
+  PUZZLE = "PUZZLE",
+  SLIDER_ITEM = "SLIDER_ITEM",
+}
 
 export type __PushSubscriptionType = {
   id: number;
@@ -856,20 +789,32 @@ export type __SectionTranslationType = {
   language: string;
 };
 
-export type __SectionType = {
+type __SectionBaseType = {
   id: number;
   created_at: string;
   updated_at: string;
   slug: string;
   order: number;
-  view_mode: string;
-  selection_mode: string;
-  sort_mode?: string;
-  period_base?: string;
-  translations: __SectionTranslationType[];
+  view_mode: __SectionViewModeEnum;
+  sort_mode?: __SectionSortModeEnum;
+  period_base?: __SectionPeriodBaseEnum;
+  title: string;
+  description: string;
   section_filters: __SectionFilterType[];
+  filter: string;
+};
+
+type __NormalSectionType = __SectionBaseType & {
+  selection_mode: Exclude<__SectionSelectionModeEnum, "USER_MOVIE">;
   movies: __MovieListItemType[];
 };
+
+type __UserMovieSectionType = __SectionBaseType & {
+  selection_mode: "USER_MOVIE";
+  movies: __SectionUserMovieListItemType[];
+};
+
+export type __SectionType = __NormalSectionType | __UserMovieSectionType;
 
 export type __SectionDetailType = {
   id: number;
@@ -886,23 +831,18 @@ export type __SectionDetailType = {
   section_movies: __MovieListItemType[];
 };
 
-export type __SectionMovieListItemType = {
+export type __SectionUserMovieListItemType = {
   id: number;
   created_at: string;
   updated_at: string;
-  type: string;
-  slug: string;
-  age_limit?: number;
-  released_year: number;
-  likes_count: number;
-  dislikes_count: number;
-  watches_count: number;
-  title: string;
-  short_description: string;
-  seasons_count?: number;
-  episodes_count?: number;
-  files: __MovieFileType[];
+  type: __UserMovieTypeEnum;
+  progress_time: number;
+  entity_type: __SectionUserMovieTypeEnum;
+  movie: __MovieListItemType;
+  episode: __EpisodeListItemType;
 };
+
+export type __SectionMovieListItemType = __MovieListItemType | __SectionUserMovieListItemType;
 
 export type __SectionListItemType = {
   id: number;
@@ -1183,4 +1123,61 @@ export enum __AuthModeEnum {
   LOGIN = "Login",
   SIGNUP = "Signup",
   FORGET_PASSWORD = "ForgetPassword",
+}
+
+export enum __SectionViewModeEnum {
+  HERO = "HERO",
+  NORMAL_SLIDER = "NORMAL_SLIDER",
+  KIDS_SLIDER = "KIDS_SLIDER",
+  HERO_LIKE_SLIDER = "HERO_LIKE_SLIDER",
+  PUZZLE = "PUZZLE",
+  ADVERTISEMENT = "ADVERTISEMENT",
+}
+
+export enum __SectionSelectionModeEnum {
+  AUTO = "AUTO",
+  USER_MOVIE = "USER_MOVIE",
+  SUGGESTION = "SUGGESTION",
+  MANUAL = "MANUAL",
+}
+
+export enum __SectionSortModeEnum {
+  NEWEST = "NEWEST",
+  OLDEST = "OLDEST",
+  MOST_VIEWED = "MOST_VIEWED",
+  TOP_RATED = "TOP_RATED",
+  TRENDING = "TRENDING",
+  RANDOM = "RANDOM",
+}
+
+export enum __SectionPeriodBaseEnum {
+  A_DAY_AGO = "A_DAY_AGO",
+  A_WEEK_AGO = "A_WEEK_AGO",
+  A_MONTH_AGO = "A_MONTH_AGO",
+}
+
+export enum __SectionUserMovieTypeEnum {
+  EPISODE = "EPISODE",
+  MOVIE = "MOVIE",
+}
+
+export enum __UserMovieTypeEnum {
+  BOOKMARK = "BOOKMARK",
+  NOTIFICATION = "NOTIFICATION",
+  LIKE = "LIKE",
+  DISLIKE = "DISLIKE",
+  WATCHING = "WATCHING",
+  WATCHED = "WATCHED",
+}
+
+export enum __FileTypeEnum {
+  POSTER = "POSTER",
+  THUMBNAIL = "THUMBNAIL",
+  BANNER = "BANNER",
+  FILM = "FILM",
+}
+
+export enum __MovieTypeEnum {
+  SERIES = "SERIES",
+  CINEMATIC = "CINEMATIC",
 }

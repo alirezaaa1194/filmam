@@ -44,7 +44,7 @@ export async function GetTranslation() {
   return { t };
 }
 
-export async function GetLocale(user: UserType | null): Promise<AppLanguagesEnum> {
+export async function GetLocale(user?: UserType | null): Promise<AppLanguagesEnum> {
   let locale = null;
 
   if (user) {

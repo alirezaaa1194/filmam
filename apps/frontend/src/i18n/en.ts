@@ -26,6 +26,16 @@ export const EN = {
     copyright: "Services provided in Filmam have the necessary licenses from the relevant authorities, and any exploitation or misuse of Filmam's content will be legally prosecuted.",
     startYear: "2018",
   },
+  RecentWatch: {
+    series: "Series",
+    season: "Season",
+    episode: "Episode",
+  },
+  Hero: {
+    watch: "Watch",
+    watchTrailer: "Watch trailer",
+    addToWishlist: "Add to wishlist",
+  },
   Auth: {
     title: {
       login: "Login",

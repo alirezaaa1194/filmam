@@ -1,138 +1,12 @@
 import type { __AuthUser, __UserState } from "./auth";
-import type {
-  __PaginationType,
-  __JWTTokenType,
-  __MessageType,
-  __ApiErrorItemType,
-  __ApiErrorType,
-  __CardsDataType,
-  __MonthlyWatchDataType,
-  __RecentUserType,
-  __OverviewStatsType,
-  __AnalyticsCardsDataType,
-  __WeeklyChartDataType,
-  __TopMovieType,
-  __TopGenreType,
-  __AnalyticsStatsType,
-  __SummaryStatsType,
-  __CommentUserType,
-  __CommentType,
-  __AllCommentsType,
-  __EntityCommentType,
-  __ContactType,
-  __CountryTranslationType,
-  __CountryType,
-  __CountryListType,
-  __CreateCountryType,
-  __EpisodeFileType,
-  __EpisodeTranslationType,
-  __EpisodeDetailAdminType,
-  __EpisodeDetailSeasonType,
-  __EpisodeDetailNextEpisodeType,
-  __MovieDetailPublicType,
-  __EpisodeDetailPublicType,
-  __EpisodeListItemType,
-  __FactorTranslationType,
-  __FactorUploadType,
-  __FactorFileTypeDef,
-  __FactorProfileType,
-  __FactorType,
-  __FactorDetailType,
-  __FactorListType,
-  __FactorMovieListItemType,
-  __GenreTranslationType,
-  __GenreType,
-  __GenreListType,
-  __HeaderMenuTranslationType,
-  __HeaderMenuFilterType,
-  __HeaderMenuDetailType,
-  __HeaderMenuPublicType,
-  __HeaderMenuListType,
-  __LanguageTranslationType,
-  __LanguageType,
-  __LanguageListType,
-  __MovieFileType,
-  __MovieRoleType,
-  __MovieFactorType,
-  __MovieGenreType,
-  __MovieCountryType,
-  __MovieLanguageType,
-  __MovieSeasonType,
-  __MovieAdminFactorProfileType,
-  __MovieAdminFactorTranslationType,
-  __MovieAdminFactorType,
-  __MovieAdminGenreTranslationType,
-  __MovieAdminGenreType,
-  __MovieAdminSeasonType,
-  __MovieAdminEpisodeType,
-  __MovieAdminTranslationType,
-  __MovieAdminDetailType,
-  __MovieRecommendedType,
-  __MovieListItemType,
-  __PushSubscriptionType,
-  __RoleTranslationType,
-  __RoleType,
-  __RoleListType,
-  __SeasonFileType,
-  __SeasonType,
-  __SeasonTranslationType,
-  __SeasonDetailMovieTranslationType,
-  __SeasonDetailMovieType,
-  __SeasonDetailType,
-  __SeasonListType,
-  __SeasonEpisodeFileType,
-  __SeasonEpisodeListItemType,
-  __SectionFilterType,
-  __SectionTranslationType,
-  __SectionType,
-  __SectionDetailType,
-  __SectionMovieListItemType,
-  __SectionListItemType,
-  __TagTranslationType,
-  __TagType,
-  __TagListType,
-  __MediaFileType,
-  __UploadType,
-  __UserType,
-  __UserMovieActionType,
-  __MovieBriefType,
-  __EpisodeBriefType,
-  __UserMovieListItemType,
-  __UserMovieActionsType,
-  __NotificationType,
-  __StatsOverviewType,
-  __StatsAnalyticsType,
-  __ApiQueryType,
-  __ApiCallOptionsType,
-  __CookieOptionsType,
-  __MenuItemType,
-  __AuthModeType,
-  __ConfirmModalValueType,
-} from "./general";
-import {
-  __AppLanguagesEnum,
-  __UserRoleEnum,
-  __SortTypeEnum,
-  __MenuTypeEnum,
-  __AuthModeEnum,
-} from "./general";
+import type { __PaginationType, __JWTTokenType, __ApiErrorItemType, __ApiErrorType, __CommentUserType, __CommentType, __AllCommentsType, __EntityCommentType, __ContactType, __CountryTranslationType, __CountryType, __CountryListType, __CreateCountryType, __EpisodeFileType, __EpisodeTranslationType, __EpisodeDetailAdminType, __EpisodeDetailSeasonType, __EpisodeDetailNextEpisodeType, __MovieDetailPublicType, __EpisodeDetailPublicType, __EpisodeListItemType, __FactorTranslationType, __FactorUploadType, __FactorFileTypeDef, __FactorProfileType, __FactorType, __FactorDetailType, __FactorListType, __FactorMovieListItemType, __GenreTranslationType, __GenreType, __GenreListType, __HeaderMenuTranslationType, __HeaderMenuFilterType, __HeaderMenuDetailType, __HeaderMenuPublicType, __HeaderMenuListType, __LanguageTranslationType, __LanguageType, __LanguageListType, __MovieFileType, __MovieRoleType, __MovieFactorType, __MovieGenreType, __MovieCountryType, __MovieLanguageType, __MovieSeasonType, __MovieAdminFactorProfileType, __MovieAdminFactorTranslationType, __MovieAdminFactorType, __MovieAdminGenreTranslationType, __MovieAdminGenreType, __MovieAdminSeasonType, __MovieAdminEpisodeType, __MovieAdminTranslationType, __MovieAdminDetailType, __MovieRecommendedType, __MovieListItemType, __PushSubscriptionType, __RoleTranslationType, __RoleType, __RoleListType, __SeasonFileType, __SeasonType, __SeasonTranslationType, __SeasonDetailMovieTranslationType, __SeasonDetailMovieType, __SeasonDetailType, __SeasonListType, __SeasonEpisodeFileType, __SeasonEpisodeListItemType, __SectionFilterType, __SectionTranslationType, __SectionType, __SectionDetailType, __SectionMovieListItemType, __SectionListItemType, __TagTranslationType, __TagType, __TagListType, __MediaFileType, __UploadType, __UserType, __UserMovieActionType, __MovieBriefType, __EpisodeBriefType, __UserMovieListItemType, __UserMovieActionsType, __NotificationType, __StatsOverviewType, __StatsAnalyticsType, __ApiQueryType, __ApiCallOptionsType, __CookieOptionsType, __MenuItemType, __AuthModeType, __ConfirmModalValueType, __SectionUserMovieListItemType } from "./general";
+import { __AppLanguagesEnum, __UserRoleEnum, __SortTypeEnum, __MenuTypeEnum, __AuthModeEnum, __SectionViewModeEnum, __SectionSelectionModeEnum, __SectionSortModeEnum, __SectionPeriodBaseEnum, __SectionUserMovieTypeEnum, __FileTypeEnum, __MovieTypeEnum, __PuzzleSectionMovieViewModeEnum, __RoleTypeEnum } from "./general";
 
 export type { __AuthUser as AuthUser, __UserState as UserState };
 export type { __PaginationType as PaginationType };
 export type { __JWTTokenType as JWTTokenType };
-export type { __MessageType as MessageType };
 export type { __ApiErrorItemType as ApiErrorItemType };
 export type { __ApiErrorType as ApiErrorType };
-export type { __CardsDataType as CardsDataType };
-export type { __MonthlyWatchDataType as MonthlyWatchDataType };
-export type { __RecentUserType as RecentUserType };
-export type { __OverviewStatsType as OverviewStatsType };
-export type { __AnalyticsCardsDataType as AnalyticsCardsDataType };
-export type { __WeeklyChartDataType as WeeklyChartDataType };
-export type { __TopMovieType as TopMovieType };
-export type { __TopGenreType as TopGenreType };
-export type { __AnalyticsStatsType as AnalyticsStatsType };
-export type { __SummaryStatsType as SummaryStatsType };
 export type { __CommentUserType as CommentUserType };
 export type { __CommentType as CommentType };
 export type { __AllCommentsType as AllCommentsType };
@@ -226,10 +100,20 @@ export type { __CookieOptionsType as CookieOptionsType };
 export type { __MenuItemType as MenuItemType };
 export type { __AuthModeType as AuthModeType };
 export type { __ConfirmModalValueType as ConfirmModalValueType };
+export type { __SectionUserMovieListItemType as SectionUserMovieListItemType };
 
 export { __AppLanguagesEnum as AppLanguagesEnum };
 export { __SortTypeEnum as SortTypeEnum };
 export { __UserRoleEnum as UserRoleEnum };
 export { __MenuTypeEnum as MenuTypeEnum };
 export { __AuthModeEnum as AuthModeEnum };
+export { __SectionViewModeEnum as SectionViewModeEnum };
+export { __SectionSelectionModeEnum as SectionSelectionModeEnum };
+export { __SectionSortModeEnum as SectionSortModeEnum };
+export { __SectionPeriodBaseEnum as SectionPeriodBaseEnum };
+export { __SectionUserMovieTypeEnum as SectionUserMovieTypeEnum };
+export { __FileTypeEnum as FileTypeEnum };
+export { __MovieTypeEnum as MovieTypeEnum };
+export { __PuzzleSectionMovieViewModeEnum as PuzzleSectionMovieViewModeEnum };
+export { __RoleTypeEnum as RoleTypeEnum };
 export { __MediaFileAcceptMap as MediaFileAcceptMap } from "./general";
