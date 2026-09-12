@@ -2,7 +2,7 @@
 
 import { BuildApiUrl, DefaultLanguage } from "../index";
 import { AppApis } from "@/data";
-import { MessageType, ApiCallOptionsType } from "@/types";
+import { ApiCallOptionsType, MessageType } from "@/types";
 
 const API_ORIGIN = process.env.NEXT_PUBLIC_FILMAM_SERVER_URL ?? "";
 
@@ -13,31 +13,19 @@ function SameOriginUrl(url: string): string {
   return url;
 }
 
-export async function ClientCall<T>(
-  url: string,
-  options: ApiCallOptionsType,
-  retry = true,
-): Promise<T> {
+export async function ClientCall<T>(url: string, options: ApiCallOptionsType, retry = true): Promise<T> {
   const currentLanguage = options.locale || DefaultLanguage;
 
-  const response = await fetch(
-    BuildApiUrl(SameOriginUrl(url), currentLanguage, options.query),
-    {
-      method: options.method,
-      credentials: "include",
-      body: options.body ? JSON.stringify(options.body) : undefined,
-      headers: {
-        "content-type": "application/json",
-      },
+  const response = await fetch(BuildApiUrl(SameOriginUrl(url), currentLanguage, options.query), {
+    method: options.method,
+    credentials: "include",
+    body: options.body ? JSON.stringify(options.body) : undefined,
+    headers: {
+      "content-type": "application/json",
     },
-  );
+  });
 
-  if (
-    response.status === 401 &&
-    retry &&
-    url !== AppApis.auth.logout &&
-    url !== AppApis.auth.refresh
-  ) {
+  if (response.status === 401 && retry && url !== AppApis.auth.logout && url !== AppApis.auth.refresh) {
     const refreshResponse = await Refresh();
 
     if (refreshResponse.ok) {
@@ -61,13 +49,10 @@ let refreshPromise: Promise<Response> | null = null;
 
 export async function Refresh(): Promise<Response> {
   if (!refreshPromise) {
-    refreshPromise = fetch(
-      BuildApiUrl(SameOriginUrl(AppApis.auth.refresh), DefaultLanguage),
-      {
-        method: "POST",
-        credentials: "include",
-      },
-    ).finally(() => {
+    refreshPromise = fetch(BuildApiUrl(SameOriginUrl(AppApis.auth.refresh), DefaultLanguage), {
+      method: "POST",
+      credentials: "include",
+    }).finally(() => {
       refreshPromise = null;
     });
   }

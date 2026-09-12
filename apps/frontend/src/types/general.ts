@@ -20,6 +20,9 @@ export type __CommentUserType = {
   username: string;
   email: string;
 };
+export type __MessageType = {
+  message: string;
+};
 
 export type __CommentType = {
   id: number;

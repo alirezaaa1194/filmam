@@ -27,6 +27,8 @@ export const roleTabLanguageOrder: AppLanguagesEnum[] = [
 export const roleTypes = [
   { labelKey: 'roles.type_creator', value: 'CREATOR' },
   { labelKey: 'roles.type_actor', value: 'ACTOR' },
+  { labelKey: 'roles.type_director', value: 'DIRECTOR' },
+  { labelKey: 'roles.type_presenter', value: 'PRESENTER' },
 ] satisfies ReadonlyArray<{ labelKey: string; value: RoleTypeValue }>
 
 export const callTypes = new Map<string, string>([

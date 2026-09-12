@@ -4,6 +4,8 @@ import type { AppLanguagesEnum } from '../../types'
 export const roleTypeSchema = z.union([
   z.literal('CREATOR'),
   z.literal('ACTOR'),
+  z.literal('DIRECTOR'),
+  z.literal('PRESENTER'),
 ])
 export type RoleTypeValue = z.infer<typeof roleTypeSchema>
 
