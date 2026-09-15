@@ -5,7 +5,7 @@ export type __PaginationType<T> = {
   page: number;
   page_size: number;
   count: number;
-  data: T;
+  data: T[];
 };
 
 export type __JWTTokenType = {
@@ -159,6 +159,25 @@ export type __EpisodeDetailNextEpisodeType = {
   watches_count: number;
   title: string;
   season_title: string;
+};
+
+export type __SeasonEpisodeType = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  order: number;
+  slug: string;
+  season_id: number;
+  movie_id: number;
+  likes_count: number;
+  dislikes_count: number;
+  watches_count: number;
+  title: string;
+  movie_title: string;
+  season_title: string;
+  movie_season_count: number;
+  watch_progress_time: number;
+  files: __EpisodeFileType[];
 };
 
 export type __MovieDetailPublicType = {
@@ -457,6 +476,15 @@ export type __MovieFactorType = {
   last_name: string;
   role_name?: string;
   role: __MovieRoleType;
+  profile: __MovieFactorProfileType;
+};
+
+export type __MovieFactorProfileType = {
+  id: number;
+  path: string;
+  mime_type: string;
+  file_name: string;
+  type: __FactorFileTypeEnum;
 };
 
 export type __MovieGenreType = {
@@ -1178,9 +1206,14 @@ export enum __FileTypeEnum {
   THUMBNAIL = "THUMBNAIL",
   BANNER = "BANNER",
   FILM = "FILM",
+  COVER = "COVER",
 }
 
 export enum __MovieTypeEnum {
   SERIES = "SERIES",
   CINEMATIC = "CINEMATIC",
+}
+
+export enum __FactorFileTypeEnum {
+  PROFILE = "PROFILE",
 }

@@ -5,6 +5,8 @@ import { GetDir } from "@/scripts";
 import { GetUser } from "@/scripts/server/fetch";
 import type { Viewport } from "next";
 import { ibmPlexSansArabic, inter, iranYekan } from "@/utilities/styles/fonts";
+import Header from "../utilities/components/header/header.index";
+import Footer from "../utilities/components/footer/footer.index";
 
 export const instant = false;
 
@@ -30,7 +32,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="bg-black text-white relative font-sans">
         <Provider user={user} locale={locale}>
+          <Header absolute={true} />
           {children}
+          <Footer />
         </Provider>
       </body>
     </html>

@@ -49,7 +49,7 @@ export const __AppApis = {
   },
   movie: {
     all: `${base}/movie/all`,
-    bySlug: (slug: string) => `${base}/movie/${slug}`,
+    detail: (slug: string) => `${base}/movie/${slug}`,
     recommended: (slug: string) => `${base}/movie/recommended/${slug}`,
   },
   notification: {

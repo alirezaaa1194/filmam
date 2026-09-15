@@ -9,6 +9,7 @@ import {
 } from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 import { TagResponseDto } from '../../tag/dto/tag.response.dto';
+import { FactorFileDto } from '../../factor/dto/factor.response.dto';
 
 export class MovieFileResponseDto {
   @ApiProperty()
@@ -104,6 +105,9 @@ export class MovieFactorResponseDto {
 
   @ApiProperty({ type: MovieRoleResponseDto })
   role!: MovieRoleResponseDto;
+
+  @ApiProperty({ type: FactorFileDto })
+  profile?: FactorFileDto;
 }
 
 export class MovieGenreResponseDto {

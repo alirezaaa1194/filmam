@@ -12,8 +12,9 @@ export const paginationCalculator = (page: number, page_size: number) => {
 export const normalizeMovieDetail = (movie) => {
   const { files, translations, seasons, _count, ...otherMovieData } = movie;
   const movieFactors = otherMovieData.factors?.map((movieFactor) => {
-    const { translations, movie_factors, ...otherMovieFactorData } =
+    const { translations, files, movie_factors, ...otherMovieFactorData } =
       movieFactor.factor;
+
     const movieFactorTranslation = translations?.[0] ?? {};
     const { first_name = '', last_name = '' } = movieFactorTranslation;
 
@@ -27,11 +28,16 @@ export const normalizeMovieDetail = (movie) => {
       ...otherMovieFactorRoleData
     } = movieFactor.role;
     const { name = '' } = movieFactorRoleTranslation?.[0] ?? {};
+    const { upload, ...otherFactorProfileData } = files[0] || {};
+
     return {
       ...otherMovieFactorData,
       order: movieFactor.order,
       first_name,
       last_name,
+      profile: files[0]
+        ? { ...otherFactorProfileData, path: upload.path }
+        : null,
       role_name: mainMovieFactorTranslation?.role_name || null,
       role: { ...otherMovieFactorRoleData, name },
     };
@@ -76,8 +82,11 @@ export const normalizeMovieDetail = (movie) => {
     const { title = '' } = translations?.[0] ?? {};
     return { ...otherSeasonData, title, files: movieFiles };
   });
-  const { title = '', short_description = '', description = '' } =
-    translations?.[0] ?? {};
+  const {
+    title = '',
+    short_description = '',
+    description = '',
+  } = translations?.[0] ?? {};
   return {
     ...otherMovieData,
     seasons_count: _count?.seasons,

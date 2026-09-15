@@ -2,9 +2,10 @@ export const EN = {
   Common: {
     language: "Language",
     viewAll: "View all",
+    filmam: "Filmam",
   },
   HomePage: {
-    title: "Filmam - Watch Movies & Series Online",
+    title: "Watch Movies & Series Online",
     description: "Watch movies and series anytime, anywhere.",
   },
   Header: {
@@ -43,6 +44,13 @@ export const EN = {
     Series: "Series",
     Cinematic: "Cinematic",
     Film: "Film",
+  },
+  MovieDetailPage: {
+    director: "Director",
+    watch: "Watch",
+    Episodes: "Episodes of",
+    Actors: "Actors",
+    Factors: "Factors",
   },
   Auth: {
     title: {

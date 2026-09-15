@@ -1,14 +1,13 @@
 import { infiniteQueryOptions } from "@tanstack/react-query";
 import { AppApis } from "../../data";
-import { AppLanguagesEnum, SectionType } from "../../types";
+import { AppLanguagesEnum, PaginationType, SectionType } from "../../types";
 import { ClientCall } from "../../scripts/client";
 
 export const sectionsInfiniteOptions = (locale: AppLanguagesEnum, fetcher: typeof ClientCall) =>
   infiniteQueryOptions({
     queryKey: ["sections", locale],
-
     queryFn: ({ pageParam }) =>
-      fetcher<SectionType>(AppApis.section.publicAll, {
+      fetcher<PaginationType<SectionType>>(AppApis.section.publicAll, {
         method: "GET",
         locale,
         query: {

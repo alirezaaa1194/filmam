@@ -4,9 +4,10 @@ export const FA: typeof EN = {
   Common: {
     language: "زبان",
     viewAll: "مشاهده همه",
+    filmam: "فیلمام",
   },
   HomePage: {
-    title: "فیلمام - تماشای آنلاین فیلم و سریال",
+    title: "تماشای آنلاین فیلم و سریال",
     description: "هر زمان و هر جا فیلم و سریال تماشا کنید.",
   },
   Header: {
@@ -45,6 +46,13 @@ export const FA: typeof EN = {
     Series: "سریال",
     Cinematic: "سینمایی",
     Film: "فیلم",
+  },
+  MovieDetailPage: {
+    director: "کارگردان",
+    watch: "تماشا",
+    Episodes: "قسمت های",
+    Actors: "بازیگران",
+    Factors: "عوامل",
   },
   Auth: {
     title: {

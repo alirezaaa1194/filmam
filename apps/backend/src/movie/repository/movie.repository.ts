@@ -207,6 +207,11 @@ export class MovieRepository {
                     language: lang,
                   },
                 },
+                files:{
+                  include:{
+                    upload:true
+                  }
+                },
                 movie_factors: {
                   include: {
                     translations: {

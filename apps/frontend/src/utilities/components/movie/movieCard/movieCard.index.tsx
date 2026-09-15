@@ -1,10 +1,10 @@
 "use client";
 import { Heart } from "iconsax-react";
 import Image from "next/image";
-import { FileTypeEnum, MovieListItemType, MovieTypeEnum } from "../../../../types";
+import { FileTypeEnum, MovieDetailPublicType, MovieListItemType, MovieTypeEnum } from "../../../../types";
 import { useLocale } from "../../../../hooks";
 
-function MovieCardComp({ movie }: { movie: MovieListItemType }) {
+function MovieCardComp({ movie }: { movie: MovieListItemType|MovieDetailPublicType }) {
   const { t } = useLocale();
   const movieLikePercent = (movie.likes_count / (movie.likes_count + movie.dislikes_count)) * 100;
   const movieCover = movie.files.find((file) => file.type === FileTypeEnum.THUMBNAIL);

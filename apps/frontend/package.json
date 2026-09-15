@@ -16,6 +16,7 @@
     "@tanstack/react-query-devtools": "^5.101.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cn": "^0.2.6",
     "iconsax-react": "^0.0.8",
     "input-otp": "^1.5.0",
     "lucide-react": "^1.31.0",

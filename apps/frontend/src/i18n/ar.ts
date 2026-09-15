@@ -4,9 +4,10 @@ export const AR: typeof EN = {
   Common: {
     language: "اللغة",
     viewAll: "عرض الكل",
+    filmam: "فیلمام",
   },
   HomePage: {
-    title: "فيلمام - مشاهدة الأفلام والمسلسلات أونلاين",
+    title: "مشاهدة الأفلام والمسلسلات أونلاين",
     description: "شاهد الأفلام والمسلسلات في أي وقت ومن أي مكان.",
   },
   Header: {
@@ -45,6 +46,13 @@ export const AR: typeof EN = {
     Series: "مسلسلات",
     Cinematic: "سينمائي",
     Film: "فيلم",
+  },
+  MovieDetailPage: {
+    director: "مخرج",
+    watch: "يشاهد",
+    Episodes: "حلقات من",
+    Actors: "الممثلون",
+    Factors: "العوامل",
   },
   Auth: {
     title: {

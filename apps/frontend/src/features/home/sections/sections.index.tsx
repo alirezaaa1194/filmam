@@ -1,21 +1,21 @@
 "use client";
-import HeroSectionComp from "@/utilities/components/sections/hero/hero.index";
-import RecentWatchSectionComp from "@/utilities/components/sections/recentWatch/recentWatch.index";
+import HeroSectionComp from "@/features/home/sections/hero/hero.index";
+import RecentWatchSectionComp from "@/features/home/sections/recentWatch/recentWatch.index";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { sectionsInfiniteOptions } from "../home.script";
 import { useLocale } from "../../../hooks";
 import { useEffect, useRef } from "react";
 import { ClientCall } from "../../../scripts/client";
 import { SectionSelectionModeEnum, SectionType, SectionViewModeEnum } from "../../../types";
-import NormalSliderSectionComp from "../../../utilities/components/sections/normal/normal.index";
-import HeroLikeSectionComp from "../../../utilities/components/sections/heroLike/heroLike.index";
-import KidsSectionComp from "../../../utilities/components/sections/kids/kids.index";
-import PuzzleSectionComp from "../../../utilities/components/sections/puzzle/puzzle.index";
-import RecentWatchSectionSkeletonComp from "../../../utilities/components/sections/recentWatch/skeleton/recentWatchItemSkeleton.index";
-import NormalSectionSkeletonComp from "../../../utilities/components/sections/normal/skeleton/normalSectionSkeleton.index";
-import HeroLikeSectionSkeletonComp from "../../../utilities/components/sections/heroLike/skeleton/heroLikeSectionSkeleton.index";
-import KidsSectionSkeletonComp from "../../../utilities/components/sections/kids/skeleton/kidsSectionSkeleton.index";
-import PuzzleSectionSkeletonComp from "../../../utilities/components/sections/puzzle/skeleton/puzzleSectionSkeleton.index";
+import NormalSliderSectionComp from "./normal/normal.index";
+import HeroLikeSectionComp from "./heroLike/heroLike.index";
+import KidsSectionComp from "./kids/kids.index";
+import PuzzleSectionComp from "./puzzle/puzzle.index";
+import RecentWatchSectionSkeletonComp from "./recentWatch/skeleton/recentWatchItemSkeleton.index";
+import NormalSectionSkeletonComp from "./normal/skeleton/normalSectionSkeleton.index";
+import HeroLikeSectionSkeletonComp from "./heroLike/skeleton/heroLikeSectionSkeleton.index";
+import KidsSectionSkeletonComp from "./kids/skeleton/kidsSectionSkeleton.index";
+import PuzzleSectionSkeletonComp from "./puzzle/skeleton/puzzleSectionSkeleton.index";
 
 function HomeSectionsComp() {
   const { locale } = useLocale();
