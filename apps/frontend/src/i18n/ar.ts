@@ -5,8 +5,8 @@ export const AR: typeof EN = {
     language: "اللغة",
     viewAll: "عرض الكل",
   },
-  Layout: {
-    title: "فيلمام",
+  HomePage: {
+    title: "فيلمام - مشاهدة الأفلام والمسلسلات أونلاين",
     description: "شاهد الأفلام والمسلسلات في أي وقت ومن أي مكان.",
   },
   Header: {
@@ -28,6 +28,9 @@ export const AR: typeof EN = {
     copyright: "الخدمات المقدمة في فيلمام تمتلك التراخيص اللازمة من الجهات المختصة، وأي استغلال أو سوء استخدام لمحتوى فيلمام يعرض للمتابعة القانونية.",
     startYear: "2018",
   },
+  Puzzle: {
+    realityShow: "مسابقة - برنامج واقعي",
+  },
   RecentWatch: {
     series: "مسلسل",
     season: "موسم",
@@ -37,6 +40,11 @@ export const AR: typeof EN = {
     watch: "شاهد",
     watchTrailer: "شاهد المقطع الدعائي",
     addToWishlist: "إضافة إلى المفضلة",
+  },
+  Movie: {
+    Series: "مسلسلات",
+    Cinematic: "سينمائي",
+    Film: "فيلم",
   },
   Auth: {
     title: {

@@ -3,8 +3,8 @@ export const EN = {
     language: "Language",
     viewAll: "View all",
   },
-  Layout: {
-    title: "Filmam",
+  HomePage: {
+    title: "Filmam - Watch Movies & Series Online",
     description: "Watch movies and series anytime, anywhere.",
   },
   Header: {
@@ -26,6 +26,9 @@ export const EN = {
     copyright: "Services provided in Filmam have the necessary licenses from the relevant authorities, and any exploitation or misuse of Filmam's content will be legally prosecuted.",
     startYear: "2018",
   },
+  Puzzle: {
+    realityShow: "Competition - Reality Show",
+  },
   RecentWatch: {
     series: "Series",
     season: "Season",
@@ -35,6 +38,11 @@ export const EN = {
     watch: "Watch",
     watchTrailer: "Watch trailer",
     addToWishlist: "Add to wishlist",
+  },
+  Movie: {
+    Series: "Series",
+    Cinematic: "Cinematic",
+    Film: "Film",
   },
   Auth: {
     title: {

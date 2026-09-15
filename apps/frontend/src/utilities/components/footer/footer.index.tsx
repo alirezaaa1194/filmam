@@ -15,7 +15,7 @@ function Footer() {
   const descriptionParts = t("Footer.description").split("--");
 
   return (
-    <footer className="flex flex-col py-12 px-layout-x-space border-t border-t-gray-11 w-full">
+    <footer className="flex flex-col py-12 px-layout-x-space border-t border-t-gray-11 w-full mt-14 lg:mt-24">
       <div className="flex flex-col gap-4 max-w-layout-max lg:mx-auto">
         <Link href="/" className="flex items-center gap-1 w-fit">
           <Image

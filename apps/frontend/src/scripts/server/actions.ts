@@ -2,23 +2,19 @@
 
 import { cookies } from "next/headers";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { AppLanguagesEnum } from "../../types";
+import { DefaultLanguage } from "..";
 
 const DEFAULT_MAX_AGE = 60 * 60 * 24 * 7;
 const SAFE_NAME = /^[a-zA-Z0-9_-]+$/;
 
-export async function SetCookie(
-  name: string,
-  value: string,
-  maxAge: number = DEFAULT_MAX_AGE,
-): Promise<void> {
+export async function SetCookie(name: string, value: string, maxAge: number = DEFAULT_MAX_AGE): Promise<void> {
   if (!SAFE_NAME.test(name)) return;
   const store = await cookies();
   store.set(name, value, { path: "/", maxAge });
 }
 
-export async function GetCookie(
-  name: string,
-): Promise<RequestCookie | undefined> {
+export async function GetCookie(name: string): Promise<RequestCookie | undefined> {
   if (!SAFE_NAME.test(name)) return;
   const store = await cookies();
   return store.get(name);

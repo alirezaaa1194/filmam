@@ -10,7 +10,7 @@ async function HomePageComp() {
   await queryClient.infiniteQuery(sectionsInfiniteOptions(locale, ServerCall)).catch(noop);
 
   return (
-    <main className="pb-10">
+    <main>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <HomeSectionsComp />
       </HydrationBoundary>

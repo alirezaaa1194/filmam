@@ -3,6 +3,8 @@ import { PropsWithChildren } from "react";
 import { HeroSectionContentPropsType } from "./sectionContent.type";
 
 function HeroSectionContentComp({ title, description, options, imageUrl, children }: PropsWithChildren<HeroSectionContentPropsType>) {
+  const placeholderPath = "/images/placeholder-h.jpg";
+
   return (
     <>
       <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(0deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0.96)_13%,rgba(12,12,12,0.4)_33%,rgba(12,12,12,0)_47%,rgba(12,12,12,0.28)_68%,rgba(12,12,12,1)_100%)] flex flex-col justify-end gap-2 lg:gap-8 items-start px-layout-x-space py-8 lg:py-6">
@@ -19,7 +21,7 @@ function HeroSectionContentComp({ title, description, options, imageUrl, childre
         </div>
         {children}
       </div>
-      <Image src={imageUrl} alt={title} className="w-full h-[240px] xl:h-screen! object-cover object-top bg-gray-11" width={800} height={240} />
+      <Image src={imageUrl || placeholderPath} alt={title} className="w-full h-full object-cover object-top bg-gray-11" width={800} height={240} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 @import '../../../../app/globals.css';
 
 .hero-section .swiper-pagination {
-  @apply w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! bottom-2! lg:bottom-[52px]!;
+  @apply w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! bottom-1! lg:bottom-[52px]!;
 }
 
 .hero-section .swiper-pagination-bullet {

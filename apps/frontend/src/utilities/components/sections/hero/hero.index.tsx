@@ -8,7 +8,7 @@ import "swiper/css/pagination";
 import { EffectFade, Pagination, Autoplay } from "swiper/modules";
 import HeroSectionContentComp from "./sectionContent/sectionContent.index";
 import { useLocale } from "../../../../hooks";
-import { FileTypeEnum, SectionSelectionModeEnum, SectionType } from "../../../../types";
+import { FileTypeEnum, MovieTypeEnum, SectionSelectionModeEnum, SectionType } from "../../../../types";
 import HeroContentOptionsComp from "./sectionContent/options/options.index";
 
 function HeroSectionComp({ section }: { section: SectionType }) {
@@ -16,10 +16,10 @@ function HeroSectionComp({ section }: { section: SectionType }) {
     return;
   }
 
-  const { dir } = useLocale();
+  const { dir, t } = useLocale();
 
   return (
-    <section className="hero-section min-h-[240px]!">
+    <section className="hero-section h-[240px] md:h-[624px] 2xl:h-screen">
       <Swiper
         key={dir}
         slidesPerView={1}
@@ -33,11 +33,11 @@ function HeroSectionComp({ section }: { section: SectionType }) {
         pagination={{
           clickable: true,
         }}
-        className="!min-h-[240px] [&_.swiper-wrapper]:!min-h-[240px] [&_.swiper-slide]:!min-h-[240px]"
+        className="h-full"
       >
         {section.movies.map((movie) => (
           <SwiperSlide key={movie.id} className="select-none">
-            <HeroSectionContentComp title={movie.title} description={movie.short_description} options={movie.genres?.map((genre) => genre.name) || []} imageUrl={movie.files.find((file) => file.type === FileTypeEnum.POSTER)?.path || ""}>
+            <HeroSectionContentComp title={movie.title} description={movie.short_description} options={[movie.type === MovieTypeEnum.SERIES ? t("Movie.Series") : t("Movie.Cinematic"), ...(movie.genres?.map((genre) => genre.name) || [])]} imageUrl={movie.files.find((file) => file.type === FileTypeEnum.POSTER)?.path}>
               <HeroContentOptionsComp />
             </HeroSectionContentComp>
           </SwiperSlide>

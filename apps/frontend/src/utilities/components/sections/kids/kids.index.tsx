@@ -1,7 +1,7 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
-import KidCardComp from "./card/card.index";
+import KidCardComp from "./kidsCard/kidsCard.index";
 import { Autoplay, Pagination } from "swiper/modules";
 import "./kids.style.css";
 import Link from "next/link";

@@ -57,7 +57,7 @@ function LanguageSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="w-full! lg:w-auto! group">
-        <Button variant="ghost" size="icon" className="w-full flex items-center justify-between gap-2 lg:size-8 lg:overflow-hidden lg:rounded-full !bg-transparent cursor-pointer lg:!bg-gray-12 lg:hover:bg-gray-11 lg:aria-expanded:bg-gray-11 relative">
+        <Button variant="ghost" size="icon" className="w-full flex items-center justify-between gap-2 lg:size-8 lg:overflow-hidden lg:rounded-full !bg-transparent cursor-pointer bg-gray-11 lg:aria-expanded:bg-gray-11 relative">
           <span className="flex items-center justify-start gap-2">
             <Image width={32} height={32} src={flags[locale]} alt={`${locale}-flag`} className="size-6 lg:size-8 lg:!bg-gray-12 rounded-full object-cover" />
             <span className="text-white! text-body-xs lg:hidden">{languageLabels[locale]}</span>

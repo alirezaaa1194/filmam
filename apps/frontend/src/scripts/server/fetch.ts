@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 import { AppApis } from "../../data";
 import { AppLanguagesEnum, ApiCallOptionsType, UserType } from "../../types";
-import { BuildApiUrl } from "../index";
+import { BuildApiUrl, DefaultLanguage } from "../index";
+import { GetLocale } from "./translation";
 
 async function ServerFetch<T>(url: string, options: ApiCallOptionsType, cookieHeader: string | null, locale: AppLanguagesEnum): Promise<T> {
   const response = await fetch(BuildApiUrl(url, locale, options.query), {
@@ -32,27 +33,17 @@ export async function ServerCall<T>(url: string, options: ApiCallOptionsType): P
 
     let locale = options.locale;
     if (!locale) {
-      try {
-        // const detectedLocale = await getLocale();
-        // locale = hasLocale(detectedLocale) ? detectedLocale : undefined;
-      } catch {
-        // not in a next-intl request context (e.g. route handler)
-      }
+      const detectedLocale = await GetLocale();
+      locale = detectedLocale || DefaultLanguage;
     }
-    locale = locale ?? AppLanguagesEnum.EN;
 
     return await ServerFetch<T>(url, options, cookieHeader, locale);
   } else {
     let locale = options.locale;
     if (!locale) {
-      try {
-        // const detectedLocale = await getLocale();
-        // locale = hasLocale(detectedLocale) ? detectedLocale : undefined;
-      } catch {
-        // not in a next-intl request context (e.g. route handler)
-      }
+      const detectedLocale = await GetLocale();
+      locale = detectedLocale || DefaultLanguage;
     }
-    locale = locale ?? AppLanguagesEnum.EN;
     return await ServerFetch<T>(url, options, null, locale);
   }
 }

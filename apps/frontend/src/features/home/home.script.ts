@@ -13,7 +13,7 @@ export const sectionsInfiniteOptions = (locale: AppLanguagesEnum, fetcher: typeo
         locale,
         query: {
           page: pageParam,
-          page_size: 3,
+          page_size: 10,
         },
       }),
 

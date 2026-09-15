@@ -17,10 +17,11 @@ function HeroLikeSectionComp({ section }: { section: SectionType }) {
   }
 
   const { dir } = useLocale();
+  const placeholderPath = "/images/placeholder-h.jpg";
 
   return (
-    <section className="min-h-[240px]! mt-8 lg:mt-12 relative">
-      <SectionHeaderComp title={section.title} address={`/movies${section.filter||''}`} absolute />
+    <section className="h-[240px] md:h-[624px] 2xl:h-screen mt-8 lg:mt-12 relative">
+      <SectionHeaderComp title={section.title} address={`/movies${section.filter || placeholderPath}`} absolute />
       <Swiper
         key={dir}
         slidesPerView={1}
@@ -31,11 +32,12 @@ function HeroLikeSectionComp({ section }: { section: SectionType }) {
           disableOnInteraction: false,
         }}
         loop={true}
-        className="!min-h-[240px] [&_.swiper-wrapper]:!min-h-[240px] [&_.swiper-slide]:!min-h-[240px]"
+        // className="!min-h-[240px] [&_.swiper-wrapper]:!min-h-[240px] [&_.swiper-slide]:!min-h-[240px]"
+        className="h-full"
       >
         {section.movies.map((movie) => (
           <SwiperSlide className="select-none" key={movie.id}>
-            <HeroSectionContentComp title={movie.title} description={movie.short_description} options={movie.genres?.map((genre) => genre.name) || []} imageUrl={movie.files.find((file) => file.type === FileTypeEnum.POSTER)?.path || ""}>
+            <HeroSectionContentComp title={movie.title} description={movie.short_description} options={movie.genres?.map((genre) => genre.name) || []} imageUrl={movie.files.find((file) => file.type === FileTypeEnum.POSTER)?.path}>
               <HeroLikeContentOptionsComp />
             </HeroSectionContentComp>
           </SwiperSlide>

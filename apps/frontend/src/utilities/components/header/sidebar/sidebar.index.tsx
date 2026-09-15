@@ -3,15 +3,17 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/utilities/comp
 import { HambergerMenu } from "iconsax-react";
 import Image from "next/image";
 import Link from "next/link";
-import { AuthModeEnum, UserRoleEnum, UserType } from "@/types";
+import { AuthModeEnum, UserRoleEnum } from "@/types";
 import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import { useLocale, useLogOut } from "@/hooks";
-import { PropsWithChildren, use, useState } from "react";
+import { ReactNode, use, useState } from "react";
 import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";
 import { AuthModalContext } from "../../../../contexts/authModal";
+import { UserContext } from "../../../../contexts";
 
-function Sidebar({ user, children }: PropsWithChildren<{ user: UserType | null }>) {
+function Sidebar({ children }: { children: ReactNode }) {
   const { t, dir } = useLocale();
+  const user = use(UserContext);
   const side = dir === "rtl" ? "right" : "left";
   const [openSheet, setOpenSheet] = useState(false);
   const { setAuthMode } = use(AuthModalContext);

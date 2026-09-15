@@ -7,6 +7,7 @@ export * from "./field/field.index";
 export * from "./input/input.index";
 export * from "./label/label.index";
 export * from "./passwordInput/passwordInput.index";
+export * from "./skeleton/skeleton.index";
 export * from "./separator/separator.index";
 export * from "./sheet/sheet.index";
 export * from "./sonner/sonner.index";
