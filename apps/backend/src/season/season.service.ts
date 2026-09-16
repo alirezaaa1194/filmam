@@ -257,6 +257,7 @@ export class SeasonService {
         sort_type: query.sort === SortType.ASC ? 'asc' : 'desc',
       },
       seasonSlug,
+      userId,
     );
 
     const seasonUserMovieEpisodesMap = new Map();
@@ -288,6 +289,7 @@ export class SeasonService {
         title: translations[0].title,
         movie_title: movie.translations[0].title,
         season_title: season.translations[0].title,
+        season_slug: seasonSlug,
         movie_season_count: movie._count.seasons,
         watch_progress_time: userEpisode ? userEpisode.progress_time : 0,
         files: seasonFiles,

@@ -53,6 +53,7 @@ export const __AppApis = {
     recommended: (slug: string) => `${base}/movie/recommended/${slug}`,
   },
   notification: {
+    index: `${base}/notification`,
     send: `${base}/notification/send`,
   },
   role: {
@@ -73,6 +74,7 @@ export const __AppApis = {
     updateInfo: `${base}/user`,
   },
   userMovie: {
+    index: `${base}/user-movie`,
     all: `${base}/user-movie/all`,
     movieActions: (entityId: number) =>
       `${base}/user-movie/movie_actions/${entityId}`,

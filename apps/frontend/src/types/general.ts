@@ -1,4 +1,4 @@
-import { AppLanguagesEnum } from ".";
+import { AppLanguagesEnum, UserMovieTypeEnum } from ".";
 
 //      ----------------------- types -----------------------
 export type __PaginationType<T> = {
@@ -175,9 +175,16 @@ export type __SeasonEpisodeType = {
   title: string;
   movie_title: string;
   season_title: string;
+  season_slug: string;
   movie_season_count: number;
   watch_progress_time: number;
   files: __EpisodeFileType[];
+  user_movies: __SeasonEpisodeUserMovieType[];
+};
+
+export type __SeasonEpisodeUserMovieType = {
+  id: number;
+  type: UserMovieTypeEnum;
 };
 
 export type __MovieDetailPublicType = {
@@ -1125,6 +1132,18 @@ export type __ConfirmModalValueType = {
   cancelText?: string;
   callback?: () => void | Promise<unknown>;
   isRefreshing: boolean;
+};
+
+export type __UserMovieActions = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  type: UserMovieTypeEnum;
+  progress_time: number;
+  user_id: number;
+  movie_id: number;
+  episode_id?: number | null;
+  entity_type: __SectionUserMovieTypeEnum;
 };
 
 //      ----------------------- enums -----------------------

@@ -21,8 +21,8 @@ export class UserMovieRepository {
     });
   }
 
-  async deleteUserMovie(actionId: number) {
-    return await prisma.userMovie.delete({
+  async deleteUserMovie(actionId: number, tx?: TransactionType) {
+    return await (tx || prisma).userMovie.delete({
       where: {
         id: actionId,
       },

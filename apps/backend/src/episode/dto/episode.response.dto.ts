@@ -260,6 +260,9 @@ export class EpisodeListItemDto {
   season_title!: string;
 
   @ApiProperty()
+  season_slug!: string;
+
+  @ApiProperty()
   movie_season_count!: number;
 
   @ApiProperty({ type: [EpisodeFileResponseDto] })

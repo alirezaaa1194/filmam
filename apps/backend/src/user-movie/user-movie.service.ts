@@ -37,31 +37,34 @@ export class UserMovieService {
     return await this.userMovieRepository.getUserMovieByType(body, userId);
   }
 
-  async deleteUserMovie(actionId: number) {
-    return await this.userMovieRepository.deleteUserMovie(actionId);
+  async deleteUserMovie(actionId: number, tx?: TransactionType) {
+    return await this.userMovieRepository.deleteUserMovie(actionId, tx);
   }
 
   async submitUserMovieAction(props: SubmitUserMovieActionProps) {
-    if (props.hasUserDidAction) {
-      if (props.actionMode === 'DELETE') {
-        return await this.deleteUserMovie(props.hasUserDidAction.id);
+    const result = await prisma.$transaction(async (tx) => {
+      if (props.hasUserDidAction) {
+        if (props.actionMode === 'DELETE') {
+          return await this.deleteUserMovie(props.hasUserDidAction.id, tx);
+        } else {
+          return await this.userMovieRepository.updateUserMovie(
+            props.hasUserDidAction.id,
+            props.body,
+            props.tx,
+          );
+        }
       } else {
-        return await this.userMovieRepository.updateUserMovie(
-          props.hasUserDidAction.id,
+        if (props.callback) {
+          await props.callback;
+        }
+        return await this.userMovieRepository.createUserMovie(
           props.body,
+          props.userId,
           props.tx,
         );
       }
-    } else {
-      if (props.callback) {
-        await props.callback;
-      }
-      return await this.userMovieRepository.createUserMovie(
-        props.body,
-        props.userId,
-        props.tx,
-      );
-    }
+    });
+    return result;
   }
 
   async updateUserMovies(body: UpdateUserMoviesDto, userId: number) {
@@ -427,7 +430,7 @@ export class UserMovieService {
         const episodesTranslation = translations[0];
         normalizedEpisode = {
           ...otherEpisodeData,
-          season_order:season.order,
+          season_order: season.order,
           title: episodesTranslation.title,
           files: episodeFiles,
         };

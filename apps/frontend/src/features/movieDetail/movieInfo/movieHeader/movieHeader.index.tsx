@@ -1,9 +1,8 @@
 import Image from "next/image";
 import { FileTypeEnum, MovieDetailPublicType, MovieTypeEnum, RoleTypeEnum } from "../../../../types";
 import { useLocale } from "../../../../hooks";
-import { Button } from "../../../../utilities/components/ui";
-import { Add, ArchiveAdd } from "iconsax-react";
 import MovieCardComp from "../../../../utilities/components/movie/movieCard/movieCard.index";
+import MovieFunctionalitiesComp from "../../../../utilities/components/movie/movieFunctionalities/movieFunctionalities.index";
 
 function MovieHeaderComp({ movie }: { movie: MovieDetailPublicType }) {
   const bannerUrl = movie.files.find((file) => file.type === FileTypeEnum.BANNER);
@@ -36,11 +35,7 @@ function MovieHeaderComp({ movie }: { movie: MovieDetailPublicType }) {
             ) : null}
             <p className="hidden md:block text-justify text-body-xs md:line-clamp-4!">{movie.short_description}</p>
           </div>
-          <Button variant="outline" className="flex self-end lg:self-start items-center px-0 lg:px-4 gap-2 lg:min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-gray-7 text-button-s! lg:text-button-xlg! border-transparent bg-none lg:border-gray-5! lg:hover:bg-gray-5/10">
-            <Add variant="Outline" className="fill-gray-7 size-4 lg:size-6 hidden lg:block" />
-            <ArchiveAdd variant="Outline" className="fill-white size-6 block lg:hidden" />
-            <span className="hidden lg:block">{t("Hero.addToWishlist")}</span>
-          </Button>
+          <MovieFunctionalitiesComp movieId={movie.id} />
         </div>
       </div>
       <Image src={bannerUrl?.path || placeholderPath} alt={bannerUrl?.alt_text || movie.title} className="w-full h-full object-cover object-top bg-gray-11" width={800} height={240} />

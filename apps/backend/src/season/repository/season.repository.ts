@@ -186,6 +186,7 @@ export class SeasonRepository {
   async getSeasonEpisodes(
     query: RepositoryPaginationQueryProps,
     seasonSlug: string,
+    userId?: number,
   ) {
     return await prisma.episode.findMany({
       where: { season: { slug: seasonSlug } },
@@ -216,6 +217,10 @@ export class SeasonRepository {
               },
             },
           },
+        },
+        user_movies: {
+          where: { user_id: userId },
+          select: { id: true, type: true },
         },
         files: {
           include: { upload: true },

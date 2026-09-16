@@ -12,9 +12,9 @@ import SuggestionMoviesComp from "./suggestionMovies/suggestionMovies.index";
 
 function MovieDetailInfoComp({ slug }: { slug: string }) {
   const { locale } = useLocale();
-  const { data: movie, isPending } = useQuery(movieDetailQueryOptions(locale, slug, ClientCall));
+  const { data: movie, isPending: movieIsPending } = useQuery(movieDetailQueryOptions(locale, slug, ClientCall));
 
-  if (isPending || !movie) {
+  if (movieIsPending || !movie) {
     return;
   }
 

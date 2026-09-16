@@ -28,14 +28,14 @@ export const normalizeMovieDetail = (movie) => {
       ...otherMovieFactorRoleData
     } = movieFactor.role;
     const { name = '' } = movieFactorRoleTranslation?.[0] ?? {};
-    const { upload, ...otherFactorProfileData } = files[0] || {};
+    const { upload, ...otherFactorProfileData } = files?.[0] || {};
 
     return {
       ...otherMovieFactorData,
       order: movieFactor.order,
       first_name,
       last_name,
-      profile: files[0]
+      profile: files?.[0]
         ? { ...otherFactorProfileData, path: upload.path }
         : null,
       role_name: mainMovieFactorTranslation?.role_name || null,

@@ -69,7 +69,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="w-full overflow-x-auto overflow-y-hidden rounded-md">
+      <div className="w-full overflow-x-auto overflow-y-hidden rounded-md pb-2 lg:pb-0">
         <Tabs defaultValue={movie.seasons?.[0]?.slug} value={activeTab} onValueChange={(e) => setActiveTab(e)} className="w-full">
           <TabsList className="flex flex-nowrap gap-2 lg:gap-5 h-max!">
             {movie.seasons?.map((season) => (
@@ -80,7 +80,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
           </TabsList>
         </Tabs>
       </div>
-      <div className="flex flex-col mt-2 lg:mt-0">
+      <div className="flex flex-col">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:gap-6">
             <EpisodeCardSkeletonComp />

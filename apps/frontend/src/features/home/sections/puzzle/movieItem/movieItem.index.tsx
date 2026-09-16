@@ -6,7 +6,8 @@ import { useLocale } from "@/hooks";
 function PuzzleMovieItemComp({ movie }: { movie: MovieListItemType }) {
   const movieThumbnail = movie.files.find((file) => file.type === FileTypeEnum.THUMBNAIL);
   const movieCreator = movie.factors?.find((factor) => factor.role.type === RoleTypeEnum.PRESENTER);
-  const movieLikePercent = (movie.likes_count / (movie.likes_count + movie.dislikes_count)) * 100;
+  const total = movie.likes_count + movie.dislikes_count;
+  const movieLikePercent = total === 0 ? 0 : movie.likes_count > movie.dislikes_count ? (movie.likes_count / total) * 100 : 0;
   const placeholderPath = "/images/placeholder-v.jpg";
   const { t } = useLocale();
 
@@ -31,7 +32,7 @@ function PuzzleMovieItemComp({ movie }: { movie: MovieListItemType }) {
         </span>
         <span className="text-gray-8 flex items-center gap-1">
           <VideoPlay className="size-6 fill-gray-8 shrink-0" variant="Outline" />
-          <span className="text-body-xxs flex-1 text-nowrap line-clamp-1">{(movie.seasons_count ?? 0) > 1 ? `${movie.seasons_count} ${t('RecentWatch.season')}` : `${movie.episodes_count} ${t('RecentWatch.episode')}`}</span>
+          <span className="text-body-xxs flex-1 text-nowrap line-clamp-1">{(movie.seasons_count ?? 0) > 1 ? `${movie.seasons_count} ${t("RecentWatch.season")}` : `${movie.episodes_count} ${t("RecentWatch.episode")}`}</span>
         </span>
       </div>
     </div>

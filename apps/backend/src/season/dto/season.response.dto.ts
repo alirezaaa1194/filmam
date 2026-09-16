@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AppLanguage, EpisodeFileType, SeasonFileType, SourceType } from '../../generated/prisma';
+import {
+  AppLanguage,
+  EpisodeFileType,
+  SeasonFileType,
+  SourceType,
+  UserMovieType,
+} from '../../generated/prisma';
 import { PaginationMetaDto } from '../../common/dto/response.dto';
 import { EpisodeListItemDto } from '../../episode/dto/episode.response.dto';
 
@@ -219,12 +225,20 @@ export class SeasonEpisodeFileResponseDto {
   type!: EpisodeFileType;
 }
 
+export class SeasonEpisodeUserMovieDto {
+  id!: number;
+  type!: UserMovieType;
+}
+
 export class SeasonEpisodeListItemDto extends EpisodeListItemDto {
   @ApiProperty({ type: [SeasonEpisodeFileResponseDto] })
   declare files: SeasonEpisodeFileResponseDto[];
 
   @ApiProperty()
   watch_progress_time!: number;
+
+  @ApiProperty({ type: [SeasonEpisodeUserMovieDto] })
+  user_movies!: SeasonEpisodeUserMovieDto[];
 }
 
 export class PaginatedSeasonEpisodesDto extends PaginationMetaDto {
