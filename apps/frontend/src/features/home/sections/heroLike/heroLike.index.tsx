@@ -32,7 +32,6 @@ function HeroLikeSectionComp({ section }: { section: SectionType }) {
           disableOnInteraction: false,
         }}
         loop={true}
-        // className="!min-h-[240px] [&_.swiper-wrapper]:!min-h-[240px] [&_.swiper-slide]:!min-h-[240px]"
         className="h-full"
       >
         {section.movies.map((movie) => (

@@ -9,6 +9,7 @@ import MovieSeasonsComp from "./movieSeasons.index";
 import { MovieTypeEnum } from "../../../types";
 import EpisodeFactorsComp from "./factors/factors.index";
 import SuggestionMoviesComp from "./suggestionMovies/suggestionMovies.index";
+import CommentSectionComp from "../../../utilities/components/movie/comment/comment.index";
 
 function MovieDetailInfoComp({ slug }: { slug: string }) {
   const { locale } = useLocale();
@@ -23,6 +24,7 @@ function MovieDetailInfoComp({ slug }: { slug: string }) {
       <MovieHeaderComp movie={movie} />
       {movie.type === MovieTypeEnum.SERIES ? <MovieSeasonsComp movie={movie} /> : null}
       <EpisodeFactorsComp movie={movie} />
+      <CommentSectionComp />
       <SuggestionMoviesComp slug={slug} />
     </main>
   );

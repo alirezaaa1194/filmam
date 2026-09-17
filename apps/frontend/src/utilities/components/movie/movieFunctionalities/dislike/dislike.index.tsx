@@ -34,7 +34,7 @@ function MovieDislikeFunctionalityComp({ movieId, actions }: { movieId: number; 
       }}
       className={`size-9 lg:size-14 rounded-md lg:rounded-lg cursor-pointer border ${didUserSaved ? "border-complementary bg-complementary hover:bg-complementary/80 hover:border-complementary/80" : "bg-white/7 backdrop-blur-[12px] border-white/10 hover:border-complementary hover:bg-white/7 hover:[&>svg]:fill-complementary"}`}
     >
-      <Dislike variant={didUserSaved ? "Bold" : "Outline"} className="size-4 lg:size-7 transition-all fill-white" />
+      <Dislike variant={didUserSaved ? "Bold" : "Outline"} className="size-5 lg:size-7 transition-all fill-white" />
     </Button>
   );
 }

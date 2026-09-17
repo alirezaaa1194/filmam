@@ -28,7 +28,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
   });
 
   const didUserSaved = userMovies?.some((action) => action.type === UserMovieTypeEnum.NOTIFICATION);
-  const { hasDeviceSubscription, isCheckingDevice } = useDeviceSubscriptionStatus();
+  const { hasDeviceSubscription } = useDeviceSubscriptionStatus();
   const { toggleMovieNotification } = useMovieNotification();
 
   const isFullyActive = didUserSaved && hasDeviceSubscription;

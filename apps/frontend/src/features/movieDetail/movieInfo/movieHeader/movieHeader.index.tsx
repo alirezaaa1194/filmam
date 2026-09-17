@@ -13,7 +13,7 @@ function MovieHeaderComp({ movie }: { movie: MovieDetailPublicType }) {
   return (
     <section className="relative h-[240px] md:h-[624px] 2xl:h-screen">
       <div className="absolute z-10 top-0 left-0 w-full h-full bg-[linear-gradient(0deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0.96)_13%,rgba(12,12,12,0.4)_33%,rgba(12,12,12,0)_47%,rgba(12,12,12,0.28)_68%,rgba(12,12,12,1)_100%)]" />
-      <div className="absolute z-10 top-0 left-0 w-full h-full bg-[linear-gradient(90deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0)_28%,rgba(12,12,12,0.55)_52%,rgba(12,12,12,1)_100%)]"/>
+      <div className="absolute z-10 top-0 left-0 w-full h-full bg-[linear-gradient(90deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0)_28%,rgba(12,12,12,0.55)_52%,rgba(12,12,12,1)_100%)]" />
       <div className="absolute z-20 top-0 left-0 right-0 w-full max-w-layout-max mx-auto h-full flex gap-12 px-layout-x-space pb-10 xl:pb-5">
         <div className="w-fit h-fit self-end py-8 lg:py-6 hidden xl:block">
           <MovieCardComp movie={movie} />
@@ -36,7 +36,7 @@ function MovieHeaderComp({ movie }: { movie: MovieDetailPublicType }) {
             ) : null}
             <p className="hidden md:block text-justify text-body-xs md:line-clamp-4!">{movie.short_description}</p>
           </div>
-          <MovieFunctionalitiesComp movieId={movie.id} />
+          <MovieFunctionalitiesComp movie={movie} share={true} play={{ title: t("Hero.watch") }} trailer={true} />
         </div>
       </div>
       <Image src={bannerUrl?.path || placeholderPath} alt={bannerUrl?.alt_text || movie.title} className="w-full h-full object-cover object-top bg-gray-11" width={800} height={240} />
