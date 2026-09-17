@@ -146,7 +146,7 @@ export function useMovieNotification() {
         } else {
           toast.success("اعلان این فیلم فعال شد");
         }
-        
+
         queryClient.setQueryData(["user-movie-actions", movieId], (old: UserMovieActionType[] | undefined) => {
           if (!old) return old;
           if (isCurrentlyEnabled) {

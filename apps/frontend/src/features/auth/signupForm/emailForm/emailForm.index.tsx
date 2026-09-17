@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import googleIcon from "@/assets/icons/google.svg";
 import Image from "next/image";
+import { AuthModalContext } from "../../../../contexts/authModal";
+import { use } from "react";
 
 export const SignupEmailSchema = z.object({
   username: z.string().min(1, "Auth.validation.usernameRequired"),
@@ -29,7 +31,7 @@ export type SignupEmailFormValues = {
   password: string;
 };
 
-function SignupEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; onSubmit: (values: SignupEmailFormValues) => void; defaultValues: SignupEmailFormValues }) {
+function SignupEmailForm({ setStep, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; start: () => void; onSubmit: (values: SignupEmailFormValues) => void; defaultValues: SignupEmailFormValues }) {
   const { locale, t, dir } = useLocale();
   const form = useForm<SignupEmailFormValues>({
     mode: "onSubmit",
@@ -60,6 +62,8 @@ function SignupEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: {
   });
 
   const { handleGoogleLogin, isGoogleLoading } = useGoogle();
+
+  const { setAuthMode } = use(AuthModalContext);
 
   function handleSubmit(data: SignupEmailFormValues) {
     onSubmit(data);
@@ -129,7 +133,7 @@ function SignupEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: {
       <button
         className="cursor-pointer mt-4 self-center text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode(AuthModeEnum.LOGIN);
+          setAuthMode({ mode: AuthModeEnum.LOGIN });
         }}
       >
         {t("Auth.links.haveAccount")}

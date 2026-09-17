@@ -24,11 +24,14 @@ function MovieFunctionalitiesComp({ movieId, save = true, notification = true, l
   });
 
   return (
-    <div className="w-full h-10 flex items-center justify-center lg:justify-start gap-2 lg:gap-3">
-      {save ? isPending || !data ? <MovieFunctionalitiesSkeletonComp /> : <MovieSaveFunctionalityComp movieId={movieId} actions={data} /> : null}
-      {notification ? isPending || !data ? <MovieFunctionalitiesSkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movieId} actions={data} /> : null}
-      {like ? isPending || !data ? <MovieFunctionalitiesSkeletonComp /> : <MovieLikeFunctionalityComp movieId={movieId} actions={data} /> : null}
-      {dislike ? isPending || !data ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movieId} actions={data} /> : null}
+    <div className="w-full flex items-center justify-between gap-4">
+      <div className="flex items-center justify-center lg:justify-start gap-2 lg:gap-3">
+        {save ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieSaveFunctionalityComp movieId={movieId} actions={data || []} /> : null}
+        {notification ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movieId} actions={data || []} /> : null}
+        {like ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieLikeFunctionalityComp movieId={movieId} actions={data || []} /> : null}
+        {dislike ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movieId} actions={data || []} /> : null}
+      </div>
+      {dislike ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movieId} actions={data || []} /> : null}
     </div>
   );
 }

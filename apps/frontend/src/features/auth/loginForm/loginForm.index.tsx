@@ -2,9 +2,8 @@ import { useState } from "react";
 import LoginEmailForm from "./emailForm/emailForm.index";
 import LoginOtpForm from "./otpForm/otpForm.index";
 import { useLocale, useTimer } from "@/hooks";
-import { AuthModeType } from "../../../types";
 
-function LoginForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
+function LoginForm() {
   const [step, setStep] = useState<"Email" | "Otp">("Email");
   const [credentials, setCredentials] = useState<{
     email: string;
@@ -15,28 +14,8 @@ function LoginForm({ setMode }: { setMode: (mode: AuthModeType) => void }) {
 
   return (
     <div className="w-full p-6">
-      <h5 className="text-h-5 text-white text-center mb-8">
-        {t("Auth.title.login")}
-      </h5>
-      {step === "Email" ? (
-        <LoginEmailForm
-          setMode={setMode}
-          setStep={setStep}
-          start={start}
-          defaultValues={credentials}
-          onSubmit={(values) => setCredentials(values)}
-        />
-      ) : (
-        <LoginOtpForm
-          setMode={setMode}
-          setStep={setStep}
-          start={start}
-          reset={reset}
-          timer={timer}
-          email={credentials.email}
-          password={credentials.password}
-        />
-      )}
+      <h5 className="text-h-5 text-white text-center mb-8">{t("Auth.title.login")}</h5>
+      {step === "Email" ? <LoginEmailForm setStep={setStep} start={start} defaultValues={credentials} onSubmit={(values) => setCredentials(values)} /> : <LoginOtpForm setStep={setStep} start={start} reset={reset} timer={timer} email={credentials.email} password={credentials.password} />}
     </div>
   );
 }

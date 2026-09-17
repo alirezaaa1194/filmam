@@ -13,6 +13,8 @@ import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
 import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import { AuthModeEnum, AuthModeType } from "../../../../types";
+import { AuthModalContext } from "../../../../contexts/authModal";
+import { use } from "react";
 
 const ForgetEmailSchema = z.object({
   email: z.email("Auth.validation.emailInvalid"),
@@ -22,7 +24,7 @@ type ForgetEmailFormValues = {
   email: string;
 };
 
-function ForgetEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; onSubmit: (values: ForgetEmailFormValues) => void; defaultValues: ForgetEmailFormValues }) {
+function ForgetEmailForm({ setStep, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; start: () => void; onSubmit: (values: ForgetEmailFormValues) => void; defaultValues: ForgetEmailFormValues }) {
   const { t, dir } = useLocale();
   const form = useForm<ForgetEmailFormValues>({
     mode: "onSubmit",
@@ -32,6 +34,8 @@ function ForgetEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: {
     },
     resolver: zodResolver(ForgetEmailSchema),
   });
+
+  const { setAuthMode } = use(AuthModalContext);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string }) => ClientCall(AppApis.auth.forgetPassword, { method: "POST", body: value }),
@@ -75,7 +79,7 @@ function ForgetEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: {
       <button
         className="cursor-pointer mt-4 self-center text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode(AuthModeEnum.LOGIN);
+          setAuthMode({ mode: AuthModeEnum.LOGIN });
         }}
       >
         {t("Auth.links.haveAccount")}

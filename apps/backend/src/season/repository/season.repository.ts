@@ -219,7 +219,7 @@ export class SeasonRepository {
           },
         },
         user_movies: {
-          where: { user_id: userId },
+          where: { user_id: userId ?? -1  },
           select: { id: true, type: true },
         },
         files: {

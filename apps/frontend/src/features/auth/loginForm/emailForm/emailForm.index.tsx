@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import googleIcon from "@/assets/icons/google.svg";
 import Image from "next/image";
+import { use } from "react";
+import { AuthModalContext } from "../../../../contexts/authModal";
 
 export const LoginEmailSchema = z.object({
   email: z.email("Auth.validation.emailInvalid"),
@@ -27,7 +29,7 @@ export type LoginEmailFormValues = {
   password: string;
 };
 
-function LoginEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; onSubmit: (values: LoginEmailFormValues) => void; defaultValues: LoginEmailFormValues }) {
+function LoginEmailForm({ setStep, start, onSubmit, defaultValues }: { setStep: (step: "Email" | "Otp") => void; start: () => void; onSubmit: (values: LoginEmailFormValues) => void; defaultValues: LoginEmailFormValues }) {
   const { t, dir } = useLocale();
   const form = useForm<LoginEmailFormValues>({
     mode: "onSubmit",
@@ -53,6 +55,8 @@ function LoginEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { 
   });
 
   const { handleGoogleLogin, isGoogleLoading } = useGoogle();
+
+  const { setAuthMode } = use(AuthModalContext);
 
   function handleSubmit(data: LoginEmailFormValues) {
     onSubmit(data);
@@ -93,7 +97,7 @@ function LoginEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { 
         type="button"
         className="cursor-pointer mt-2 text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode(AuthModeEnum.FORGET_PASSWORD);
+          setAuthMode({ mode: AuthModeEnum.FORGET_PASSWORD });
         }}
       >
         {t("Auth.links.forgotPassword")}
@@ -114,7 +118,7 @@ function LoginEmailForm({ setStep, setMode, start, onSubmit, defaultValues }: { 
       <button
         className="cursor-pointer mt-4 self-center text-body-xxs transition-all text-warning hover:text-warning/80"
         onClick={() => {
-          setMode(AuthModeEnum.SIGNUP);
+          setAuthMode({ mode: AuthModeEnum.SIGNUP });
         }}
       >
         {t("Auth.links.noAccount")}

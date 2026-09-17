@@ -1,8 +1,5 @@
 "use client";
-import {
-  Dialog,
-  DialogContent,
-} from "@/utilities/components/ui/dialog/dialog.index";
+import { Dialog, DialogContent } from "@/utilities/components/ui/dialog/dialog.index";
 import { use } from "react";
 import LoginForm from "./loginForm/loginForm.index";
 import SignupForm from "./signupForm/signupForm.index";
@@ -21,15 +18,7 @@ function AuthModal() {
         }
       }}
     >
-      <DialogContent className="flex flex-col items-center">
-        {authMode === "Login" || null ? (
-          <LoginForm setMode={setAuthMode} />
-        ) : authMode === "Signup" ? (
-          <SignupForm setMode={setAuthMode} />
-        ) : authMode === "ForgetPassword" ? (
-          <ForgetPasswordForm setMode={setAuthMode} />
-        ) : null}
-      </DialogContent>
+      <DialogContent className="flex flex-col items-center">{authMode?.mode === "Login" || null ? <LoginForm /> : authMode?.mode === "Signup" ? <SignupForm /> : authMode?.mode === "ForgetPassword" ? <ForgetPasswordForm /> : null}</DialogContent>
     </Dialog>
   );
 }

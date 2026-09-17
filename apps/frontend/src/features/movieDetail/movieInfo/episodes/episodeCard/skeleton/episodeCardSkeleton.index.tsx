@@ -10,7 +10,7 @@ function EpisodeCardSkeletonComp() {
           <Skeleton className="h-3.5 lg:h-4 w-1/2" />
         </div>
         <Separator className="bg-gray-12 w-full" />
-        <div className="flex gap-4 lg:gap-5">
+        <div className="flex gap-4 lg:gap-5 mt-0 lg:mt-6">
           <div className="flex gap-2">
             <Skeleton className="size-8 lg:size-12 rounded-md" />
             <Skeleton className="size-8 lg:size-12 rounded-md" />

@@ -1,10 +1,13 @@
 import Image from "next/image";
-import { FileTypeEnum, SeasonEpisodeType, UserMovieTypeEnum } from "../../../../../types";
+import { AuthModeEnum, FileTypeEnum, SeasonEpisodeType, UserMovieTypeEnum } from "../../../../../types";
 import Link from "next/link";
 import { useLocale } from "../../../../../hooks";
 import { Button, Separator } from "../../../../../utilities/components/ui";
 import { Dislike, Like1 } from "iconsax-react";
 import { useEpisodeAction } from "./episodeCard.script";
+import { use } from "react";
+import { UserContext } from "../../../../../contexts";
+import { AuthModalContext } from "../../../../../contexts/authModal";
 
 function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
   const episodeCover = episode.files.find((file) => file.type === FileTypeEnum.COVER);
@@ -16,6 +19,8 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
 
   const isCurrentlyLiked = episode.user_movies.some((item) => item.type === UserMovieTypeEnum.LIKE);
   const isCurrentlyDisLiked = episode.user_movies.some((item) => item.type === UserMovieTypeEnum.DISLIKE);
+  const user = use(UserContext);
+  const { setAuthMode } = use(AuthModalContext);
 
   return (
     <div className="w-full border border-gray-12 bg-gray-13 rounded-md lg:rounded-xl px-2 lg:px-4 py-4 flex gap-2 lg:gap-4 items-stretch">
@@ -30,12 +35,40 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
           </span>
         </div>
         <Separator className="bg-gray-12 w-full" />
-        <div className="flex gap-4 lg:gap-5">
+        <div className="flex gap-4 lg:gap-5 mt-0 lg:mt-6">
           <div className="flex gap-2">
-            <Button onClick={() => likeToggleEpisodeAction({ episodeId: episode.id, isCurrentlySaved: isCurrentlyLiked })} className={`size-8 lg:size-12 rounded-md cursor-pointer ${isCurrentlyLiked ? "bg-primary hover:bg-primary hover:opacity-80 [&>svg]:fill-white" : "border border-gray-7 bg-transparent hover:border-primary hover:bg-transparent [&>svg]:fill-gray-7 hover:[&>svg]:fill-primary"}`}>
+            <Button
+              onClick={() => {
+                if (user) {
+                  likeToggleEpisodeAction({ episodeId: episode.id, isCurrentlySaved: isCurrentlyLiked });
+                } else {
+                  setAuthMode({
+                    mode: AuthModeEnum.LOGIN,
+                    callback: () => {
+                      likeToggleEpisodeAction({ episodeId: episode.id, isCurrentlySaved: isCurrentlyLiked });
+                    },
+                  });
+                }
+              }}
+              className={`size-8 lg:size-12 rounded-md cursor-pointer border ${isCurrentlyLiked ? "border-primary bg-primary hover:bg-primary/80 hover:border-primary/80 [&>svg]:fill-white" : "border-gray-7 bg-transparent hover:border-primary hover:bg-transparent [&>svg]:fill-gray-7 hover:[&>svg]:fill-primary"}`}
+            >
               <Like1 variant={isCurrentlyLiked ? "Bold" : "Outline"} className="transition-all size-4 lg:size-6" />
             </Button>
-            <Button onClick={() => dislikeToggleEpisodeAction({ episodeId: episode.id, isCurrentlySaved: isCurrentlyDisLiked })} className={`size-8 lg:size-12 rounded-md cursor-pointer ${isCurrentlyDisLiked ? "bg-complementary hover:bg-complementary hover:opacity-80 [&>svg]:fill-white" : "border border-gray-7 bg-transparent hover:border-complementary hover:bg-transparent [&>svg]:fill-gray-7 hover:[&>svg]:fill-complementary"}`}>
+            <Button
+              onClick={() => {
+                if (user) {
+                  dislikeToggleEpisodeAction({ episodeId: episode.id, isCurrentlySaved: isCurrentlyDisLiked });
+                } else {
+                  setAuthMode({
+                    mode: AuthModeEnum.LOGIN,
+                    callback: () => {
+                      dislikeToggleEpisodeAction({ episodeId: episode.id, isCurrentlySaved: isCurrentlyDisLiked });
+                    },
+                  });
+                }
+              }}
+              className={`size-8 lg:size-12 rounded-md cursor-pointer border ${isCurrentlyDisLiked ? "border-complementary bg-complementary hover:bg-complementary/80 hover:border-complementary/80 [&>svg]:fill-white" : "border-gray-7 bg-transparent hover:border-complementary hover:bg-transparent [&>svg]:fill-gray-7 hover:[&>svg]:fill-complementary"}`}
+            >
               <Dislike variant={isCurrentlyDisLiked ? "Bold" : "Outline"} className="transition-all size-4 lg:size-6" />
             </Button>
           </div>

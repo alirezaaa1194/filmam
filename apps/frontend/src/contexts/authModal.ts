@@ -2,11 +2,11 @@ import { createContext } from "react";
 import { AuthModeType } from "../types";
 
 export const AuthModalContext = createContext<{
-  authMode: AuthModeType;
-  setAuthMode: (authMode: AuthModeType) => void;
-  callBack?: () => void;
+  authMode: { mode: AuthModeType; callback?: () => void } | null;
+  setAuthMode: (authMode: { mode: AuthModeType; callback?: () => void } | null) => void;
+  // callBack?: () => void;
 }>({
   authMode: null,
-  setAuthMode: (authMode: AuthModeType) => null,
-  callBack: () => null,
+  setAuthMode: (authMode: { mode: AuthModeType; callback?: () => void } | null) => null,
+  // callBack: () => null,
 });

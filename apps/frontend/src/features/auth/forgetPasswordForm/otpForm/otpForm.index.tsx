@@ -14,6 +14,8 @@ import { TranslateServerError } from "@/scripts";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { PasswordInput } from "@/utilities/components/ui/passwordInput/passwordInput.index";
 import { useLocale } from "@/hooks";
+import { AuthModalContext } from "../../../../contexts/authModal";
+import { use } from "react";
 
 const ForgetOtpSchema = z
   .object({
@@ -32,7 +34,7 @@ type ForgetOtpFormValues = {
   otp: string;
 };
 
-function ForgetOtpForm({ setStep, setMode, start, reset, timer, email }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number; email: string }) {
+function ForgetOtpForm({ setStep, start, reset, timer, email }: { setStep: (step: "Email" | "Otp") => void; start: () => void; reset: () => void; timer: number; email: string }) {
   const { t, dir } = useLocale();
   const form = useForm<ForgetOtpFormValues>({
     mode: "onSubmit",
@@ -44,6 +46,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer, email }: { setSt
     },
     resolver: zodResolver(ForgetOtpSchema),
   });
+  const { setAuthMode } = use(AuthModalContext);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; newPassword: string; otp: string }) =>
@@ -70,7 +73,7 @@ function ForgetOtpForm({ setStep, setMode, start, reset, timer, email }: { setSt
     onSuccess: () => {
       start();
       form.reset();
-      setMode(AuthModeEnum.LOGIN);
+      setAuthMode({ mode: AuthModeEnum.LOGIN });
       toast.success(t("Auth.toasts.passwordChanged"));
     },
     onError: (error: Response) => {

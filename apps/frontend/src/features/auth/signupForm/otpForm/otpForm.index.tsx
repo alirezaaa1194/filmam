@@ -5,7 +5,7 @@ import { AuthModeType } from "@/types";
 import { Controller } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
 import { Button } from "@/utilities/components/ui/button/button.index";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
 import { AppApis } from "@/data";
 import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
@@ -13,6 +13,9 @@ import { toast } from "sonner";
 import { TranslateServerError } from "@/scripts";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { useLocale } from "@/hooks";
+import { use } from "react";
+import { AuthModalContext } from "../../../../contexts/authModal";
+import { useRouter } from "next/navigation";
 
 const SignupOtpSchema = z.object({
   otp: z.string().length(5, "Auth.validation.otpLength"),
@@ -22,7 +25,7 @@ type SignupOtpFormValues = {
   otp: string;
 };
 
-function SignupOtpForm({ setStep, start, reset, timer, email, password, username }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number; email: string; password: string; username: string }) {
+function SignupOtpForm({ setStep, start, reset, timer, email, password, username }: { setStep: (step: "Email" | "Otp") => void; start: () => void; reset: () => void; timer: number; email: string; password: string; username: string }) {
   const { locale, t } = useLocale();
   const form = useForm<SignupOtpFormValues>({
     mode: "onSubmit",
@@ -33,16 +36,29 @@ function SignupOtpForm({ setStep, start, reset, timer, email, password, username
     resolver: zodResolver(SignupOtpSchema),
   });
 
+  const router = useRouter();
+  const { authMode, setAuthMode } = use(AuthModalContext);
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; password: string; username: string; otp: string }) =>
       ClientCall(AppApis.auth.signupVerify, {
         method: "POST",
         body: { ...value, preferred_language: locale },
       }),
-    onSuccess: () => {
-      setStep("Otp");
-      start();
-      toast.success(t("Auth.toasts.otpSent"));
+    onSuccess: async () => {
+      toast.success("ثبت نام با موفقیت انجام شد");
+      setAuthMode(null);
+
+      await queryClient.invalidateQueries({
+        refetchType: "all",
+      });
+
+      if (authMode?.callback) {
+        await authMode.callback();
+      }
+
+      router.refresh();
     },
     onError: (error: Response) => {
       toast.error(t(TranslateServerError(error.status)));

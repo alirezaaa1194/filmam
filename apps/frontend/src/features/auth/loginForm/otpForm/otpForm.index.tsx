@@ -1,11 +1,10 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { AuthModeType } from "@/types";
 import { Controller } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/utilities/components/ui/field/field.index";
 import { Button } from "@/utilities/components/ui/button/button.index";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
 import { AppApis } from "@/data";
 import { Spinner } from "@/utilities/components/ui/spinner/spinner.index";
@@ -14,6 +13,8 @@ import { TranslateServerError } from "@/scripts";
 import { Input } from "@/utilities/components/ui/input/input.index";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/hooks";
+import { AuthModalContext } from "../../../../contexts/authModal";
+import { use } from "react";
 
 const LoginOtpSchema = z.object({
   otp: z.string().length(5, "Auth.validation.otpLength"),
@@ -23,7 +24,7 @@ type LoginOtpFormValues = {
   otp: string;
 };
 
-function LoginOtpForm({ setStep, setMode, start, reset, timer, email, password }: { setStep: (step: "Email" | "Otp") => void; setMode: (mode: AuthModeType) => void; start: () => void; reset: () => void; timer: number; email: string; password: string }) {
+function LoginOtpForm({ setStep, start, reset, timer, email, password }: { setStep: (step: "Email" | "Otp") => void; start: () => void; reset: () => void; timer: number; email: string; password: string }) {
   const form = useForm<LoginOtpFormValues>({
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -34,12 +35,23 @@ function LoginOtpForm({ setStep, setMode, start, reset, timer, email, password }
   });
   const { t } = useLocale();
   const router = useRouter();
+  const { authMode, setAuthMode } = use(AuthModalContext);
+  const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (value: { email: string; password: string; otp: string }) => ClientCall(AppApis.auth.loginVerify, { method: "POST", body: value }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(t("Auth.toasts.loginSuccess"));
-      setMode(null);
+      setAuthMode(null);
+
+      await queryClient.invalidateQueries({
+        refetchType: "all",
+      });
+
+      if (authMode?.callback) {
+        await authMode.callback();
+      }
+
       router.refresh();
     },
     onError: (error: Response) => {

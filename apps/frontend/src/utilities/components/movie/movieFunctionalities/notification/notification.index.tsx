@@ -1,7 +1,10 @@
 import { Notification } from "iconsax-react";
 import { Button } from "../../../ui";
-import { UserMovieActionType, UserMovieTypeEnum } from "../../../../../types";
+import { AuthModeEnum, UserMovieActionType, UserMovieTypeEnum } from "../../../../../types";
 import { useDeviceSubscriptionStatus, useMovieNotification } from "./notification.script";
+import { use } from "react";
+import { UserContext } from "../../../../../contexts";
+import { AuthModalContext } from "../../../../../contexts/authModal";
 
 function MovieNotificationFunctionalityComp({ actions, movieId }: { actions: UserMovieActionType[]; movieId: number }) {
   const didUserSaved = actions.some((action) => action.type === UserMovieTypeEnum.NOTIFICATION);
@@ -11,19 +14,36 @@ function MovieNotificationFunctionalityComp({ actions, movieId }: { actions: Use
   const isFullyActive = didUserSaved && hasDeviceSubscription;
   const isPartiallyActive = didUserSaved && !hasDeviceSubscription;
 
+  const user = use(UserContext);
+  const { setAuthMode } = use(AuthModalContext);
+
   return (
     <Button
-      onClick={() =>
-        toggleMovieNotification({
-          movieId,
-          isCurrentlyEnabled: didUserSaved,
-          hasDeviceSubscription,
-        })
-      }
+      onClick={() => {
+        if (user) {
+          toggleMovieNotification({
+            movieId,
+            isCurrentlyEnabled: didUserSaved,
+            hasDeviceSubscription,
+          });
+        } else {
+          setAuthMode({
+            mode: AuthModeEnum.LOGIN,
+            callback: async () => {
+              toggleMovieNotification({
+                movieId,
+                isCurrentlyEnabled: didUserSaved,
+                hasDeviceSubscription,
+              });
+            },
+          });
+        }
+      }}
+
       disabled={isLoading || isCheckingDevice}
-      className={`size-9 lg:size-14 rounded-full cursor-pointer ${isFullyActive ? "bg-warning hover:bg-warning hover:opacity-80" : isPartiallyActive ? "opacity-40 hover:opacity-60" : "bg-white/7 backdrop-blur-[12px] border border-white/10 hover:border-warning hover:bg-white/7 hover:[&>svg]:fill-warning"}`}
+      className={`size-9 lg:size-14 rounded-md lg:rounded-lg cursor-pointer border ${isFullyActive ? "bg-warning border-warning hover:bg-warning hover:bg-warning/80 hover:border-warning/80" : isPartiallyActive ? " bg-warning hover:bg-warning opacity-40 hover:opacity-60" : "bg-white/7 backdrop-blur-[12px] border-white/10 hover:border-warning hover:bg-white/7 hover:[&>svg]:fill-warning"}`}
     >
-      <Notification variant={didUserSaved ? "Bold" : "Outline"} className="size-4 lg:size-6 transition-all fill-white" />
+      <Notification variant={didUserSaved ? "Bold" : "Outline"} className="size-4 lg:size-7 transition-all fill-white" />
     </Button>
   );
 }

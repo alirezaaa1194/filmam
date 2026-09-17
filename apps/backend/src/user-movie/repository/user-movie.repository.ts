@@ -14,7 +14,7 @@ export class UserMovieRepository {
       where: {
         ...(body.entity_type === CommentEntityType.EPISODE
           ? { episode_id: body.episode_id }
-          : { movie_id: body.movie_id }),
+          : { movie_id: body.movie_id, entity_type: CommentEntityType.MOVIE }),
         user_id: userId,
         type: { in: body.type },
       },
@@ -62,7 +62,7 @@ export class UserMovieRepository {
       where: {
         ...(body.entity_type === CommentEntityType.EPISODE
           ? { episode_id: body.episode_id }
-          : { movie_id: body.movie_id }),
+          : { movie_id: body.movie_id, entity_type: CommentEntityType.MOVIE }),
         user_id: userId,
         type,
       },
