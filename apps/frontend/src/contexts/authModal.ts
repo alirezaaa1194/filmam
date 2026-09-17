@@ -1,12 +1,17 @@
 import { createContext } from "react";
 import { AuthModeType } from "../types";
 
-export const AuthModalContext = createContext<{
-  authMode: { mode: AuthModeType; callback?: () => void } | null;
-  setAuthMode: (authMode: { mode: AuthModeType; callback?: () => void } | null) => void;
-  // callBack?: () => void;
-}>({
+export type AuthModeValueType = {
+  mode: AuthModeType;
+  callback?: () => void;
+};
+
+export type AuthModalContextValueType = {
+  authMode: AuthModeValueType | null;
+  setAuthMode: (authMode: AuthModeValueType | null) => void;
+};
+
+export const AuthModalContext = createContext<AuthModalContextValueType>({
   authMode: null,
-  setAuthMode: (authMode: { mode: AuthModeType; callback?: () => void } | null) => null,
-  // callBack: () => null,
+  setAuthMode: () => null,
 });

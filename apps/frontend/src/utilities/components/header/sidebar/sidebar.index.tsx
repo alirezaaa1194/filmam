@@ -67,7 +67,7 @@ function Sidebar({ children }: { children: ReactNode }) {
             <button
               onClick={() => {
                 setOpenSheet(false);
-                setAuthMode(AuthModeEnum.LOGIN);
+                setAuthMode({ mode: AuthModeEnum.LOGIN });
               }}
               className="cursor-pointer text-start"
             >

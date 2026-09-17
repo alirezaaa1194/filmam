@@ -1122,7 +1122,7 @@ export type __MenuItemType = {
   children: __MenuItemType[];
 };
 
-export type __AuthModeType = __AuthModeEnum | null;
+export type __AuthModeType = __AuthModeEnum;
 
 export type __ConfirmModalValueType = {
   title: string;
