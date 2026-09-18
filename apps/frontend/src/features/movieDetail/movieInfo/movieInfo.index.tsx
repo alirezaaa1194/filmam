@@ -6,7 +6,7 @@ import { useLocale } from "../../../hooks";
 import { ClientCall } from "../../../scripts/client";
 import MovieHeaderComp from "./movieHeader/movieHeader.index";
 import MovieSeasonsComp from "./movieSeasons.index";
-import { MovieTypeEnum } from "../../../types";
+import { CommentEntityTypeEnum, MovieTypeEnum } from "../../../types";
 import EpisodeFactorsComp from "./factors/factors.index";
 import SuggestionMoviesComp from "./suggestionMovies/suggestionMovies.index";
 import CommentSectionComp from "../../../utilities/components/movie/comment/comment.index";
@@ -24,7 +24,7 @@ function MovieDetailInfoComp({ slug }: { slug: string }) {
       <MovieHeaderComp movie={movie} />
       {movie.type === MovieTypeEnum.SERIES ? <MovieSeasonsComp movie={movie} /> : null}
       <EpisodeFactorsComp movie={movie} />
-      <CommentSectionComp />
+      <CommentSectionComp entitySlug={slug} entityId={movie.id} entityType={CommentEntityTypeEnum.MOVIE} movieTitle={movie.title} />
       <SuggestionMoviesComp slug={slug} />
     </main>
   );

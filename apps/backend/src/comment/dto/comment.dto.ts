@@ -96,6 +96,17 @@ export class GetAllCommentsDto extends CommonQueryParamsDto {
   status?: CommentStatus[];
 }
 
+export class GetAllPublicCommentsDto extends CommonQueryParamsDto {
+  @ApiProperty({
+    name: 'entity_type',
+    required: true,
+    enum: CommentEntityType,
+    default: CommentEntityType.MOVIE,
+  })
+  @IsEnum(CommentEntityType)
+  entity_type!: CommentEntityType;
+}
+
 export class CommentVoteDto {
   @ApiProperty({
     enum: CommentVoteStatus,
@@ -126,5 +137,3 @@ export class GetEntityCommentsDto {
   @Type(() => Number)
   page_size?: number;
 }
-
-

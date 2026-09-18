@@ -124,7 +124,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
             مرتب سازی ({sortValue === SortTypeEnum.ASC ? "صعودی" : "نزولی"})
             <ArrowDown2 className={`size-4 lg:size-5 stroke-gray-7 transition-all ${open ? "rotate-180" : ""}`} />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
+          <DropdownMenuContent align="end" className="!mt-1 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
             <DropdownMenuItem onClick={() => setSortValue(SortTypeEnum.ASC)} className={`bg-transparent transition-all ${sortValue === SortTypeEnum.ASC ? "bg-primary hover:bg-primary/80 rounded-md" : "hover:bg-gray-12"} cursor-pointer`}>
               صعودی
             </DropdownMenuItem>
@@ -168,8 +168,8 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
           </div>
         )}
         {hasNextPage ? (
-          <Button disabled={isFetchingNextPage || isLoading} className="border border-primary px-4 lg:px-6 h-8 lg:h-12 rounded-md self-center bg-transparent hover:bg-gray-5/10 cursor-pointer text-primary mt-5 lg:mt-8 text-button-md!" onClick={() => fetchNextPage()}>
-            {isFetchingNextPage ? <Spinner /> : null} بیشتر
+          <Button disabled={isFetchingNextPage || isLoading} onClick={() => fetchNextPage()} className="h-10 px-8 w-fit mx-auto rounded-md cursor-pointer border-gray-10 text-gray-10 hover:text-primary hover:border-primary hover:[&>svg]:stroke-primary" variant="outline">
+            مشاهده بیشتر {isFetchingNextPage ? <Spinner /> : <ArrowDown2 className="stroke-gray-10 size-5 transition-all" />}
           </Button>
         ) : null}
       </div>

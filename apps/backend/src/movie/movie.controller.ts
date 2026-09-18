@@ -16,17 +16,23 @@ import {
   DeleteMoviesDto,
   GetAllMoviesPublicDto,
   GetMovieDetailPublicDto,
+  GetMovieSeasonsAndEpisodesDto,
 } from './dto/movie.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { MovieService } from './movie.service';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { CountResponseDto } from '../common/dto/response.dto';
 import {
   MovieAdminDetailResponseDto,
   MovieDetailPublicResponseDto,
   MovieRecommendedResponseDto,
+  MovieSeasonsAndEpisodesResponseDto,
   PaginatedMoviesDto,
 } from './dto/movie.response.dto';
 import { MovieFilterInput } from './type/movie.type';
@@ -70,7 +76,11 @@ export class MovieController {
     @Param('movieId', ParseIntPipe) movieId: number,
     @Query() query: GetMovieDetailPublicDto,
   ) {
-    return this.movieService.getMovieDetailAdmin(movieId, undefined, query.lang);
+    return this.movieService.getMovieDetailAdmin(
+      movieId,
+      undefined,
+      query.lang,
+    );
   }
 
   @ApiBearerAuth()
@@ -92,6 +102,15 @@ export class MovieController {
     @Query() query: GetMovieDetailPublicDto,
   ) {
     return this.movieService.getRecommendedMovies(slug, query.lang);
+  }
+
+  @ApiOkResponse({ type: MovieSeasonsAndEpisodesResponseDto })
+  @Get(':slug/episodes')
+  async getMovieSeasonsAndEpisodes(
+    @Param('slug') slug: string,
+    @Query() query: GetMovieSeasonsAndEpisodesDto,
+  ) {
+    return await this.movieService.getMovieSeasonsAndEpisodes(slug, query.lang);
   }
 
   @ApiBearerAuth()

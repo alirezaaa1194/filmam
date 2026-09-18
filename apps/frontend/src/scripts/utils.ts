@@ -118,5 +118,25 @@ export function __GetLocaleYear(locale: AppLanguagesEnum): string {
   }).format(new Date());
 }
 
+export function __FormatDate(dateStr: string, locale: AppLanguagesEnum): string {
+  const date = new Date(dateStr);
+
+  const localeMap: Record<AppLanguagesEnum, string> = {
+    [AppLanguagesEnum.FA]: "fa-IR",
+    [AppLanguagesEnum.EN]: "en-US",
+    [AppLanguagesEnum.AR]: "ar",
+  };
+
+  const intlLocale = localeMap[locale];
+
+  const year = new Intl.DateTimeFormat(intlLocale, { year: "numeric" }).format(date);
+  const month = new Intl.DateTimeFormat(intlLocale, { month: "2-digit" }).format(date);
+  const day = new Intl.DateTimeFormat(intlLocale, { day: "2-digit" }).format(date);
+  const hour = new Intl.DateTimeFormat(intlLocale, { hour: "2-digit", hour12: false }).format(date);
+  const minute = new Intl.DateTimeFormat(intlLocale, { minute: "2-digit" }).format(date);
+
+  return `${year}/${month}/${day} ${hour}:${minute}`;
+}
+
 export const __DefaultLanguage = AppLanguagesEnum.FA;
 export const __AppLanguages = [AppLanguagesEnum.EN, AppLanguagesEnum.FA, AppLanguagesEnum.AR];

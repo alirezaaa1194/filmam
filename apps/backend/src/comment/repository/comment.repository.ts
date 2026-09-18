@@ -54,7 +54,10 @@ export class CommentRepository {
     });
   }
 
-  async updateCommentsStatus(body: UpdateCommentsStatusDto, tx?: TransactionType) {
+  async updateCommentsStatus(
+    body: UpdateCommentsStatusDto,
+    tx?: TransactionType,
+  ) {
     return await (tx || prisma).comment.updateMany({
       where: { id: { in: body.comment_ids } },
       data: { status: body.status },
@@ -175,6 +178,7 @@ export class CommentRepository {
                 slug: entitySlug,
               },
             }),
+        status: CommentStatus.APPROVED,
       },
       include: {
         user: {
@@ -188,7 +192,7 @@ export class CommentRepository {
       skip: query.page,
       take: query.page_size,
       orderBy: {
-        updated_at: 'desc',
+        created_at: 'desc',
       },
     });
   }
@@ -213,6 +217,7 @@ export class CommentRepository {
                 slug: entitySlug,
               },
             }),
+        status: CommentStatus.APPROVED,
       },
     });
   }

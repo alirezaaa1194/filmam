@@ -31,12 +31,14 @@ export type __CommentType = {
   likes_count: number;
   dislikes_count: number;
   status: string;
-  entity_type: string;
+  entity_type: __CommentEntityTypeEnum;
   movie_id: number;
   episode_id?: number;
   body: string;
   user_id: number;
   user: __CommentUserType;
+  did_user_liked: boolean;
+  did_user_disliked: boolean;
 };
 
 export type __AllCommentsType = __CommentType & {
@@ -1236,3 +1238,23 @@ export enum __MovieTypeEnum {
 export enum __FactorFileTypeEnum {
   PROFILE = "PROFILE",
 }
+
+export enum __CommentEntityTypeEnum {
+  MOVIE = "MOVIE",
+  EPISODE = "EPISODE",
+}
+
+export type __MovieSeasonWithEpisodesType = {
+  id: number;
+  title: string;
+  slug: string;
+  order: number;
+  episodes: __MovieEpisodeSimpleType[];
+};
+
+export type __MovieEpisodeSimpleType = {
+  id: number;
+  title: string;
+  order: number;
+  slug: string;
+};

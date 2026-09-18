@@ -294,4 +294,16 @@ export class GetAllMoviesPublicDto {
   type?: MovieType;
 }
 
+export class GetMovieSeasonsAndEpisodesDto {
+  @ApiProperty({
+    name: 'lang',
+    required: false,
+    default: defaultLang,
+    enum: AppLanguage,
+  })
+  @IsEnum(AppLanguage)
+  @IsOptional()
+  lang?: AppLanguage;
+}
+
 

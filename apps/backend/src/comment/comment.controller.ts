@@ -24,14 +24,17 @@ import {
   CreateCommentDto,
   DeleteCommentsDto,
   GetAllCommentsDto,
+  GetAllPublicCommentsDto,
   UpdateCommentDto,
   UpdateCommentsStatusDto,
 } from './dto/comment.dto';
 import { CommentService } from './comment.service';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { CommentEntityType } from '../generated/prisma';
 import { Public } from '../common/decorators/public.decorator';
-import { CountResponseDto, MessageResponseDto } from '../common/dto/response.dto';
+import {
+  CountResponseDto,
+  MessageResponseDto,
+} from '../common/dto/response.dto';
 import {
   CommentResponseDto,
   PaginatedCommentsDto,
@@ -95,35 +98,17 @@ export class CommentController {
 
   @ApiBearerAuth()
   @ApiOkResponse({ type: PaginatedEntityCommentDto })
-  @Get('movie/:movieSlug')
-  @Public()
-  @UseGuards(JwtAuthGuard)
-  async getMovieComments(
-    @Req() req,
-    @Query() query: GetAllCommentsDto,
-    @Param('movieSlug') movieSlug: string,
-  ) {
-    return await this.commentService.getMovieOrEpisodeComments(
-      CommentEntityType.MOVIE,
-      movieSlug,
-      query,
-      req?.user?.userId,
-    );
-  }
-
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: PaginatedEntityCommentDto })
-  @Get('episode/:episodeSlug')
+  @Get('/:entitySlug')
   @Public()
   @UseGuards(JwtAuthGuard)
   async getEpisodeComments(
     @Req() req,
-    @Query() query: GetAllCommentsDto,
-    @Param('episodeSlug') episodeSlug: string,
+    @Query() query: GetAllPublicCommentsDto,
+    @Param('entitySlug') entitySlug: string,
   ) {
     return await this.commentService.getMovieOrEpisodeComments(
-      CommentEntityType.EPISODE,
-      episodeSlug,
+      query.entity_type,
+      entitySlug,
       query,
       req?.user?.userId,
     );

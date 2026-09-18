@@ -531,6 +531,42 @@ export class MovieDetailPublicResponseDto {
   seasons?: MovieSeasonResponseDto[];
 }
 
+export class MovieEpisodeSimpleDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  order!: number;
+}
+
+export class MovieSeasonWithEpisodesDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  slug!: string;
+
+  @ApiProperty()
+  order!: number;
+
+  @ApiProperty({ type: [MovieEpisodeSimpleDto] })
+  episodes!: MovieEpisodeSimpleDto[];
+}
+
+export class MovieSeasonsAndEpisodesResponseDto {
+  @ApiProperty({ type: [MovieSeasonWithEpisodesDto] })
+  data!: MovieSeasonWithEpisodesDto[];
+}
+
 export class MovieRecommendedResponseDto {
   @ApiProperty()
   id!: number;

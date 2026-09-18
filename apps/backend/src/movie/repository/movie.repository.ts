@@ -1,6 +1,7 @@
 import { AppLanguage, MovieType } from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { TransactionType } from '../../common/types/types';
+import { defaultLang } from '../../lib/utils';
 
 export class MovieRepository {
   async createMovieAdmin(
@@ -207,10 +208,10 @@ export class MovieRepository {
                     language: lang,
                   },
                 },
-                files:{
-                  include:{
-                    upload:true
-                  }
+                files: {
+                  include: {
+                    upload: true,
+                  },
                 },
                 movie_factors: {
                   include: {
@@ -385,6 +386,33 @@ export class MovieRepository {
   async countMoviesCreatedBetween(start: Date, end: Date) {
     return prisma.movie.count({
       where: { created_at: { gte: start, lt: end } },
+    });
+  }
+
+  async getMovieSeasonsAndEpisodes(
+    slug: string,
+    lang: AppLanguage = defaultLang,
+  ) {
+    return await prisma.movie.findUnique({
+      where: { slug },
+      include: {
+        seasons: {
+          orderBy: { order: 'asc' },
+          include: {
+            translations: {
+              where: { language: lang },
+            },
+            episodes: {
+              orderBy: { order: 'asc' },
+              include: {
+                translations: {
+                  where: { language: lang },
+                },
+              },
+            },
+          },
+        },
+      },
     });
   }
 }

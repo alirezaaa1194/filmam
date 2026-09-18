@@ -19,9 +19,8 @@ export const __AppApis = {
     cleanupOtp: `${base}/auth/internal/cleanup-otp`,
   },
   comment: {
-    byMovie: (movieSlug: string) => `${base}/comment/movie/${movieSlug}`,
-    byEpisode: (episodeSlug: string) =>
-      `${base}/comment/episode/${episodeSlug}`,
+    create: `${base}/comment/`,
+    index: (entitySlug: string) => `${base}/comment/${entitySlug}`,
     vote: (commentId: number) => `${base}/comment/vote/${commentId}`,
   },
   contact: {
@@ -50,6 +49,7 @@ export const __AppApis = {
   movie: {
     all: `${base}/movie/all`,
     detail: (slug: string) => `${base}/movie/${slug}`,
+    episodes: (slug: string) => `${base}/movie/${slug}/episodes`,
     recommended: (slug: string) => `${base}/movie/recommended/${slug}`,
   },
   notification: {
@@ -60,8 +60,7 @@ export const __AppApis = {
     all: `${base}/role/all`,
   },
   season: {
-    episodesBySlug: (seasonSlug: string) =>
-      `${base}/season/${seasonSlug}/episodes`,
+    episodesBySlug: (seasonSlug: string) => `${base}/season/${seasonSlug}/episodes`,
   },
   section: {
     publicAll: `${base}/section/public/all`,
@@ -76,8 +75,7 @@ export const __AppApis = {
   userMovie: {
     index: `${base}/user-movie`,
     all: `${base}/user-movie/all`,
-    movieActions: (entityId: number) =>
-      `${base}/user-movie/movie_actions/${entityId}`,
+    movieActions: (entityId: number) => `${base}/user-movie/movie_actions/${entityId}`,
     deleteAction: (actionId: number) => `${base}/user-movie/${actionId}`,
   },
 };

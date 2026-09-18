@@ -219,8 +219,7 @@ export class MovieService {
         const { factor, role, order } = movieFactor;
         const { files, translations, ...otherFactorData } = factor;
         const factorTranslation =
-          translations?.find((tr) => tr.language === lang) ??
-          translations?.[0];
+          translations?.find((tr) => tr.language === lang) ?? translations?.[0];
         const { first_name = '', last_name = '' } = factorTranslation ?? {};
 
         const { translations: roleTranslations, ...otherRoleData } = role;
@@ -254,8 +253,7 @@ export class MovieService {
         const { country } = movieCountry;
         const { translations, ...otherCountryData } = country;
         const countryTranslation =
-          translations?.find((tr) => tr.language === lang) ??
-          translations?.[0];
+          translations?.find((tr) => tr.language === lang) ?? translations?.[0];
         const { label = '' } = countryTranslation ?? {};
         return { ...otherCountryData, label };
       });
@@ -700,5 +698,30 @@ export class MovieService {
       console.error('Error in getRecommendedMovies:', err);
       return [];
     }
+  }
+
+  async getMovieSeasonsAndEpisodes(
+    slug: string,
+    lang: AppLanguage = defaultLang,
+  ) {
+    const movie = await this.movieRepository.getMovieSeasonsAndEpisodes(
+      slug,
+      lang,
+    );
+
+    if (!movie) return [];
+
+    return movie.seasons.map((season) => ({
+      id: season.id,
+      title: season.translations[0]?.title ?? '',
+      slug: season.slug,
+      order: season.order,
+      episodes: season.episodes.map((episode) => ({
+        id: episode.id,
+        title: episode.translations[0]?.title ?? '',
+        slug: episode.slug,
+        order: episode.order,
+      })),
+    }));
   }
 }

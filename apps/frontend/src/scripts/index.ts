@@ -7,5 +7,6 @@ export {
   __AppLanguages as AppLanguages,
   __GetDir as GetDir,
   __GetLocaleYear as GetLocaleYear,
+  __FormatDate as FormatDate,
   __ParseSetCookie as ParseSetCookie,
 } from "./utils";
