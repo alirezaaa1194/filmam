@@ -38,7 +38,7 @@ function HeroSectionComp({ section }: { section: SectionType }) {
         {section.movies.map((movie) => (
           <SwiperSlide key={movie.id} className="select-none">
             <HeroSectionContentComp title={movie.title} description={movie.short_description} options={[movie.type === MovieTypeEnum.SERIES ? t("Movie.Series") : t("Movie.Cinematic"), ...(movie.genres?.map((genre) => genre.name) || [])]} imageUrl={movie.files.find((file) => file.type === FileTypeEnum.POSTER)?.path}>
-              <MovieFunctionalitiesComp movie={movie} notification={false} play={{ title: t("Hero.watch") }} trailer dislike={false} like={false} />
+              <MovieFunctionalitiesComp movie={movie} notification={false} play={{ title: t("Hero.watch") }} trailer dislike={false} like={false} hero={true} />
             </HeroSectionContentComp>
           </SwiperSlide>
         ))}

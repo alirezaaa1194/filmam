@@ -1,4 +1,4 @@
-import { ArrowDown2, VideoVertical } from "iconsax-react";
+import { ArrowDown2, Sort, VideoVertical } from "iconsax-react";
 import { AuthModeEnum, MovieDetailPublicType, PaginationType, SeasonEpisodeType, SectionUserMovieTypeEnum, SortTypeEnum, UserMovieActionType, UserMovieTypeEnum } from "../../../types";
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Spinner } from "../../../utilities/components/ui";
 import { use, useState } from "react";
@@ -12,6 +12,7 @@ import EpisodeCardSkeletonComp from "./episodes/episodeCard/skeleton/episodeCard
 import { useDeviceSubscriptionStatus, useMovieNotification } from "../../../utilities/components/movie/movieFunctionalities/notification/notification.script";
 import { UserContext } from "../../../contexts";
 import { AuthModalContext } from "../../../contexts/authModal";
+import { Switch } from "../../../utilities/components/ui/switch/switch.index";
 
 function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
   const { locale, t } = useLocale();
@@ -88,8 +89,9 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
   const [open, setOpen] = useState(false);
   const [sortValue, setSortValue] = useState<SortTypeEnum>(SortTypeEnum.ASC);
   const [activeTab, setActiveTab] = useState<string>(movie.seasons?.[0]?.slug!);
+  const [unwatched_episodes, setUnwatched_episodes] = useState(false);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } = useInfiniteQuery({
-    queryKey: ["episodes", activeTab, locale, sortValue],
+    queryKey: ["episodes", activeTab, locale, sortValue, unwatched_episodes],
     queryFn: ({ pageParam = 1 }) =>
       ClientCall<PaginationType<SeasonEpisodeType>>(AppApis.season.episodesBySlug(activeTab), {
         method: "GET",
@@ -98,6 +100,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
           page: pageParam,
           page_size: 10,
           sort: sortValue,
+          unwatched_episodes: unwatched_episodes,
         },
       }),
     initialPageParam: 1,
@@ -121,8 +124,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
         </h5>
         <DropdownMenu onOpenChange={setOpen} open={open}>
           <DropdownMenuTrigger className="outline-none cursor-pointer text-gray-7 flex items-center gap-2 text-mobile-button-md lg:text-button-md">
-            مرتب سازی ({sortValue === SortTypeEnum.ASC ? "صعودی" : "نزولی"})
-            <ArrowDown2 className={`size-4 lg:size-5 stroke-gray-7 transition-all ${open ? "rotate-180" : ""}`} />
+            <Sort className="size-4 lg:size-6 stroke-gray-7" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="!mt-1 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
             <DropdownMenuItem onClick={() => setSortValue(SortTypeEnum.ASC)} className={`bg-transparent transition-all ${sortValue === SortTypeEnum.ASC ? "bg-primary hover:bg-primary/80 rounded-md" : "hover:bg-gray-12"} cursor-pointer`}>
@@ -130,6 +132,10 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSortValue(SortTypeEnum.DESC)} className={`bg-transparent transition-all ${sortValue === SortTypeEnum.DESC ? "bg-primary hover:bg-primary/80 rounded-md" : "hover:bg-gray-12"} cursor-pointer`}>
               نزولی
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex items-center justify-between">
+              مشاهده نشده
+              <Switch checked={unwatched_episodes} onCheckedChange={setUnwatched_episodes} dir="ltr" />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

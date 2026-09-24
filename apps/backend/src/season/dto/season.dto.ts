@@ -1,6 +1,7 @@
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -83,6 +84,18 @@ export class GetAllSeasonsDto extends CommonQueryParamsDto {
   movie_id?: number | null;
 }
 
-export class GetSeasonEpisodesDto extends CommonQueryParamsDto {}
-
-
+export class GetSeasonEpisodesDto extends CommonQueryParamsDto {
+  @ApiProperty({
+    name: 'unwatched_episodes',
+    required: false,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  unwatched_episodes?: boolean;
+}

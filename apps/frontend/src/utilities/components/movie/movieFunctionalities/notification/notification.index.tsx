@@ -41,9 +41,9 @@ function MovieNotificationFunctionalityComp({ actions, movieId }: { actions: Use
       }}
 
       disabled={isLoading || isCheckingDevice}
-      className={`size-9 lg:size-14 rounded-md lg:rounded-lg cursor-pointer border ${isFullyActive ? "bg-warning border-warning hover:bg-warning hover:bg-warning/80 hover:border-warning/80" : isPartiallyActive ? " bg-warning hover:bg-warning opacity-40 hover:opacity-60" : "bg-white/7 backdrop-blur-[12px] border-white/10 hover:border-warning hover:bg-white/7 hover:[&>svg]:fill-warning"}`}
+      className={`flex-1 lg:flex-0 h-[46px] lg:size-[46px] rounded-md cursor-pointer border ${isFullyActive ? "bg-warning border-warning hover:bg-warning hover:bg-warning/80 hover:border-warning/80" : isPartiallyActive ? " bg-warning hover:bg-warning opacity-40 hover:opacity-60" : "bg-white/7 backdrop-blur-[12px] border-white/10 hover:border-warning hover:bg-white/7 hover:[&>svg]:fill-warning"}`}
     >
-      <Notification variant={didUserSaved ? "Bold" : "Outline"} className="size-5 lg:size-7 transition-all fill-white" />
+      <Notification variant={didUserSaved ? "Bold" : "Outline"} className="size-6 transition-all fill-white" />
     </Button>
   );
 }

@@ -3,7 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateSeasonDto, GetAllSeasonsDto } from './dto/season.dto';
+import {
+  CreateSeasonDto,
+  GetAllSeasonsDto,
+  GetSeasonEpisodesDto,
+} from './dto/season.dto';
 import { prisma } from '../lib/prisma';
 import { SeasonRepository } from './repository/season.repository';
 import { SeasonTranslationService } from '../season-translation/season-translation.service';
@@ -11,7 +15,6 @@ import { SeasonFileService } from '../season-file/season-file.service';
 import { MovieService } from '../movie/movie.service';
 import { defaultLang, paginationCalculator } from '../lib/utils';
 import { SortType } from '../common/enums';
-import { CommonQueryParamsDto } from '../common/dto/query-param.dto';
 import { TransactionType } from '../common/types/types';
 import { UserMovieService } from '../user-movie/user-movie.service';
 import { NotificationService } from '../notification/notification.service';
@@ -240,7 +243,7 @@ export class SeasonService {
   }
 
   async getSeasonEpisodes(
-    query: CommonQueryParamsDto,
+    query: GetSeasonEpisodesDto,
     seasonSlug: string,
     userId?: number,
   ) {
@@ -255,6 +258,7 @@ export class SeasonService {
         search: '',
         lang: query.lang || defaultLang,
         sort_type: query.sort === SortType.ASC ? 'asc' : 'desc',
+        unwatched_episodes: !!query.unwatched_episodes,
       },
       seasonSlug,
       userId,
@@ -296,7 +300,7 @@ export class SeasonService {
       };
     });
     const seasonEpisodesCount =
-      await this.seasonRepository.getSeasonEpisodesCount(seasonSlug);
+      await this.seasonRepository.getSeasonEpisodesCount(seasonSlug, query.unwatched_episodes, userId);
     return {
       page: page + 1,
       page_size,

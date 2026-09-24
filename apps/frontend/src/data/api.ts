@@ -51,6 +51,7 @@ export const __AppApis = {
     detail: (slug: string) => `${base}/movie/${slug}`,
     episodes: (slug: string) => `${base}/movie/${slug}/episodes`,
     recommended: (slug: string) => `${base}/movie/recommended/${slug}`,
+    watchTarget: (slug: string) => `${base}/movie/${slug}/watch-target`,
   },
   notification: {
     index: `${base}/notification`,

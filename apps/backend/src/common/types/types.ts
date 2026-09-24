@@ -8,6 +8,7 @@ export type RepositoryPaginationQueryProps = {
   lang: AppLanguage;
   sort_type: 'asc' | 'desc';
   movie_id?: number | null;
+  unwatched_episodes?: boolean;
 };
 
 export type TransactionType = Omit<

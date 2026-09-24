@@ -1,17 +1,71 @@
 import { Play } from "iconsax-react";
-import { Button } from "../../../ui";
-import { MovieDetailPublicType, MovieListItemType } from "../../../../../types";
 import Link from "next/link";
-import { useLocale } from "../../../../../hooks";
+import { use } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-function MoviePlayFunctionalityComp({ movie }: { movie: MovieListItemType | MovieDetailPublicType }) {
+import { Button } from "../../../ui";
+
+import { MovieDetailPublicType, MovieListItemType, MovieTypeEnum, UserMovieActionType, UserMovieTypeEnum, WatchTargetEpisodeType, WatchTargetMovieTypeEnum } from "../../../../../types";
+
+import { useLocale } from "../../../../../hooks";
+import { UserContext } from "../../../../../contexts";
+import { AppApis } from "../../../../../data";
+import { ClientCall } from "../../../../../scripts/client";
+
+function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieListItemType | MovieDetailPublicType; hero: boolean; actions?: UserMovieActionType[] }) {
   const { t } = useLocale();
+  const user = use(UserContext);
+
+  const isWatching = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHING);
+
+  const isWatched = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHED);
+
+  const isSeries = movie.type === MovieTypeEnum.SERIES;
+
+  const { data, isPending } = useQuery({
+    queryKey: ["movie-watch-target", movie.slug],
+    queryFn: () =>
+      ClientCall<WatchTargetEpisodeType>(AppApis.movie.watchTarget(movie.slug), {
+        method: "GET",
+      }),
+    enabled: !!user && isSeries && !hero,
+  });
+  if (hero) {
+    return (
+      <Link href={`${hero ? `/movies/${movie.slug}` : ``}`} className="w-full lg:w-fit">
+        <Button className="w-full lg:w-fit flex items-center gap-2 px-12 h-[46px] rounded-md cursor-pointer text-white text-button-md! lg:text-button-lg!">
+          <Play variant="Outline" className="fill-white size-5" />
+          تماشا
+        </Button>
+      </Link>
+    );
+  }
+
+  let label = "تماشا";
+
+  if (!isSeries) {
+    if (isWatching) {
+      label = "ادامه تماشا";
+    } else if (isWatched) {
+      label = "تماشای دوباره";
+    }
+  } else if (data?.type === WatchTargetMovieTypeEnum.CONTINUE) {
+    label = "ادامه تماشا";
+  } else if (data?.type === WatchTargetMovieTypeEnum.REWATCH) {
+    label = "تماشای دوباره";
+  } else if (data?.type === WatchTargetMovieTypeEnum.WATCH) {
+    label = data.season_order === 1 ? `تماشای قسمت ${data.order}` : `تماشای فصل ${data.season_order} قسمت ${data.order}`;
+  }
+
+  if (user && isPending && movie.type === MovieTypeEnum.SERIES) {
+    return "loading...";
+  }
 
   return (
-    <Link href="/">
-      <Button className="flex items-center px-4 gap-2 min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-white text-button-s! lg:text-button-xlg!">
-        <Play variant="Outline" className="fill-white size-4 lg:size-6" />
-        {t("Hero.watch")}
+    <Link href={`${hero ? `/movies/${movie.slug}` : ``}`} className="w-full lg:w-fit">
+      <Button className="w-full lg:w-fit flex items-center gap-2 px-12 h-[46px] rounded-md cursor-pointer text-white text-button-md! lg:text-button-lg!">
+        <Play variant="Outline" className="fill-white size-5" />
+        {label}
       </Button>
     </Link>
   );

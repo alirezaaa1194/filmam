@@ -114,6 +114,22 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: MovieDetailPublicResponseDto })
+  @Get('/:slug/watch-target')
+  async getMovieWatchTarget(
+    @Param('slug') slug: string,
+    @Req() req,
+    @Query() query: GetMovieDetailPublicDto,
+  ) {
+    return this.movieService.getMovieWatchTarget(
+      slug,
+      req?.user?.userId,
+      query.lang,
+    );
+  }
+
+  @ApiBearerAuth()
   @ApiOkResponse({ type: MovieDetailPublicResponseDto })
   @Get('/:slug')
   async getMovieDetailPublic(

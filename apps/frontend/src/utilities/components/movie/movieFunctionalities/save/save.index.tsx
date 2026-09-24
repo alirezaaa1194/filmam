@@ -33,9 +33,9 @@ function MovieSaveFunctionalityComp({ movieId, actions }: { movieId: number; act
           });
         }
       }}
-      className={`size-9 lg:size-14 rounded-md lg:rounded-lg cursor-pointer border ${didUserSaved ? "border-primary bg-primary hover:bg-primary/80 hover:border-primary/80" : "bg-white/7 backdrop-blur-[12px] border-white/10 hover:border-primary hover:bg-white/7 hover:[&>svg]:fill-primary"}`}
+      className={`flex-1 lg:flex-0 h-[46px] lg:size-[46px] rounded-md cursor-pointer border ${didUserSaved ? "border-primary bg-primary hover:bg-primary/80 hover:border-primary/80" : "bg-white/7 backdrop-blur-[12px] border-white/10 hover:border-primary hover:bg-white/7 hover:[&>svg]:fill-primary"}`}
     >
-      {!didUserSaved ? <ArchiveAdd variant={"Outline"} className="size-5 lg:size-7 transition-all fill-white" /> : <ArchiveMinus variant={"Outline"} className="size-5 lg:size-7 transition-all fill-white" />}
+      {!didUserSaved ? <ArchiveAdd variant={"Outline"} className="size-6 transition-all fill-white" /> : <ArchiveMinus variant={"Outline"} className="size-6 transition-all fill-white" />}
     </Button>
   );
 }

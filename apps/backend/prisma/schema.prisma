@@ -44,6 +44,7 @@ model Movie {
   likes_count    Int                @default(0)
   dislikes_count Int                @default(0)
   watches_count  Int                @default(0)
+  imdb_score     Float?
   combined_tags  String
   episodes       Episode[]
   factors        MovieFactor[]
@@ -784,4 +785,12 @@ enum CommentVoteStatus {
 enum HeaderMenuType {
   PAGE
   FILTER
+}
+
+enum TargetMovieType {
+WATCHING
+CONTINUE
+WATCHED
+WATCH
+REWATCH
 }

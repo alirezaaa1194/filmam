@@ -1,4 +1,4 @@
-import { Play, VideoPlay } from "iconsax-react";
+import { VideoPlay } from "iconsax-react";
 import { Button } from "../../../ui";
 import { MovieDetailPublicType, MovieListItemType } from "../../../../../types";
 import Link from "next/link";
@@ -8,9 +8,9 @@ function MovieTrailerFunctionalityComp({ movie }: { movie: MovieListItemType | M
   const { t } = useLocale();
 
   return (
-    <Link href="/">
-      <Button className="flex items-center px-4 gap-2 min-w-[106px] lg:min-w-32 h-8 lg:h-14 rounded-md lg:rounded-lg cursor-pointer text-white text-button-s! lg:text-button-xlg! bg-gray-11 hover:bg-gray-11/80">
-        <VideoPlay variant="Outline" className="fill-white size-4 lg:size-6" />
+    <Link href="/" className="w-full lg:w-fit">
+      <Button className="w-full lg:w-fit flex items-center gap-2 px-12 h-[46px] rounded-md cursor-pointer text-white text-button-md! lg:text-button-lg! bg-gray-11 hover:bg-gray-11/80">
+        <VideoPlay variant="Outline" className="fill-white size-5" />
         {t("Hero.watchTrailer")}
       </Button>
     </Link>

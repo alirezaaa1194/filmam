@@ -8,8 +8,11 @@ import { useEpisodeAction } from "./episodeCard.script";
 import { use } from "react";
 import { UserContext } from "../../../../../contexts";
 import { AuthModalContext } from "../../../../../contexts/authModal";
+import { CheckCheck } from "lucide-react";
 
 function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
+  const isWatching = episode.user_movies.some((eum) => eum.type === UserMovieTypeEnum.WATCHING);
+  const isWatched = episode.user_movies.some((eum) => eum.type === UserMovieTypeEnum.WATCHED);
   const episodeCover = episode.files.find((file) => file.type === FileTypeEnum.COVER);
   const placeholderPath = "/images/placeholder-v.jpg";
   const { t, dir } = useLocale();
@@ -27,9 +30,16 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
       <Image src={episodeCover?.path || placeholderPath} alt={episodeCover?.alt_text || episode.title} width={156} height={198} className="shrink-0 w-[97px] h-full lg:w-[156px] lg:h-[198px] object-cover rounded-lg bg-gray-11" />
       <div className="flex flex-col flex-1 gap-4 lg:gap-5">
         <div className="flex flex-col gap-2 lg:gap-3">
-          <Link href="" className="text-white text-mobile-body-sm lg:text-body-xs w-fit">
-            {dir === "rtl" ? `${t("Movie.Series")} ${episode.movie_title}` : `${episode.movie_title} ${t("Movie.Series")}`}
-          </Link>
+          <div className="w-full flex items-center gap-3 justify-between">
+            <Link href="" className="text-white text-mobile-body-sm lg:text-body-xs w-fit">
+              {dir === "rtl" ? `${t("Movie.Series")} ${episode.movie_title}` : `${episode.movie_title} ${t("Movie.Series")}`}
+            </Link>
+            {isWatched ? (
+              <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/15 ring-1 ring-primary/30">
+                <CheckCheck className="size-3 text-primary" strokeWidth={2.5} />
+              </span>
+            ) : null}
+          </div>
           <span className="text-gray-4 text-caption-md lg:text-body-xxs">
             {episode.season_title} - {t("RecentWatch.episode")} {episode.order}
           </span>
@@ -72,7 +82,7 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
               <Dislike variant={isCurrentlyDisLiked ? "Bold" : "Outline"} className="transition-all size-4 lg:size-6" />
             </Button>
           </div>
-          <Button className="flex-1 h-full cursor-pointer rounded-md text-button-s! lg:text-button-md!">{t("MovieDetailPage.watch")}</Button>
+          <Button className="flex-1 h-full cursor-pointer rounded-md text-button-s! lg:text-button-md!">{isWatching ? "ادامه تماشا" : isWatched ? "تماشای دوباره" : "تماشا"}</Button>
         </div>
       </div>
     </div>

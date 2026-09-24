@@ -724,4 +724,25 @@ export class MovieService {
       })),
     }));
   }
+  async getMovieWatchTarget(
+    movieSlug: string,
+    userId: number,
+    lang: AppLanguage = defaultLang,
+  ) {
+    const watchTargetEpisode = await this.movieRepository.getMovieWatchTarget(
+      movieSlug,
+      userId,
+      lang,
+    );
+    if (watchTargetEpisode) {
+      const { translations, season, ...otherWatchTargetEpisodeData } =
+        watchTargetEpisode;
+
+      return {
+        ...otherWatchTargetEpisodeData,
+        season_order: season.order,
+        title: translations?.[0]?.title,
+      };
+    }
+  }
 }

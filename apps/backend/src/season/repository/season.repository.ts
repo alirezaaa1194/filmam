@@ -5,6 +5,7 @@ import {
 } from '../../common/types/types';
 import { CreateSeasonRepositoryProps } from '../type/season.type';
 import { prisma } from '../../lib/prisma';
+import { UserMovieType } from '../../generated/prisma';
 
 @Injectable()
 export class SeasonRepository {
@@ -189,7 +190,16 @@ export class SeasonRepository {
     userId?: number,
   ) {
     return await prisma.episode.findMany({
-      where: { season: { slug: seasonSlug } },
+      where: {
+        season: { slug: seasonSlug },
+        ...(query.unwatched_episodes && userId
+          ? {
+              user_movies: {
+                none: { user_id: userId, type: UserMovieType.WATCHED },
+              },
+            }
+          : {}),
+      },
       skip: query.page,
       take: query.page_size,
       include: {
@@ -211,30 +221,35 @@ export class SeasonRepository {
               where: { language: query.lang },
               select: { title: true },
             },
-            _count: {
-              select: {
-                seasons: true,
-              },
-            },
+            _count: { select: { seasons: true } },
           },
         },
         user_movies: {
-          where: { user_id: userId ?? -1  },
+          where: { user_id: userId ?? -1 },
           select: { id: true, type: true },
         },
-        files: {
-          include: { upload: true },
-        },
+        files: { include: { upload: true } },
       },
-      orderBy: {
-        order: query.sort_type,
-      },
+      orderBy: { order: query.sort_type },
     });
   }
 
-  async getSeasonEpisodesCount(seasonSlug: string) {
+  async getSeasonEpisodesCount(
+    seasonSlug: string,
+    unwatched_episodes?: boolean,
+    userId?: number,
+  ) {
     return await prisma.episode.count({
-      where: { season: { slug: seasonSlug } },
+      where: {
+        season: { slug: seasonSlug },
+        ...(unwatched_episodes && userId
+          ? {
+              user_movies: {
+                none: { user_id: userId, type: UserMovieType.WATCHED },
+              },
+            }
+          : {}),
+      },
     });
   }
 }

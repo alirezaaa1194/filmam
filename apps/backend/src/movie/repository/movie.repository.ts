@@ -1,4 +1,8 @@
-import { AppLanguage, MovieType } from '../../generated/prisma';
+import {
+  AppLanguage,
+  MovieType,
+  TargetMovieType,
+} from '../../generated/prisma';
 import { prisma } from '../../lib/prisma';
 import { TransactionType } from '../../common/types/types';
 import { defaultLang } from '../../lib/utils';
@@ -414,5 +418,108 @@ export class MovieRepository {
         },
       },
     });
+  }
+
+  async getMovieWatchTarget(
+    movieSlug: string,
+    userId: number,
+    lang: AppLanguage = defaultLang,
+  ) {
+    const orderBy = [
+      {
+        season: {
+          order: 'asc',
+        },
+      },
+      {
+        order: 'asc',
+      },
+    ] as any;
+
+    const watchingEpisode = await prisma.episode.findFirst({
+      where: {
+        movie: {
+          slug: movieSlug,
+        },
+        user_movies: {
+          some: {
+            user_id: userId,
+            type: TargetMovieType.WATCHING,
+          },
+        },
+      },
+      include: {
+        translations: {
+          where: {
+            language: lang,
+          },
+        },
+        season: true,
+      },
+      orderBy,
+    });
+
+    if (watchingEpisode) {
+      return {
+        ...watchingEpisode,
+        type: TargetMovieType.CONTINUE,
+      };
+    }
+
+    const unwatchedEpisode = await prisma.episode.findFirst({
+      where: {
+        movie: {
+          slug: movieSlug,
+        },
+        user_movies: {
+          none: {
+            user_id: userId,
+            type: TargetMovieType.WATCHED,
+          },
+        },
+      },
+      include: {
+        translations: {
+          where: {
+            language: lang,
+          },
+        },
+        season: true,
+      },
+      orderBy,
+    });
+
+    if (unwatchedEpisode) {
+      return {
+        ...unwatchedEpisode,
+        type: TargetMovieType.WATCH,
+      };
+    }
+
+    const firstEpisode = await prisma.episode.findFirst({
+      where: {
+        movie: {
+          slug: movieSlug,
+        },
+      },
+      include: {
+        translations: {
+          where: {
+            language: lang,
+          },
+        },
+        season: true,
+      },
+      orderBy,
+    });
+
+    if (!firstEpisode) {
+      return null;
+    }
+
+    return {
+      ...firstEpisode,
+      type: TargetMovieType.REWATCH,
+    };
   }
 }

@@ -1,0 +1,2 @@
+-- CreateEnum
+CREATE TYPE "TargetMovieType" AS ENUM ('WATCHING', 'CONTINUE', 'WATCHED', 'WATCH', 'REWATCH');

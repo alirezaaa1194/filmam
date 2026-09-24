@@ -8,8 +8,8 @@ export type MovieFunctionalitiesProps = {
   dislike?: boolean;
   play?: MoviePlayFunctionality | false;
   trailer?: boolean;
-  share?: boolean;
   download?: boolean;
+  hero?: boolean;
 };
 
 export type MoviePlayFunctionality = {

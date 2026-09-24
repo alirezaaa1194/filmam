@@ -206,12 +206,29 @@ export type __MovieDetailPublicType = {
   description: string;
   seasons_count?: number;
   episodes_count?: number;
+  imdb_score: number;
   factors?: __MovieFactorType[];
   genres?: __MovieGenreType[];
   countries?: __MovieCountryType[];
   languages?: __MovieLanguageType[];
   files: __MovieFileType[];
   seasons?: __MovieSeasonType[];
+};
+
+export type __WatchTargetEpisodeType = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  order: number;
+  slug: string;
+  season_id: number;
+  movie_id: number;
+  likes_count: number;
+  dislikes_count: number;
+  watches_count: number;
+  type: __TargetMovieTypeEnum;
+  title: string;
+  season_order: number;
 };
 
 export type __EpisodeDetailPublicType = {
@@ -1148,6 +1165,21 @@ export type __UserMovieActions = {
   entity_type: __SectionUserMovieTypeEnum;
 };
 
+export type __MovieSeasonWithEpisodesType = {
+  id: number;
+  title: string;
+  slug: string;
+  order: number;
+  episodes: __MovieEpisodeSimpleType[];
+};
+
+export type __MovieEpisodeSimpleType = {
+  id: number;
+  title: string;
+  order: number;
+  slug: string;
+};
+
 //      ----------------------- enums -----------------------
 
 export enum __AppLanguagesEnum {
@@ -1228,6 +1260,7 @@ export enum __FileTypeEnum {
   BANNER = "BANNER",
   FILM = "FILM",
   COVER = "COVER",
+  TRAILER = "TRAILER",
 }
 
 export enum __MovieTypeEnum {
@@ -1243,18 +1276,10 @@ export enum __CommentEntityTypeEnum {
   MOVIE = "MOVIE",
   EPISODE = "EPISODE",
 }
-
-export type __MovieSeasonWithEpisodesType = {
-  id: number;
-  title: string;
-  slug: string;
-  order: number;
-  episodes: __MovieEpisodeSimpleType[];
-};
-
-export type __MovieEpisodeSimpleType = {
-  id: number;
-  title: string;
-  order: number;
-  slug: string;
-};
+export enum __TargetMovieTypeEnum {
+  WATCHING = "WATCHING",
+  CONTINUE = "CONTINUE",
+  WATCHED = "WATCHED",
+  WATCH = "WATCH",
+  REWATCH = "REWATCH",
+}
