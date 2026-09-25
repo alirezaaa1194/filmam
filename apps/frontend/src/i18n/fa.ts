@@ -39,7 +39,7 @@ export const FA: typeof EN = {
   },
   Hero: {
     watch: "مشاهده",
-    watchTrailer: "مشاهده تریلر",
+    watchTrailer: "پیش نمایش",
     addToWishlist: "اضافه به لیست علاقه مندی",
   },
   Movie: {

@@ -39,7 +39,7 @@ export const AR: typeof EN = {
   },
   Hero: {
     watch: "شاهد",
-    watchTrailer: "شاهد المقطع الدعائي",
+    watchTrailer: "المقطع الدعائي",
     addToWishlist: "إضافة إلى المفضلة",
   },
   Movie: {

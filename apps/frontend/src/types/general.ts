@@ -206,7 +206,7 @@ export type __MovieDetailPublicType = {
   description: string;
   seasons_count?: number;
   episodes_count?: number;
-  imdb_score: number;
+  imdb_score?: number;
   factors?: __MovieFactorType[];
   genres?: __MovieGenreType[];
   countries?: __MovieCountryType[];
@@ -344,6 +344,7 @@ export type __FactorMovieListItemType = {
   type: string;
   slug: string;
   age_limit?: number;
+  imdb_score?: number;
   released_year: number;
   likes_count: number;
   dislikes_count: number;
@@ -642,6 +643,7 @@ export type __MovieAdminDetailType = {
   type: string;
   slug: string;
   age_limit?: number;
+  imdb_score?: number;
   released_year: number;
   likes_count: number;
   dislikes_count: number;
@@ -667,6 +669,7 @@ export type __MovieRecommendedType = {
   type: string;
   slug: string;
   age_limit?: number;
+  imdb_score?: number;
   released_year: number;
   likes_count: number;
   dislikes_count: number;
@@ -685,6 +688,7 @@ export type __MovieListItemType = {
   type: __MovieTypeEnum;
   slug: string;
   age_limit?: number;
+  imdb_score?: number;
   released_year: number;
   likes_count: number;
   dislikes_count: number;

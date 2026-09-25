@@ -42,10 +42,11 @@ function MovieFunctionalitiesComp({ movie, save = true, notification = true, lik
             {notification && movie.type === MovieTypeEnum.SERIES ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
             {like ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieLikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
             {dislike ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+            {!hero ? <MovieDownloadFunctionalityComp movie={movie} className="block flex-1 lg:hidden" /> : null}
           </div>
         ) : null}
       </div>
-      {!hero ? <div className="flex items-center justify-center lg:justify-start gap-2 lg:gap-3">{movie.type === MovieTypeEnum.CINEMATIC && download ? <MovieDownloadFunctionalityComp movie={movie} /> : null}</div> : null}
+      {!hero ? <div className="flex items-center justify-center lg:justify-start gap-2 lg:gap-3">{movie.type === MovieTypeEnum.CINEMATIC && download ? <MovieDownloadFunctionalityComp movie={movie} className="hidden lg:block" /> : null}</div> : null}
     </div>
   );
 }

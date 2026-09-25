@@ -1,88 +1,61 @@
 import Image from "next/image";
-import userPlaceholder from "@/assets/images/userPlaceholder.webp";
-import { Dislike, Like1 } from "iconsax-react";
-import { AuthModeEnum, CommentEntityTypeEnum, CommentType, UserMovieTypeEnum } from "../../../../../types";
-import { useCommentVote } from "./commentCard.script";
 import { use } from "react";
+import { Dislike, Like1 } from "iconsax-react";
+import userPlaceholder from "@/assets/images/userPlaceholder.webp";
+import { AuthModeEnum, UserMovieTypeEnum } from "../../../../../types";
+import { useCommentVote } from "./commentCard.script";
 import { UserContext } from "../../../../../contexts";
 import { AuthModalContext } from "../../../../../contexts/authModal";
 import { useLocale } from "../../../../../hooks";
-import { FormatDate } from "../../../../../scripts";
+import { FormatDate, HashEmail } from "../../../../../scripts";
+import { CommentCardCompProps } from "./commentCard.type";
 
-function CommentCardComp({ entitySlug, entityType, comment }: { entitySlug: string; entityType: CommentEntityTypeEnum; comment: CommentType }) {
+function CommentCardComp({ entitySlug, entityType, comment }: CommentCardCompProps) {
   const user = use(UserContext);
   const { setAuthMode } = use(AuthModalContext);
-  const { vote: voteLike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.LIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ثبت شد", "خطا در ثبت نظر");
-  const { vote: voteDislike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.DISLIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ثبت شد", "خطا در ثبت نظر");
   const { locale } = useLocale();
 
+  const { vote: voteLike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.LIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ثبت شد", "خطا در ثبت نظر");
+  const { vote: voteDislike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.DISLIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ثبت شد", "خطا در ثبت نظر");
+
+  const handleVote = (voteFn: typeof voteLike, commentId: number, isCurrentlyVoted: boolean) => {
+    if (user) {
+      voteFn({ commentId, isCurrentlyVoted });
+    } else {
+      setAuthMode({
+        mode: AuthModeEnum.LOGIN,
+        callback: () => voteFn({ commentId, isCurrentlyVoted }),
+      });
+    }
+  };
+  const hashedEmail = HashEmail(comment.user.email);
+
   return (
-    <div className="flex flex-col p-4 bg-gray-13 border border-gray-12 rounded-md lg:rounded-xl gap-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image src={userPlaceholder} alt="" width={16} height={16} className="size-10 rounded-full shrink-0" />
-          <div className="flex flex-col gap-1">
-            <span className="text-primary text-h-6">{comment.user.username}</span>
-            <span className="text-mobile-caption-md text-gray-9">{FormatDate(comment.created_at, locale)}</span>
+    <div className="flex flex-col p-4 bg-gray-13 border border-gray-12 rounded-md lg:rounded-xl gap-3 lg:gap-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 lg:gap-3 min-w-0">
+          <Image src={`https://www.gravatar.com/avatar/${hashedEmail}?d=mp`} alt={comment.user.username} width={40} height={40} className="size-9 lg:size-10 rounded-full shrink-0 bg-gray-11" />
+          <div className="flex flex-col min-w-0">
+            <span className="text-white text-caption-md truncate">{comment.user.username}</span>
+            <span className="text-gray-8 text-mobile-caption-sm lg:text-caption-md">{FormatDate(comment.created_at, locale)}</span>
           </div>
         </div>
-        <div className="flex items-center gap-5">
-          <span className="flex items-center gap-2">
-            <span className="text-gray-9">{comment.likes_count}</span>
-            <button
-              onClick={() => {
-                if (user) {
-                  voteLike({
-                    commentId: comment.id,
-                    isCurrentlyVoted: comment.did_user_liked,
-                  });
-                } else {
-                  setAuthMode({
-                    mode: AuthModeEnum.LOGIN,
-                    callback: () => {
-                      voteLike({
-                        commentId: comment.id,
-                        isCurrentlyVoted: comment.did_user_liked,
-                      });
-                    },
-                  });
-                }
-              }}
-              className={`cursor-pointer ${comment.did_user_liked ? "hover:[&>svg]:fill-primary/80" : "hover:[&>svg]:fill-primary"}`}
-            >
-              <Like1 variant={comment.did_user_liked ? "Bold" : "Outline"} className={`${comment.did_user_liked ? "fill-primary" : "fill-gray-9"} size-4 lg:size-6 transition-all`} />
+        <div className="flex items-center gap-3 lg:gap-5 shrink-0">
+          <div className="flex items-center gap-1.5 lg:gap-2">
+            <span className="text-gray-7 text-mobile-caption-md lg:text-caption-md tabular-nums">{comment.likes_count}</span>
+            <button type="button" onClick={() => handleVote(voteLike, comment.id, comment.did_user_liked)} className="cursor-pointer flex items-center justify-center transition-colors" aria-label="لایک">
+              <Like1 variant={comment.did_user_liked ? "Bold" : "Outline"} className={`size-5 lg:size-5 transition-all ${comment.did_user_liked ? "fill-primary" : "fill-gray-8 hover:fill-primary"}`} />
             </button>
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="text-gray-9">{comment.dislikes_count}</span>
-            <button
-              onClick={() => {
-                if (user) {
-                  voteDislike({
-                    commentId: comment.id,
-                    isCurrentlyVoted: comment.did_user_disliked,
-                  });
-                } else {
-                  setAuthMode({
-                    mode: AuthModeEnum.LOGIN,
-                    callback: () => {
-                      voteDislike({
-                        commentId: comment.id,
-                        isCurrentlyVoted: comment.did_user_disliked,
-                      });
-                    },
-                  });
-                }
-              }}
-
-              className={`cursor-pointer ${comment.did_user_disliked ? "hover:[&>svg]:fill-complementary/80" : "hover:[&>svg]:fill-complementary"}`}
-            >
-              <Dislike variant={comment.did_user_disliked ? "Bold" : "Outline"} className={`${comment.did_user_disliked ? "fill-complementary" : "fill-gray-9"} size-4 lg:size-6 transition-all`} />
+          </div>
+          <div className="flex items-center gap-1.5 lg:gap-2">
+            <span className="text-gray-7 text-mobile-caption-md lg:text-caption-md tabular-nums">{comment.dislikes_count}</span>
+            <button type="button" onClick={() => handleVote(voteDislike, comment.id, comment.did_user_disliked)} className="cursor-pointer flex items-center justify-center transition-colors" aria-label="دیس‌لایک">
+              <Dislike variant={comment.did_user_disliked ? "Bold" : "Outline"} className={`size-5 lg:size-5 transition-all ${comment.did_user_disliked ? "fill-complementary" : "fill-gray-8 hover:fill-complementary"}`} />
             </button>
-          </span>
+          </div>
         </div>
       </div>
-      <p className="ps-0 lg:ps-[52px] text-gray-6 text-caption-lg">{comment.body}</p>
+      <p className="text-gray-3 text-body-xxs ps-0 lg:ps-[52px] whitespace-pre-wrap break-words">{comment.body}</p>
     </div>
   );
 }

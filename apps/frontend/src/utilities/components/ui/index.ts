@@ -12,3 +12,4 @@ export * from "./separator/separator.index";
 export * from "./sheet/sheet.index";
 export * from "./sonner/sonner.index";
 export * from "./spinner/spinner.index";
+export * from "./switch/switch.index";

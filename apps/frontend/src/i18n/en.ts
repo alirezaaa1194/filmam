@@ -37,7 +37,7 @@ export const EN = {
   },
   Hero: {
     watch: "Watch",
-    watchTrailer: "Watch trailer",
+    watchTrailer: "Trailer",
     addToWishlist: "Add to wishlist",
   },
   Movie: {

@@ -13,7 +13,6 @@ import { useState } from "react";
 import { FreeMode } from "swiper/modules";
 import "swiper/css";
 
-
 function SuggestionMoviesComp({ slug }: { slug: string }) {
   const { locale, dir, t } = useLocale();
   const [isBeginning, setIsBeginning] = useState(true);
@@ -26,7 +25,7 @@ function SuggestionMoviesComp({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="flex flex-col gap-4 lg:gap-6 mt-8 lg:mt-12 max-w-layout-max mx-auto">
+    <section className="w-full flex flex-col gap-4 lg:gap-8 max-w-layout-max mx-auto">
       <SectionHeaderComp title="به شما پیشنهاد میشود" />
       <div className="relative">
         <div className={`absolute top-0 left-0 w-10 lg:w-28 z-10 h-full bg-[linear-gradient(-90deg,rgba(12,12,12,0)_0%,rgba(12,12,12,0.72)_50%,rgba(12,12,12,1)_100%)] transition-all ${isEnd ? "opacity-0 invisible" : ""}`}></div>
