@@ -44,7 +44,8 @@ model Movie {
   likes_count    Int                @default(0)
   dislikes_count Int                @default(0)
   watches_count  Int                @default(0)
-  imdb_score     Float?
+  imdb_score     Float
+  has_dub        Boolean   @default(false)
   combined_tags  String
   episodes       Episode[]
   factors        MovieFactor[]

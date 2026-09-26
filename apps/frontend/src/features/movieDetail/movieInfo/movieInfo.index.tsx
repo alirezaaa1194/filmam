@@ -24,11 +24,11 @@ function MovieDetailInfoComp({ slug }: { slug: string }) {
   return (
     <main className="flex flex-col gap-6 lg:gap-9">
       <MovieHeaderComp movie={movie} />
-      <MovieDescriptionComp movie={movie} />
-      <MovieInformationTable movie={movie} />
       {movie.type === MovieTypeEnum.SERIES ? <MovieSeasonsComp movie={movie} /> : null}
       <EpisodeFactorsComp movie={movie} />
       <CommentSectionComp movie={movie} entitySlug={slug} entityId={movie.id} entityType={CommentEntityTypeEnum.MOVIE} movieTitle={movie.title} />
+      <MovieInformationTable movie={movie} />
+      <MovieDescriptionComp movie={movie} />
       <SuggestionMoviesComp slug={slug} />
     </main>
   );

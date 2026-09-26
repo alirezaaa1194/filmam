@@ -2,24 +2,16 @@ import { Play } from "iconsax-react";
 import Link from "next/link";
 import { use } from "react";
 import { useQuery } from "@tanstack/react-query";
-
 import { Button } from "../../../ui";
-
 import { MovieDetailPublicType, MovieListItemType, MovieTypeEnum, UserMovieActionType, UserMovieTypeEnum, WatchTargetEpisodeType, WatchTargetMovieTypeEnum } from "../../../../../types";
-
-import { useLocale } from "../../../../../hooks";
 import { UserContext } from "../../../../../contexts";
 import { AppApis } from "../../../../../data";
 import { ClientCall } from "../../../../../scripts/client";
 
 function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieListItemType | MovieDetailPublicType; hero: boolean; actions?: UserMovieActionType[] }) {
-  const { t } = useLocale();
   const user = use(UserContext);
-
   const isWatching = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHING);
-
   const isWatched = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHED);
-
   const isSeries = movie.type === MovieTypeEnum.SERIES;
 
   const { data, isPending } = useQuery({

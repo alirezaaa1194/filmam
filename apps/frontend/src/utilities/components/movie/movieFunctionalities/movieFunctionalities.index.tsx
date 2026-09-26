@@ -30,23 +30,20 @@ function MovieFunctionalitiesComp({ movie, save = true, notification = true, lik
   const hasTrailer = movie.files.some((file) => file.type === FileTypeEnum.TRAILER);
 
   return (
-    <div className="w-full flex items-center justify-between lg:gap-4">
-      <div className="flex items-center flex-col lg:flex-row lg:justify-start gap-3 lg:gap-4 w-full">
-        <div className="flex flex-col lg:flex-row gap-2 lg:gap-3 w-full lg:w-fit">
-          {play ? <MoviePlayFunctionalityComp movie={movie} hero={hero} actions={data} /> : null}
-          {trailer && hasTrailer && !hero ? <MovieTrailerFunctionalityComp movie={movie} /> : null}
-        </div>
-        {!hero ? (
-          <div className="w-full flex items-center lg:justify-start gap-2 lg:gap-3">
-            {save ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieSaveFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-            {notification && movie.type === MovieTypeEnum.SERIES ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-            {like ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieLikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-            {dislike ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-            {!hero ? <MovieDownloadFunctionalityComp movie={movie} className="block flex-1 lg:hidden" /> : null}
-          </div>
-        ) : null}
+    <div className="flex items-center flex-col lg:flex-row lg:justify-start gap-4 w-full">
+      <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-fit">
+        {play ? <MoviePlayFunctionalityComp movie={movie} hero={hero} actions={data} /> : null}
+        {trailer && hasTrailer && !hero ? <MovieTrailerFunctionalityComp movie={movie} /> : null}
       </div>
-      {!hero ? <div className="flex items-center justify-center lg:justify-start gap-2 lg:gap-3">{movie.type === MovieTypeEnum.CINEMATIC && download ? <MovieDownloadFunctionalityComp movie={movie} className="hidden lg:block" /> : null}</div> : null}
+      {!hero ? (
+        <div className="w-full flex items-center lg:justify-start gap-4">
+          {save ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieSaveFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {notification && movie.type === MovieTypeEnum.SERIES ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {like ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieLikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {dislike ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {!hero && movie.type === MovieTypeEnum.CINEMATIC && download ? <MovieDownloadFunctionalityComp movie={movie} /> : null}
+        </div>
+      ) : null}
     </div>
   );
 }

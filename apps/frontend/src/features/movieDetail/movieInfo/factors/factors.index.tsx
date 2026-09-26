@@ -10,7 +10,7 @@ function EpisodeFactorsComp({ movie }: { movie: MovieDetailPublicType }) {
 
   return (
     <section className="w-full px-layout-x-space max-w-layout-max mx-auto flex flex-col gap-4 lg:gap-7">
-      <div className="flex flex-col gap-3 lg:gap-4">
+      <div className="flex flex-col gap-2 lg:gap-4">
         <h5 className="text-white text-mobile-h-6 lg:text-h-5">{t("MovieDetailPage.Actors")}</h5>
         <div className="flex flex-wrap gap-2 lg:gap-5">
           {actorFactors?.map((factor) => (
@@ -24,7 +24,7 @@ function EpisodeFactorsComp({ movie }: { movie: MovieDetailPublicType }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 lg:gap-4">
+      <div className="flex flex-col gap-2 lg:gap-4">
         <h5 className="text-white text-mobile-h-6 lg:text-h-5">{t("MovieDetailPage.Factors")}</h5>
         <div className="flex flex-wrap gap-x-5 gap-y-3 lg:gap-x-8 lg:gap-y-5">
           {creatorFactors?.map((factor) => (

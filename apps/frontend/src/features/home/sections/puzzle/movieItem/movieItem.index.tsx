@@ -2,12 +2,11 @@ import { Heart, Stickynote, UserSquare, VideoPlay } from "iconsax-react";
 import Image from "next/image";
 import { FileTypeEnum, MovieListItemType, RoleTypeEnum } from "../../../../../types";
 import { useLocale } from "@/hooks";
+import { movieLikePercentCalc } from "../../../../../lib/utils";
 
 function PuzzleMovieItemComp({ movie }: { movie: MovieListItemType }) {
   const movieThumbnail = movie.files.find((file) => file.type === FileTypeEnum.THUMBNAIL);
   const movieCreator = movie.factors?.find((factor) => factor.role.type === RoleTypeEnum.PRESENTER);
-  const total = movie.likes_count + movie.dislikes_count;
-  const movieLikePercent = total === 0 ? 0 : movie.likes_count > movie.dislikes_count ? (movie.likes_count / total) * 100 : 0;
   const placeholderPath = "/images/placeholder-v.jpg";
   const { t } = useLocale();
 
@@ -28,7 +27,7 @@ function PuzzleMovieItemComp({ movie }: { movie: MovieListItemType }) {
         </span>
         <span className="text-gray-8 flex items-center gap-1">
           <Heart className="size-6 fill-gray-8 shrink-0" variant="Outline" />
-          <span className="text-body-xxs flex-1 text-nowrap line-clamp-1">{movieLikePercent}%</span>
+          <span className="text-body-xxs flex-1 text-nowrap line-clamp-1">{movieLikePercentCalc(movie.likes_count, movie.dislikes_count)}%</span>
         </span>
         <span className="text-gray-8 flex items-center gap-1">
           <VideoPlay className="size-6 fill-gray-8 shrink-0" variant="Outline" />

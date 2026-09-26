@@ -21,7 +21,7 @@ function SortEpisodesComp({ open, onOpenChange, sortValue, onSortChange, unwatch
         <Separator className="bg-gray-12" />
         <DropdownMenuItem className="flex items-center justify-between">
           مشاهده نشده
-          <Switch checked={unwatchedEpisodes} onCheckedChange={onUnwatchedChange} dir="ltr" />
+          <Switch size="sm" checked={unwatchedEpisodes} onCheckedChange={onUnwatchedChange} dir="ltr" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

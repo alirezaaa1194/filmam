@@ -52,7 +52,7 @@ function CommentSectionComp({ entitySlug, entityId, entityType, movieTitle, movi
   const flatComments = comments?.pages.flatMap((page) => page.data ?? []) ?? [];
 
   return (
-    <section className="w-full px-layout-x-space max-w-layout-max mx-auto flex flex-col gap-4 lg:gap-8">
+    <section className="w-full px-layout-x-space max-w-layout-max mx-auto flex flex-col gap-2 lg:gap-4">
       <h5 className="text-white text-mobile-h-5 lg:text-h-5">دیدگاه ها</h5>
 
       <div className="flex flex-col gap-3">

@@ -291,16 +291,22 @@ export class SeasonService {
       return {
         ...otherEpisodeData,
         title: translations[0].title,
+        short_description: translations[0].short_description,
         movie_title: movie.translations[0].title,
         season_title: season.translations[0].title,
         season_slug: seasonSlug,
+        season_order: season.order,
         movie_season_count: movie._count.seasons,
         watch_progress_time: userEpisode ? userEpisode.progress_time : 0,
         files: seasonFiles,
       };
     });
     const seasonEpisodesCount =
-      await this.seasonRepository.getSeasonEpisodesCount(seasonSlug, query.unwatched_episodes, userId);
+      await this.seasonRepository.getSeasonEpisodesCount(
+        seasonSlug,
+        query.unwatched_episodes,
+        userId,
+      );
     return {
       page: page + 1,
       page_size,

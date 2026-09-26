@@ -205,14 +205,15 @@ export class SeasonRepository {
       include: {
         translations: {
           where: { language: query.lang },
-          select: { title: true },
+          select: { title: true, short_description: true },
         },
         season: {
           select: {
             translations: {
               where: { language: query.lang },
-              select: { title: true },
+              select: { title: true, },
             },
+            order: true,
           },
         },
         movie: {

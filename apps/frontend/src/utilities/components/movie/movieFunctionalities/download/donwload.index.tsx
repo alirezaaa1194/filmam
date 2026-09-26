@@ -6,11 +6,11 @@ function MovieDownloadFunctionalityComp({ movie, className }: { movie: MovieDeta
   const movieFilmFile = movie.files.find((file) => file.type === FileTypeEnum.POSTER);
 
   return (
-    <a href={movieFilmFile?.path} download={`${movie.title}`} target="_blank" className={className}>
-      <Button className={`w-full h-[46px] lg:size-[46px] rounded-md cursor-pointer bg-white/7! border border-white/10 hover:border-white`}>
+    <Button asChild className={`flex flex-1 lg:ms-auto lg:flex-0 h-[46px] lg:size-[46px] rounded-md cursor-pointer bg-white/7! border border-white/10 hover:border-white ${className}`}>
+      <a href={movieFilmFile?.path} download={movie.title} target="_blank">
         <ImportCurve variant="Outline" className="size-6 transition-all fill-white" />
-      </Button>
-    </a>
+      </a>
+    </Button>
   );
 }
 

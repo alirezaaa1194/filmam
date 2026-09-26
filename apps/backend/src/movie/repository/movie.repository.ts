@@ -14,6 +14,8 @@ export class MovieRepository {
       released_year: number;
       slug: string;
       combined_tags: string;
+      imdb_score: number;
+      has_dub?: boolean;
     },
     tx: TransactionType,
   ) {

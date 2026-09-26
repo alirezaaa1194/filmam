@@ -72,7 +72,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
   const isEmptyBecauseNoEpisodes = isListEmpty && !unwatchedEpisodes;
 
   return (
-    <section className="flex flex-col gap-4 lg:gap-8 w-full max-w-layout-max mx-auto px-layout-x-space">
+    <section className="flex flex-col gap-2 lg:gap-4 w-full max-w-layout-max mx-auto px-layout-x-space">
       <div className="w-full flex items-center justify-between">
         <h5 className="text-mobile-h-5 lg:text-h-5">
           {t("MovieDetailPage.Episodes")} {movie.title}
@@ -84,7 +84,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
           <TabsList className="flex flex-nowrap gap-2 lg:gap-5 h-max!">
             {movie.seasons?.map((season) => (
               <TabsTrigger key={season.id} value={season.slug} className={`px-4 lg:px-6 h-8 lg:h-12 rounded-md bg-transparent border border-gray-9 text-gray-9! text-button-s md:text-button-md cursor-pointer transition-all ${activeTab === season.slug ? "border-primary bg-primary hover:bg-primary/80 hover:border-primary/80 text-white!" : "hover:border-primary hover:text-primary!"}`}>
-                {season.title}
+                فصل {season.order}
               </TabsTrigger>
             ))}
           </TabsList>

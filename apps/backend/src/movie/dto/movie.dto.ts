@@ -4,6 +4,7 @@ import { CreateMovieTranslationDto } from '../../movie-translation/dto/movie-tra
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -47,6 +48,30 @@ export class CreateMovieDto {
   @IsNumber()
   @Type(() => Number)
   age_limit?: number | null;
+
+  @ApiProperty({
+    type: 'number',
+    example: 14,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  imdb_score!: number;
+
+  @ApiProperty({
+    name: 'unwatched_episodes',
+    required: false,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  has_dub?: boolean;
 
   @ApiProperty({
     type: 'string',
@@ -305,5 +330,3 @@ export class GetMovieSeasonsAndEpisodesDto {
   @IsOptional()
   lang?: AppLanguage;
 }
-
-
