@@ -7,7 +7,7 @@ function MovieDescriptionComp({ movie }: { movie: MovieDetailPublicType }) {
   const isDescriptionLong = (movie.description?.length ?? 0) > 200;
 
   return (
-    <section className="px-layout-x-space max-w-layout-max mx-auto">
+    <section className="w-full px-layout-x-space max-w-layout-max mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
         <div className="flex flex-col gap-2 lg:gap-4">
           <h3 className="text-white text-mobile-h-5 lg:text-h-5">داستان {movie.title}</h3>

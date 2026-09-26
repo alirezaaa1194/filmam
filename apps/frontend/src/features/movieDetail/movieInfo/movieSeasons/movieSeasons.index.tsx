@@ -60,7 +60,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
     if (didUserSaved === undefined) return null;
 
     return (
-      <section className="max-w-layout-max mx-auto px-layout-x-space mt-4 lg:mt-16">
+      <section className="w-full max-w-layout-max mx-auto px-layout-x-space mt-4 lg:mt-16">
         <SeasonsEmptyStateComp variant="noSeasons" title="هنوز فصلی اضافه نشده است" description="فصل های جدید به زودی اضافه خواهند شد" action={!isFullyActive ? <NotifyButtonComp onClick={handleToggle} /> : null} />
       </section>
     );
