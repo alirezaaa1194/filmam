@@ -139,8 +139,12 @@ export class MovieRepository {
     });
   }
 
-  async getMovieDetailPublic(slug: string, lang: AppLanguage) {
-    return await prisma.movie.findUnique({
+  async getMovieDetailPublic(
+    slug: string,
+    lang: AppLanguage,
+    tx?: TransactionType,
+  ) {
+    return await (tx || prisma).movie.findUnique({
       where: { slug },
       include: {
         _count: {
@@ -424,8 +428,9 @@ export class MovieRepository {
 
   async getMovieWatchTarget(
     movieSlug: string,
-    userId: number,
+    userId?: number,
     lang: AppLanguage = defaultLang,
+    tx?: TransactionType,
   ) {
     const orderBy = [
       {
@@ -438,7 +443,7 @@ export class MovieRepository {
       },
     ] as any;
 
-    const watchingEpisode = await prisma.episode.findFirst({
+    const watchingEpisode = await (tx || prisma).episode.findFirst({
       where: {
         movie: {
           slug: movieSlug,
@@ -468,7 +473,7 @@ export class MovieRepository {
       };
     }
 
-    const unwatchedEpisode = await prisma.episode.findFirst({
+    const unwatchedEpisode = await (tx || prisma).episode.findFirst({
       where: {
         movie: {
           slug: movieSlug,
@@ -498,7 +503,7 @@ export class MovieRepository {
       };
     }
 
-    const firstEpisode = await prisma.episode.findFirst({
+    const firstEpisode = await (tx || prisma).episode.findFirst({
       where: {
         movie: {
           slug: movieSlug,

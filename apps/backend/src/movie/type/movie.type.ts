@@ -6,6 +6,7 @@ import {
   RoleType,
   SortByType,
 } from '../../common/enums';
+import { TargetMovieType } from '../../generated/prisma';
 
 export type Movie = {
   id: number;
@@ -113,4 +114,20 @@ export type MovieFilterInput = {
   released_year_from?: number | null;
   released_year_to?: number | null;
   section?: string | null;
+};
+
+export type WatchTargetEpisodeType = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  order: number;
+  slug: string;
+  season_id: number;
+  movie_id: number;
+  likes_count: number;
+  dislikes_count: number;
+  watches_count: number;
+  type: TargetMovieType;
+  title: string;
+  season_order: number;
 };

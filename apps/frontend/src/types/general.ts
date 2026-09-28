@@ -216,6 +216,7 @@ export type __MovieDetailPublicType = {
   languages?: __MovieLanguageType[];
   files: __MovieFileType[];
   seasons?: __MovieSeasonType[];
+  watch_target?: __WatchTargetEpisodeType;
 };
 
 export type __WatchTargetEpisodeType = {

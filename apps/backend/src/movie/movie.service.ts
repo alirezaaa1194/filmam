@@ -297,13 +297,29 @@ export class MovieService {
     }
   }
 
-  async getMovieDetailPublic(slug: string, lang: AppLanguage = defaultLang) {
-    const movie = await this.movieRepository.getMovieDetailPublic(slug, lang);
-    if (movie) {
-      return normalizeMovieDetail({
-        ...movie,
-      });
-    }
+  async getMovieDetailPublic(
+    slug: string,
+    lang: AppLanguage = defaultLang,
+    userId?: number,
+  ) {
+    const result = await prisma.$transaction(async (tx) => {
+      const movie = await this.movieRepository.getMovieDetailPublic(
+        slug,
+        lang,
+        tx,
+      );
+      if (movie) {
+        const watchTarget = await this.getMovieWatchTarget(
+          slug,
+          userId,
+          lang,
+          tx,
+        );
+
+        return { ...normalizeMovieDetail(movie), watch_target: watchTarget };
+      }
+    });
+    return result;
   }
 
   async getAllMovies(filter: MovieFilterInput, userId?: number) {
@@ -724,15 +740,22 @@ export class MovieService {
       })),
     }));
   }
+
   async getMovieWatchTarget(
     movieSlug: string,
-    userId: number,
+    userId?: number,
     lang: AppLanguage = defaultLang,
+    tx?: TransactionType,
   ) {
+    if (!userId) {
+      return;
+    }
+
     const watchTargetEpisode = await this.movieRepository.getMovieWatchTarget(
       movieSlug,
       userId,
       lang,
+      tx,
     );
     if (watchTargetEpisode) {
       const { translations, season, ...otherWatchTargetEpisodeData } =

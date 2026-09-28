@@ -1,5 +1,6 @@
-function loading() {
-  return <div>loading</div>;
-}
+import MovieInfoSkeletonComp from "../../../features/movieDetail/movieInfo/skeleton/skeleton.index";
 
+function loading() {
+  return <MovieInfoSkeletonComp />;
+}
 export default loading;

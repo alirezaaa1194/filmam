@@ -2,7 +2,6 @@ import { AppApis } from "../../../data";
 import { GetTranslation, ServerCall } from "../../../scripts/server";
 import { MovieDetailPublicType, MovieTypeEnum } from "../../../types";
 import MovieDetailPageComp from "../../../features/movieDetail/movieDetail.index";
-import { Suspense } from "react";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { t } = await GetTranslation();
@@ -18,11 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 async function MovieDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  return (
-    <Suspense fallback={"loading2..."}>
-      <MovieDetailPageComp slug={slug} />
-    </Suspense>
-  );
+  return <MovieDetailPageComp slug={slug} />;
 }
 
 export default MovieDetailPage;

@@ -16,10 +16,11 @@ import NormalSectionSkeletonComp from "./normal/skeleton/normalSectionSkeleton.i
 import HeroLikeSectionSkeletonComp from "./heroLike/skeleton/heroLikeSectionSkeleton.index";
 import KidsSectionSkeletonComp from "./kids/skeleton/kidsSectionSkeleton.index";
 import PuzzleSectionSkeletonComp from "./puzzle/skeleton/puzzleSectionSkeleton.index";
+import HeroSectionSkeletonComp from "./hero/skeleton/heroSectionSkeleton.index";
 
 function HomeSectionsComp() {
   const { locale } = useLocale();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(sectionsInfiniteOptions(locale, ClientCall));
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } = useInfiniteQuery(sectionsInfiniteOptions(locale, ClientCall));
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,6 +52,16 @@ function HomeSectionsComp() {
 
       {isFetchingNextPage && (
         <>
+          <RecentWatchSectionSkeletonComp />
+          <NormalSectionSkeletonComp />
+          <HeroLikeSectionSkeletonComp />
+          <KidsSectionSkeletonComp />
+          <PuzzleSectionSkeletonComp />
+        </>
+      )}
+      {isPending && (
+        <>
+          <HeroSectionSkeletonComp />
           <RecentWatchSectionSkeletonComp />
           <NormalSectionSkeletonComp />
           <HeroLikeSectionSkeletonComp />

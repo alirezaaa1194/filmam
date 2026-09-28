@@ -114,28 +114,19 @@ export class MovieController {
   }
 
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MovieDetailPublicResponseDto })
+  @Public()
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ type: MovieDetailPublicResponseDto })
-  @Get('/:slug/watch-target')
-  async getMovieWatchTarget(
-    @Param('slug') slug: string,
-    @Req() req,
-    @Query() query: GetMovieDetailPublicDto,
-  ) {
-    return this.movieService.getMovieWatchTarget(
-      slug,
-      req?.user?.userId,
-      query.lang,
-    );
-  }
-
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: MovieDetailPublicResponseDto })
   @Get('/:slug')
   async getMovieDetailPublic(
     @Param('slug') slug: string,
     @Query() query: GetMovieDetailPublicDto,
+    @Req() req,
   ) {
-    return this.movieService.getMovieDetailPublic(slug, query.lang);
+    return this.movieService.getMovieDetailPublic(
+      slug,
+      query.lang,
+      req?.user?.userId,
+    );
   }
 }

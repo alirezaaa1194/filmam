@@ -3,19 +3,15 @@
 import { useState } from "react";
 import { ArrowDown2 } from "iconsax-react";
 import { CommentEntityTypeEnum, MovieSeasonWithEpisodesType } from "@/types";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../ui";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/utilities/components/ui";
 import { useQuery } from "@tanstack/react-query";
 import { ClientCall } from "../../../../../scripts/client";
 import { AppApis } from "../../../../../data";
 import { useLocale } from "../../../../../hooks";
+import { CommentSourcePickerProps } from "./commentSourcePicker.type";
+import { CommentSourcePickerSkeletonComp } from "./skeleton/skeleton.index";
 
-export type CommentEntityPickerProps = {
-  entityId: number;
-  entityType: CommentEntityTypeEnum;
-  entitySlug: string;
-};
-
-export default function CommentEntityPickerComp({ movieSlug, movieTitle, movieId, commentEntityType, setCommentEntityType }: { movieSlug: string; movieTitle?: string; movieId: number; commentEntityType: CommentEntityPickerProps; setCommentEntityType: (value: CommentEntityPickerProps) => void }) {
+export default function CommentSourcePickerComp({ movieSlug, movieTitle, movieId, commentSource, setCommentSource }: CommentSourcePickerProps) {
   const { locale, t } = useLocale();
   const { data, isPending } = useQuery({
     queryKey: ["movie-episodes", movieSlug, locale],
@@ -27,12 +23,12 @@ export default function CommentEntityPickerComp({ movieSlug, movieTitle, movieId
   });
 
   const [open, setOpen] = useState(false);
-  const isMovieSelected = commentEntityType.entityType === CommentEntityTypeEnum.MOVIE;
-  const selectedSeason = data?.find((season) => season.episodes.some((ep) => ep.slug === commentEntityType.entitySlug));
+  const isMovieSelected = commentSource.entityType === CommentEntityTypeEnum.MOVIE;
+  const selectedSeason = data?.find((season) => season.episodes.some((ep) => ep.slug === commentSource.entitySlug));
   const [accordionValue, setAccordionValue] = useState<string>(selectedSeason ? String(selectedSeason.id) : "");
-  const selectedLabel = isMovieSelected ? movieTitle || "فیلم" : (data?.flatMap((season) => season.episodes).find((ep) => ep.slug === commentEntityType.entitySlug)?.title ?? "انتخاب کنید");
+  const selectedLabel = isMovieSelected ? movieTitle || "فیلم" : (data?.flatMap((season) => season.episodes).find((ep) => ep.slug === commentSource.entitySlug)?.title ?? "انتخاب کنید");
 
-  if (isPending) return "loading...";
+  if (isPending) return <CommentSourcePickerSkeletonComp />;
 
   const hasSingleSeason = data?.length === 1;
   const singleSeason = hasSingleSeason ? data[0] : null;
@@ -47,7 +43,7 @@ export default function CommentEntityPickerComp({ movieSlug, movieTitle, movieId
       <DropdownMenuContent className="!mt-1 !p-3 w-fit min-w-56 max-w-80 bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2" align="start">
         <DropdownMenuItem
           onClick={() => {
-            setCommentEntityType({
+            setCommentSource({
               entityId: movieId,
               entityType: CommentEntityTypeEnum.MOVIE,
               entitySlug: movieSlug,
@@ -67,14 +63,14 @@ export default function CommentEntityPickerComp({ movieSlug, movieTitle, movieId
                 <button
                   key={episode.id}
                   onClick={() => {
-                    setCommentEntityType({
+                    setCommentSource({
                       entityId: episode.id,
                       entityType: CommentEntityTypeEnum.EPISODE,
                       entitySlug: episode.slug,
                     });
                     setOpen(false);
                   }}
-                  className={`w-full text-right px-2 py-1.5 text-sm rounded-md cursor-pointer flex items-center justify-between whitespace-nowrap ${commentEntityType.entitySlug === episode.slug ? "bg-primary hover:bg-primary/80" : "bg-gray-13 hover:bg-gray-12"}`}
+                  className={`w-full text-right px-2 py-1.5 text-sm rounded-md cursor-pointer flex items-center justify-between whitespace-nowrap ${commentSource.entitySlug === episode.slug ? "bg-primary hover:bg-primary/80" : "bg-gray-13 hover:bg-gray-12"}`}
                 >
                   {t("RecentWatch.episode")} {episode.order}
                 </button>
@@ -100,14 +96,14 @@ export default function CommentEntityPickerComp({ movieSlug, movieTitle, movieId
                         <button
                           key={episode.id}
                           onClick={() => {
-                            setCommentEntityType({
+                            setCommentSource({
                               entityId: episode.id,
                               entityType: CommentEntityTypeEnum.EPISODE,
                               entitySlug: episode.slug,
                             });
                             setOpen(false);
                           }}
-                          className={`w-full text-right px-2 py-1.5 text-sm rounded-md cursor-pointer flex items-center justify-between whitespace-nowrap ${commentEntityType.entitySlug === episode.slug ? "bg-primary hover:bg-primary/80" : "bg-gray-13 hover:bg-gray-12"}`}
+                          className={`w-full text-right px-2 py-1.5 text-sm rounded-md cursor-pointer flex items-center justify-between whitespace-nowrap ${commentSource.entitySlug === episode.slug ? "bg-primary hover:bg-primary/80" : "bg-gray-13 hover:bg-gray-12"}`}
                         >
                           {t("RecentWatch.episode")} {episode.order}
                         </button>

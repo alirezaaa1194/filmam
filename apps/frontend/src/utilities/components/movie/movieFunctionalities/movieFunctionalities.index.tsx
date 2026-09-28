@@ -7,14 +7,18 @@ import { FileTypeEnum, MovieTypeEnum, SectionUserMovieTypeEnum, UserMovieActionT
 import { AppApis } from "../../../../data";
 import { ClientCall } from "../../../../scripts/client";
 import { useLocale } from "../../../../hooks";
-import MovieFunctionalitiesSkeletonComp from "./skeleton/movieFunctionalitiesSkeleton.index";
 import { MovieFunctionalitiesProps } from "./movieFunctionalities.type";
 import MovieDownloadFunctionalityComp from "./download/donwload.index";
 import MoviePlayFunctionalityComp from "./play/play.index";
 import MovieTrailerFunctionalityComp from "./trailer/trailer.index";
+import { use } from "react";
+import { UserContext } from "../../../../contexts";
+import MovieFunctionalitySkeletonComp from "./skeleton/buttonSkeleton/buttonSkeleton.index";
 
 function MovieFunctionalitiesComp({ movie, save = true, notification = true, like = true, dislike = true, play = false, download = true, trailer, hero = false }: MovieFunctionalitiesProps) {
   const { locale } = useLocale();
+  const user = use(UserContext);
+
   const { data, isPending } = useQuery({
     queryKey: ["user-movie-actions", movie.id],
     queryFn: () =>
@@ -25,6 +29,7 @@ function MovieFunctionalitiesComp({ movie, save = true, notification = true, lik
           entity_type: SectionUserMovieTypeEnum.MOVIE,
         },
       }),
+    enabled: !!user,
   });
 
   const hasTrailer = movie.files.some((file) => file.type === FileTypeEnum.TRAILER);
@@ -37,10 +42,10 @@ function MovieFunctionalitiesComp({ movie, save = true, notification = true, lik
       </div>
       {!hero ? (
         <div className="w-full flex items-center lg:justify-start gap-4">
-          {save ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieSaveFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-          {notification && movie.type === MovieTypeEnum.SERIES ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-          {like ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieLikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
-          {dislike ? isPending ? <MovieFunctionalitiesSkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {save ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieSaveFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {notification && movie.type === MovieTypeEnum.SERIES ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {like ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieLikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {dislike ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
           {!hero && movie.type === MovieTypeEnum.CINEMATIC && download ? <MovieDownloadFunctionalityComp movie={movie} /> : null}
         </div>
       ) : null}

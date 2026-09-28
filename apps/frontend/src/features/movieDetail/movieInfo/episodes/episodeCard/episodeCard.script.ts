@@ -4,25 +4,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClientCall } from "@/scripts/client";
 import { AppApis } from "@/data";
 import { toast } from "sonner";
-import {
-  SectionUserMovieTypeEnum,
-  PaginationType,
-  SeasonEpisodeType,
-  UserMovieTypeEnum,
-} from "@/types";
-
-// ═══════════════════════════════════════════════
-// نگاشت type به مخالفش
-// ═══════════════════════════════════════════════
+import { SectionUserMovieTypeEnum, PaginationType, SeasonEpisodeType, UserMovieTypeEnum } from "@/types";
 
 const OPPOSITE_TYPE: Partial<Record<UserMovieTypeEnum, UserMovieTypeEnum>> = {
   [UserMovieTypeEnum.LIKE]: UserMovieTypeEnum.DISLIKE,
   [UserMovieTypeEnum.DISLIKE]: UserMovieTypeEnum.LIKE,
 };
-
-// ═══════════════════════════════════════════════
-// تایپ‌های کمکی
-// ═══════════════════════════════════════════════
 
 type ToggleEpisodeActionParams = {
   episodeId: number;
@@ -34,17 +21,7 @@ type InfiniteEpisodesData = {
   pageParams: unknown[];
 };
 
-// ═══════════════════════════════════════════════
-// هوک: toggle اکشن اپیزود
-// ═══════════════════════════════════════════════
-
-export function useEpisodeAction(
-  activeTab: string,
-  type: UserMovieTypeEnum,
-  successMessage: string,
-  disSuccessMessage: string,
-  errorMessage: string,
-) {
+export function useEpisodeAction(activeTab: string, type: UserMovieTypeEnum, successMessage: string, disSuccessMessage: string, errorMessage: string) {
   const queryClient = useQueryClient();
   const oppositeType = OPPOSITE_TYPE[type];
 
@@ -67,64 +44,50 @@ export function useEpisodeAction(
         queryKey: ["episodes", activeTab],
       });
 
-      // ✅ همه‌ی queryKey هایی که با ["episodes", activeTab] شروع می‌شن
       const previousData = queryClient.getQueriesData<InfiniteEpisodesData>({
         queryKey: ["episodes", activeTab],
       });
 
-      queryClient.setQueriesData<InfiniteEpisodesData>(
-        { queryKey: ["episodes", activeTab] },
-        (old) => {
-          if (!old?.pages) return old;
+      queryClient.setQueriesData<InfiniteEpisodesData>({ queryKey: ["episodes", activeTab] }, (old) => {
+        if (!old?.pages) return old;
 
-          return {
-            ...old,
-            pages: old.pages.map((page) => ({
-              ...page,
-              data: page.data.map((episode) => {
-                if (episode.id !== episodeId) return episode;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.map((episode) => {
+              if (episode.id !== episodeId) return episode;
 
-                // ✅ user_movies فعلی این اپیزود
-                const currentUserMovies = episode.user_movies ?? [];
+              const currentUserMovies = episode.user_movies ?? [];
 
-                // آیدی که برای اکشن مخالف داریم (اگه هست)
-                const oppositeAction = oppositeType
-                  ? currentUserMovies.find((a) => a.type === oppositeType)
-                  : undefined;
+              const oppositeAction = oppositeType ? currentUserMovies.find((a) => a.type === oppositeType) : undefined;
 
-                let newUserMovies;
+              let newUserMovies;
 
-                if (isCurrentlySaved) {
-                  // ─── حذف ───
-                  newUserMovies = currentUserMovies.filter(
-                    (a) => a.type !== type,
-                  );
-                } else {
-                  // ─── اضافه + حذف مخالف ───
-                  let filtered = currentUserMovies;
-                  if (oppositeAction) {
-                    filtered = filtered.filter((a) => a.type !== oppositeType);
-                  }
-                  newUserMovies = [
-                    ...filtered,
-                    {
-                      // آیدی موقت (چون هنوز از بک‌اند نیومده)
-                      // بعد از invalidate، آیدی واقعی جایگزین می‌شه
-                      id: -Date.now(),
-                      type,
-                    },
-                  ];
+              if (isCurrentlySaved) {
+                newUserMovies = currentUserMovies.filter((a) => a.type !== type);
+              } else {
+                let filtered = currentUserMovies;
+                if (oppositeAction) {
+                  filtered = filtered.filter((a) => a.type !== oppositeType);
                 }
+                newUserMovies = [
+                  ...filtered,
+                  {
+                    id: -Date.now(),
+                    type,
+                  },
+                ];
+              }
 
-                return {
-                  ...episode,
-                  user_movies: newUserMovies,
-                };
-              }),
-            })),
-          };
-        },
-      );
+              return {
+                ...episode,
+                user_movies: newUserMovies,
+              };
+            }),
+          })),
+        };
+      });
 
       if (isCurrentlySaved) {
         toast.success(disSuccessMessage);
@@ -166,8 +129,7 @@ export function useEpisodeAction(
   });
 
   return {
-    toggleEpisodeAction: (params: ToggleEpisodeActionParams) =>
-      toggleMutation.mutate(params),
+    toggleEpisodeAction: (params: ToggleEpisodeActionParams) => toggleMutation.mutate(params),
     isLoading: toggleMutation.isPending,
   };
 }

@@ -12,13 +12,18 @@ import MovieCardComp from "../../../../utilities/components/movie/movieCard/movi
 import { useState } from "react";
 import { FreeMode } from "swiper/modules";
 import "swiper/css";
+import SuggestionMoviesSectionSkeleton from "./skeleton/skeleton.index";
 
 function SuggestionMoviesComp({ slug }: { slug: string }) {
   const { locale, dir, t } = useLocale();
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
-  const { data: movies } = useQuery({ queryKey: ["suggestion-movies", locale, slug], queryFn: () => ClientCall<MovieRecommendedType[]>(AppApis.movie.recommended(slug), { method: "GET", locale }) });
+  const { data: movies, isPending } = useQuery({ queryKey: ["suggestion-movies", locale, slug], queryFn: () => ClientCall<MovieRecommendedType[]>(AppApis.movie.recommended(slug), { method: "GET", locale }) });
+
+  if (isPending || !movies) {
+    return <SuggestionMoviesSectionSkeleton />;
+  }
 
   const updateEdges = (swiper: { isBeginning: boolean; progress: number }) => {
     setIsBeginning(swiper.isBeginning && swiper.progress <= 0);

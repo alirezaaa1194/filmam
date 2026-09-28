@@ -6,19 +6,20 @@ import { useLocale } from "../../../hooks";
 import { ClientCall } from "../../../scripts/client";
 import MovieHeaderComp from "./movieHeader/movieHeader.index";
 import MovieSeasonsComp from "./movieSeasons/movieSeasons.index";
-import { CommentEntityTypeEnum, MovieTypeEnum } from "../../../types";
+import { MovieTypeEnum } from "../../../types";
 import EpisodeFactorsComp from "./factors/factors.index";
 import SuggestionMoviesComp from "./suggestionMovies/suggestionMovies.index";
-import CommentSectionComp from "../../../utilities/components/movie/comment/comment.index";
 import MovieDescriptionComp from "./description/description.index";
 import MovieInformationTable from "./informationTable/informationTable.index";
+import CommentSectionComp from "./comment/comment.index";
+import MovieInfoSkeletonComp from "./skeleton/skeleton.index";
 
 function MovieDetailInfoComp({ slug }: { slug: string }) {
   const { locale } = useLocale();
   const { data: movie, isPending: movieIsPending } = useQuery(movieDetailQueryOptions(locale, slug, ClientCall));
 
   if (movieIsPending || !movie) {
-    return;
+    return <MovieInfoSkeletonComp />;
   }
 
   return (
@@ -26,7 +27,7 @@ function MovieDetailInfoComp({ slug }: { slug: string }) {
       <MovieHeaderComp movie={movie} />
       {movie.type === MovieTypeEnum.SERIES ? <MovieSeasonsComp movie={movie} /> : null}
       <EpisodeFactorsComp movie={movie} />
-      <CommentSectionComp movie={movie} entitySlug={slug} entityId={movie.id} entityType={CommentEntityTypeEnum.MOVIE} movieTitle={movie.title} />
+      <CommentSectionComp movie={movie} />
       <MovieInformationTable movie={movie} />
       <MovieDescriptionComp movie={movie} />
       <SuggestionMoviesComp slug={slug} />

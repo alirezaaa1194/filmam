@@ -1,23 +1,24 @@
 import { ArrowDown2 } from "iconsax-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button, Spinner } from "../../ui";
 import CommentCardComp from "./commentCard/commentCard.index";
 import CommentInputComp from "./commentInput/commentInput.index";
-import CommentEntityPickerComp from "./commentEntityPicker/commentEntityPicker.index";
+import CommentSourcePickerComp from "./commentSourcePicker/commentSourcePicker.index";
 import CommentEmptyStateComp from "./emptyState/emptyState.index";
 import { useLocale } from "../../../../hooks";
 import { ClientCall } from "../../../../scripts/client";
 import { CommentEntityTypeEnum, CommentType, MovieTypeEnum, PaginationType, SortTypeEnum } from "../../../../types";
 import { AppApis } from "../../../../data";
 import { CommentSectionCompProps } from "./comment.type";
+import { Button, Spinner } from "../../../../utilities/components/ui";
+import { CommentCardSkeletonComp } from "./commentCard/skeleton/skeleton.index";
 
-function CommentSectionComp({ entitySlug, entityId, entityType, movieTitle, movie }: CommentSectionCompProps) {
+function CommentSectionComp({ movie }: CommentSectionCompProps) {
   const { locale } = useLocale();
-  const [commentEntityType, setCommentEntityType] = useState({
-    entityId,
-    entityType,
-    entitySlug,
+  const [commentSource, setCommentSource] = useState({
+    entityId: movie.id,
+    entityType: CommentEntityTypeEnum.MOVIE,
+    entitySlug: movie.slug,
   });
 
   const {
@@ -27,16 +28,16 @@ function CommentSectionComp({ entitySlug, entityId, entityType, movieTitle, movi
     isFetchingNextPage,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: ["comments", commentEntityType.entityType, commentEntityType.entitySlug, locale],
+    queryKey: ["comments", commentSource.entityType, commentSource.entitySlug, locale],
     queryFn: ({ pageParam = 1 }) =>
-      ClientCall<PaginationType<CommentType>>(AppApis.comment.index(commentEntityType.entitySlug), {
+      ClientCall<PaginationType<CommentType>>(AppApis.comment.index(commentSource.entitySlug), {
         method: "GET",
         locale,
         query: {
           page: pageParam,
           page_size: 10,
           sort: SortTypeEnum.ASC,
-          entity_type: commentEntityType.entityType,
+          entity_type: commentSource.entityType,
         },
       }),
     initialPageParam: 1,
@@ -46,26 +47,28 @@ function CommentSectionComp({ entitySlug, entityId, entityType, movieTitle, movi
     },
   });
 
-  const isSeriesMovieEntity = movie?.type === MovieTypeEnum.SERIES && entityType === CommentEntityTypeEnum.MOVIE && ((movie.seasons_count ?? 1) > 1 || (movie.episodes_count ?? 1) > 1);
+  const isShowSourcePicker = movie?.type === MovieTypeEnum.SERIES && ((movie.seasons_count ?? 1) > 1 || (movie.episodes_count ?? 1) > 1);
   const totalCount = comments?.pages?.[0]?.count ?? 0;
-
   const flatComments = comments?.pages.flatMap((page) => page.data ?? []) ?? [];
 
   return (
     <section className="w-full px-layout-x-space max-w-layout-max mx-auto flex flex-col gap-2 lg:gap-4">
       <h5 className="text-white text-mobile-h-5 lg:text-h-5">دیدگاه ها</h5>
-
       <div className="flex flex-col gap-3">
-        {isSeriesMovieEntity ? <CommentEntityPickerComp movieSlug={entitySlug} movieId={entityId} movieTitle={movieTitle} commentEntityType={commentEntityType} setCommentEntityType={setCommentEntityType} /> : null}
-        <CommentInputComp entityId={commentEntityType.entityId} entityType={commentEntityType.entityType} />
+        {isShowSourcePicker ? <CommentSourcePickerComp movieSlug={movie.slug} movieId={movie.id} movieTitle={movie.title} commentSource={commentSource} setCommentSource={setCommentSource} /> : null}
+        <CommentInputComp entityId={commentSource.entityId} entityType={commentSource.entityType} />
         {isLoading ? (
-          "loading"
+          <>
+            <CommentCardSkeletonComp />
+            <CommentCardSkeletonComp />
+            <CommentCardSkeletonComp />
+          </>
         ) : (
           <>
             {totalCount ? (
               <div className="flex flex-col gap-2">
                 {flatComments.map((comment) => (
-                  <CommentCardComp key={comment.id} entitySlug={commentEntityType.entitySlug} entityType={commentEntityType.entityType} comment={comment} />
+                  <CommentCardComp key={comment.id} entitySlug={commentSource.entitySlug} entityType={commentSource.entityType} comment={comment} />
                 ))}
               </div>
             ) : (

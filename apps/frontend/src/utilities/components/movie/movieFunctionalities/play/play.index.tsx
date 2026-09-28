@@ -1,27 +1,13 @@
 import { Play } from "iconsax-react";
 import Link from "next/link";
-import { use } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "../../../ui";
-import { MovieDetailPublicType, MovieListItemType, MovieTypeEnum, UserMovieActionType, UserMovieTypeEnum, WatchTargetEpisodeType, WatchTargetMovieTypeEnum } from "../../../../../types";
-import { UserContext } from "../../../../../contexts";
-import { AppApis } from "../../../../../data";
-import { ClientCall } from "../../../../../scripts/client";
+import { MovieDetailPublicType, MovieListItemType, MovieTypeEnum, UserMovieActionType, UserMovieTypeEnum, WatchTargetMovieTypeEnum } from "../../../../../types";
 
-function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieListItemType | MovieDetailPublicType; hero: boolean; actions?: UserMovieActionType[] }) {
-  const user = use(UserContext);
+function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieDetailPublicType | MovieListItemType; hero: boolean; actions?: UserMovieActionType[] }) {
   const isWatching = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHING);
   const isWatched = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHED);
   const isSeries = movie.type === MovieTypeEnum.SERIES;
 
-  const { data, isPending } = useQuery({
-    queryKey: ["movie-watch-target", movie.slug],
-    queryFn: () =>
-      ClientCall<WatchTargetEpisodeType>(AppApis.movie.watchTarget(movie.slug), {
-        method: "GET",
-      }),
-    enabled: !!user && isSeries && !hero,
-  });
   if (hero) {
     return (
       <Link href={`${hero ? `/movies/${movie.slug}` : ``}`} className="w-full lg:w-fit">
@@ -33,6 +19,8 @@ function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieList
     );
   }
 
+  const watchTarget = "watch_target" in movie ? movie.watch_target : undefined;
+
   let label = "تماشا";
 
   if (!isSeries) {
@@ -41,16 +29,12 @@ function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieList
     } else if (isWatched) {
       label = "تماشای دوباره";
     }
-  } else if (data?.type === WatchTargetMovieTypeEnum.CONTINUE) {
+  } else if (watchTarget?.type === WatchTargetMovieTypeEnum.CONTINUE) {
     label = "ادامه تماشا";
-  } else if (data?.type === WatchTargetMovieTypeEnum.REWATCH) {
+  } else if (watchTarget?.type === WatchTargetMovieTypeEnum.REWATCH) {
     label = "تماشای دوباره";
-  } else if (data?.type === WatchTargetMovieTypeEnum.WATCH) {
-    label = data.season_order === 1 ? `تماشای قسمت ${data.order}` : `تماشای فصل ${data.season_order} قسمت ${data.order}`;
-  }
-
-  if (user && isPending && movie.type === MovieTypeEnum.SERIES) {
-    return "loading...";
+  } else if (watchTarget?.type === WatchTargetMovieTypeEnum.WATCH) {
+    label = watchTarget?.season_order === 1 ? `تماشای قسمت ${watchTarget?.order}` : `تماشای فصل ${watchTarget?.season_order} قسمت ${watchTarget?.order}`;
   }
 
   return (

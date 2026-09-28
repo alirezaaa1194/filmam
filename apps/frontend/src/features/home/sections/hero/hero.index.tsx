@@ -19,16 +19,16 @@ function HeroSectionComp({ section }: { section: SectionType }) {
   const { dir, t } = useLocale();
 
   return (
-    <section className="hero-section h-[240px] md:h-[624px] 2xl:h-screen">
+    <section className="hero-section h-[420px] md:h-[624px] 2xl:h-screen">
       <Swiper
         key={dir}
         slidesPerView={1}
         modules={[EffectFade, Pagination, Autoplay]}
         effect={"fade"}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 5000,
+        //   disableOnInteraction: false,
+        // }}
         loop={true}
         pagination={{
           clickable: true,
