@@ -7,6 +7,7 @@ import "./puzzle.style.css";
 import PuzzleSliderItemComp from "./sliderItem/sliderItem.index";
 import PuzzleMovieItemComp from "./movieItem/movieItem.index";
 import { PuzzleSectionMovieViewModeEnum, SectionSelectionModeEnum, SectionType } from "../../../../types";
+import Link from "next/link";
 
 function PuzzleSectionComp({ section }: { section: SectionType }) {
   if (section.selection_mode === SectionSelectionModeEnum.USER_MOVIE) {
@@ -44,7 +45,9 @@ function PuzzleSectionComp({ section }: { section: SectionType }) {
           >
             {sliderItems.map((movie) => (
               <SwiperSlide key={movie.id} className="h-[350px]! xl:h-full!">
-                <PuzzleSliderItemComp movie={movie} />
+                <Link href={`/movies/${movie.slug}`}>
+                  <PuzzleSliderItemComp movie={movie} />
+                </Link>
               </SwiperSlide>
             ))}
           </Swiper>

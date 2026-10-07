@@ -42,7 +42,7 @@ function Provider({ user, locale, children }: { user: UserType | null; locale: A
               </DirectionProvider>
             </ConfirmModalProvider>
           </AuthModalProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </LocaleProvider>
       </UserContext>
     </QueryClientProvider>

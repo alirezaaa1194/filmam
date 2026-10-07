@@ -349,15 +349,69 @@ export class EpisodeRepository {
     });
   }
 
+  // async getNextEpisode(
+  //   currentEpisodeOrder: number,
+  //   currentEpisodeSeasonOrder: number,
+  //   lang: AppLanguage = defaultLang,
+  //   tx: TransactionType,
+  // ) {
+  //   const nextEpisode = await tx.episode.findFirst({
+  //     where: {
+  //       order: currentEpisodeOrder + 1,
+  //     },
+  //     orderBy: {
+  //       order: 'asc',
+  //     },
+  //     include: {
+  //       translations: {
+  //         select: {
+  //           title: true,
+  //         },
+  //         where: {
+  //           language: lang,
+  //         },
+  //       },
+  //       season: {
+  //         include: {
+  //           translations: {
+  //             where: {
+  //               language: lang,
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+
+  //   if (nextEpisode) {
+  //     return nextEpisode;
+  //   }
+
+  //   return await this.getNextSeasonFirstEpisode(
+  //     currentEpisodeSeasonOrder,
+  //     lang,
+  //     tx,
+  //   );
+  // }
+
   async getNextEpisode(
     currentEpisodeOrder: number,
     currentEpisodeSeasonOrder: number,
     lang: AppLanguage = defaultLang,
     tx: TransactionType,
   ) {
+    // 1. Next episode in the current season
     const nextEpisode = await tx.episode.findFirst({
       where: {
-        order: currentEpisodeOrder + 1,
+        order: {
+          gt: currentEpisodeOrder,
+        },
+        season: {
+          order: currentEpisodeSeasonOrder,
+        },
+      },
+      orderBy: {
+        order: 'asc',
       },
       include: {
         translations: {
@@ -384,11 +438,9 @@ export class EpisodeRepository {
       return nextEpisode;
     }
 
-    return await this.getNextSeasonFirstEpisode(
-      currentEpisodeSeasonOrder,
-      lang,
-      tx,
-    );
+    // 2. No next episode in current season.
+    // Find the first episode of the next available season.
+    return this.getNextSeasonFirstEpisode(currentEpisodeSeasonOrder, lang, tx);
   }
 
   async getNextSeasonFirstEpisode(

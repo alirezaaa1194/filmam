@@ -1,9 +1,72 @@
+// import "server-only";
+
+// import { cookies } from "next/headers";
+// import { cache } from "react";
+// import { AppApis } from "../../data";
+// import { AppLanguagesEnum, ApiCallOptionsType, UserType } from "../../types";
+// import { BuildApiUrl, DefaultLanguage } from "../index";
+// import { GetLocale } from "./translation";
+
+// async function ServerFetch<T>(url: string, options: ApiCallOptionsType, cookieHeader: string | null, locale: AppLanguagesEnum): Promise<T> {
+//   const response = await fetch(BuildApiUrl(url, locale, options.query), {
+//     method: options.method,
+//     body: options.body ? JSON.stringify(options.body) : undefined,
+//     headers: {
+//       "content-type": "application/json",
+//       ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+//     },
+//     cache: "no-store",
+//   });
+
+//   if (!response.ok) {
+//     throw response;
+//   }
+
+//   const data = await response.json();
+//   return data as T;
+// }
+
+// export async function ServerCall<T>(url: string, options: ApiCallOptionsType): Promise<T> {
+//   if (!options.ghostMode) {
+//     const cookieStore = await cookies();
+//     const cookieHeader = cookieStore.toString();
+
+//     let locale = options.locale;
+//     if (!locale) {
+//       const detectedLocale = await GetLocale();
+//       locale = detectedLocale || DefaultLanguage;
+//     }
+
+//     return await ServerFetch<T>(url, options, cookieHeader, locale);
+//   } else {
+//     let locale = options.locale;
+//     if (!locale) {
+//       const detectedLocale = await GetLocale();
+//       locale = detectedLocale || DefaultLanguage;
+//     }
+//     return await ServerFetch<T>(url, options, null, locale);
+//   }
+// }
+
+// export const GetUser = cache(async (locale: AppLanguagesEnum = AppLanguagesEnum.EN): Promise<UserType | null> => {
+//   try {
+//     return await ServerCall<UserType>(AppApis.auth.me, {
+//       method: "GET",
+//       locale,
+//     });
+//   } catch {
+//     return null;
+//   }
+// });
+
 import "server-only";
 
 import { cookies } from "next/headers";
 import { cache } from "react";
+
 import { AppApis } from "../../data";
 import { AppLanguagesEnum, ApiCallOptionsType, UserType } from "../../types";
+
 import { BuildApiUrl, DefaultLanguage } from "../index";
 import { GetLocale } from "./translation";
 
@@ -13,42 +76,53 @@ async function ServerFetch<T>(url: string, options: ApiCallOptionsType, cookieHe
     body: options.body ? JSON.stringify(options.body) : undefined,
     headers: {
       "content-type": "application/json",
-      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+      ...(cookieHeader
+        ? {
+            Cookie: cookieHeader,
+          }
+        : {}),
     },
     cache: "no-store",
   });
 
   if (!response.ok) {
-    throw response;
+    let errorBody: string | undefined;
+
+    try {
+      errorBody = await response.text();
+    } catch {
+      errorBody = undefined;
+    }
+
+    throw new Error([`ServerFetch failed`, `Status: ${response.status}`, `StatusText: ${response.statusText}`, errorBody ? `Body: ${errorBody}` : undefined, `URL: ${BuildApiUrl(url, locale, options.query)}`].filter(Boolean).join(" | "));
   }
 
-  const data = await response.json();
-  return data as T;
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return (await response.json()) as T;
 }
 
 export async function ServerCall<T>(url: string, options: ApiCallOptionsType): Promise<T> {
-  if (!options.ghostMode) {
-    const cookieStore = await cookies();
-    const cookieHeader = cookieStore.toString();
+  let locale = options.locale;
 
-    let locale = options.locale;
-    if (!locale) {
-      const detectedLocale = await GetLocale();
-      locale = detectedLocale || DefaultLanguage;
-    }
-
-    return await ServerFetch<T>(url, options, cookieHeader, locale);
-  } else {
-    let locale = options.locale;
-    if (!locale) {
-      const detectedLocale = await GetLocale();
-      locale = detectedLocale || DefaultLanguage;
-    }
-    return await ServerFetch<T>(url, options, null, locale);
+  if (!locale) {
+    const detectedLocale = await GetLocale();
+    locale = detectedLocale || DefaultLanguage;
   }
+
+  if (options.ghostMode) {
+    return ServerFetch<T>(url, options, null, locale);
+  }
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+
+  return ServerFetch<T>(url, options, cookieHeader, locale);
 }
 
-export const GetUser = cache(async (locale: AppLanguagesEnum = AppLanguagesEnum.EN): Promise<UserType | null> => {
+export const GetUser = cache(async (locale?: AppLanguagesEnum): Promise<UserType | null> => {
   try {
     return await ServerCall<UserType>(AppApis.auth.me, {
       method: "GET",

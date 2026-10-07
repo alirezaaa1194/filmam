@@ -1,7 +1,7 @@
-import { AppApis } from "../../../data";
-import { GetTranslation, ServerCall } from "../../../scripts/server";
-import { MovieDetailPublicType, MovieTypeEnum } from "../../../types";
-import MovieDetailPageComp from "../../../features/movieDetail/movieDetail.index";
+import { AppApis } from "@/data";
+import { GetTranslation, ServerCall } from "@/scripts/server";
+import { MovieDetailPublicType, MovieTypeEnum } from "@/types";
+import MovieDetailPageComp from "@/features/movieDetail/movieDetail.index";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { t } = await GetTranslation();

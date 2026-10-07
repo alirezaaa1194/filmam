@@ -80,14 +80,26 @@ function KidsSectionComp({ section }: { section: SectionType }) {
       >
         {section.movies.map((movie) => (
           <SwiperSlide key={movie.id}>
-            <KidCardComp movie={movie} />
+            {({ isActive }) => (
+              <Link
+                href={`/movies/${movie.slug}`}
+                onClick={(e) => {
+                  if (!isActive) e.preventDefault();
+                }}
+                className={!isActive ? "pointer-events-none" : ""}
+                tabIndex={isActive ? 0 : -1}
+                aria-disabled={!isActive}
+              >
+                <KidCardComp movie={movie} />
+              </Link>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
       <div className="flex items-center justify-between mt-[64px] lg:mt-[70px] gap-14 px-layout-x-space lg:px-0">
         <p className="hidden lg:block text-white text-body-xs truncate">{section.description}</p>
         <Link href={`/movies${section.filter || ""}`} className="w-full lg:w-fit">
-          <Button className="flex items-center gap-2 whitespace-nowrap transition-all text-caption-md lg:text-body-xxs cursor-pointer rounded-md px-4 h-8 text-button-s w-full lg:w-fit">
+          <Button className="flex items-center gap-2 whitespace-nowrap transition-all cursor-pointer rounded-md px-4 h-[46px] lg:h-8 text-button-s lg:text-body-xxs w-full lg:w-fit">
             {t("Common.viewAll")} <ArrowLeft variant="Outline" className={`fill-white size-5 transition-all ${dir === "ltr" ? "rotate-180" : ""}`} />
           </Button>
         </Link>

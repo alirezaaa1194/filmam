@@ -1,6 +1,6 @@
 import { Like1 } from "iconsax-react";
 import { Button } from "../../../ui";
-import { AuthModeEnum, UserMovieActionType, UserMovieTypeEnum } from "../../../../../types";
+import { AuthModeEnum, CommentEntityTypeEnum, UserMovieActionType, UserMovieTypeEnum } from "../../../../../types";
 import { useMovieAction } from "../movieFunctionalities.script";
 import { use } from "react";
 import { UserContext } from "../../../../../contexts";
@@ -8,7 +8,14 @@ import { AuthModalContext } from "../../../../../contexts/authModal";
 
 function MovieLikeFunctionalityComp({ movieId, actions }: { movieId: number; actions: UserMovieActionType[] }) {
   const didUserSaved = actions.some((action) => action.type === UserMovieTypeEnum.LIKE);
-  const { toggleAction } = useMovieAction(movieId, UserMovieTypeEnum.LIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ذخیره شد", "خطا در ثبت نظر شما");
+  const { toggleAction } = useMovieAction({
+    entityId: movieId,
+    entityType: CommentEntityTypeEnum.MOVIE,
+    type: UserMovieTypeEnum.LIKE,
+    successMessage: "نظر شما با موفقیت ثبت شد",
+    disSuccessMessage: "نظر شما با موفقیت ذخیره شد",
+    errorMessage: "خطا در ثبت نظر شما",
+  });
   const user = use(UserContext);
   const { setAuthMode } = use(AuthModalContext);
 
@@ -17,7 +24,7 @@ function MovieLikeFunctionalityComp({ movieId, actions }: { movieId: number; act
       onClick={() => {
         if (user) {
           toggleAction({
-            movieId,
+            entityId: movieId,
             isCurrentlySaved: didUserSaved,
           });
         } else {
@@ -25,7 +32,7 @@ function MovieLikeFunctionalityComp({ movieId, actions }: { movieId: number; act
             mode: AuthModeEnum.LOGIN,
             callback: async () => {
               toggleAction({
-                movieId,
+                entityId: movieId,
                 isCurrentlySaved: didUserSaved,
               });
             },

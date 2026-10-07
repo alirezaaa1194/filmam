@@ -21,7 +21,7 @@ function KidsSectionSkeletonComp() {
       </div>
       <div className="flex items-center justify-between mt-12 gap-14 px-layout-x-space lg:px-0">
         <Skeleton className="h-4 w-40 lg:w-56 hidden lg:block" />
-        <Skeleton className="h-8 w-full lg:w-32 rounded-md" />
+        <Skeleton className="h-[46px] lg:h-8 w-full lg:w-32 rounded-md" />
       </div>
     </section>
   );

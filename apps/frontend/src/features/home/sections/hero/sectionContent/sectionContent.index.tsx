@@ -12,13 +12,15 @@ function HeroSectionContentComp({ title, description, options, imageUrl, childre
         <div className="flex flex-col gap-2 lg:gap-4 md:max-w-[393px]">
           <h2 className="text-mobile-h-3 md:text-display-2">{title}</h2>
           <p className="text-mobile-caption-md text-gray-5 line-clamp-2 md:hidden">{description}</p>
-          <div className="hidden xl:flex flex-wrap gap-2">
-            {options.map((option, i) => (
-              <span key={i} className="flex items-center justify-center px-2 text-body-xs text-white border border-gray-10 bg-[#2f2f2f]/40 rounded-md">
-                {option}
-              </span>
-            ))}
-          </div>
+          {options && options.length ? (
+            <div className="hidden xl:flex flex-wrap gap-2">
+              {options.map((option, i) => (
+                <span key={i} className="flex items-center justify-center px-2 text-body-xs text-white border border-gray-10 bg-[#2f2f2f]/40 rounded-md">
+                  {option}
+                </span>
+              ))}
+            </div>
+          ) : null}
           <p className="hidden md:block text-justify text-body-xs md:line-clamp-6!">{description}</p>
         </div>
         {children}

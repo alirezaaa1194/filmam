@@ -15,12 +15,12 @@ import { use } from "react";
 import { UserContext } from "../../../../contexts";
 import MovieFunctionalitySkeletonComp from "./skeleton/buttonSkeleton/buttonSkeleton.index";
 
-function MovieFunctionalitiesComp({ movie, save = true, notification = true, like = true, dislike = true, play = false, download = true, trailer, hero = false }: MovieFunctionalitiesProps) {
+function MovieFunctionalitiesComp({ movie, save = true, notification = true, like = true, dislike = true, play = false, download = true, trailer, hero = false, heroLike = false }: MovieFunctionalitiesProps) {
   const { locale } = useLocale();
   const user = use(UserContext);
 
   const { data, isPending } = useQuery({
-    queryKey: ["user-movie-actions", movie.id],
+    queryKey: ["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movie.id],
     queryFn: () =>
       ClientCall<UserMovieActionType[]>(AppApis.userMovie.movieActions(movie.id), {
         method: "GET",
@@ -42,7 +42,7 @@ function MovieFunctionalitiesComp({ movie, save = true, notification = true, lik
       </div>
       {!hero ? (
         <div className="w-full flex items-center lg:justify-start gap-4">
-          {save ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieSaveFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
+          {save ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieSaveFunctionalityComp movieId={movie.id} actions={data || []} heroLike={heroLike} /> : null}
           {notification && movie.type === MovieTypeEnum.SERIES ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieNotificationFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
           {like ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieLikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}
           {dislike ? user && isPending ? <MovieFunctionalitySkeletonComp /> : <MovieDislikeFunctionalityComp movieId={movie.id} actions={data || []} /> : null}

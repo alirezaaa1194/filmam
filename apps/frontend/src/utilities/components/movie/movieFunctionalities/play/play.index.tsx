@@ -38,7 +38,7 @@ function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieDeta
   }
 
   return (
-    <Link href={`${hero ? `/movies/${movie.slug}` : ``}`} className="w-full lg:w-fit">
+    <Link href="/player/episode/sh-e2-s1?source=FILM" className="w-full lg:w-fit">
       <Button className="w-full lg:w-fit flex items-center gap-2 px-12 h-[46px] rounded-md cursor-pointer text-white text-button-md! lg:text-button-lg!">
         <Play variant="Outline" className="fill-white size-5" />
         {label}

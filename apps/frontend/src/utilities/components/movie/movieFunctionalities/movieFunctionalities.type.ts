@@ -10,6 +10,7 @@ export type MovieFunctionalitiesProps = {
   trailer?: boolean;
   download?: boolean;
   hero?: boolean;
+  heroLike?: boolean;
 };
 
 export type MoviePlayFunctionality = {

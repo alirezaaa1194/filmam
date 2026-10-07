@@ -3,6 +3,7 @@ import Image from "next/image";
 import { FileTypeEnum, MovieListItemType, RoleTypeEnum } from "../../../../../types";
 import { useLocale } from "@/hooks";
 import { movieLikePercentCalc } from "../../../../../lib/utils";
+import Link from "next/link";
 
 function PuzzleMovieItemComp({ movie }: { movie: MovieListItemType }) {
   const movieThumbnail = movie.files.find((file) => file.type === FileTypeEnum.THUMBNAIL);
@@ -12,9 +13,13 @@ function PuzzleMovieItemComp({ movie }: { movie: MovieListItemType }) {
 
   return (
     <div className="h-max w-fit flex gap-3">
-      <Image src={movieThumbnail?.path || placeholderPath} width={106} height={173} alt={movieThumbnail?.alt_text || movie.title} className="h-auto self-stretch xl:max-w-[105px] object-cover rounded-xl border border-gray-10 bg-gray-11" />
+      <Link href={`/movies/${movie.slug}`} className="contents">
+        <Image src={movieThumbnail?.path || placeholderPath} width={106} height={173} alt={movieThumbnail?.alt_text || movie.title} className="h-auto self-stretch xl:max-w-[105px] object-cover rounded-xl border border-gray-10 bg-gray-11" />
+      </Link>
       <div className="hidden xl:flex flex-col justify-center gap-3">
-        <h5 className="text-white text-h-5 line-clamp-1">{movie.title}</h5>
+        <Link href={`/movies/${movie.slug}`} className="contents">
+          <h5 className="text-white text-h-5 line-clamp-1">{movie.title}</h5>
+        </Link>
         <span className="text-gray-8 flex items-center gap-1">
           <UserSquare className="size-6 fill-gray-8 shrink-0" variant="Bold" />
           <span className="text-body-xxs flex-1 text-nowrap line-clamp-1">
