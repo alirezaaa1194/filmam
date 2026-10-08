@@ -29,13 +29,34 @@ export class UserMovieRepository {
     });
   }
 
+  // async createUserMovie(
+  //   body: UpdateUserMoviesDto,
+  //   userId: number,
+  //   tx: TransactionType,
+  // ) {
+  //   return await tx.userMovie.create({
+  //     data: { ...body, user_id: userId },
+  //   });
+  // }
+
   async createUserMovie(
     body: UpdateUserMoviesDto,
     userId: number,
     tx: TransactionType,
   ) {
-    return await tx.userMovie.create({
-      data: { ...body, user_id: userId },
+    const entityFilter =
+      body.entity_type === CommentEntityType.EPISODE
+        ? { episode_id: body.episode_id }
+        : { movie_id: body.movie_id };
+
+    return await tx.userMovie.upsert({
+      where: {
+        ...entityFilter,
+        user_id: userId,
+        type: body.type,
+      } as any,
+      update: { progress_time: body.progress_time },
+      create: { ...body, user_id: userId },
     });
   }
 

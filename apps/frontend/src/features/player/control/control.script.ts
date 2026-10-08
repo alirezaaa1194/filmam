@@ -10,19 +10,30 @@ import { UserMovieActionType, UserMovieTypeEnum } from "@/types";
 import { PlayerControlProps } from "./control.type";
 import { useSaveWatchTime } from "../player.script";
 
-export function useControlScript({ entityType, data }: Pick<PlayerControlProps, "entityType" | "data">) {
+export function useControlScript({ entityType, source, data }: Pick<PlayerControlProps, "entityType" | "source" | "data">) {
   const { locale } = useLocale();
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { mutate: saveWatchTime } = useSaveWatchTime();
   const lastSavedTimeRef = useRef(0);
 
+  const videoSource = data.files.find((f) => f.type === source.toUpperCase());
+  const sourceDuration = Number(videoSource?.duration) || 0;
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoTime, setVideoTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(sourceDuration);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setDuration(sourceDuration);
+  }, [sourceDuration]);
+
+  useEffect(() => {
+    lastSavedTimeRef.current = 0;
+  }, [videoSource?.path]);
 
   const { data: userActions, isPending } = useQuery({
     queryKey: ["user-movie-actions", entityType, data.id],
@@ -50,22 +61,28 @@ export function useControlScript({ entityType, data }: Pick<PlayerControlProps, 
       video.pause();
       video.currentTime = savedProgress;
     }
+    lastSavedTimeRef.current = savedProgress;
     setShowResumeModal(true);
     setHasCheckedResume(true);
   }, [isPending, userActions, savedProgress, hasCheckedResume]);
 
-  const getSaveInterval = (d: number) => (d < 30 ? 10 : 30);
+  const getSaveInterval = (d: number) => (d > 60 ? 30 : 10);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !sourceDuration) return;
+
     setVideoTime(video.currentTime);
-    const interval = getSaveInterval(video.duration);
+
+    const interval = getSaveInterval(sourceDuration);
     const elapsed = video.currentTime - lastSavedTimeRef.current;
+
     if (elapsed >= interval) {
       lastSavedTimeRef.current = video.currentTime;
-      const progress = video.currentTime / video.duration;
+
+      const progress = video.currentTime / sourceDuration;
       const isWatched = progress >= 0.8;
+
       saveWatchTime({
         entityId: data.id,
         entityType,
@@ -80,8 +97,20 @@ export function useControlScript({ entityType, data }: Pick<PlayerControlProps, 
     else router.push(`/movies/${(data as any).movie.slug}`);
   };
 
+  const markAsWatched = () => {
+    if (!sourceDuration) return;
+    saveWatchTime({
+      entityId: data.id,
+      entityType,
+      progressTime: sourceDuration,
+      type: UserMovieTypeEnum.WATCHED,
+    });
+  };
+
   return {
     videoRef,
+    videoSource,
+    sourceDuration,
     isPlaying,
     setIsPlaying,
     videoTime,
@@ -99,5 +128,6 @@ export function useControlScript({ entityType, data }: Pick<PlayerControlProps, 
     savedProgress,
     handleTimeUpdate,
     navigateToMovie,
+    markAsWatched,
   };
 }

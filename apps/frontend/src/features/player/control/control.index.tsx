@@ -20,6 +20,7 @@ import SkipIntroComp from "./overlays/skipIntro/skipIntro.index";
 import BufferingComp from "./overlays/buffering/buffering.index";
 import ResumeModalComp from "./modals/resume/resume.index";
 import ErrorComp from "./error/error.index";
+import { CommentEntityTypeEnum } from "../../../types";
 
 function PlayerControlComp(props: PlayerControlProps) {
   const { entityType, source, data } = props;
@@ -27,8 +28,8 @@ function PlayerControlComp(props: PlayerControlProps) {
   const router = useRouter();
   const mainRef = useRef<HTMLDivElement>(null);
 
-  const script = useControlScript({ entityType, data });
-  const { videoRef, isPlaying, setIsPlaying, videoTime, setVideoTime, duration, setDuration, isBuffering, setIsBuffering, hasStarted, setHasStarted, error, setError, showResumeModal, setShowResumeModal, savedProgress, handleTimeUpdate, navigateToMovie } = script;
+  const script = useControlScript({ entityType,source, data });
+  const { videoRef, isPlaying, setIsPlaying, videoTime, setVideoTime, duration, setDuration, isBuffering, setIsBuffering, hasStarted, setHasStarted, error, setError, showResumeModal, setShowResumeModal, savedProgress, handleTimeUpdate, markAsWatched } = script;
 
   const [ripple, setRipple] = useState<{ type: RippleType; id: number } | null>(null);
   const [isCover, setIsCover] = useState(false);
@@ -124,11 +125,11 @@ function PlayerControlComp(props: PlayerControlProps) {
           }}
         />
 
-        <NextEpisodeComp visible={videoTime >= Number(videoSource.duration) - Number(videoSource.outro_duration) && entityType === "EPISODE" && !!(data as any).next_episode && autoNextEpisode} videoSource={videoSource} data={data} autoNextEpisode={autoNextEpisode} setAutoNextEpisode={setAutoNextEpisode} />
+        <NextEpisodeComp visible={videoTime >= Number(videoSource.duration) - Number(videoSource.outro_duration) && entityType === "EPISODE" && !!(data as any).next_episode && autoNextEpisode} data={data} autoNextEpisode={autoNextEpisode} setAutoNextEpisode={setAutoNextEpisode} markAsWatched={markAsWatched} />
         <SkipIntroComp visible={videoTime >= Number(videoSource.intro_start_time) && videoTime <= Number(videoSource.intro_start_time) + Number(videoSource.intro_duration)} introDuration={Number(videoSource.intro_duration)} videoRef={videoRef} />
         <RippleComp ripple={ripple} />
         <div className={`w-full h-full absolute top-0 right-0 flex flex-col justify-between transition-all duration-300 ${visibility.showControl ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-          <TopBarComp entityType={entityType} source={source} data={data} dir={dir} onBack={navigateToMovie} videoRef={videoRef} />
+          <TopBarComp entityType={entityType} source={source} data={data} dir={dir} slug={entityType === CommentEntityTypeEnum.EPISODE ? data.movie.slug : data.slug} videoRef={videoRef} />
           <BottomBarComp entityType={entityType} source={source} data={data} videoRef={videoRef} videoSource={videoSource} isPlaying={isPlaying} videoTime={videoTime} setVideoTime={setVideoTime} duration={duration} isBuffering={isBuffering} isSeeking={isSeeking} setIsSeeking={setIsSeeking} handlePlayPause={handlePlayPause} seekBy={seekBy} volume={volume} fullscreen={fullscreen} pip={pip} playback={playback} isCover={isCover} setIsCover={setIsCover} setAutoNextEpisode={setAutoNextEpisode} router={router} />
         </div>
       </div>

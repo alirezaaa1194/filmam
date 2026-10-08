@@ -515,6 +515,7 @@ model UserMovie {
   movie         Movie?            @relation(fields: [movie_id], references: [id], onDelete: Cascade)
   user          User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
+  @@unique([user_id, episode_id, type])
   @@map("user_movies")
 }
 

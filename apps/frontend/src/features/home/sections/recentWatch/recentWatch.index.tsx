@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode } from "swiper/modules";
 import { useLocale } from "../../../../hooks";
-import { SectionSelectionModeEnum, SectionType } from "../../../../types";
+import { SectionSelectionModeEnum, SectionType, SectionUserMovieTypeEnum, UserMovieTypeEnum } from "../../../../types";
+import Link from "next/link";
 
 function RecentWatchSectionComp({ section }: { section: SectionType }) {
   if (section.selection_mode !== SectionSelectionModeEnum.USER_MOVIE) {
@@ -102,7 +103,9 @@ function RecentWatchSectionComp({ section }: { section: SectionType }) {
         >
           {section.movies.map((movie) => (
             <SwiperSlide key={movie.id}>
-              <RecentWatchItemComp movie={movie} />
+              <Link href={`/player/${movie.entity_type === SectionUserMovieTypeEnum.MOVIE ? `movie/${movie.id}` : `episode/${movie.episode.slug}?source=FILM`}`}>
+                <RecentWatchItemComp movie={movie} />
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

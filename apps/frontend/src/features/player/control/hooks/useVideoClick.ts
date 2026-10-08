@@ -7,7 +7,7 @@ export function useVideoClick({ onPlayPause, onSeek, showControl, setShowControl
 
   const handleVideoClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "BUTTON" || target.isContentEditable || target.closest("[role=tablist]") || target.closest("[role=tab]") || target.closest("[role=dialog]") || target.closest("[data-slot=slider]") || target.closest("[data-player-control]")) return;
+    if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "BUTTON" || target.isContentEditable || target.closest("a") || target.closest("[role=tablist]") || target.closest("[role=tab]") || target.closest("[role=dialog]") || target.closest("[data-slot=slider]") || target.closest("[data-player-control]")) return;
 
     if (!showControl) {
       setShowControl(true);

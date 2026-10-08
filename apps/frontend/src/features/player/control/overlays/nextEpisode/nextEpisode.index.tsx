@@ -4,13 +4,14 @@ import { X } from "lucide-react";
 import { Button } from "../../../../../utilities/components/ui";
 import { useRouter } from "next/navigation";
 
-export default function NextEpisodeComp({ visible, videoSource, data, autoNextEpisode, setAutoNextEpisode }: any) {
+export default function NextEpisodeComp({ visible, data, autoNextEpisode, setAutoNextEpisode, markAsWatched }: any) {
   const router = useRouter();
   if (!visible) return null;
 
   const goNext = () => {
     if (!autoNextEpisode) return;
     if (!data.next_episode?.slug) return;
+    markAsWatched()
     router.push(`/player/episode/${data.next_episode.slug}?source=FILM`);
   };
 

@@ -232,6 +232,7 @@ export type __WatchTargetEpisodeType = {
   watches_count: number;
   type: __TargetMovieTypeEnum;
   title: string;
+  files: __EpisodeFileType[];
   season_order: number;
 };
 

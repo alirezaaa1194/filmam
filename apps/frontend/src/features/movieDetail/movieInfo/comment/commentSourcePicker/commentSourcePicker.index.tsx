@@ -87,7 +87,7 @@ export default function CommentSourcePickerComp({ movieSlug, movieTitle, movieId
               return (
                 <AccordionItem value={String(season.id)} className="border-0!" key={season.id}>
                   <AccordionTrigger className={`group px-2 py-1.5 text-sm rounded-md justify-between hover:bg-gray-12! hover:no-underline cursor-pointer data-[state=open]:bg-gray-12 ${!hasEpisodes ? "opacity-50 pointer-events-none cursor-not-allowed" : ""}`} showIcon={false} onClick={(e) => e.stopPropagation()} disabled={!hasEpisodes}>
-                    <span className="whitespace-nowrap">{season.title}</span>
+                    <span className="whitespace-nowrap">فصل {season.order}</span>
                     {hasEpisodes ? <ArrowDown2 variant="Outline" className="stroke-[#fff] size-3 shrink-0 transition-all group-data-[state=open]:rotate-180" /> : null}
                   </AccordionTrigger>
                   <AccordionContent className="pb-0 pt-1 ps-3 space-y-1 h-fit">

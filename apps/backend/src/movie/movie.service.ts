@@ -758,11 +758,23 @@ export class MovieService {
       tx,
     );
     if (watchTargetEpisode) {
-      const { translations, season, ...otherWatchTargetEpisodeData } =
+      const { translations, season, files, ...otherWatchTargetEpisodeData } =
         watchTargetEpisode;
+
+      const watchTargetFiles = files.map((file) => {
+        const { upload, type } = file;
+        return {
+          ...upload,
+          type,
+          intro_start_time: file.intro_start_time,
+          intro_duration: file.intro_duration,
+          outro_duration: file.outro_duration,
+        };
+      });
 
       return {
         ...otherWatchTargetEpisodeData,
+        files: watchTargetFiles,
         season_order: season.order,
         title: translations?.[0]?.title,
       };

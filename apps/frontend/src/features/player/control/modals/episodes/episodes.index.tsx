@@ -4,12 +4,11 @@ import { Category, Play } from "iconsax-react";
 import { X } from "lucide-react";
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Spinner } from "../../../../../utilities/components/ui";
 import { Tabs, TabsList, TabsTrigger } from "../../../../../utilities/components/ui/tabs";
-import { FileTypeEnum } from "../../../../../types";
+import { FileTypeEnum, SeasonEpisodeType } from "../../../../../types";
 import { useLocale } from "../../../../../hooks";
 import { useState } from "react";
 import { useEpisodesScript } from "./episodes.script";
 import { PlayerEpisodesModalProps } from "./episodes.type";
-
 
 export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, activeSeasonSlug, onOpenChange }: PlayerEpisodesModalProps) {
   const { dir } = useLocale();
@@ -38,7 +37,7 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
         </DialogHeader>
 
         {movie.seasons && movie.seasons.length > 0 ? (
-          <div className="px-6 py-2 overflow-x-auto overflow-y-hidden scrollbar-none">
+          <div className="px-6 py-2 overflow-x-auto overflow-y-hidden">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-max">
               <TabsList className="flex flex-nowrap justify-start gap-2 h-max! bg-transparent w-max">
                 {movie.seasons.map((season: any) => (
@@ -59,7 +58,7 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
           ) : data.pages[0]?.count ? (
             <div className="flex flex-col gap-2">
               {data.pages.map((page: any) =>
-                page.data.map((episode: any) => {
+                page.data.map((episode: SeasonEpisodeType) => {
                   const isActive = episode.id === activeEpisodeId;
                   const isWatched = watchedIds.has(episode.id);
                   const episodeCover = episode.files?.find((file: any) => file.type === FileTypeEnum.COVER);
@@ -83,13 +82,12 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
                           ) : null}
                         </div>
                       ) : (
-                        <div className={`size-10 rounded-full flex items-center justify-center shrink-0 ${isActive ? "bg-primary" : "bg-white/10"}`}>{isActive ? <Play className="size-4 fill-white" /> : <span className="text-white text-body-xxs font-bold">{episode.order}</span>}</div>
+                        <div className={`size-10 rounded-md flex items-center justify-center shrink-0 ${isActive ? "bg-primary" : "bg-white/10"}`}>{isActive ? <Play className="size-4 fill-white" /> : <span className="text-white text-body-xxs font-bold">{episode.order}</span>}</div>
                       )}
 
                       <div className="flex flex-col gap-1 flex-1 min-w-0">
                         <span className="text-white text-body-xxs font-bold truncate">
-                          قسمت {episode.order}
-                          {episode.title ? ` - ${episode.title}` : ""}
+                          فصل {episode.season_order} قسمت {episode.order}
                         </span>
                         {isWatched ? <span className="text-primary text-caption-md">دیده‌شده</span> : null}
                       </div>

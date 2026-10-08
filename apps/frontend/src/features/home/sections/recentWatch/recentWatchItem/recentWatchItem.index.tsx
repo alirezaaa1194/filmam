@@ -25,7 +25,7 @@ function RecentWatchItemComp({ movie }: { movie: SectionUserMovieListItemType })
   const placeholderPath = "/images/placeholder-h.jpg";
 
   return (
-    <Link href="/" className="block relative rounded-md lg:rounded-xl overflow-hidden select-none h-40 xl:h-60">
+    <div className="relative rounded-md lg:rounded-xl overflow-hidden select-none h-40 xl:h-60">
       <Image src={moviePoster?.path || placeholderPath} alt={moviePoster?.alt_text || title} draggable={false} width={392} height={239} className="h-full object-top w-full object-cover bg-gray-11" />
       <div className="absolute rounded-b-md lg:rounded-b-xl bottom-0 left-0 bg-black/70 backdrop-blur-[15px] w-full z-10 flex flex-col gap-px p-2">
         <span className="text-white text-caption-sm lg:text-body-xxs">{title}</span>
@@ -35,7 +35,7 @@ function RecentWatchItemComp({ movie }: { movie: SectionUserMovieListItemType })
           <span className={`shrink-0 lg:text-caption-md text-caption-sm ${dir === "rtl" ? "order-3" : "order-1"}`}>{TimerParser(Number(movie.progress_time), true)}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

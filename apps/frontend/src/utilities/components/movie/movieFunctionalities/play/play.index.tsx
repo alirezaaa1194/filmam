@@ -1,7 +1,7 @@
 import { Play } from "iconsax-react";
 import Link from "next/link";
 import { Button } from "../../../ui";
-import { MovieDetailPublicType, MovieListItemType, MovieTypeEnum, UserMovieActionType, UserMovieTypeEnum, WatchTargetMovieTypeEnum } from "../../../../../types";
+import { FileTypeEnum, MovieDetailPublicType, MovieListItemType, MovieTypeEnum, UserMovieActionType, UserMovieTypeEnum, WatchTargetMovieTypeEnum } from "../../../../../types";
 
 function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieDetailPublicType | MovieListItemType; hero: boolean; actions?: UserMovieActionType[] }) {
   const isWatching = actions?.some((action) => action.type === UserMovieTypeEnum.WATCHING);
@@ -10,7 +10,7 @@ function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieDeta
 
   if (hero) {
     return (
-      <Link href={`${hero ? `/movies/${movie.slug}` : ``}`} className="w-full lg:w-fit">
+      <Link href={`/movies/${movie.slug}`} className="w-full lg:w-fit">
         <Button className="w-full lg:w-fit flex items-center gap-2 px-12 h-[46px] rounded-md cursor-pointer text-white text-button-md! lg:text-button-lg!">
           <Play variant="Outline" className="fill-white size-5" />
           تماشا
@@ -36,9 +36,13 @@ function MoviePlayFunctionalityComp({ movie, hero, actions }: { movie: MovieDeta
   } else if (watchTarget?.type === WatchTargetMovieTypeEnum.WATCH) {
     label = watchTarget?.season_order === 1 ? `تماشای قسمت ${watchTarget?.order}` : `تماشای فصل ${watchTarget?.season_order} قسمت ${watchTarget?.order}`;
   }
+  const filmFile = watchTarget?.files.find((file) => file.type === FileTypeEnum.FILM);
+  if (!filmFile) {
+    return;
+  }
 
   return (
-    <Link href="/player/episode/sh-e2-s1?source=FILM" className="w-full lg:w-fit">
+    <Link href={`/player/episode/${watchTarget?.slug}?source=FILM`} className="w-full lg:w-fit">
       <Button className="w-full lg:w-fit flex items-center gap-2 px-12 h-[46px] rounded-md cursor-pointer text-white text-button-md! lg:text-button-lg!">
         <Play variant="Outline" className="fill-white size-5" />
         {label}

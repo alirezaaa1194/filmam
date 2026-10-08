@@ -10,6 +10,7 @@ import { AuthModalContext } from "../../../../../contexts/authModal";
 import { CheckCheck } from "lucide-react";
 import { formatDuration } from "../../../../../lib/utils";
 import EpisodeActionDropdownComp from "./actionDropdown/actionDropdown.index";
+import Link from "next/link";
 
 function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
   const isWatching = episode.user_movies.find((eum) => eum.type === UserMovieTypeEnum.WATCHING);
@@ -39,7 +40,7 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
         <div className="flex flex-col gap-1 lg:gap-2">
           <div className="w-full flex items-center justify-between gap-3">
             <span className="text-white text-mobile-body-sm lg:text-body-xs">
-              فصل {episode.season_order} - {t("RecentWatch.episode")} {episode.order}
+              فصل {episode.season_order} {t("RecentWatch.episode")} {episode.order}
             </span>
             <div className="flex items-center gap-3">
               {isWatched ? (
@@ -125,7 +126,9 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
                 <Dislike variant={isCurrentlyDisLiked ? "Bold" : "Outline"} className="transition-all size-4 lg:size-6" />
               </Button>
             </div>
-            <Button className="flex-1 h-8 lg:h-12 cursor-pointer rounded-md text-button-s! lg:text-button-md!">{isWatching ? "ادامه تماشا" : isWatched ? "تماشای دوباره" : "تماشا"}</Button>
+            <Link href={`/player/episode/${episode.slug}?source=FILM`} className="flex-1">
+              <Button className="w-full h-8 lg:h-12 cursor-pointer rounded-md text-button-s! lg:text-button-md!">{isWatching ? "ادامه تماشا" : isWatched ? "تماشای دوباره" : "تماشا"}</Button>
+            </Link>
           </div>
         </div>
       </div>

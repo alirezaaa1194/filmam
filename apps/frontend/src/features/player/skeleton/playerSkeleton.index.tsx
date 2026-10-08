@@ -28,9 +28,9 @@ export default function PlayerSkeletonComp() {
               <div className="flex items-center gap-2 lg:gap-4">
                 <Skeleton className="size-11 lg:size-12 rounded-full" />
                 <Skeleton className="hidden lg:block size-12 rounded-full" />
-                <Skeleton className="size-11 lg:size-12 rounded-full" />
-                <Skeleton className="size-11 lg:size-12 rounded-full" />
-                <Skeleton className="size-11 lg:size-12 rounded-full" />
+                <Skeleton className="size-11 lg:size-12 rounded-full hidden lg:block" />
+                <Skeleton className="size-11 lg:size-12 rounded-full hidden lg:block" />
+                <Skeleton className="size-11 lg:size-12 rounded-full hidden lg:block" />
                 <Skeleton className="size-11 lg:size-12 rounded-full" />
               </div>
 

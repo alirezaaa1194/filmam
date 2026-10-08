@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft2, Crop, Maximize2, Maximize3, Next } from "iconsax-react";
-import { PictureInPicture2 } from "lucide-react";
+import { Minimize, PictureInPicture2 } from "lucide-react";
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../../../utilities/components/ui";
 import { CommentEntityTypeEnum, FileTypeEnum } from "../../../../../../types";
 import PlayerEpisodesModalComp from "../../../modals/episodes/episodes.index";
@@ -34,10 +34,10 @@ export default function LeftControlsComp(props: any) {
       >
         <div className="flex items-center gap-2 lg:gap-4 w-max">
           <Button onClick={fullscreen.toggleFullscreen} className="size-11 lg:size-12 shrink-0 rounded-full bg-gray-14/50 hover:bg-gray-14 backdrop-blur-[20px] cursor-pointer hover:shadow-[0_0_3px_var(--color-gray-12)]">
-            {fullscreen.isFullscreen ? <Maximize2 className="size-5 stroke-white" /> : <Maximize2 className="size-5 stroke-white" />}
+            {fullscreen.isFullscreen ? <Minimize className="size-5 stroke-white" /> : <Maximize2 className="size-5 stroke-white" />}
           </Button>
 
-          <Button onClick={() => setIsCover((v: boolean) => !v)} className={`size-11 lg:size-12 shrink-0 rounded-full backdrop-blur-[20px] cursor-pointer hover:shadow-[0_0_3px_var(--color-gray-12)] hidden lg:flex landscape:flex bg-gray-14/50 hover:bg-gray-14 ${isCover ? "shadow-[0_0_3px_var(--color-gray-12)]" : ""}`}>
+          <Button onClick={() => setIsCover((v: boolean) => !v)} className="size-11 lg:size-12 shrink-0 rounded-full backdrop-blur-[20px] cursor-pointer hover:shadow-[0_0_3px_var(--color-gray-12)] hidden lg:flex landscape:flex bg-gray-14/50 hover:bg-gray-14">
             {isCover ? <Crop className="size-5 stroke-white" /> : <Maximize3 className="size-5 stroke-white" />}
           </Button>
 

@@ -67,308 +67,556 @@ export class UserMovieService {
     return result;
   }
 
-  async updateUserMovies(body: UpdateUserMoviesDto, userId: number) {
-    const user = await this.userService.getUserById(userId);
-    if (
-      user &&
-      user.role !== UserRole.ADMIN &&
-      user.block_expires_at &&
-      new Date(user.block_expires_at) > new Date()
-    ) {
-      throw new ForbiddenException(
-        `You cannot do any action. Your block expires at ${user.block_expires_at}`,
-      );
+  // async updateUserMovies(body: UpdateUserMoviesDto, userId: number) {
+  //   const user = await this.userService.getUserById(userId);
+  //   if (
+  //     user &&
+  //     user.role !== UserRole.ADMIN &&
+  //     user.block_expires_at &&
+  //     new Date(user.block_expires_at) > new Date()
+  //   ) {
+  //     throw new ForbiddenException(
+  //       `You cannot do any action. Your block expires at ${user.block_expires_at}`,
+  //     );
+  //   }
+
+  //   const userActions = await this.hasUserDidAction(
+  //     {
+  //       ...body,
+  //       type:
+  //         body.type === UserMovieType.WATCHED ||
+  //         body.type === UserMovieType.WATCHING
+  //           ? [UserMovieType.WATCHED, UserMovieType.WATCHING]
+  //           : body.type === UserMovieType.LIKE
+  //             ? [body.type, UserMovieType.DISLIKE]
+  //             : body.type === UserMovieType.DISLIKE
+  //               ? [body.type, UserMovieType.LIKE]
+  //               : [body.type],
+  //     },
+  //     userId,
+  //   );
+  //   const hasUserDidAction = userActions.find((action) => {
+  //     if (body.type === 'WATCHED' || body.type === 'WATCHING') {
+  //       return action.type === 'WATCHED' || action.type === 'WATCHING';
+  //     } else {
+  //       return action.type === body.type;
+  //     }
+  //   });
+  //   const result = await prisma.$transaction(async (tx) => {
+  //     switch (body.type) {
+  //       case UserMovieType.NOTIFICATION: {
+  //         return await this.submitUserMovieAction({
+  //           userId,
+  //           body,
+  //           actionMode: 'DELETE',
+  //           hasUserDidAction,
+  //           tx,
+  //         });
+  //       }
+
+  //       case UserMovieType.BOOKMARK: {
+  //         return await this.submitUserMovieAction({
+  //           userId,
+  //           body,
+  //           actionMode: 'DELETE',
+  //           hasUserDidAction,
+  //           tx,
+  //         });
+  //       }
+
+  //       case UserMovieType.LIKE: {
+  //         //update movie or episode or both stats
+  //         const hasUserDidDisLike = userActions.find(
+  //           (action) => action.type === UserMovieType.DISLIKE,
+  //         );
+  //         if (body.entity_type === CommentEntityType.MOVIE) {
+  //           await tx.movie.update({
+  //             where: { id: body.movie_id },
+  //             data: {
+  //               likes_count: {
+  //                 ...(hasUserDidAction
+  //                   ? {
+  //                       decrement: 1,
+  //                     }
+  //                   : {
+  //                       increment: 1,
+  //                     }),
+  //               },
+  //               ...(!hasUserDidAction && hasUserDidDisLike
+  //                 ? {
+  //                     dislikes_count: {
+  //                       decrement: 1,
+  //                     },
+  //                   }
+  //                 : {}),
+  //             },
+  //           });
+  //         } else if (
+  //           body.entity_type === CommentEntityType.EPISODE &&
+  //           body.episode_id
+  //         ) {
+  //           await tx.episode.update({
+  //             where: { id: body.episode_id },
+  //             data: {
+  //               likes_count: {
+  //                 ...(hasUserDidAction
+  //                   ? {
+  //                       decrement: 1,
+  //                     }
+  //                   : {
+  //                       increment: 1,
+  //                     }),
+  //               },
+  //               ...(!hasUserDidAction && hasUserDidDisLike
+  //                 ? {
+  //                     dislikes_count: {
+  //                       decrement: 1,
+  //                     },
+  //                   }
+  //                 : {}),
+  //             },
+  //           });
+  //           await tx.movie.update({
+  //             where: {
+  //               id: body.movie_id,
+  //             },
+  //             data: {
+  //               likes_count: {
+  //                 ...(hasUserDidAction
+  //                   ? {
+  //                       decrement: 1,
+  //                     }
+  //                   : {
+  //                       increment: 1,
+  //                     }),
+  //               },
+  //               ...(!hasUserDidAction && hasUserDidDisLike
+  //                 ? {
+  //                     dislikes_count: {
+  //                       decrement: 1,
+  //                     },
+  //                   }
+  //                 : {}),
+  //             },
+  //           });
+  //         }
+
+  //         //update user movie
+  //         return await this.submitUserMovieAction({
+  //           userId,
+  //           body,
+  //           actionMode: 'DELETE',
+  //           hasUserDidAction,
+  //           tx,
+  //           callback: this.userMovieRepository.deleteUserLikedMovies(
+  //             body,
+  //             userId,
+  //             UserMovieType.DISLIKE,
+  //             tx,
+  //           ),
+  //         });
+  //       }
+
+  //       case UserMovieType.DISLIKE: {
+  //         //update movie or episode or both stats
+  //         const hasUserDidLike = userActions.find(
+  //           (action) => action.type === UserMovieType.LIKE,
+  //         );
+  //         if (body.entity_type === CommentEntityType.MOVIE) {
+  //           await tx.movie.update({
+  //             where: { id: body.movie_id },
+  //             data: {
+  //               dislikes_count: {
+  //                 ...(hasUserDidAction
+  //                   ? {
+  //                       decrement: 1,
+  //                     }
+  //                   : {
+  //                       increment: 1,
+  //                     }),
+  //               },
+  //               ...(!hasUserDidAction && hasUserDidLike
+  //                 ? {
+  //                     likes_count: {
+  //                       decrement: 1,
+  //                     },
+  //                   }
+  //                 : {}),
+  //             },
+  //           });
+  //         } else if (
+  //           body.entity_type === CommentEntityType.EPISODE &&
+  //           body.episode_id
+  //         ) {
+  //           await tx.episode.update({
+  //             where: { id: body.episode_id },
+  //             data: {
+  //               dislikes_count: {
+  //                 ...(hasUserDidAction
+  //                   ? {
+  //                       decrement: 1,
+  //                     }
+  //                   : {
+  //                       increment: 1,
+  //                     }),
+  //               },
+  //               ...(!hasUserDidAction && hasUserDidLike
+  //                 ? {
+  //                     likes_count: {
+  //                       decrement: 1,
+  //                     },
+  //                   }
+  //                 : {}),
+  //             },
+  //           });
+
+  //           await tx.movie.update({
+  //             where: {
+  //               id: body.movie_id,
+  //             },
+  //             data: {
+  //               dislikes_count: {
+  //                 ...(hasUserDidAction
+  //                   ? {
+  //                       decrement: 1,
+  //                     }
+  //                   : {
+  //                       increment: 1,
+  //                     }),
+  //               },
+  //               ...(!hasUserDidAction && hasUserDidLike
+  //                 ? {
+  //                     likes_count: {
+  //                       decrement: 1,
+  //                     },
+  //                   }
+  //                 : {}),
+  //             },
+  //           });
+  //         }
+
+  //         //update user movie
+  //         return await this.submitUserMovieAction({
+  //           userId,
+  //           body,
+  //           actionMode: 'DELETE',
+  //           tx,
+  //           hasUserDidAction,
+  //           callback: this.userMovieRepository.deleteUserLikedMovies(
+  //             body,
+  //             userId,
+  //             UserMovieType.LIKE,
+  //             tx,
+  //           ),
+  //         });
+  //       }
+
+  //       case UserMovieType.WATCHED:
+  //       case UserMovieType.WATCHING: {
+  //         //update movie or episode or both stats
+  //         if (
+  //           body.entity_type === CommentEntityType.MOVIE &&
+  //           !hasUserDidAction
+  //         ) {
+  //           await tx.movie.update({
+  //             where: { id: body.movie_id },
+  //             data: {
+  //               watches_count: {
+  //                 increment: 1,
+  //               },
+  //             },
+  //           });
+  //         } else if (
+  //           body.entity_type === CommentEntityType.EPISODE &&
+  //           !hasUserDidAction
+  //         ) {
+  //           await tx.movie.update({
+  //             where: { id: body.movie_id },
+  //             data: {
+  //               watches_count: {
+  //                 increment: 1,
+  //               },
+  //             },
+  //           });
+
+  //           await tx.episode.update({
+  //             where: { id: body.episode_id },
+  //             data: {
+  //               watches_count: {
+  //                 increment: 1,
+  //               },
+  //             },
+  //           });
+  //         }
+
+  //         //update user movie
+  //         return await this.submitUserMovieAction({
+  //           userId,
+  //           body,
+  //           actionMode: 'UPDATE',
+  //           tx,
+  //           hasUserDidAction,
+  //           callback: this.userMovieRepository.deleteUserLikedMovies(
+  //             body,
+  //             userId,
+  //             UserMovieType.LIKE,
+  //             tx,
+  //           ),
+  //         });
+  //       }
+  //     }
+  //   });
+
+  //   return result;
+  // }
+
+async updateUserMovies(body: UpdateUserMoviesDto, userId: number) {
+  const user = await this.userService.getUserById(userId);
+  if (
+    user &&
+    user.role !== UserRole.ADMIN &&
+    user.block_expires_at &&
+    new Date(user.block_expires_at) > new Date()
+  ) {
+    throw new ForbiddenException(
+      `You cannot do any action. Your block expires at ${user.block_expires_at}`,
+    );
+  }
+
+  if (
+    body.type === UserMovieType.WATCHING ||
+    body.type === UserMovieType.WATCHED
+  ) {
+    return await this.handleWatchAction(body, userId);
+  }
+
+  const userActions = await this.hasUserDidAction(
+    {
+      ...body,
+      type:
+        body.type === UserMovieType.LIKE
+          ? [body.type, UserMovieType.DISLIKE]
+          : body.type === UserMovieType.DISLIKE
+            ? [body.type, UserMovieType.LIKE]
+            : [body.type],
+    },
+    userId,
+  );
+
+  const hasUserDidAction = userActions.find((action) => {
+    if (body.type === 'WATCHED' || body.type === 'WATCHING') {
+      return action.type === 'WATCHED' || action.type === 'WATCHING';
+    } else {
+      return action.type === body.type;
+    }
+  });
+
+  const result = await prisma.$transaction(async (tx) => {
+    switch (body.type) {
+      case UserMovieType.NOTIFICATION: {
+        return await this.submitUserMovieAction({
+          userId,
+          body,
+          actionMode: 'DELETE',
+          hasUserDidAction,
+          tx,
+        });
+      }
+
+      case UserMovieType.BOOKMARK: {
+        return await this.submitUserMovieAction({
+          userId,
+          body,
+          actionMode: 'DELETE',
+          hasUserDidAction,
+          tx,
+        });
+      }
+
+      case UserMovieType.LIKE: {
+        const hasUserDidDisLike = userActions.find(
+          (action) => action.type === UserMovieType.DISLIKE,
+        );
+        if (body.entity_type === CommentEntityType.MOVIE) {
+          await tx.movie.update({
+            where: { id: body.movie_id },
+            data: {
+              likes_count: {
+                ...(hasUserDidAction
+                  ? { decrement: 1 }
+                  : { increment: 1 }),
+              },
+              ...(!hasUserDidAction && hasUserDidDisLike
+                ? { dislikes_count: { decrement: 1 } }
+                : {}),
+            },
+          });
+        } else if (
+          body.entity_type === CommentEntityType.EPISODE &&
+          body.episode_id
+        ) {
+          await tx.episode.update({
+            where: { id: body.episode_id },
+            data: {
+              likes_count: {
+                ...(hasUserDidAction
+                  ? { decrement: 1 }
+                  : { increment: 1 }),
+              },
+              ...(!hasUserDidAction && hasUserDidDisLike
+                ? { dislikes_count: { decrement: 1 } }
+                : {}),
+            },
+          });
+          await tx.movie.update({
+            where: { id: body.movie_id },
+            data: {
+              likes_count: {
+                ...(hasUserDidAction
+                  ? { decrement: 1 }
+                  : { increment: 1 }),
+              },
+              ...(!hasUserDidAction && hasUserDidDisLike
+                ? { dislikes_count: { decrement: 1 } }
+                : {}),
+            },
+          });
+        }
+
+        return await this.submitUserMovieAction({
+          userId,
+          body,
+          actionMode: 'DELETE',
+          hasUserDidAction,
+          tx,
+          callback: this.userMovieRepository.deleteUserLikedMovies(
+            body,
+            userId,
+            UserMovieType.DISLIKE,
+            tx,
+          ),
+        });
+      }
+
+      case UserMovieType.DISLIKE: {
+        const hasUserDidLike = userActions.find(
+          (action) => action.type === UserMovieType.LIKE,
+        );
+        if (body.entity_type === CommentEntityType.MOVIE) {
+          await tx.movie.update({
+            where: { id: body.movie_id },
+            data: {
+              dislikes_count: {
+                ...(hasUserDidAction
+                  ? { decrement: 1 }
+                  : { increment: 1 }),
+              },
+              ...(!hasUserDidAction && hasUserDidLike
+                ? { likes_count: { decrement: 1 } }
+                : {}),
+            },
+          });
+        } else if (
+          body.entity_type === CommentEntityType.EPISODE &&
+          body.episode_id
+        ) {
+          await tx.episode.update({
+            where: { id: body.episode_id },
+            data: {
+              dislikes_count: {
+                ...(hasUserDidAction
+                  ? { decrement: 1 }
+                  : { increment: 1 }),
+              },
+              ...(!hasUserDidAction && hasUserDidLike
+                ? { likes_count: { decrement: 1 } }
+                : {}),
+            },
+          });
+
+          await tx.movie.update({
+            where: { id: body.movie_id },
+            data: {
+              dislikes_count: {
+                ...(hasUserDidAction
+                  ? { decrement: 1 }
+                  : { increment: 1 }),
+              },
+              ...(!hasUserDidAction && hasUserDidLike
+                ? { likes_count: { decrement: 1 } }
+                : {}),
+            },
+          });
+        }
+
+        return await this.submitUserMovieAction({
+          userId,
+          body,
+          actionMode: 'DELETE',
+          tx,
+          hasUserDidAction,
+          callback: this.userMovieRepository.deleteUserLikedMovies(
+            body,
+            userId,
+            UserMovieType.LIKE,
+            tx,
+          ),
+        });
+      }
+    }
+  });
+
+  return result;
+}
+
+private async handleWatchAction(
+  body: UpdateUserMoviesDto,
+  userId: number,
+) {
+  return await prisma.$transaction(async (tx) => {
+    const entityFilter =
+      body.entity_type === CommentEntityType.EPISODE
+        ? { episode_id: body.episode_id }
+        : { movie_id: body.movie_id, entity_type: CommentEntityType.MOVIE };
+
+    const existingSameType = await tx.userMovie.findFirst({
+      where: { ...entityFilter, user_id: userId, type: body.type },
+    });
+
+    if (existingSameType) {
+      await tx.userMovie.update({
+        where: { id: existingSameType.id },
+        data: { progress_time: body.progress_time },
+      });
+    } else {
+      await tx.userMovie.create({
+        data: { ...body, user_id: userId },
+      });
+
+      if (body.entity_type === CommentEntityType.MOVIE && body.movie_id) {
+        await tx.movie.update({
+          where: { id: body.movie_id },
+          data: { watches_count: { increment: 1 } },
+        });
+      } else if (
+        body.entity_type === CommentEntityType.EPISODE &&
+        body.episode_id &&
+        body.movie_id
+      ) {
+        await tx.movie.update({
+          where: { id: body.movie_id },
+          data: { watches_count: { increment: 1 } },
+        });
+        await tx.episode.update({
+          where: { id: body.episode_id },
+          data: { watches_count: { increment: 1 } },
+        });
+      }
     }
 
-    const userActions = await this.hasUserDidAction(
-      {
-        ...body,
-        type:
-          body.type === UserMovieType.WATCHED ||
-          body.type === UserMovieType.WATCHING
-            ? [UserMovieType.WATCHED, UserMovieType.WATCHING]
-            : body.type === UserMovieType.LIKE
-              ? [body.type, UserMovieType.DISLIKE]
-              : body.type === UserMovieType.DISLIKE
-                ? [body.type, UserMovieType.LIKE]
-                : [body.type],
-      },
-      userId,
-    );
-    const hasUserDidAction = userActions.find((action) => {
-      if (body.type === 'WATCHED' || body.type === 'WATCHING') {
-        return action.type === 'WATCHED' || action.type === 'WATCHING';
-      } else {
-        return action.type === body.type;
-      }
-    });
-    const result = await prisma.$transaction(async (tx) => {
-      switch (body.type) {
-        case UserMovieType.NOTIFICATION: {
-          return await this.submitUserMovieAction({
-            userId,
-            body,
-            actionMode: 'DELETE',
-            hasUserDidAction,
-            tx,
-          });
-        }
-
-        case UserMovieType.BOOKMARK: {
-          return await this.submitUserMovieAction({
-            userId,
-            body,
-            actionMode: 'DELETE',
-            hasUserDidAction,
-            tx,
-          });
-        }
-
-        case UserMovieType.LIKE: {
-          //update movie or episode or both stats
-          const hasUserDidDisLike = userActions.find(
-            (action) => action.type === UserMovieType.DISLIKE,
-          );
-          if (body.entity_type === CommentEntityType.MOVIE) {
-            await tx.movie.update({
-              where: { id: body.movie_id },
-              data: {
-                likes_count: {
-                  ...(hasUserDidAction
-                    ? {
-                        decrement: 1,
-                      }
-                    : {
-                        increment: 1,
-                      }),
-                },
-                ...(!hasUserDidAction && hasUserDidDisLike
-                  ? {
-                      dislikes_count: {
-                        decrement: 1,
-                      },
-                    }
-                  : {}),
-              },
-            });
-          } else if (
-            body.entity_type === CommentEntityType.EPISODE &&
-            body.episode_id
-          ) {
-            await tx.episode.update({
-              where: { id: body.episode_id },
-              data: {
-                likes_count: {
-                  ...(hasUserDidAction
-                    ? {
-                        decrement: 1,
-                      }
-                    : {
-                        increment: 1,
-                      }),
-                },
-                ...(!hasUserDidAction && hasUserDidDisLike
-                  ? {
-                      dislikes_count: {
-                        decrement: 1,
-                      },
-                    }
-                  : {}),
-              },
-            });
-            await tx.movie.update({
-              where: {
-                id: body.movie_id,
-              },
-              data: {
-                likes_count: {
-                  ...(hasUserDidAction
-                    ? {
-                        decrement: 1,
-                      }
-                    : {
-                        increment: 1,
-                      }),
-                },
-                ...(!hasUserDidAction && hasUserDidDisLike
-                  ? {
-                      dislikes_count: {
-                        decrement: 1,
-                      },
-                    }
-                  : {}),
-              },
-            });
-          }
-
-          //update user movie
-          return await this.submitUserMovieAction({
-            userId,
-            body,
-            actionMode: 'DELETE',
-            hasUserDidAction,
-            tx,
-            callback: this.userMovieRepository.deleteUserLikedMovies(
-              body,
-              userId,
-              UserMovieType.DISLIKE,
-              tx,
-            ),
-          });
-        }
-
-        case UserMovieType.DISLIKE: {
-          //update movie or episode or both stats
-          const hasUserDidLike = userActions.find(
-            (action) => action.type === UserMovieType.LIKE,
-          );
-          if (body.entity_type === CommentEntityType.MOVIE) {
-            await tx.movie.update({
-              where: { id: body.movie_id },
-              data: {
-                dislikes_count: {
-                  ...(hasUserDidAction
-                    ? {
-                        decrement: 1,
-                      }
-                    : {
-                        increment: 1,
-                      }),
-                },
-                ...(!hasUserDidAction && hasUserDidLike
-                  ? {
-                      likes_count: {
-                        decrement: 1,
-                      },
-                    }
-                  : {}),
-              },
-            });
-          } else if (
-            body.entity_type === CommentEntityType.EPISODE &&
-            body.episode_id
-          ) {
-            await tx.episode.update({
-              where: { id: body.episode_id },
-              data: {
-                dislikes_count: {
-                  ...(hasUserDidAction
-                    ? {
-                        decrement: 1,
-                      }
-                    : {
-                        increment: 1,
-                      }),
-                },
-                ...(!hasUserDidAction && hasUserDidLike
-                  ? {
-                      likes_count: {
-                        decrement: 1,
-                      },
-                    }
-                  : {}),
-              },
-            });
-
-            await tx.movie.update({
-              where: {
-                id: body.movie_id,
-              },
-              data: {
-                dislikes_count: {
-                  ...(hasUserDidAction
-                    ? {
-                        decrement: 1,
-                      }
-                    : {
-                        increment: 1,
-                      }),
-                },
-                ...(!hasUserDidAction && hasUserDidLike
-                  ? {
-                      likes_count: {
-                        decrement: 1,
-                      },
-                    }
-                  : {}),
-              },
-            });
-          }
-
-          //update user movie
-          return await this.submitUserMovieAction({
-            userId,
-            body,
-            actionMode: 'DELETE',
-            tx,
-            hasUserDidAction,
-            callback: this.userMovieRepository.deleteUserLikedMovies(
-              body,
-              userId,
-              UserMovieType.LIKE,
-              tx,
-            ),
-          });
-        }
-
-        case UserMovieType.WATCHED:
-        case UserMovieType.WATCHING: {
-          //update movie or episode or both stats
-          if (
-            body.entity_type === CommentEntityType.MOVIE &&
-            !hasUserDidAction
-          ) {
-            await tx.movie.update({
-              where: { id: body.movie_id },
-              data: {
-                watches_count: {
-                  increment: 1,
-                },
-              },
-            });
-          } else if (
-            body.entity_type === CommentEntityType.EPISODE &&
-            !hasUserDidAction
-          ) {
-            await tx.movie.update({
-              where: { id: body.movie_id },
-              data: {
-                watches_count: {
-                  increment: 1,
-                },
-              },
-            });
-
-            await tx.episode.update({
-              where: { id: body.episode_id },
-              data: {
-                watches_count: {
-                  increment: 1,
-                },
-              },
-            });
-          }
-
-          //update user movie
-          return await this.submitUserMovieAction({
-            userId,
-            body,
-            actionMode: 'UPDATE',
-            tx,
-            hasUserDidAction,
-            callback: this.userMovieRepository.deleteUserLikedMovies(
-              body,
-              userId,
-              UserMovieType.LIKE,
-              tx,
-            ),
-          });
-        }
-      }
-    });
-
-    return result;
-  }
+    return { success: true };
+  });
+}
 
   async getUserMovieActions(
     userId: number,
@@ -506,7 +754,10 @@ export class UserMovieService {
       movie_id = episode.movie_id;
     }
 
-    if (body.type === UserMovieType.WATCHING && !body.progress_time) {
+    if (
+      body.type === UserMovieType.WATCHING &&
+      body.progress_time === undefined
+    ) {
       throw new BadRequestException('progress time is required');
     }
 

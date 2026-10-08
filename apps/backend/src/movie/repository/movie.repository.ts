@@ -462,6 +462,11 @@ export class MovieRepository {
           },
         },
         season: true,
+        files: {
+          include: {
+            upload: true,
+          },
+        },
       },
       orderBy,
     });
@@ -492,6 +497,11 @@ export class MovieRepository {
           },
         },
         season: true,
+        files: {
+          include: {
+            upload: true,
+          },
+        },
       },
       orderBy,
     });
@@ -516,6 +526,11 @@ export class MovieRepository {
           },
         },
         season: true,
+        files: {
+          include: {
+            upload: true,
+          },
+        },
       },
       orderBy,
     });
