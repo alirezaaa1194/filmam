@@ -20,7 +20,7 @@ function HeroLikeSectionComp({ section }: { section: SectionType }) {
   const placeholderPath = "/images/placeholder-h.jpg";
 
   return (
-    <section className="h-[420px] md:h-[624px] 2xl:h-screen mt-8 lg:mt-12 relative">
+    <section className="h-[420px] md:h-[624px] 2xl:h-screen mt-8 lg:mt-12 relative flex flex-col w-full">
       <SectionHeaderComp title={section.title} address={`/movies${section.filter || placeholderPath}`} absolute />
       <Swiper
         key={dir}
@@ -32,7 +32,7 @@ function HeroLikeSectionComp({ section }: { section: SectionType }) {
           disableOnInteraction: false,
         }}
         loop={true}
-        className="h-full"
+        className="flex-1 w-full"
       >
         {section.movies.map((movie) => (
           <SwiperSlide className="select-none" key={movie.id}>

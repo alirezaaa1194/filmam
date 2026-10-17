@@ -418,6 +418,12 @@ export class MovieAdminDetailResponseDto {
   released_year!: number;
 
   @ApiProperty()
+  imdb_score!: number;
+
+  @ApiProperty()
+  has_dub!: boolean;
+
+  @ApiProperty()
   likes_count!: number;
 
   @ApiProperty()
@@ -635,6 +641,12 @@ export class MovieListItemDto {
 
   @ApiProperty()
   released_year!: number;
+
+  @ApiProperty()
+  imdb_score!: number;
+
+  @ApiProperty()
+  has_dub!: boolean;
 
   @ApiProperty()
   likes_count!: number;

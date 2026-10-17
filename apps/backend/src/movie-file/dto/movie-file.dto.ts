@@ -19,6 +19,11 @@ export class CreateMovieFilesDto {
   @IsOptional()
   outro_duration?: number;
 
+  @ApiProperty({ type: 'string', required: false })
+  @IsString()
+  @IsOptional()
+  duration?: string;
+
   @ApiProperty({
     example: 1,
     type: 'number',

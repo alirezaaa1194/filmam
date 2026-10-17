@@ -92,6 +92,7 @@ export function buildEpisodeFilesFromDetail(
       film?.intro_duration != null ? String(film.intro_duration) : '',
     outroDuration:
       film?.outro_duration != null ? String(film.outro_duration) : '',
+    duration: film?.duration != null ? String(film.duration) : '',
   }
 }
 
@@ -115,6 +116,7 @@ export function buildEpisodePayload(
     filesPayload.push({
       upload_id: files.film[0].id,
       type: 'FILM',
+      duration: files.duration.trim() || undefined,
       intro_start_time:
         files.introStartTime.trim() !== ''
           ? Number(files.introStartTime)
@@ -155,6 +157,7 @@ export function validateEpisodeFiles(
     return t('episodes.errors.film_required')
   }
   const times = [
+    files.duration,
     files.introStartTime,
     files.introDuration,
     files.outroDuration,

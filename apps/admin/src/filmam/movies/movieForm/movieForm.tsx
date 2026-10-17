@@ -8,6 +8,7 @@ import { Plus, GripVertical, X } from 'lucide-react'
 import {
   AsyncSelect,
   Button,
+  Checkbox,
   Form,
   FormControl,
   FormField,
@@ -238,6 +239,50 @@ export function MovieForm({
                     placeholder='2024'
                     className='col-span-4'
                     {...field}
+                  />
+                </FormControl>
+                <FormMessage className='col-span-4 col-start-3' />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='imdb_score'
+            render={({ field }) => (
+              <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                <FormLabel className='col-span-2 text-end'>
+                  {t('movies.imdb_score')}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    min='0'
+                    max='10'
+                    step='0.1'
+                    placeholder='7.5'
+                    className='col-span-4'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className='col-span-4 col-start-3' />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='has_dub'
+            render={({ field }) => (
+              <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                <FormLabel className='col-span-2 text-end'>
+                  {t('movies.has_dub')}
+                </FormLabel>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(checked) => field.onChange(checked === true)}
+                    className='col-span-4 justify-self-start'
                   />
                 </FormControl>
                 <FormMessage className='col-span-4 col-start-3' />
@@ -567,7 +612,14 @@ export function MovieForm({
           />
 
           {watchedType === 'CINEMATIC' && files.film.length > 0 && (
-            <div className='grid grid-cols-1 gap-3 rounded-lg border p-3 sm:grid-cols-3'>
+            <div className='grid grid-cols-1 gap-3 rounded-lg border p-3 sm:grid-cols-4'>
+              <TimingInput
+                label={t('movies.duration')}
+                value={files.duration}
+                onChange={(value) =>
+                  setFiles((prev) => ({ ...prev, duration: value }))
+                }
+              />
               <TimingInput
                 label={t('movies.intro_start_time')}
                 value={files.introStartTime}

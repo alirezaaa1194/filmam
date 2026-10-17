@@ -234,14 +234,13 @@ export class GetAllMoviesPublicDto {
   @ApiProperty({
     name: 'genres',
     required: false,
-    type: Number,
+    type: String,
     isArray: true,
   })
-  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
-  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
+  @Transform(({ value }) => (typeof value === 'string' ? [value] : value))
+  @IsString({ each: true })
   @IsOptional()
-  @Type(() => Number)
-  genres?: number[];
+  genres?: string[];
 
   @ApiProperty({
     name: 'age_limits',
@@ -258,37 +257,34 @@ export class GetAllMoviesPublicDto {
   @ApiProperty({
     name: 'countries',
     required: false,
-    type: Number,
+    type: String,
     isArray: true,
   })
-  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
-  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
+  @Transform(({ value }) => (typeof value === 'string' ? [value] : value))
+  @IsString({ each: true })
   @IsOptional()
-  @Type(() => Number)
-  countries?: number[];
+  countries?: string[];
 
   @ApiProperty({
     name: 'tags',
     required: false,
-    type: Number,
+    type: String,
     isArray: true,
   })
-  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
-  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
+  @Transform(({ value }) => (typeof value === 'string' ? [value] : value))
+  @IsString({ each: true })
   @IsOptional()
-  @Type(() => Number)
   tags?: string[];
 
   @ApiProperty({
     name: 'languages',
     required: false,
-    type: Number,
+    type: String,
     isArray: true,
   })
-  @Transform(({ value }) => (typeof value === 'number' ? [value] : value))
-  @IsNumber({ allowInfinity: false, allowNaN: false }, { each: true })
+  @Transform(({ value }) => (typeof value === 'string' ? [value] : value))
+  @IsString({ each: true })
   @IsOptional()
-  @Type(() => Number)
   languages?: string[];
 
   @ApiProperty({

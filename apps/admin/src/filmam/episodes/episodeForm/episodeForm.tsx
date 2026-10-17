@@ -253,7 +253,14 @@ export function EpisodeForm({
           />
 
           {files.film.length > 0 && (
-            <div className='grid grid-cols-1 gap-3 rounded-lg border p-3 sm:grid-cols-3'>
+            <div className='grid grid-cols-1 gap-3 rounded-lg border p-3 sm:grid-cols-4'>
+              <TimingInput
+                label={t('episodes.duration')}
+                value={files.duration}
+                onChange={(value) =>
+                  setFiles((prev) => ({ ...prev, duration: value }))
+                }
+              />
               <TimingInput
                 label={t('episodes.intro_start_time')}
                 value={files.introStartTime}

@@ -3,7 +3,7 @@ import PuzzleMovieItemSkeletonComp from "../movieItem/skeleton/puzzleMovieItemSk
 
 function PuzzleSectionSkeletonComp() {
   return (
-    <section className="puzzle-section max-w-layout-max mx-auto mt-20 px-layout-x-space flex flex-col gap-2 lg:gap-4">
+    <section className="puzzle-section max-w-layout-max mx-auto mt-8 lg:mt-12 px-layout-x-space flex flex-col gap-2 lg:gap-4">
       <Skeleton className="h-6 lg:h-7 w-48" />
       <div className="flex flex-col xl:flex-row items-stretch gap-6">
         <div className="w-full xl:max-w-[665px] rounded-xl overflow-hidden relative">

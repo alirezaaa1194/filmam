@@ -36,6 +36,8 @@ export type CreateMoviePayloadType = {
   type: MovieTypeValue
   slug: string
   released_year: number
+  imdb_score: number
+  has_dub: boolean
   age_limit?: number | null
   combined_tags: string
   genres: number[]
@@ -57,6 +59,7 @@ export type CreateMoviePayloadType = {
   files: {
     upload_id: number
     upload_type: MovieUploadTypeValue
+    duration?: string
     intro_start_time?: number
     intro_duration?: number
     outro_duration?: number
@@ -77,6 +80,7 @@ export type MovieFilesState = {
   introStartTime: string
   introDuration: string
   outroDuration: string
+  duration: string
 }
 
 export const emptyMovieFilesState: MovieFilesState = {
@@ -88,4 +92,5 @@ export const emptyMovieFilesState: MovieFilesState = {
   introStartTime: '',
   introDuration: '',
   outroDuration: '',
+  duration: '',
 }

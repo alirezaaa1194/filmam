@@ -35,9 +35,9 @@ function MovieFunctionalitiesComp({ movie, save = true, notification = true, lik
   const hasTrailer = movie.files.some((file) => file.type === FileTypeEnum.TRAILER);
 
   return (
-    <div className="flex items-center flex-col lg:flex-row lg:justify-start gap-4 w-full">
+    <div className="flex items-center flex-col lg:flex-row lg:justify-start gap-4 w-full h-fit">
       <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-fit">
-        {play ? <MoviePlayFunctionalityComp movie={movie} hero={hero} actions={data} /> : null}
+        {play ? <MoviePlayFunctionalityComp movie={movie} hero={hero||heroLike} actions={data} /> : null}
         {trailer && hasTrailer && !hero ? <MovieTrailerFunctionalityComp movie={movie} /> : null}
       </div>
       {!hero ? (

@@ -16,10 +16,10 @@ function MovieHeaderComp({ movie }: { movie: MovieDetailPublicType }) {
       <div className="absolute z-10 top-0 left-0 w-full h-[250px] lg:h-full bg-[linear-gradient(0deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0.96)_13%,rgba(12,12,12,0.4)_33%,rgba(12,12,12,0)_47%,rgba(12,12,12,0.28)_68%,rgba(12,12,12,1)_100%)]" />
       <div className="hidden lg:block absolute z-10 top-0 left-0 w-full h-full bg-[linear-gradient(90deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0)_28%,rgba(12,12,12,0.55)_52%,rgba(12,12,12,1)_100%)]" />
       <div className="lg:absolute z-20 top-0 left-0 right-0 w-full max-w-layout-max mx-auto flex gap-12 lg:h-full px-layout-x-space pb-10 xl:pb-5">
-        <div className="w-fit h-fit self-end py-8 lg:py-6 hidden xl:block">
+        <div className="w-[160px] xl:w-[227px] self-end py-8 lg:py-6 hidden xl:block">
           <MovieCardComp movie={movie} />
         </div>
-        <div className="w-full min-w-0 h-full flex flex-col justify-end items-start lg:py-6">
+        <div className="flex-1 min-w-0 h-full flex flex-col justify-end items-start lg:py-6">
           <div className="flex flex-col gap-4 w-full">
             <h1 className="text-mobile-h-3 lg:text-display-2 truncate max-w-full">{movie.title}</h1>
             <div className="hidden lg:flex flex-wrap gap-2">

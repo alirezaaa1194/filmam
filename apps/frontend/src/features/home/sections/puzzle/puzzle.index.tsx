@@ -26,7 +26,7 @@ function PuzzleSectionComp({ section }: { section: SectionType }) {
   }, []);
 
   return (
-    <section className="puzzle-section max-w-layout-max mx-auto mt-20 px-layout-x-space flex flex-col gap-2 lg:gap-4">
+    <section className="puzzle-section max-w-layout-max mx-auto mt-8 lg:mt-12 px-layout-x-space flex flex-col gap-2 lg:gap-4">
       <h5 className="text-primary text-mobile-h-6 lg:text-h-5">{section.title}</h5>
       <div className="flex flex-col xl:flex-row items-stretch gap-6">
         <div className="w-full xl:max-w-[665px] rounded-xl border border-gray-10 overflow-hidden">

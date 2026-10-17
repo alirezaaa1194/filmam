@@ -11,6 +11,16 @@ export class MovieFileService {
     movieId: number,
     tx: TransactionType,
   ) {
+    await Promise.all(
+      body
+        .filter((movieFile) => movieFile.duration !== undefined)
+        .map((movieFile) =>
+          tx.upload.update({
+            where: { id: movieFile.upload_id },
+            data: { duration: movieFile.duration },
+          }),
+        ),
+    );
     const movieFiles = body.map((movieFile) => ({
       upload_id: movieFile.upload_id,
       type: movieFile.upload_type,

@@ -659,6 +659,8 @@ export type __MovieAdminDetailType = {
   slug: string
   age_limit?: number
   released_year: number
+  imdb_score: number
+  has_dub?: boolean
   likes_count: number
   dislikes_count: number
   watches_count: number
@@ -702,6 +704,8 @@ export type __MovieListItemType = {
   slug: string
   age_limit?: number
   released_year: number
+  imdb_score: number
+  has_dub?: boolean
   likes_count: number
   dislikes_count: number
   watches_count: number

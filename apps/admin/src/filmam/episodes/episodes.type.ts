@@ -36,6 +36,7 @@ export type CreateEpisodePayloadType = {
   files: {
     upload_id: number
     type: EpisodeUploadTypeValue
+    duration?: string
     intro_start_time?: number
     intro_duration?: number
     outro_duration?: number
@@ -55,6 +56,7 @@ export type EpisodeFilesState = {
   introStartTime: string
   introDuration: string
   outroDuration: string
+  duration: string
 }
 
 export const emptyEpisodeFilesState: EpisodeFilesState = {
@@ -65,4 +67,5 @@ export const emptyEpisodeFilesState: EpisodeFilesState = {
   introStartTime: '',
   introDuration: '',
   outroDuration: '',
+  duration: '',
 }

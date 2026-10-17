@@ -343,6 +343,8 @@ export class MovieService {
         skip: 0,
         take: 0,
       };
+      const numericFilterIds = (values: string[]) =>
+        values.filter((value) => /^\d+$/.test(value)).map(Number);
 
       let sort: any = {};
 
@@ -443,9 +445,12 @@ export class MovieService {
       if (filter.genres && filter.genres.length) {
         where.genres = {
           some: {
-            genre_id: {
-              in: filter.genres,
-            },
+            OR: [
+              { genre: { slug: { in: filter.genres } } },
+              ...(numericFilterIds(filter.genres).length
+                ? [{ genre_id: { in: numericFilterIds(filter.genres) } }]
+                : []),
+            ],
           },
         };
       }
@@ -453,9 +458,12 @@ export class MovieService {
       if (filter.tags && filter.tags.length) {
         where.tags = {
           some: {
-            tag_id: {
-              in: filter.tags,
-            },
+            OR: [
+              { tag: { slug: { in: filter.tags } } },
+              ...(numericFilterIds(filter.tags).length
+                ? [{ tag_id: { in: numericFilterIds(filter.tags) } }]
+                : []),
+            ],
           },
         };
       }
@@ -463,9 +471,12 @@ export class MovieService {
       if (filter.countries && filter.countries.length) {
         where.countries = {
           some: {
-            country_id: {
-              in: filter.countries,
-            },
+            OR: [
+              { country: { code: { in: filter.countries } } },
+              ...(numericFilterIds(filter.countries).length
+                ? [{ country_id: { in: numericFilterIds(filter.countries) } }]
+                : []),
+            ],
           },
         };
       }
@@ -473,9 +484,12 @@ export class MovieService {
       if (filter.languages && filter.languages.length) {
         where.languages = {
           some: {
-            language_id: {
-              in: filter.languages,
-            },
+            OR: [
+              { language: { code: { in: filter.languages } } },
+              ...(numericFilterIds(filter.languages).length
+                ? [{ language_id: { in: numericFilterIds(filter.languages) } }]
+                : []),
+            ],
           },
         };
       }

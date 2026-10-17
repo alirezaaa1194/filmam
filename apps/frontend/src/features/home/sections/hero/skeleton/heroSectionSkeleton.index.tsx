@@ -40,7 +40,7 @@ function HeroSectionSkeletonComp() {
         </div>
       </div>
 
-      <div className="absolute z-40 flex items-center gap-2 w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! bottom-2! lg:bottom-[52px]!">
+      <div className="absolute z-40 flex items-center gap-2 w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! bottom-1! lg:bottom-[60px]!">
         <Skeleton className="size-2 lg:size-4 rounded-full bg-gray-11" />
         <Skeleton className="size-2 lg:size-4 rounded-full bg-gray-11" />
         <Skeleton className="size-2 lg:size-4 rounded-full bg-gray-11" />

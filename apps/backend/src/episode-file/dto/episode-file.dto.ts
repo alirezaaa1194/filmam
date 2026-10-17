@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EpisodeFileType } from '../../generated/prisma';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateEpisodeFileDto {
   @ApiProperty({ type: 'number', required: false })
@@ -17,6 +17,11 @@ export class CreateEpisodeFileDto {
   @IsNumber()
   @IsOptional()
   outro_duration?: number;
+
+  @ApiProperty({ type: 'string', required: false })
+  @IsString()
+  @IsOptional()
+  duration?: string;
 
   @ApiProperty()
   @IsNumber()

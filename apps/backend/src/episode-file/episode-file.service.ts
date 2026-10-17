@@ -10,6 +10,16 @@ export class EpisodeFileService {
     body: CreateEpisodeFilePropsType[],
     tx: TransactionType,
   ) {
+    await Promise.all(
+      body
+        .filter((episodeFile) => episodeFile.duration !== undefined)
+        .map((episodeFile) =>
+          tx.upload.update({
+            where: { id: episodeFile.upload_id },
+            data: { duration: episodeFile.duration },
+          }),
+        ),
+    );
     return await this.episodeFileRepository.createEpisodeFiles(body, tx);
   }
 

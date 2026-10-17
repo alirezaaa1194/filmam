@@ -31,6 +31,11 @@ export function buildMovieFormSchema(t: TFunction) {
           },
           { message: t('movies.released_year_required') }
         ),
+      imdb_score: z.string().refine(
+        (value) => Number.isFinite(Number(value)) && Number(value) >= 0 && Number(value) <= 10,
+        { message: t('movies.imdb_score_invalid') }
+      ),
+      has_dub: z.boolean(),
       age_limit: z
         .string()
         .refine(
@@ -70,6 +75,8 @@ export function buildEmptyMovieFormValues(): MovieFormValues {
     type: 'CINEMATIC',
     slug: '',
     released_year: '',
+    imdb_score: '',
+    has_dub: false,
     age_limit: '',
     combined_tags: '',
     genres: [],
@@ -105,6 +112,8 @@ export function buildMovieFormValuesFromDetail(
     type: detail.type as MovieTypeValue,
     slug: detail.slug,
     released_year: String(detail.released_year),
+    imdb_score: detail.imdb_score != null ? String(detail.imdb_score) : '',
+    has_dub: detail.has_dub ?? false,
     age_limit: detail.age_limit != null ? String(detail.age_limit) : '',
     combined_tags: detail.combined_tags ?? '',
     genres: detail.genres.map((genre) => String(genre.id)),
@@ -147,6 +156,7 @@ export function buildMovieFilesFromDetail(
       film?.intro_duration != null ? String(film.intro_duration) : '',
     outroDuration:
       film?.outro_duration != null ? String(film.outro_duration) : '',
+    duration: film?.duration != null ? String(film.duration) : '',
   }
 }
 
@@ -171,6 +181,7 @@ export function buildMoviePayload(
     filesPayload.push({
       upload_id: files.film[0].id,
       upload_type: 'FILM',
+      duration: files.duration.trim() || undefined,
       intro_start_time:
         files.introStartTime.trim() !== ''
           ? Number(files.introStartTime)
@@ -190,6 +201,8 @@ export function buildMoviePayload(
     type: values.type,
     slug: values.slug.trim(),
     released_year: Number(values.released_year),
+    imdb_score: Number(values.imdb_score),
+    has_dub: values.has_dub,
     age_limit:
       values.age_limit.trim() !== '' ? Number(values.age_limit) : undefined,
     combined_tags: values.combined_tags.trim(),
@@ -231,6 +244,7 @@ export function validateMovieFiles(
       return t('movies.errors.film_required')
     }
     const times = [
+      files.duration,
       files.introStartTime,
       files.introDuration,
       files.outroDuration,

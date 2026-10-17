@@ -103,7 +103,7 @@ export type MovieFilterInput = {
   lang: AppLanguage;
   page?: number | null;
   page_size?: number | null;
-  genres?: number[] | null;
+  genres?: string[] | null;
   age_limits?: number[] | null;
   countries?: string[] | null;
   tags?: string[] | null;

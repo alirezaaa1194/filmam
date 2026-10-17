@@ -403,19 +403,21 @@ export class SectionService {
 
           const genresFilter = otherSectionData.section_filters
             .filter((sf) => sf.filter_key === SectionFilterKey.GENRES)
-            .map((sf) => +sf.filter_value);
+            .map((sf) => sf.filter_value);
 
           const countriesFilter = otherSectionData.section_filters
             .filter((sf) => sf.filter_key === SectionFilterKey.COUNTRIES)
-            .map((sf) => +sf.filter_value);
+            .map((sf) => sf.filter_value);
 
           const languagesFilter = otherSectionData.section_filters
             .filter((sf) => sf.filter_key === SectionFilterKey.LANGUAGES)
-            .map((sf) => +sf.filter_value);
+            .map((sf) => sf.filter_value);
 
           const tagsFilter = otherSectionData.section_filters
             .filter((sf) => sf.filter_key === SectionFilterKey.TAGS)
-            .map((sf) => +sf.filter_value);
+            .map((sf) => sf.filter_value);
+          const numericFilterIds = (values: string[]) =>
+            values.filter((value) => /^\d+$/.test(value)).map(Number);
 
           const searchFilter = otherSectionData.section_filters.find(
             (sf) => sf.filter_key === SectionFilterKey.SEARCH,
@@ -530,9 +532,12 @@ export class SectionService {
                     // })),
                     genres: {
                       some: {
-                        genre_id: {
-                          in: genresFilter,
-                        },
+                        OR: [
+                          { genre: { slug: { in: genresFilter } } },
+                          ...(numericFilterIds(genresFilter).length
+                            ? [{ genre_id: { in: numericFilterIds(genresFilter) } }]
+                            : []),
+                        ],
                       },
                     },
                   }
@@ -541,9 +546,12 @@ export class SectionService {
                 ? {
                     countries: {
                       some: {
-                        country_id: {
-                          in: countriesFilter,
-                        },
+                        OR: [
+                          { country: { code: { in: countriesFilter } } },
+                          ...(numericFilterIds(countriesFilter).length
+                            ? [{ country_id: { in: numericFilterIds(countriesFilter) } }]
+                            : []),
+                        ],
                       },
                     },
                   }
@@ -552,9 +560,12 @@ export class SectionService {
                 ? {
                     languages: {
                       some: {
-                        language_id: {
-                          in: languagesFilter,
-                        },
+                        OR: [
+                          { language: { code: { in: languagesFilter } } },
+                          ...(numericFilterIds(languagesFilter).length
+                            ? [{ language_id: { in: numericFilterIds(languagesFilter) } }]
+                            : []),
+                        ],
                       },
                     },
                   }
@@ -563,9 +574,12 @@ export class SectionService {
                 ? {
                     tags: {
                       some: {
-                        tag_id: {
-                          in: tagsFilter,
-                        },
+                        OR: [
+                          { tag: { slug: { in: tagsFilter } } },
+                          ...(numericFilterIds(tagsFilter).length
+                            ? [{ tag_id: { in: numericFilterIds(tagsFilter) } }]
+                            : []),
+                        ],
                       },
                     },
                   }
