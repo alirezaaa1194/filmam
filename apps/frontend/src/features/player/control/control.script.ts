@@ -14,8 +14,9 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
   const { locale } = useLocale();
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { mutate: saveWatchTime } = useSaveWatchTime();
+  const { mutateAsync: saveWatchTimeAsync } = useSaveWatchTime();
   const lastSavedTimeRef = useRef(0);
+  const pendingWatchSaveRef = useRef<Promise<void>>(Promise.resolve());
 
   const videoSource = data.files.find((f) => f.type === source.toUpperCase());
   const sourceDuration = Number(videoSource?.duration) || 0;
@@ -68,6 +69,38 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
 
   const getSaveInterval = (d: number) => (d > 60 ? 30 : 10);
 
+  const queueWatchSave = (payload: {
+    entityId: number;
+    entityType: typeof entityType;
+    progressTime: number;
+    type: UserMovieTypeEnum;
+  }) => {
+    const request = pendingWatchSaveRef.current.then(async () => {
+      await saveWatchTimeAsync(payload);
+    });
+    pendingWatchSaveRef.current = request.catch(() => {});
+    return request;
+  };
+
+  const saveCompletedWatchStatus = async (progressTime: number) => {
+    try {
+      await queueWatchSave({
+        entityId: data.id,
+        entityType,
+        progressTime,
+        type: UserMovieTypeEnum.WATCHING,
+      });
+      await queueWatchSave({
+        entityId: data.id,
+        entityType,
+        progressTime,
+        type: UserMovieTypeEnum.WATCHED,
+      });
+    } catch (error) {
+      console.error("Failed to save final watch status", error);
+    }
+  };
+
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (!video || !sourceDuration) return;
@@ -80,12 +113,12 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     if (elapsed >= interval) {
       lastSavedTimeRef.current = video.currentTime;
 
-      saveWatchTime({
+      void queueWatchSave({
         entityId: data.id,
         entityType,
         progressTime: video.currentTime,
         type: UserMovieTypeEnum.WATCHING,
-      });
+      }).catch((error) => console.error("Failed to save watch progress", error));
     }
   };
 
@@ -101,24 +134,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     lastSavedTimeRef.current = finalProgress;
     setVideoTime(finalProgress);
 
-    saveWatchTime(
-      {
-        entityId: data.id,
-        entityType,
-        progressTime: finalProgress,
-        type: UserMovieTypeEnum.WATCHING,
-      },
-      {
-        onSuccess: () => {
-          saveWatchTime({
-            entityId: data.id,
-            entityType,
-            progressTime: finalProgress,
-            type: UserMovieTypeEnum.WATCHED,
-          });
-        },
-      },
-    );
+    void saveCompletedWatchStatus(finalProgress);
   };
 
   const navigateToMovie = () => {
@@ -128,18 +144,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
 
   const markAsWatched = () => {
     if (!sourceDuration) return;
-    saveWatchTime({
-      entityId: data.id,
-      entityType,
-      progressTime: sourceDuration,
-      type: UserMovieTypeEnum.WATCHING,
-    });
-    saveWatchTime({
-      entityId: data.id,
-      entityType,
-      progressTime: sourceDuration,
-      type: UserMovieTypeEnum.WATCHED,
-    });
+    void saveCompletedWatchStatus(sourceDuration);
   };
 
   return {
