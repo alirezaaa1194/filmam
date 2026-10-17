@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "../../../../../hooks";
 import { AppApis } from "../../../../../data";
 import { ClientCall } from "../../../../../scripts/client";
-import { PaginationType, SeasonEpisodeType, SortTypeEnum, UserMovieActionType, UserMovieTypeEnum } from "../../../../../types";
+import { PaginationType, SeasonEpisodeType, SectionUserMovieTypeEnum, SortTypeEnum, UserMovieActionType, UserMovieTypeEnum } from "../../../../../types";
 
 export function useEpisodesScript(movie: any, activeSeasonSlug: string, activeEpisodeId: number, open: boolean) {
   const { locale } = useLocale();
@@ -37,7 +37,7 @@ export function useEpisodesScript(movie: any, activeSeasonSlug: string, activeEp
   });
 
   const { data: userMovies } = useQuery({
-    queryKey: ["user-movie-actions", movie.id],
+    queryKey: ["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movie.id],
     queryFn: () =>
       ClientCall<UserMovieActionType[]>(AppApis.userMovie.movieActions(movie.id), {
         method: "GET",

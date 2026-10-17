@@ -17,7 +17,7 @@ import { Button, Spinner } from "../../../../utilities/components/ui";
 function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
   const { locale, t } = useLocale();
   const { data: userMovies } = useQuery({
-    queryKey: ["user-movie-actions", movie.id],
+    queryKey: ["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movie.id],
     queryFn: () =>
       ClientCall<UserMovieActionType[]>(AppApis.userMovie.movieActions(movie.id), {
         method: "GET",

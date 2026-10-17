@@ -16,7 +16,7 @@ export default function NextEpisodeComp({ visible, data, autoNextEpisode, setAut
   };
 
   return (
-    <div className="flex items-center gap-2 absolute bottom-40 lg:bottom-60 inset-s-5 lg:inset-s-12 z-10">
+    <div className="flex items-center gap-2 absolute bottom-[30%] inset-s-5 lg:inset-s-12 z-10">
       <Button
         className="bg-gray-14/50! backdrop-blur-[20px] rounded-md cursor-pointer text-body-xs! font-bold! px-4 h-10 relative"
         onClick={goNext}

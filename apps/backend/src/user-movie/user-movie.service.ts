@@ -80,28 +80,28 @@ export class UserMovieService {
       );
     }
 
+    if (
+      body.type === UserMovieType.WATCHED ||
+      body.type === UserMovieType.WATCHING
+    ) {
+      return await this.handleWatchAction(body, userId);
+    }
+
     const userActions = await this.hasUserDidAction(
       {
         ...body,
         type:
-          body.type === UserMovieType.WATCHED ||
-          body.type === UserMovieType.WATCHING
-            ? [UserMovieType.WATCHED, UserMovieType.WATCHING]
-            : body.type === UserMovieType.LIKE
-              ? [body.type, UserMovieType.DISLIKE]
-              : body.type === UserMovieType.DISLIKE
-                ? [body.type, UserMovieType.LIKE]
-                : [body.type],
+          body.type === UserMovieType.LIKE
+            ? [body.type, UserMovieType.DISLIKE]
+            : body.type === UserMovieType.DISLIKE
+              ? [body.type, UserMovieType.LIKE]
+              : [body.type],
       },
       userId,
     );
-    const hasUserDidAction = userActions.find((action) => {
-      if (body.type === 'WATCHED' || body.type === 'WATCHING') {
-        return action.type === 'WATCHED' || action.type === 'WATCHING';
-      } else {
-        return action.type === body.type;
-      }
-    });
+    const hasUserDidAction = userActions.find(
+      (action) => action.type === body.type,
+    );
     const result = await prisma.$transaction(async (tx) => {
       switch (body.type) {
         case UserMovieType.NOTIFICATION: {
@@ -403,13 +403,9 @@ async updateUserMovies2(body: UpdateUserMoviesDto, userId: number) {
     userId,
   );
 
-  const hasUserDidAction = userActions.find((action) => {
-    if (body.type === 'WATCHED' || body.type === 'WATCHING') {
-      return action.type === 'WATCHED' || action.type === 'WATCHING';
-    } else {
-      return action.type === body.type;
-    }
-  });
+  const hasUserDidAction = userActions.find(
+    (action) => action.type === body.type,
+  );
 
   const result = await prisma.$transaction(async (tx) => {
     switch (body.type) {
@@ -583,6 +579,18 @@ private async handleWatchAction(
       where: { ...entityFilter, user_id: userId, type: body.type },
     });
 
+    const existingWatchAction = existingSameType
+      ? existingSameType
+      : await tx.userMovie.findFirst({
+          where: {
+            ...entityFilter,
+            user_id: userId,
+            type: {
+              in: [UserMovieType.WATCHING, UserMovieType.WATCHED],
+            },
+          },
+        });
+
     if (existingSameType) {
       await tx.userMovie.update({
         where: { id: existingSameType.id },
@@ -593,12 +601,19 @@ private async handleWatchAction(
         data: { ...body, user_id: userId },
       });
 
-      if (body.entity_type === CommentEntityType.MOVIE && body.movie_id) {
+      if (
+        !existingWatchAction &&
+        body.type === UserMovieType.WATCHING &&
+        body.entity_type === CommentEntityType.MOVIE &&
+        body.movie_id
+      ) {
         await tx.movie.update({
           where: { id: body.movie_id },
           data: { watches_count: { increment: 1 } },
         });
       } else if (
+        !existingWatchAction &&
+        body.type === UserMovieType.WATCHING &&
         body.entity_type === CommentEntityType.EPISODE &&
         body.episode_id &&
         body.movie_id

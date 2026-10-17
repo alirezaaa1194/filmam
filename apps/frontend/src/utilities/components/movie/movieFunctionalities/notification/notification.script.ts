@@ -124,11 +124,12 @@ export function useMovieNotification() {
     },
 
     onMutate: async ({ movieId, isCurrentlyEnabled, hasDeviceSubscription }) => {
+      const actionsKey = ["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movieId] as const;
       await queryClient.cancelQueries({
-        queryKey: ["user-movie-actions", movieId],
+        queryKey: actionsKey,
       });
 
-      const previousActions = queryClient.getQueryData(["user-movie-actions", movieId]);
+      const previousActions = queryClient.getQueryData<UserMovieActionType[]>(actionsKey);
       const previousDevice = queryClient.getQueryData(["device-push-status"]);
 
       if (!hasDeviceSubscription) {
@@ -147,7 +148,7 @@ export function useMovieNotification() {
           toast.success("اعلان این فیلم فعال شد");
         }
 
-        queryClient.setQueryData(["user-movie-actions", movieId], (old: UserMovieActionType[] | undefined) => {
+        queryClient.setQueryData<UserMovieActionType[]>(actionsKey, (old) => {
           if (!old) return old;
           if (isCurrentlyEnabled) {
             return old.filter((a) => a.type !== UserMovieTypeEnum.NOTIFICATION);
@@ -155,8 +156,15 @@ export function useMovieNotification() {
           return [
             ...old,
             {
+              id: -movieId,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
               type: UserMovieTypeEnum.NOTIFICATION,
+              progress_time: null,
+              user_id: 0,
               movie_id: movieId,
+              episode_id: null,
+              entity_type: SectionUserMovieTypeEnum.MOVIE,
             },
           ];
         });
@@ -167,7 +175,7 @@ export function useMovieNotification() {
 
     onError: (error: any, { movieId }, context) => {
       if (context?.previousActions) {
-        queryClient.setQueryData(["user-movie-actions", movieId], context.previousActions);
+        queryClient.setQueryData(["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movieId], context.previousActions);
       }
       if (context?.previousDevice) {
         queryClient.setQueryData(["device-push-status"], context.previousDevice);
@@ -192,7 +200,7 @@ export function useMovieNotification() {
 
     onSettled: (_data, _err, { movieId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["user-movie-actions", movieId],
+        queryKey: ["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movieId],
       });
       queryClient.invalidateQueries({ queryKey: ["device-push-status"] });
     },

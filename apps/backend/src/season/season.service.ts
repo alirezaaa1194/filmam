@@ -270,10 +270,15 @@ export class SeasonService {
         await this.userMovieService.getUserWatchEpisodes(userId);
 
       seasonUserMovieEpisodes.forEach((seasonUserMovieEpisode) => {
-        seasonUserMovieEpisodesMap.set(
+        const current = seasonUserMovieEpisodesMap.get(
           seasonUserMovieEpisode.episode_id,
-          seasonUserMovieEpisode,
         );
+        if (!current || seasonUserMovieEpisode.type === 'WATCHING') {
+          seasonUserMovieEpisodesMap.set(
+            seasonUserMovieEpisode.episode_id,
+            seasonUserMovieEpisode,
+          );
+        }
       });
     }
 

@@ -16,6 +16,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
   const videoRef = useRef<HTMLVideoElement>(null);
   const { mutate: saveWatchTime } = useSaveWatchTime();
   const lastSavedTimeRef = useRef(0);
+  const watchedMarkedRef = useRef(false);
 
   const videoSource = data.files.find((f) => f.type === source.toUpperCase());
   const sourceDuration = Number(videoSource?.duration) || 0;
@@ -33,6 +34,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
 
   useEffect(() => {
     lastSavedTimeRef.current = 0;
+    watchedMarkedRef.current = false;
   }, [videoSource?.path]);
 
   const { data: userActions, isPending } = useQuery({
@@ -62,6 +64,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
       video.currentTime = savedProgress;
     }
     lastSavedTimeRef.current = savedProgress;
+    watchedMarkedRef.current = userActions.some((action) => action.type === UserMovieTypeEnum.WATCHED);
     setShowResumeModal(true);
     setHasCheckedResume(true);
   }, [isPending, userActions, savedProgress, hasCheckedResume]);
@@ -80,15 +83,22 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     if (elapsed >= interval) {
       lastSavedTimeRef.current = video.currentTime;
 
-      const progress = video.currentTime / sourceDuration;
-      const isWatched = progress >= 0.8;
-
       saveWatchTime({
         entityId: data.id,
         entityType,
         progressTime: video.currentTime,
-        type: isWatched ? UserMovieTypeEnum.WATCHED : UserMovieTypeEnum.WATCHING,
+        type: UserMovieTypeEnum.WATCHING,
       });
+
+      if (video.currentTime / sourceDuration >= 0.8 && !watchedMarkedRef.current) {
+        watchedMarkedRef.current = true;
+        saveWatchTime({
+          entityId: data.id,
+          entityType,
+          progressTime: video.currentTime,
+          type: UserMovieTypeEnum.WATCHED,
+        });
+      }
     }
   };
 
@@ -99,6 +109,13 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
 
   const markAsWatched = () => {
     if (!sourceDuration) return;
+    watchedMarkedRef.current = true;
+    saveWatchTime({
+      entityId: data.id,
+      entityType,
+      progressTime: sourceDuration,
+      type: UserMovieTypeEnum.WATCHING,
+    });
     saveWatchTime({
       entityId: data.id,
       entityType,
