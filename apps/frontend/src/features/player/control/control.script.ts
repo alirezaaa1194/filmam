@@ -103,11 +103,18 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
-    if (!video || !sourceDuration) return;
+    if (!video) return;
 
     setVideoTime(video.currentTime);
 
-    const interval = getSaveInterval(sourceDuration);
+    // The file's stored duration can be missing or stale. Use the browser's
+    // media metadata when available so short videos still get their 10s saves.
+    const actualDuration = Number.isFinite(video.duration) && video.duration > 0
+      ? video.duration
+      : sourceDuration;
+    if (!actualDuration) return;
+
+    const interval = getSaveInterval(actualDuration);
     const elapsed = video.currentTime - lastSavedTimeRef.current;
 
     if (elapsed >= interval) {
@@ -116,7 +123,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
       void queueWatchSave({
         entityId: data.id,
         entityType,
-        progressTime: video.currentTime,
+        progressTime: Math.floor(video.currentTime),
         type: UserMovieTypeEnum.WATCHING,
       }).catch((error) => console.error("Failed to save watch progress", error));
     }
