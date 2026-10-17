@@ -5,7 +5,7 @@ import { CreateEpisodeFilePropsType } from '../type/episode-file.type';
 @Injectable()
 export class EpisodeFileRepository {
   async createEpisodeFiles(
-    body: CreateEpisodeFilePropsType[],
+    body: Omit<CreateEpisodeFilePropsType, 'duration'>[],
     tx: TransactionType,
   ) {
     return await tx.episodeFile.createMany({ data: body });

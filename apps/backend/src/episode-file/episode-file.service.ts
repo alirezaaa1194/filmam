@@ -20,7 +20,15 @@ export class EpisodeFileService {
           }),
         ),
     );
-    return await this.episodeFileRepository.createEpisodeFiles(body, tx);
+    const episodeFiles = body.map((episodeFile) => ({
+      episode_id: episodeFile.episode_id,
+      upload_id: episodeFile.upload_id,
+      type: episodeFile.type,
+      intro_start_time: episodeFile.intro_start_time,
+      intro_duration: episodeFile.intro_duration,
+      outro_duration: episodeFile.outro_duration,
+    }));
+    return await this.episodeFileRepository.createEpisodeFiles(episodeFiles, tx);
   }
 
   async updateEpisodeFiles(
@@ -29,6 +37,6 @@ export class EpisodeFileService {
     tx: TransactionType,
   ) {
     await this.episodeFileRepository.deleteEpisodeFiles(episode_id, tx);
-    return await this.episodeFileRepository.createEpisodeFiles(body, tx);
+    return await this.createEpisodeFiles(body, tx);
   }
 }
