@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { AppApis } from "@/data";
@@ -67,9 +67,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     setHasCheckedResume(true);
   }, [isPending, userActions, savedProgress, hasCheckedResume]);
 
-  const getSaveInterval = (d: number) => (d > 60 ? 30 : 10);
-
-  const queueWatchSave = (payload: {
+  const queueWatchSave = useCallback((payload: {
     entityId: number;
     entityType: typeof entityType;
     progressTime: number;
@@ -80,7 +78,40 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     });
     pendingWatchSaveRef.current = request.catch(() => {});
     return request;
-  };
+  }, [entityType, saveWatchTimeAsync]);
+
+  const saveProgressIfDue = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const actualDuration = Number.isFinite(video.duration) && video.duration > 0
+      ? video.duration
+      : sourceDuration;
+    if (!actualDuration) return;
+
+    const interval = actualDuration > 60 ? 30 : 10;
+    const elapsed = video.currentTime - lastSavedTimeRef.current;
+    if (elapsed < interval) return;
+
+    // Advance by whole intervals so delayed browser timers do not drift the
+    // next save farther and farther from the requested cadence.
+    const progressTime = Math.floor(video.currentTime);
+    lastSavedTimeRef.current = progressTime;
+    void queueWatchSave({
+      entityId: data.id,
+      entityType,
+      progressTime,
+      type: UserMovieTypeEnum.WATCHING,
+    }).catch((error) => console.error("Failed to save watch progress", error));
+  }, [data.id, entityType, queueWatchSave, sourceDuration]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    // `timeupdate` is browser-throttled and can be irregular. Poll playback
+    // time while playing so crossing the save interval is always detected.
+    const timer = window.setInterval(saveProgressIfDue, 1000);
+    return () => window.clearInterval(timer);
+  }, [isPlaying, saveProgressIfDue]);
 
   const saveCompletedWatchStatus = async (progressTime: number) => {
     try {
@@ -106,27 +137,7 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     if (!video) return;
 
     setVideoTime(video.currentTime);
-
-    // The file's stored duration can be missing or stale. Use the browser's
-    // media metadata when available so short videos still get their 10s saves.
-    const actualDuration = Number.isFinite(video.duration) && video.duration > 0
-      ? video.duration
-      : sourceDuration;
-    if (!actualDuration) return;
-
-    const interval = getSaveInterval(actualDuration);
-    const elapsed = video.currentTime - lastSavedTimeRef.current;
-
-    if (elapsed >= interval) {
-      lastSavedTimeRef.current = video.currentTime;
-
-      void queueWatchSave({
-        entityId: data.id,
-        entityType,
-        progressTime: Math.floor(video.currentTime),
-        type: UserMovieTypeEnum.WATCHING,
-      }).catch((error) => console.error("Failed to save watch progress", error));
-    }
+    saveProgressIfDue();
   };
 
   const handleVideoEnded = () => {
