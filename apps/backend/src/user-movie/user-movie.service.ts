@@ -579,6 +579,16 @@ private async handleWatchAction(
       where: { ...entityFilter, user_id: userId, type: body.type },
     });
 
+    if (body.type === UserMovieType.WATCHED) {
+      await tx.userMovie.deleteMany({
+        where: {
+          ...entityFilter,
+          user_id: userId,
+          type: UserMovieType.WATCHING,
+        },
+      });
+    }
+
     const existingWatchAction = existingSameType
       ? existingSameType
       : await tx.userMovie.findFirst({

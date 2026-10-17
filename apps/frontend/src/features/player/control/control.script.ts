@@ -119,12 +119,6 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
         entityId: data.id,
         entityType,
         progressTime,
-        type: UserMovieTypeEnum.WATCHING,
-      });
-      await queueWatchSave({
-        entityId: data.id,
-        entityType,
-        progressTime,
         type: UserMovieTypeEnum.WATCHED,
       });
     } catch (error) {
@@ -161,8 +155,16 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
   };
 
   const markAsWatched = () => {
-    if (!sourceDuration) return;
-    void saveCompletedWatchStatus(sourceDuration);
+    const video = videoRef.current;
+    const finalProgress = Math.floor(
+      video && Number.isFinite(video.duration) && video.duration > 0
+        ? video.duration
+        : sourceDuration,
+    );
+    if (!finalProgress) return;
+
+    lastSavedTimeRef.current = finalProgress;
+    void saveCompletedWatchStatus(finalProgress);
   };
 
   return {
