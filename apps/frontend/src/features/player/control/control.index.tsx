@@ -29,7 +29,7 @@ function PlayerControlComp(props: PlayerControlProps) {
   const mainRef = useRef<HTMLDivElement>(null);
 
   const script = useControlScript({ entityType,source, data });
-  const { videoRef, isPlaying, setIsPlaying, videoTime, setVideoTime, duration, setDuration, isBuffering, setIsBuffering, hasStarted, setHasStarted, error, setError, showResumeModal, setShowResumeModal, savedProgress, handleTimeUpdate, markAsWatched } = script;
+  const { videoRef, isPlaying, setIsPlaying, videoTime, setVideoTime, duration, setDuration, isBuffering, setIsBuffering, hasStarted, setHasStarted, error, setError, showResumeModal, setShowResumeModal, savedProgress, handleTimeUpdate, handleVideoEnded, markAsWatched } = script;
 
   const [ripple, setRipple] = useState<{ type: RippleType; id: number } | null>(null);
   const [isCover, setIsCover] = useState(false);
@@ -115,6 +115,7 @@ function PlayerControlComp(props: PlayerControlProps) {
           onPause={() => setIsPlaying(false)}
           onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
           onTimeUpdate={handleTimeUpdate}
+          onEnded={handleVideoEnded}
           onWaiting={() => hasStarted && setIsBuffering(true)}
           onCanPlay={() => hasStarted && setIsBuffering(false)}
           onPlaying={() => hasStarted && setIsBuffering(false)}
