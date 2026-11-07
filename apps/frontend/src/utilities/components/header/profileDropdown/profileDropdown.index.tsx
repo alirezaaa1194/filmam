@@ -36,7 +36,7 @@ export function ProfileDropdown({ user }: { user: UserType }) {
               <ArchiveMinus className="!stroke-white size-5" />
             </span>
           </Link>
-          <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
+          <Link href="/contact" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-white text-body-xxs">{t("Header.support")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
               <I24Support className="!stroke-white size-5" />

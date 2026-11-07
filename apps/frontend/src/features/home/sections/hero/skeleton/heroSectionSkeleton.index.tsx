@@ -4,7 +4,7 @@ import { Skeleton } from "../../../../../utilities/components/ui";
 
 function HeroSectionSkeletonComp() {
   return (
-    <section className="hero-section relative h-[420px] md:h-[624px] 2xl:h-screen w-full overflow-hidden">
+    <section className="hero-section relative h-[440px] md:h-[624px] 2xl:h-screen w-full overflow-hidden">
       <Skeleton className="absolute z-10 top-0 left-0 w-full h-full object-cover object-top bg-gray-11 rounded-none" />
 
       <div className="absolute z-20 top-0 left-0 w-full h-full bg-[linear-gradient(0deg,rgba(12,12,12,1)_0%,rgba(12,12,12,0.96)_13%,rgba(12,12,12,0.4)_33%,rgba(12,12,12,0)_47%,rgba(12,12,12,0.28)_68%,rgba(12,12,12,1)_100%)]" />

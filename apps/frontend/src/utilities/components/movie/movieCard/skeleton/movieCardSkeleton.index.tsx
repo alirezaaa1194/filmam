@@ -1,8 +1,8 @@
 import { Skeleton } from "../../../ui";
 
-function MovieCardSkeletonComp() {
+function MovieCardSkeletonComp({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`flex-shrink-0 w-[160px] xl:w-[227px] h-[300px] xl:h-[370px]`}>
+    <div className={compact ? "w-full h-auto aspect-[0.56] xl:h-[370px] xl:aspect-auto" : "shrink-0 w-[170px] sm:w-[160px] md:w-[180px] lg:w-[200px] h-[300px] xl:h-[370px]"}>
       <div className="relative rounded-xl overflow-hidden h-full">
         <Skeleton className="w-full h-full rounded-xl" />
         <Skeleton className="absolute top-[6px] start-[6px] text-white text-caption-md px-2 bg-gray-10 rounded-md w-12 h-5" />

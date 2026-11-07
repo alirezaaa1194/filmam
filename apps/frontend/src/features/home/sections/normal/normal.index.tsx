@@ -2,7 +2,7 @@
 import SectionHeaderComp from "../sectionHeader/sectionHeader.index";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MovieCardComp from "../../../../utilities/components/movie/movieCard/movieCard.index";
 import { FreeMode } from "swiper/modules";
 import { useLocale } from "@/hooks";
@@ -16,12 +16,7 @@ function NormalSliderSectionComp({ section }: { section: SectionType }) {
 
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const { dir } = useLocale();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const updateEdges = (swiper: { isBeginning: boolean; progress: number }) => {
     setIsBeginning(swiper.isBeginning && swiper.progress <= 0);
@@ -35,11 +30,13 @@ function NormalSliderSectionComp({ section }: { section: SectionType }) {
         <div className={`absolute top-0 right-0 w-10 lg:w-28 z-10 h-full bg-[linear-gradient(90deg,rgba(12,12,12,0)_0%,rgba(12,12,12,0.72)_50%,rgba(12,12,12,1)_100%)] transition-all ${isBeginning ? "opacity-0 invisible" : ""}`}></div>
         <Swiper
           key={dir}
+          slidesPerView={1.82}
+          spaceBetween={16}
           freeMode={true}
           modules={[FreeMode]}
           observer={true}
           observeParents={true}
-          className={`w-full px-layout-x-space! transition-opacity duration-300 ${mounted ? "opacity-100" : "opacity-0"}`}
+          className="w-full px-layout-x-space!"
           breakpoints={{
             0: {
               slidesPerView: 1.82,

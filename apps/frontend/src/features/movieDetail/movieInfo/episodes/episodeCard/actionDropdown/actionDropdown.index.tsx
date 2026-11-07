@@ -6,11 +6,13 @@ import { use } from "react";
 import { UserContext } from "../../../../../../contexts";
 import { AuthModalContext } from "../../../../../../contexts/authModal";
 import { Archive } from "iconsax-react";
+import { useLocale } from "../../../../../../hooks";
 
 function EpisodeActionDropdownComp({ episodeId, seasonSlug, userMovies }: { episodeId: number; seasonSlug: string; userMovies: SeasonEpisodeUserMovieType[] }) {
   const user = use(UserContext);
+  const { t } = useLocale();
   const { setAuthMode } = use(AuthModalContext);
-  const { toggleEpisodeAction: saveToggleEpisodeAction } = useEpisodeAction(seasonSlug, UserMovieTypeEnum.BOOKMARK, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ذخیره شد", "خطا در ثبت نظر شما");
+  const { toggleEpisodeAction: saveToggleEpisodeAction } = useEpisodeAction(seasonSlug, UserMovieTypeEnum.BOOKMARK, t("MovieDetail.saveSuccess"), t("MovieDetail.removeSaveSuccess"), t("MovieDetail.actionError"));
   const isCurrentlySaved = userMovies.some((item) => item.type === UserMovieTypeEnum.BOOKMARK);
 
   return (
@@ -37,7 +39,7 @@ function EpisodeActionDropdownComp({ episodeId, seasonSlug, userMovies }: { epis
           }}
         >
           <Archive className="size-4 fill-white" variant={isCurrentlySaved ? "Bold" : "Outline"} />
-          {isCurrentlySaved ? "حذف از لیست ذخیره ها" : "افزودن به لیست ذخیره ها"}
+          {isCurrentlySaved ? t("MovieDetail.removeSave") : t("MovieDetail.save")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

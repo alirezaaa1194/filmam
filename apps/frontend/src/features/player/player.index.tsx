@@ -9,14 +9,14 @@ async function PlayerComp({ entityType, entitySlug, source }: { entityType: Comm
       method: "GET",
     });
 
-    return <PlayerControlComp entityType={entityType} data={data} source={source} />;
+    return <PlayerControlComp key={`${entityType}-${data.id}-${source}`} entityType={entityType} data={data} source={source} />;
   }
 
   const data = await ServerCall<EpisodeDetailPublicType>(AppApis.episode.bySlug(entitySlug), {
     method: "GET",
   });
 
-  return <PlayerControlComp entityType={entityType} data={data} source={source} />;
+  return <PlayerControlComp key={`${entityType}-${data.id}-${source}`} entityType={entityType} data={data} source={source} />;
 }
 
 export default PlayerComp;

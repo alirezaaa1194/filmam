@@ -15,7 +15,8 @@ import SeasonEpisodesComp from "../episodes/episodes.index";
 import { Button, Spinner } from "../../../../utilities/components/ui";
 
 function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
-  const { locale, t } = useLocale();
+  const { locale, t, dir } = useLocale();
+  const [episodesTitlePrefix = "", episodesTitleSuffix = ""] = t("MovieDetailPage.Episodes").split("--");
   const { data: userMovies } = useQuery({
     queryKey: ["user-movie-actions", SectionUserMovieTypeEnum.MOVIE, movie.id],
     queryFn: () =>
@@ -61,7 +62,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
 
     return (
       <section className="w-full max-w-layout-max mx-auto px-layout-x-space mt-4 lg:mt-16">
-        <SeasonsEmptyStateComp variant="noSeasons" title="هنوز فصلی اضافه نشده است" description="فصل های جدید به زودی اضافه خواهند شد" action={!isFullyActive ? <NotifyButtonComp onClick={handleToggle} /> : null} />
+        <SeasonsEmptyStateComp variant="noSeasons" title={t("MovieDetail.noSeasonsTitle")} description={t("MovieDetail.noSeasonsDescription")} action={!isFullyActive ? <NotifyButtonComp onClick={handleToggle} /> : null} />
       </section>
     );
   }
@@ -74,8 +75,12 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
   return (
     <section className="flex flex-col gap-2 lg:gap-4 w-full max-w-layout-max mx-auto px-layout-x-space">
       <div className="w-full flex items-center justify-between">
-        <h5 className="text-mobile-h-5 lg:text-h-5">
-          {t("MovieDetailPage.Episodes")} {movie.title}
+        <h5 dir={dir} className="text-right text-mobile-h-5 lg:text-h-5">
+          <>
+            <span>{episodesTitlePrefix}</span>
+            <bdi dir="auto">{movie.title}</bdi>
+            <span>{episodesTitleSuffix}</span>
+          </>
         </h5>
         <SortEpisodesComp open={open} onOpenChange={setOpen} sortValue={sortValue} onSortChange={setSortValue} unwatchedEpisodes={unwatchedEpisodes} onUnwatchedChange={setUnwatchedEpisodes} />
       </div>
@@ -84,7 +89,7 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
           <TabsList className="flex flex-nowrap gap-2 lg:gap-5 h-max!">
             {movie.seasons?.map((season) => (
               <TabsTrigger key={season.id} value={season.slug} className={`px-4 lg:px-6 h-8 lg:h-12 rounded-md bg-transparent border border-gray-9 text-gray-9! text-button-s md:text-button-md cursor-pointer transition-all ${activeTab === season.slug ? "border-primary bg-primary hover:bg-primary/80 hover:border-primary/80 text-white!" : "hover:border-primary hover:text-primary!"}`}>
-                فصل {season.order}
+                {t("MovieDetail.season")} {season.order}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -100,13 +105,13 @@ function MovieSeasonsComp({ movie }: { movie: MovieDetailPublicType }) {
         ) : totalCount ? (
           <SeasonEpisodesComp episodes={data.pages} />
         ) : isEmptyBecauseAllWatched ? (
-          <SeasonsEmptyStateComp variant="allWatched" title="همه قسمت‌ها را مشاهده کرده‌اید" description="برای دیدن قسمت‌های بیشتر، فیلتر «مشاهده نشده» را غیرفعال کنید" />
+          <SeasonsEmptyStateComp variant="allWatched" title={t("MovieDetail.allWatchedTitle")} description={t("MovieDetail.allWatchedDescription")} />
         ) : isEmptyBecauseNoEpisodes ? (
-          <SeasonsEmptyStateComp variant="noEpisodes" title="این فصل قسمتی ندارد" description="قسمت‌های جدید به زودی اضافه خواهند شد" action={!isFullyActive ? <NotifyButtonComp onClick={handleToggle} /> : null} />
+          <SeasonsEmptyStateComp variant="noEpisodes" title={t("MovieDetail.noEpisodesTitle")} description={t("MovieDetail.newEpisodesSoon")} action={!isFullyActive ? <NotifyButtonComp onClick={handleToggle} /> : null} />
         ) : null}
         {hasNextPage ? (
           <Button disabled={isFetchingNextPage || isLoading} onClick={() => fetchNextPage()} className="h-10 px-8 w-fit mx-auto rounded-md cursor-pointer border-gray-10 text-gray-10 hover:text-primary hover:border-primary hover:[&>svg]:stroke-primary" variant="outline">
-            مشاهده بیشتر {isFetchingNextPage ? <Spinner /> : <ArrowDown2 className="stroke-gray-10 size-5 transition-all" />}
+            {t("MovieDetail.loadMore")} {isFetchingNextPage ? <Spinner /> : <ArrowDown2 className="stroke-gray-10 size-5 transition-all" />}
           </Button>
         ) : null}
       </div>

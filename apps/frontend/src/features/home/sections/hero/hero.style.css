@@ -1,7 +1,13 @@
 @import '../../../../app/globals.css';
 
 .hero-section .swiper-pagination {
-  @apply w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! h-fit! -bottom-2! lg:bottom-[52px]!;
+  @apply w-fit! start-0! end-0! mx-auto! lg:start-auto! lg:end-[108px]! h-fit! -bottom-8! lg:bottom-[52px]! z-[100]!;
+  position: absolute !important;
+  z-index: 100 !important;
+}
+
+.hero-section .swiper {
+  overflow: visible !important;
 }
 
 .hero-section .swiper-pagination-bullet {

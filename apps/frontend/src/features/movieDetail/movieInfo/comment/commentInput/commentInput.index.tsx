@@ -14,7 +14,7 @@ import { AuthModeEnum, CommentEntityTypeEnum } from "../../../../../types";
 import { HashEmail } from "../../../../../scripts";
 
 function CommentInputComp({ entityId, entityType }: { entityId: number; entityType: CommentEntityTypeEnum }) {
-  const { dir } = useLocale();
+  const { dir, t } = useLocale();
   const user = use(UserContext);
   const { setAuthMode } = use(AuthModalContext);
   const [inputValue, setInputValue] = useState("");
@@ -30,17 +30,17 @@ function CommentInputComp({ entityId, entityType }: { entityId: number; entityTy
       }),
     onSuccess: () => {
       setInputValue("");
-      toast.success("کامنت با موفقیت ثبت شد");
+      toast.success(t("MovieDetail.commentSuccess"));
     },
     onError: () => {
-      toast.error("خطا در ثبت کامنت");
+      toast.error(t("MovieDetail.commentError"));
     },
   });
   const hashedEmail = HashEmail(user?.email || "");
 
   const postCommentHandler = ({ body }: { body: string }) => {
     if (!body.trim().length) {
-      toast.error("متن کامنت نباید خالی باشد");
+      toast.error(t("MovieDetail.commentRequired"));
       return;
     }
 
@@ -61,7 +61,7 @@ function CommentInputComp({ entityId, entityType }: { entityId: number; entityTy
       <div className="flex items-start gap-3 flex-1">
         <Image src={`https://www.gravatar.com/avatar/${hashedEmail}?d=mp`} alt={user?.username || "user-icon"} width={16} height={16} className="size-10 rounded-full shrink-0 bg-gray-11" />
         <div className="relative w-full">
-          <Textarea placeholder="دیدگاه خودرا بنویسید" disabled={isPending} value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="pe-[52px] pt-3.5 bg-gray-12 rounded-md min-h-12 h-12 focus:h-20 lg:scrollbar-none resize-none" />
+          <Textarea placeholder={t("MovieDetail.commentPlaceholder")} disabled={isPending} value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="pe-[52px] pt-3.5 bg-gray-12 rounded-md min-h-12 h-12 focus:h-20 lg:scrollbar-none resize-none" />
           <Button onClick={() => postCommentHandler({ body: inputValue })} className={`w-fit h-fit p-0 bg-transparent! cursor-pointer absolute inset-e-4 top-[13px] ${!isPending ? "[&>svg]:fill-white hover:[&>svg]:fill-primary" : ""}`}>
             {isPending ? <Spinner /> : <Send variant="Bold" className={`size-5 transition-all ${dir === "rtl" ? "rotate-180" : ""}`} />}
           </Button>

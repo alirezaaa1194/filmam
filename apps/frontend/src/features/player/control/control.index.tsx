@@ -11,7 +11,6 @@ import { usePlaybackRate } from "./hooks/usePlaybackRate";
 import { useKeyboard } from "./hooks/useKeyboard";
 import { useVideoClick } from "./hooks/useVideoClick";
 import { PlayerControlProps, RippleType } from "./control.type";
-import { useLocale } from "../../../hooks";
 import TopBarComp from "./topBar/topBar.index";
 import BottomBarComp from "./bottomBar/bottomBar.index";
 import RippleComp from "./overlays/ripple/ripple.index";
@@ -24,7 +23,6 @@ import { CommentEntityTypeEnum } from "../../../types";
 
 function PlayerControlComp(props: PlayerControlProps) {
   const { entityType, source, data } = props;
-  const { dir } = useLocale();
   const router = useRouter();
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -94,14 +92,14 @@ function PlayerControlComp(props: PlayerControlProps) {
   visibility.setVideoRefForCheck(videoRef.current);
 
   if (!videoSource || error) {
-    return <ErrorComp entityType={entityType} data={data} dir={dir} setError={setError} />;
+    return <ErrorComp entityType={entityType} data={data} setError={setError} />;
   }
 
   return (
-    <main className="h-[100svh] w-full overflow-hidden bg-gray-13">
-      <ResumeModalComp open={showResumeModal} setOpen={setShowResumeModal} savedProgress={savedProgress} data={data} entityType={entityType} dir={dir} videoRef={videoRef} />
+    <main className="h-[100dvh] w-full overflow-hidden bg-gray-13">
+      <ResumeModalComp open={showResumeModal} setOpen={setShowResumeModal} savedProgress={savedProgress} data={data} entityType={entityType} dir="rtl" videoRef={videoRef} />
 
-      <div ref={mainRef} className="relative select-none w-full h-[100svh]" onMouseEnter={visibility.handleMouseEnter} onMouseLeave={visibility.handleMouseLeave} onMouseMove={visibility.handleMouseMove} onClick={handleVideoClick}>
+      <div ref={mainRef} dir="rtl" className="relative select-none w-full h-[100dvh]" onMouseEnter={visibility.handleMouseEnter} onMouseLeave={visibility.handleMouseLeave} onMouseMove={visibility.handleMouseMove} onClick={handleVideoClick}>
         {isBuffering ? <BufferingComp /> : null}
 
         <video
@@ -111,8 +109,12 @@ function PlayerControlComp(props: PlayerControlProps) {
           onPlay={() => {
             setIsPlaying(true);
             setHasStarted(true);
+            visibility.handlePlaybackStarted();
           }}
-          onPause={() => setIsPlaying(false)}
+          onPause={() => {
+            setIsPlaying(false);
+            visibility.handlePlaybackPaused();
+          }}
           onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnded}
@@ -130,7 +132,7 @@ function PlayerControlComp(props: PlayerControlProps) {
         <SkipIntroComp visible={videoTime >= Number(videoSource.intro_start_time) && videoTime <= Number(videoSource.intro_start_time) + Number(videoSource.intro_duration)} introDuration={Number(videoSource.intro_duration)} videoRef={videoRef} />
         <RippleComp ripple={ripple} />
         <div className={`w-full h-full absolute top-0 right-0 flex flex-col justify-between transition-all duration-300 ${visibility.showControl ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-          <TopBarComp entityType={entityType} source={source} data={data} dir={dir} slug={entityType === CommentEntityTypeEnum.EPISODE ? data.movie.slug : data.slug} videoRef={videoRef} />
+          <TopBarComp entityType={entityType} source={source} data={data} dir="rtl" slug={entityType === CommentEntityTypeEnum.EPISODE ? data.movie.slug : data.slug} videoRef={videoRef} />
           <BottomBarComp entityType={entityType} source={source} data={data} videoRef={videoRef} videoSource={videoSource} isPlaying={isPlaying} videoTime={videoTime} setVideoTime={setVideoTime} duration={duration} isBuffering={isBuffering} isSeeking={isSeeking} setIsSeeking={setIsSeeking} handlePlayPause={handlePlayPause} seekBy={seekBy} volume={volume} fullscreen={fullscreen} pip={pip} playback={playback} isCover={isCover} setIsCover={setIsCover} setAutoNextEpisode={setAutoNextEpisode} router={router} />
         </div>
       </div>

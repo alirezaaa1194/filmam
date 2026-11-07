@@ -1,6 +1,5 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useState } from "react";
 import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 import { useLocale, useMediaQuery } from "../../../../hooks";
 import "./puzzle.style.css";
@@ -14,16 +13,11 @@ function PuzzleSectionComp({ section }: { section: SectionType }) {
     return;
   }
 
-  const [mounted, setMounted] = useState(false);
   const { dir } = useLocale();
   const isXl = useMediaQuery("(min-width: 1280px)");
 
   const sliderItems = isXl ? section.movies.filter((movie) => movie.view_mode === PuzzleSectionMovieViewModeEnum.SLIDER_ITEM) : section.movies;
   const puzzleItems = section.movies.filter((movie) => movie.view_mode === PuzzleSectionMovieViewModeEnum.PUZZLE);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <section className="puzzle-section max-w-layout-max mx-auto mt-8 lg:mt-12 px-layout-x-space flex flex-col gap-2 lg:gap-4">
@@ -32,7 +26,7 @@ function PuzzleSectionComp({ section }: { section: SectionType }) {
         <div className="w-full xl:max-w-[665px] rounded-xl border border-gray-10 overflow-hidden">
           <Swiper
             effect={"fade"}
-            className={`relative h-full! ${mounted ? "opacity-100" : "opacity-0"}`}
+            className="relative h-full!"
             key={dir}
             slidesPerView={1}
             modules={[EffectFade, Pagination, Autoplay]}

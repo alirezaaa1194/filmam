@@ -2,7 +2,7 @@ import Image from "next/image";
 import { use } from "react";
 import { Dislike, Like1 } from "iconsax-react";
 import userPlaceholder from "@/assets/images/userPlaceholder.webp";
-import { AuthModeEnum, UserMovieTypeEnum } from "../../../../../types";
+import { AppLanguagesEnum, AuthModeEnum, UserMovieTypeEnum } from "../../../../../types";
 import { useCommentVote } from "./commentCard.script";
 import { UserContext } from "../../../../../contexts";
 import { AuthModalContext } from "../../../../../contexts/authModal";
@@ -13,10 +13,23 @@ import { CommentCardCompProps } from "./commentCard.type";
 function CommentCardComp({ entitySlug, entityType, comment }: CommentCardCompProps) {
   const user = use(UserContext);
   const { setAuthMode } = use(AuthModalContext);
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
+  const commentText = comment.body ?? "";
+  const hasArabicScript = /[\u0600-\u06ff\u0750-\u077f]/u.test(commentText);
+  const hasPersianLetters = /[پچژگکی]/u.test(commentText);
+  const hasLatinLetters = /[a-z]/iu.test(commentText);
+  const commentLanguage = hasPersianLetters
+    ? AppLanguagesEnum.FA
+    : hasArabicScript
+      ? AppLanguagesEnum.AR
+      : hasLatinLetters
+        ? AppLanguagesEnum.EN
+        : locale;
+  const commentDir = commentLanguage === AppLanguagesEnum.EN ? "ltr" : "rtl";
+  const commentFont = commentLanguage === AppLanguagesEnum.FA ? "font-fa" : commentLanguage === AppLanguagesEnum.AR ? "font-ar" : "font-en";
 
-  const { vote: voteLike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.LIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ثبت شد", "خطا در ثبت نظر");
-  const { vote: voteDislike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.DISLIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ثبت شد", "خطا در ثبت نظر");
+  const { vote: voteLike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.LIKE, t("MovieDetail.commentSuccess"), t("MovieDetail.commentSuccess"), t("MovieDetail.actionError"));
+  const { vote: voteDislike } = useCommentVote(entitySlug, entityType, UserMovieTypeEnum.DISLIKE, t("MovieDetail.commentSuccess"), t("MovieDetail.commentSuccess"), t("MovieDetail.actionError"));
 
   const handleVote = (voteFn: typeof voteLike, commentId: number, isCurrentlyVoted: boolean) => {
     if (user) {
@@ -43,19 +56,19 @@ function CommentCardComp({ entitySlug, entityType, comment }: CommentCardCompPro
         <div className="flex items-center gap-3 lg:gap-5 shrink-0">
           <div className="flex items-center gap-1.5 lg:gap-2">
             <span className="text-gray-7 text-mobile-caption-md lg:text-caption-md tabular-nums">{comment.likes_count}</span>
-            <button type="button" onClick={() => handleVote(voteLike, comment.id, comment.did_user_liked)} className="cursor-pointer flex items-center justify-center transition-colors" aria-label="لایک">
+            <button type="button" onClick={() => handleVote(voteLike, comment.id, comment.did_user_liked)} className="cursor-pointer flex items-center justify-center transition-colors" aria-label={t("MovieDetail.like")}>
               <Like1 variant={comment.did_user_liked ? "Bold" : "Outline"} className={`size-5 lg:size-5 transition-all ${comment.did_user_liked ? "fill-primary" : "fill-gray-8 hover:fill-primary"}`} />
             </button>
           </div>
           <div className="flex items-center gap-1.5 lg:gap-2">
             <span className="text-gray-7 text-mobile-caption-md lg:text-caption-md tabular-nums">{comment.dislikes_count}</span>
-            <button type="button" onClick={() => handleVote(voteDislike, comment.id, comment.did_user_disliked)} className="cursor-pointer flex items-center justify-center transition-colors" aria-label="دیس‌لایک">
+            <button type="button" onClick={() => handleVote(voteDislike, comment.id, comment.did_user_disliked)} className="cursor-pointer flex items-center justify-center transition-colors" aria-label={t("MovieDetail.dislike")}>
               <Dislike variant={comment.did_user_disliked ? "Bold" : "Outline"} className={`size-5 lg:size-5 transition-all ${comment.did_user_disliked ? "fill-complementary" : "fill-gray-8 hover:fill-complementary"}`} />
             </button>
           </div>
         </div>
       </div>
-      <p className="text-gray-3 text-body-xxs ps-0 lg:ps-[52px] whitespace-pre-wrap break-words">{comment.body}</p>
+      <p dir={commentDir} className={`text-gray-3 text-body-xxs ps-0 lg:ps-[52px] whitespace-pre-wrap break-words text-start ${commentFont}`}>{commentText}</p>
     </div>
   );
 }

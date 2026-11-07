@@ -36,6 +36,18 @@ export function useControlScript({ entityType, source, data }: Pick<PlayerContro
     lastSavedTimeRef.current = 0;
   }, [videoSource?.path]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    const stopPlayback = () => video?.pause();
+    window.addEventListener("pagehide", stopPlayback);
+
+    return () => {
+      window.removeEventListener("pagehide", stopPlayback);
+      if (!video) return;
+      video.pause();
+    };
+  }, []);
+
   const { data: userActions, isPending } = useQuery({
     queryKey: ["user-movie-actions", entityType, data.id],
     queryFn: () =>

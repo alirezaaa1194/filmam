@@ -5,13 +5,13 @@ import { FileTypeEnum, MovieDetailPublicType, MovieListItemType, MovieTypeEnum }
 import { useLocale } from "../../../../hooks";
 import { movieLikePercentCalc } from "../../../../lib/utils";
 
-function MovieCardComp({ movie }: { movie: MovieListItemType | MovieDetailPublicType }) {
+function MovieCardComp({ movie, compact = false }: { movie: MovieListItemType | MovieDetailPublicType; compact?: boolean }) {
   const { t } = useLocale();
   const movieCover = movie.files.find((file) => file.type === FileTypeEnum.THUMBNAIL);
   const placeholderPath = "/images/placeholder-v.jpg";
 
   return (
-    <div className="relative rounded-xl select-none h-[300px] xl:h-[370px]">
+    <div className={`relative rounded-xl select-none ${compact ? "h-auto aspect-[0.56] xl:h-[370px] xl:aspect-auto" : "h-[300px] xl:h-[370px]"}`}>
       <span className="absolute top-[6px] start-[6px] text-white text-caption-md px-2 bg-black/70 backdrop-blur-[5px] rounded-md">{movie.type === MovieTypeEnum.SERIES ? t("Movie.Series") : t("Movie.Film")}</span>
       <Image draggable={false} src={movieCover?.path || placeholderPath} alt={movie.title} width={207} height={370} className="w-full h-full object-cover rounded-xl bg-gray-11" />
       <div className="absolute bottom-0 left-0 w-full bg-black/70 backdrop-blur-[10px] flex items-center justify-center xl:justify-between p-3 rounded-b-xl">

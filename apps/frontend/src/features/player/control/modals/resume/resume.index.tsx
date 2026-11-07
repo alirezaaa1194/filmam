@@ -4,8 +4,10 @@ import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogT
 import { TimerParser } from "../../../../../scripts";
 import { CommentEntityTypeEnum, UserMovieTypeEnum } from "../../../../../types";
 import { useSaveWatchTime } from "../../../player.script";
+import { useLocale } from "../../../../../hooks";
 
 export default function ResumeModalComp({ open, setOpen, savedProgress, data, entityType, dir, videoRef }: any) {
+  const { t } = useLocale();
   const { mutate: saveWatchTime } = useSaveWatchTime();
 
   return (
@@ -18,8 +20,8 @@ export default function ResumeModalComp({ open, setOpen, savedProgress, data, en
     >
       <DialogContent showHeader={false} className="bg-gray-14/95 backdrop-blur-[20px] border-white/20 text-white max-w-md p-6" dir={dir}>
         <DialogHeader>
-          <DialogTitle className="text-white">ادامه‌ی تماشا</DialogTitle>
-          <DialogDescription className="text-white/70">شما قبلاً این ویدیو را تا {TimerParser(Math.floor(savedProgress), true)} تماشا کرده‌اید. از کجا ادامه می‌دهید؟</DialogDescription>
+          <DialogTitle className="text-white">{t("Player.resumeTitle")}</DialogTitle>
+          <DialogDescription className="text-white/70">{t("Player.resumeDescription")} {TimerParser(Math.floor(savedProgress), true)} {t("Player.resumeQuestion")}</DialogDescription>
         </DialogHeader>
         <div className="flex gap-2 mt-8">
           <Button
@@ -32,7 +34,7 @@ export default function ResumeModalComp({ open, setOpen, savedProgress, data, en
             }}
             className="bg-primary hover:bg-primary-shade-1 text-white cursor-pointer h-10 rounded-md flex-1"
           >
-            ادامه از {TimerParser(Math.floor(savedProgress), true)}
+            {t("Player.resumeFrom")} {TimerParser(Math.floor(savedProgress), true)}
           </Button>
           <Button
             variant="outline"
@@ -46,7 +48,7 @@ export default function ResumeModalComp({ open, setOpen, savedProgress, data, en
             }}
             className="border-white/30 text-white hover:bg-white/10 cursor-pointer h-10 rounded-md flex-1"
           >
-            شروع از ابتدا
+            {t("Player.startOver")}
           </Button>
         </div>
       </DialogContent>

@@ -19,8 +19,8 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
   const placeholderPath = "/images/placeholder-v.jpg";
   const { t } = useLocale();
 
-  const { toggleEpisodeAction: likeToggleEpisodeAction } = useEpisodeAction(episode.season_slug, UserMovieTypeEnum.LIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ذخیره شد", "خطا در ثبت نظر شما");
-  const { toggleEpisodeAction: dislikeToggleEpisodeAction } = useEpisodeAction(episode.season_slug, UserMovieTypeEnum.DISLIKE, "نظر شما با موفقیت ثبت شد", "نظر شما با موفقیت ذخیره شد", "خطا در ثبت نظر شما");
+  const { toggleEpisodeAction: likeToggleEpisodeAction } = useEpisodeAction(episode.season_slug, UserMovieTypeEnum.LIKE, t("MovieDetail.commentSuccess"), t("MovieDetail.commentSuccess"), t("MovieDetail.actionError"));
+  const { toggleEpisodeAction: dislikeToggleEpisodeAction } = useEpisodeAction(episode.season_slug, UserMovieTypeEnum.DISLIKE, t("MovieDetail.commentSuccess"), t("MovieDetail.commentSuccess"), t("MovieDetail.actionError"));
 
   const isCurrentlyLiked = episode.user_movies.some((item) => item.type === UserMovieTypeEnum.LIKE);
   const isCurrentlyDisLiked = episode.user_movies.some((item) => item.type === UserMovieTypeEnum.DISLIKE);
@@ -40,13 +40,13 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
         <div className="flex flex-col gap-1 lg:gap-2">
           <div className="w-full flex items-center justify-between gap-3">
             <span className="text-white text-mobile-body-sm lg:text-body-xs">
-              فصل {episode.season_order} {t("RecentWatch.episode")} {episode.order}
+              {t("MovieDetail.season")} {episode.season_order} {t("RecentWatch.episode")} {episode.order}
             </span>
             <div className="flex items-center gap-3">
               {isWatched ? (
                 <span className="inline-flex items-center gap-1.5 shrink-0 rounded-full bg-primary/15 ring-1 ring-primary/30 size-5 md:size-auto justify-center md:pl-2 md:pr-1.5">
                   <CheckCheck className="size-3 text-primary" strokeWidth={2.5} />
-                  <span className="text-caption-sm lg:text-caption-md text-primary whitespace-nowrap font-bold hidden md:block">دیده شده</span>
+                  <span className="text-caption-sm lg:text-caption-md text-primary whitespace-nowrap font-bold hidden md:block">{t("MovieDetail.watched")}</span>
                 </span>
               ) : null}
               <EpisodeActionDropdownComp episodeId={episode.id} seasonSlug={episode.season_slug} userMovies={episode.user_movies} />
@@ -63,20 +63,20 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
           <span className="flex items-center gap-2 text-caption-md text-gray-8 lg:min-w-[104px]">
             <Clock variant="Outline" className="size-4 fill-gray-8" />
             {formatDuration(duration, {
-              second: "ثانیه",
-              minute: "دقیقه",
-              hour: "ساعت",
+              second: t("MovieDetail.seconds"),
+              minute: t("MovieDetail.minutes"),
+              hour: t("MovieDetail.hours"),
             })}
           </span>
           {isWatching ? (
             <div className="flex-1 max-w-[452px] flex flex-col gap-2">
               <span className="text-caption-md flex gap-1">
-                <span className="text-gray-8 hidden lg:inline-block">مشاهده شده:</span>
+                <span className="text-gray-8 hidden lg:inline-block">{t("MovieDetail.watchedProgress")}</span>
                 <span className="text-primary hidden lg:inline-block">
                   {formatDuration(progressTime, {
-                    second: "ثانیه",
-                    minute: "دقیقه",
-                    hour: "ساعت",
+                    second: t("MovieDetail.seconds"),
+                    minute: t("MovieDetail.minutes"),
+                    hour: t("MovieDetail.hours"),
                   })}
                 </span>
               </span>
@@ -127,7 +127,7 @@ function EpisodeCardComp({ episode }: { episode: SeasonEpisodeType }) {
               </Button>
             </div>
             <Link href={`/player/episode/${episode.slug}?source=FILM`} className="flex-1">
-              <Button className="w-full h-8 lg:h-12 cursor-pointer rounded-md text-button-s! lg:text-button-md!">{isWatching ? "ادامه تماشا" : isWatched ? "تماشای دوباره" : "تماشا"}</Button>
+              <Button className="w-full h-8 lg:h-12 cursor-pointer rounded-md text-button-s! lg:text-button-md!">{isWatching ? t("MovieDetail.continueWatching") : isWatched ? t("MovieDetail.watchAgain") : t("MovieDetail.watch")}</Button>
             </Link>
           </div>
         </div>

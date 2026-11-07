@@ -19,7 +19,7 @@ function HeroSectionComp({ section }: { section: SectionType }) {
   const { dir, t } = useLocale();
 
   return (
-    <section className="hero-section h-[420px] md:h-[624px] 2xl:h-screen">
+    <section className="hero-section relative h-[420px] md:h-[624px] 2xl:h-screen">
       <Swiper
         key={dir}
         slidesPerView={1}
@@ -33,10 +33,10 @@ function HeroSectionComp({ section }: { section: SectionType }) {
         pagination={{
           clickable: true,
         }}
-        className="h-full"
+        className="h-full overflow-visible!"
       >
         {section.movies.map((movie) => (
-          <SwiperSlide key={movie.id} className="select-none">
+          <SwiperSlide key={movie.id} className="select-none overflow-hidden">
             <HeroSectionContentComp title={movie.title} description={movie.short_description} options={[movie.type === MovieTypeEnum.SERIES ? t("Movie.Series") : t("Movie.Cinematic"), ...(movie.genres?.map((genre) => genre.name) || [])]} imageUrl={movie.files.find((file) => file.type === FileTypeEnum.POSTER)?.path}>
               <MovieFunctionalitiesComp movie={movie} notification={false} play={{ title: t("Hero.watch") }} trailer dislike={false} like={false} hero={true} />
             </HeroSectionContentComp>

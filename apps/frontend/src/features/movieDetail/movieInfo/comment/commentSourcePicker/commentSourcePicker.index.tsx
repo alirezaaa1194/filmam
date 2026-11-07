@@ -26,7 +26,7 @@ export default function CommentSourcePickerComp({ movieSlug, movieTitle, movieId
   const isMovieSelected = commentSource.entityType === CommentEntityTypeEnum.MOVIE;
   const selectedSeason = data?.find((season) => season.episodes.some((ep) => ep.slug === commentSource.entitySlug));
   const [accordionValue, setAccordionValue] = useState<string>(selectedSeason ? String(selectedSeason.id) : "");
-  const selectedLabel = isMovieSelected ? movieTitle || "فیلم" : (data?.flatMap((season) => season.episodes).find((ep) => ep.slug === commentSource.entitySlug)?.title ?? "انتخاب کنید");
+  const selectedLabel = isMovieSelected ? movieTitle || t("MovieDetail.selectMovie") : (data?.flatMap((season) => season.episodes).find((ep) => ep.slug === commentSource.entitySlug)?.title ?? t("MovieDetail.selectOption"));
 
   if (isPending) return <CommentSourcePickerSkeletonComp />;
 
@@ -76,7 +76,7 @@ export default function CommentSourcePickerComp({ movieSlug, movieTitle, movieId
                 </button>
               ))
             ) : (
-              <div className="w-full text-right px-2 py-1.5 text-sm rounded-md text-gray-9 bg-gray-12/50 select-none whitespace-nowrap">قسمتی ندارد</div>
+              <div className="w-full text-right px-2 py-1.5 text-sm rounded-md text-gray-9 bg-gray-12/50 select-none whitespace-nowrap">{t("MovieDetail.noEpisodes")}</div>
             )}
           </div>
         ) : (
@@ -87,7 +87,7 @@ export default function CommentSourcePickerComp({ movieSlug, movieTitle, movieId
               return (
                 <AccordionItem value={String(season.id)} className="border-0!" key={season.id}>
                   <AccordionTrigger className={`group px-2 py-1.5 text-sm rounded-md justify-between hover:bg-gray-12! hover:no-underline cursor-pointer data-[state=open]:bg-gray-12 ${!hasEpisodes ? "opacity-50 pointer-events-none cursor-not-allowed" : ""}`} showIcon={false} onClick={(e) => e.stopPropagation()} disabled={!hasEpisodes}>
-                    <span className="whitespace-nowrap">فصل {season.order}</span>
+                    <span className="whitespace-nowrap">{t("MovieDetail.season")} {season.order}</span>
                     {hasEpisodes ? <ArrowDown2 variant="Outline" className="stroke-[#fff] size-3 shrink-0 transition-all group-data-[state=open]:rotate-180" /> : null}
                   </AccordionTrigger>
                   <AccordionContent className="pb-0 pt-1 ps-3 space-y-1 h-fit">
@@ -109,7 +109,7 @@ export default function CommentSourcePickerComp({ movieSlug, movieTitle, movieId
                         </button>
                       ))
                     ) : (
-                      <div className="w-full text-right px-2 py-1.5 text-sm rounded-md text-gray-9 bg-gray-12/50 select-none whitespace-nowrap">قسمتی ندارد</div>
+                      <div className="w-full text-right px-2 py-1.5 text-sm rounded-md text-gray-9 bg-gray-12/50 select-none whitespace-nowrap">{t("MovieDetail.noEpisodes")}</div>
                     )}
                   </AccordionContent>
                 </AccordionItem>

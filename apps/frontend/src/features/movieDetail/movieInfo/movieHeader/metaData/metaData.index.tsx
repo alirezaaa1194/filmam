@@ -22,7 +22,7 @@ function MovieHeaderMetaDataComp({ movie }: { movie: MovieDetailPublicType }) {
           {movie.seasons_count} {t("RecentWatch.season")} ({movie.episodes_count} {t("RecentWatch.episode")})
         </span>
       ) : movie.type !== MovieTypeEnum.SERIES && filmFile && filmFile.duration ? (
-        <span className="shrink-0">{Math.floor(Number(filmFile.duration || 0) / 60)} دقیقه</span>
+        <span className="shrink-0">{Math.floor(Number(filmFile.duration || 0) / 60)} {t("MovieDetail.minutes")}</span>
       ) : null}
       {movie.genres?.length ? <span className="flex xl:hidden shrink-0">{movie.genres.map((genre) => genre.name).join(locale === AppLanguagesEnum.FA || locale === AppLanguagesEnum.AR ? "، " : ", ")}</span> : null}
       {movie.released_year ? (

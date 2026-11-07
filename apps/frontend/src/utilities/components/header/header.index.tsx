@@ -38,7 +38,7 @@ async function Header({ absolute }: { absolute: boolean }) {
           <Suspense
             fallback={
               <div className="hidden lg:flex items-center gap-8">
-                {Array.from({ length: 5 }).map((_, i) => (
+                {Array.from({ length: 6 }).map((_, i) => (
                   <NavbarItemSkeleton key={i} className="h-4 w-14" />
                 ))}
               </div>
@@ -48,7 +48,9 @@ async function Header({ absolute }: { absolute: boolean }) {
           </Suspense>
         </div>
         <div className="flex items-center gap-3 lg:gap-6">
-          <SearchInput />
+          <Suspense fallback={<div className="h-8 w-[150px] rounded-md bg-gray-12 sm:w-[296px] lg:hidden xl:block" />}>
+            <SearchInput />
+          </Suspense>
           <div className="hidden lg:flex">
             <LanguageSwitcher />
           </div>

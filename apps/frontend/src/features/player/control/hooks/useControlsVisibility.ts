@@ -21,19 +21,34 @@ export function useControlsVisibility(isBuffering: boolean) {
   }, [clearTimer, isBuffering]);
 
   const handleMouseEnter = useCallback(() => {
-    clearTimer();
     setShowControl(true);
-  }, [clearTimer]);
+    startHideTimer();
+  }, [startHideTimer]);
 
   const handleMouseLeave = useCallback(() => startHideTimer(), [startHideTimer]);
 
   const handleMouseMove = useCallback(() => {
-    if (!showControl) {
-      setShowControl(true);
-      return;
-    }
+    setShowControl(true);
     startHideTimer();
-  }, [showControl, startHideTimer]);
+  }, [startHideTimer]);
+
+  const handlePlaybackStarted = useCallback(() => {
+    setShowControl(true);
+    startHideTimer();
+  }, [startHideTimer]);
+
+  const handlePlaybackPaused = useCallback(() => {
+    clearTimer();
+    setShowControl(true);
+  }, [clearTimer]);
+
+  useEffect(() => {
+    if (isBuffering) {
+      clearTimer();
+    } else if (videoRefForCheck.current && !videoRefForCheck.current.paused) {
+      startHideTimer();
+    }
+  }, [clearTimer, isBuffering, startHideTimer]);
 
   useEffect(() => () => clearTimer(), [clearTimer]);
 
@@ -44,5 +59,7 @@ export function useControlsVisibility(isBuffering: boolean) {
     handleMouseEnter,
     handleMouseLeave,
     handleMouseMove,
+    handlePlaybackStarted,
+    handlePlaybackPaused,
   };
 }

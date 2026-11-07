@@ -17,13 +17,8 @@ function RecentWatchSectionComp({ section }: { section: SectionType }) {
 
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const { dir } = useLocale();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const updateEdges = (swiper: { isBeginning: boolean; progress: number }) => {
     setIsBeginning(swiper.isBeginning && swiper.progress <= 0);
@@ -41,8 +36,8 @@ function RecentWatchSectionComp({ section }: { section: SectionType }) {
           modules={[FreeMode]}
           observer={true}
           observeParents={true}
-          className={`w-full px-layout-x-space! transition-opacity duration-300 ${mounted ? "opacity-100" : "opacity-0"}`}
-          slidesPerView={1.2}
+          className="w-full px-layout-x-space!"
+          slidesPerView={1.25}
           spaceBetween={8}
           breakpoints={{
             0: {

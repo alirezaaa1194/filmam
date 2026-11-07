@@ -11,7 +11,8 @@ import { useEpisodesScript } from "./episodes.script";
 import { PlayerEpisodesModalProps } from "./episodes.type";
 
 export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, activeSeasonSlug, onOpenChange }: PlayerEpisodesModalProps) {
-  const { dir } = useLocale();
+  const { t, dir } = useLocale();
+  const [episodesTitlePrefix = "", episodesTitleSuffix = ""] = t("Player.episodesTitle").split("--");
   const [open, setOpen] = useState(false);
   const { activeTab, setActiveTab, loadMoreRef, watchedIds, handleEpisodeClick, data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useEpisodesScript(movie, activeSeasonSlug, activeEpisodeId, open);
 
@@ -28,21 +29,21 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
         </Button>
       </DialogTrigger>
 
-      <DialogContent showHeader={false} className="bg-gray-14/95 backdrop-blur-[20px] border-white/20 text-white p-0 flex flex-col w-screen h-[100svh] max-w-none rounded-none left-0 top-0 translate-x-0 translate-y-0 sm:w-auto sm:h-auto sm:max-w-3xl sm:max-h-[80dvh] sm:rounded-lg sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2" dir={dir}>
+      <DialogContent showHeader={false} className="bg-gray-14/95 backdrop-blur-[20px] border-white/20 text-white p-0 flex flex-col w-screen h-[100dvh] max-h-[100dvh] max-w-none rounded-none left-0 top-0 translate-x-0 translate-y-0 sm:w-auto sm:h-auto sm:max-w-3xl sm:max-h-[80dvh] sm:rounded-lg sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2" dir="rtl">
         <DialogHeader className="p-6 pb-4 border-b border-white/10 flex flex-row items-center justify-between">
-          <DialogTitle className="text-white">قسمت‌های {movie.title}</DialogTitle>
+          <DialogTitle dir={dir} className="text-right text-white"><span>{episodesTitlePrefix}</span><bdi dir="auto">{movie.title}</bdi><span>{episodesTitleSuffix}</span></DialogTitle>
           <Button className="size-11 lg:size-12 shrink-0 rounded-full bg-gray-14/50 hover:bg-gray-14 backdrop-blur-[20px] cursor-pointer" onClick={() => setOpen(false)}>
             <X className="size-5 fill-white" />
           </Button>
         </DialogHeader>
 
         {movie.seasons && movie.seasons.length > 0 ? (
-          <div className="px-6 py-2 overflow-x-auto overflow-y-hidden">
+          <div className="shrink-0 min-h-[52px] px-6 py-2 overflow-x-auto overflow-y-hidden">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-max">
-              <TabsList className="flex flex-nowrap justify-start gap-2 h-max! bg-transparent w-max">
+              <TabsList className="flex min-h-9 flex-nowrap justify-start gap-2 h-max! bg-transparent w-max">
                 {movie.seasons.map((season: any) => (
                   <TabsTrigger key={season.id} value={season.slug} className={`flex-none px-4 h-9 rounded-md bg-transparent border border-gray-9 text-gray-9! text-button-s cursor-pointer transition-all ${activeTab === season.slug ? "border-primary bg-primary text-white!" : "hover:border-primary hover:text-primary!"}`}>
-                    فصل {season.order}
+                    {t("MovieDetail.season")} {season.order}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -50,7 +51,7 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
           </div>
         ) : null}
 
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 scrollbar-none">
+        <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 scrollbar-none">
           {isLoading || !data ? (
             <div className="flex items-center justify-center py-12">
               <Spinner className="size-8 text-primary" />
@@ -74,7 +75,7 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
                     >
                       {episodeCover?.path ? (
                         <div className="relative size-16 sm:size-10 shrink-0 rounded-md overflow-hidden bg-white/10">
-                          <img src={episodeCover.path} alt={`قسمت ${episode.order}`} className="w-full h-full object-cover" />
+                          <img src={episodeCover.path} alt={`${t("Player.episode")} ${episode.order}`} className="w-full h-full object-cover" />
                           {isActive ? (
                             <div className="absolute inset-0 bg-primary/50 flex items-center justify-center">
                               <Play className="size-5 fill-white" />
@@ -87,12 +88,12 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
 
                       <div className="flex flex-col gap-1 flex-1 min-w-0">
                         <span className="text-white text-body-xxs font-bold truncate">
-                          فصل {episode.season_order} قسمت {episode.order}
+                          {t("MovieDetail.season")} {episode.season_order} {t("Player.episode")} {episode.order}
                         </span>
-                        {isWatched ? <span className="text-primary text-caption-md">دیده‌شده</span> : null}
+                        {isWatched ? <span className="text-primary text-caption-md">{t("MovieDetail.watched")}</span> : null}
                       </div>
 
-                      {isActive ? <span className="text-primary text-caption-md font-bold shrink-0 hidden sm:block">در حال پخش</span> : null}
+                      {isActive ? <span className="text-primary text-caption-md font-bold shrink-0 hidden sm:block">{t("Player.currentlyPlaying")}</span> : null}
                     </button>
                   );
                 }),
@@ -107,7 +108,7 @@ export default function PlayerEpisodesModalComp({ movie, activeEpisodeId, active
               ) : null}
             </div>
           ) : (
-            <div className="text-center text-gray-8 text-body-xxs py-12">قسمتی برای این فصل وجود ندارد</div>
+            <div className="text-center text-gray-8 text-body-xxs py-12">{t("Player.noEpisodes")}</div>
           )}
         </div>
       </DialogContent>

@@ -1,6 +1,5 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useState } from "react";
 import KidCardComp from "./kidsCard/kidsCard.index";
 import { Autoplay, Pagination } from "swiper/modules";
 import "./kids.style.css";
@@ -15,23 +14,20 @@ function KidsSectionComp({ section }: { section: SectionType }) {
     return;
   }
 
-  const [mounted, setMounted] = useState(false);
   const { dir, t } = useLocale();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <section className="kids-section mt-8 lg:mt-12 lg:px-layout-x-space max-w-layout-max mx-auto">
       <h4 className="text-white text-mobile-h-4 lg:text-h-4 text-center">{section.title}</h4>
       <Swiper
         key={dir}
+        slidesPerView={1.5}
+        spaceBetween={16}
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
         centeredSlides
         loop
-        className={`w-full mt-6 lg:mt-8 rounded-xl transition-opacity duration-300  ${mounted ? "opacity-100" : "opacity-0"} [&_.swiper-slide]:transition-all [&_.swiper-slide]:duration-300  
+        className={`w-full mt-6 lg:mt-8 rounded-xl [&_.swiper-slide]:transition-all [&_.swiper-slide]:duration-300  
         [&_.swiper-slide]:scale-[0.86]
         overflow-visible! overflow-x-clip!
     [&_.swiper-slide]:blur-[4px]

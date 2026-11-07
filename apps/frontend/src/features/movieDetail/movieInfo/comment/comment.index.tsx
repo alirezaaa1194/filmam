@@ -14,7 +14,7 @@ import { Button, Spinner } from "../../../../utilities/components/ui";
 import { CommentCardSkeletonComp } from "./commentCard/skeleton/skeleton.index";
 
 function CommentSectionComp({ movie }: CommentSectionCompProps) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const [commentSource, setCommentSource] = useState({
     entityId: movie.id,
     entityType: CommentEntityTypeEnum.MOVIE,
@@ -53,7 +53,7 @@ function CommentSectionComp({ movie }: CommentSectionCompProps) {
 
   return (
     <section className="w-full px-layout-x-space max-w-layout-max mx-auto flex flex-col gap-2 lg:gap-4">
-      <h5 className="text-white text-mobile-h-5 lg:text-h-5">دیدگاه ها</h5>
+      <h5 className="text-white text-mobile-h-5 lg:text-h-5">{t("MovieDetail.comments")}</h5>
       <div className="flex flex-col gap-3">
         {isShowSourcePicker ? <CommentSourcePickerComp movieSlug={movie.slug} movieId={movie.id} movieTitle={movie.title} commentSource={commentSource} setCommentSource={setCommentSource} /> : null}
         <CommentInputComp entityId={commentSource.entityId} entityType={commentSource.entityType} />
@@ -76,7 +76,7 @@ function CommentSectionComp({ movie }: CommentSectionCompProps) {
             )}
             {hasNextPage ? (
               <Button disabled={isFetchingNextPage || isLoading} onClick={() => fetchNextPage()} className="h-10 px-8 w-fit mx-auto rounded-md cursor-pointer border-gray-10 text-gray-10 hover:text-primary hover:border-primary hover:[&>svg]:stroke-primary" variant="outline">
-                مشاهده بیشتر {isFetchingNextPage ? <Spinner /> : <ArrowDown2 className="stroke-gray-10 size-5 transition-all" />}
+                {t("MovieDetail.loadMore")} {isFetchingNextPage ? <Spinner /> : <ArrowDown2 className="stroke-gray-10 size-5 transition-all" />}
               </Button>
             ) : null}
           </>

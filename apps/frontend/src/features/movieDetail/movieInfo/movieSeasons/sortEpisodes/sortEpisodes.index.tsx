@@ -2,8 +2,10 @@ import { Sort } from "iconsax-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Separator, Switch } from "@/utilities/components/ui";
 import { SortEpisodesProps } from "./sortEpisodes.type";
 import { SortTypeEnum } from "../../../../../types";
+import { useLocale } from "../../../../../hooks";
 
 function SortEpisodesComp({ open, onOpenChange, sortValue, onSortChange, unwatchedEpisodes, onUnwatchedChange }: SortEpisodesProps) {
+  const { t } = useLocale();
   const itemClass = (active: boolean) => `bg-transparent transition-all ${active ? "bg-primary hover:bg-primary/80 rounded-md" : "hover:bg-gray-12"} cursor-pointer`;
 
   return (
@@ -13,14 +15,14 @@ function SortEpisodesComp({ open, onOpenChange, sortValue, onSortChange, unwatch
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="!mt-1 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
         <DropdownMenuItem onClick={() => onSortChange(SortTypeEnum.ASC)} className={itemClass(sortValue === SortTypeEnum.ASC)}>
-          صعودی
+          {t("MovieDetail.ascending")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onSortChange(SortTypeEnum.DESC)} className={itemClass(sortValue === SortTypeEnum.DESC)}>
-          نزولی
+          {t("MovieDetail.descending")}
         </DropdownMenuItem>
         <Separator className="bg-gray-12" />
         <DropdownMenuItem className="flex items-center justify-between">
-          مشاهده نشده
+          {t("MovieDetail.unwatched")}
           <Switch size="sm" checked={unwatchedEpisodes} onCheckedChange={onUnwatchedChange} dir="ltr" />
         </DropdownMenuItem>
       </DropdownMenuContent>

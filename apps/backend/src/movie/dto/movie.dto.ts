@@ -287,6 +287,18 @@ export class GetAllMoviesPublicDto {
   @IsOptional()
   languages?: string[];
 
+  @ApiProperty({ name: 'released_year_from', required: false, type: Number })
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @IsOptional()
+  @Type(() => Number)
+  released_year_from?: number;
+
+  @ApiProperty({ name: 'released_year_to', required: false, type: Number })
+  @IsNumber({ allowInfinity: false, allowNaN: false })
+  @IsOptional()
+  @Type(() => Number)
+  released_year_to?: number;
+
   @ApiProperty({
     name: 'sort_by',
     required: false,

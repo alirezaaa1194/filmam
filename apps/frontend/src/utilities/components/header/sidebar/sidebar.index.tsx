@@ -40,7 +40,7 @@ function Sidebar({ children }: { children: ReactNode }) {
               <Separator className="bg-gray-12" />
               <Link href="/">{t("Header.wishlist")}</Link>
               <Separator className="bg-gray-12" />
-              <Link href="/">{t("Header.support")}</Link>
+              <Link href="/contact">{t("Header.support")}</Link>
               <Separator className="bg-gray-12" />
               {user.role === UserRoleEnum.ADMIN ? (
                 <>
