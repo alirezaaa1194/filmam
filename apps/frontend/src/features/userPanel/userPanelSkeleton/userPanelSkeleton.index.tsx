@@ -11,15 +11,18 @@ export default function UserPanelSkeletonComp({ watched = false, profile = false
         <Skeleton className="h-[520px] rounded-xl" />
       </div>
     </>
-  ) : watched ? (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-      {Array.from({ length: count }, (_, index) => (
-        <RecentWatchItemSkeletonComp key={index} className="w-full" />
-      ))}
-    </div>
   ) : (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6 xl:grid-cols-5">
-      {Array.from({ length: count }, (_, index) => <MovieCardSkeletonComp key={index} compact />)}
-    </div>
+    <>
+      <Skeleton className="mb-5 h-8 w-36" />
+      {watched ? (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {Array.from({ length: count }, (_, index) => <RecentWatchItemSkeletonComp key={index} className="w-full" />)}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6 xl:grid-cols-5">
+          {Array.from({ length: count }, (_, index) => <MovieCardSkeletonComp key={index} compact />)}
+        </div>
+      )}
+    </>
   );
 }
