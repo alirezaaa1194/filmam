@@ -153,6 +153,8 @@ export class UpdateUserInfoDto {
   @MinLength(3)
   username!: string;
 
+  // Email is intentionally immutable through the self-service profile endpoint.
+
   @ApiProperty({
     enum: AppLanguage,
     default: defaultLang,

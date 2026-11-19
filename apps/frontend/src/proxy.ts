@@ -4,6 +4,7 @@ import { ParseSetCookie, DefaultLanguage } from "./scripts";
 
 export async function proxy(req: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
+  const isUserPanelRoute = req.nextUrl.pathname === "/profile" || req.nextUrl.pathname.startsWith("/profile/");
 
   if (req.cookies.get("accessToken")?.value) {
     return NextResponse.next();
@@ -24,6 +25,11 @@ export async function proxy(req: NextRequest) {
   });
 
   if (!refreshResponse.ok) {
+    if (isUserPanelRoute) {
+      const redirectResponse = NextResponse.redirect(new URL("/403", req.url));
+      response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
+      return redirectResponse;
+    }
     return response;
   }
 

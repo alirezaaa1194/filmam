@@ -1,11 +1,13 @@
 "use client";
 import { Heart } from "iconsax-react";
 import Image from "next/image";
-import { FileTypeEnum, MovieDetailPublicType, MovieListItemType, MovieTypeEnum } from "../../../../types";
+import { FileTypeEnum, MovieBriefType, MovieDetailPublicType, MovieListItemType, MovieTypeEnum } from "../../../../types";
 import { useLocale } from "../../../../hooks";
 import { movieLikePercentCalc } from "../../../../lib/utils";
 
-function MovieCardComp({ movie, compact = false }: { movie: MovieListItemType | MovieDetailPublicType; compact?: boolean }) {
+type MovieCardEntity = MovieListItemType | MovieDetailPublicType | Pick<MovieBriefType, "title" | "files" | "type" | "likes_count" | "dislikes_count">;
+
+function MovieCardComp({ movie, compact = false }: { movie: MovieCardEntity; compact?: boolean }) {
   const { t } = useLocale();
   const movieCover = movie.files.find((file) => file.type === FileTypeEnum.THUMBNAIL);
   const placeholderPath = "/images/placeholder-v.jpg";
@@ -17,7 +19,7 @@ function MovieCardComp({ movie, compact = false }: { movie: MovieListItemType | 
       <div className="absolute bottom-0 left-0 w-full bg-black/70 backdrop-blur-[10px] flex items-center justify-center xl:justify-between p-3 rounded-b-xl">
         <span className="text-white text-caption-md">{movie.title}</span>
         <span className="hidden xl:flex items-center gap-[2px] text-gray-8 text-caption-md!">
-          {movieLikePercentCalc(movie.likes_count, movie.dislikes_count)}% {<Heart variant="Outline" className="size-4 fill-gray-8" />}
+          {movieLikePercentCalc(movie.likes_count ?? 0, movie.dislikes_count ?? 0)}% {<Heart variant="Outline" className="size-4 fill-gray-8" />}
         </span>
       </div>
       <div className="pointer-events-none absolute inset-0 z-20 rounded-xl border border-gray-10" />

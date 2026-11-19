@@ -36,9 +36,9 @@ function Sidebar({ children }: { children: ReactNode }) {
           <Separator className="!h-[2px] bg-gray-10 my-6" />
           {user ? (
             <div className="flex flex-col gap-2 text-body-xs">
-              <Link href="/">{user.username}</Link>
+              <Link href="/profile">{user.username}</Link>
               <Separator className="bg-gray-12" />
-              <Link href="/">{t("Header.wishlist")}</Link>
+              <Link href="/profile/liked">{t("Header.wishlist")}</Link>
               <Separator className="bg-gray-12" />
               <Link href="/contact">{t("Header.support")}</Link>
               <Separator className="bg-gray-12" />

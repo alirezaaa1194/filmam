@@ -2,10 +2,10 @@
 import { Skeleton } from "../../../../../../utilities/components/ui";
 import { useLocale } from "../../../../../../hooks";
 
-function RecentWatchItemSkeletonComp() {
+function RecentWatchItemSkeletonComp({ className }: { className?: string }) {
   const { dir } = useLocale();
   return (
-    <div className="block shrink-0 relative rounded-md lg:rounded-xl overflow-hidden select-none w-[250px] lg:w-[392px] h-40 xl:h-60">
+    <div className={`block shrink-0 relative rounded-md lg:rounded-xl overflow-hidden select-none ${className ?? "w-[250px] lg:w-[392px]"} h-40 xl:h-60`}>
       <Skeleton className="h-full w-full rounded-none" />
       <div className="absolute rounded-b-md lg:rounded-b-xl bottom-0 left-0 bg-black/70 backdrop-blur-[15px] w-full z-10 flex flex-col gap-px p-2">
         <Skeleton className="h-3.5 lg:h-3 w-3/4" />

@@ -24,22 +24,22 @@ export function ProfileDropdown({ user }: { user: UserType }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="!mt-5 !p-3 w-[182px] bg-gray-13 border border-gray-12 rounded-lg flex flex-col gap-2">
-          <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
+          <Link href="/profile" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-white text-body-xxs">{user.username}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
-              <User className="!stroke-white size-5" />
+              <User className="!fill-white !stroke-white size-5" />
             </span>
           </Link>
-          <Link href="/" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
+          <Link href="/profile/liked" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-white text-body-xxs">{t("Header.wishlist")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
-              <ArchiveMinus className="!stroke-white size-5" />
+              <ArchiveMinus className="!fill-white !stroke-white size-5" />
             </span>
           </Link>
           <Link href="/contact" className="flex items-center justify-end gap-2 hover:bg-gray-12 transition-all w-full rounded-md" dir={dir === "rtl" ? "ltr" : "rtl"}>
             <span className="text-white text-body-xxs">{t("Header.support")}</span>
             <span className="flex items-center justify-center size-8 bg-gray-12 rounded-md">
-              <I24Support className="!stroke-white size-5" />
+              <I24Support className="!fill-white !stroke-white size-5" />
             </span>
           </Link>
           {user.role === UserRoleEnum.ADMIN ? (

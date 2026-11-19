@@ -995,6 +995,7 @@ export type __UserMovieActionType = {
 
 export type __MovieBriefType = {
   id: number;
+  slug: string;
   title: string;
   poster_url?: string;
   rating?: number;
@@ -1017,6 +1018,7 @@ export type __EpisodeBriefType = {
   updated_at: string;
   title: string;
   order: number;
+  season_order?: number;
   slug: string;
   season_id?: number;
   movie_id: number;
@@ -1032,7 +1034,7 @@ export type __UserMovieListItemType = {
   updated_at: string;
   type: string;
   progress_time: number | null;
-  entity_type: string;
+  entity_type: __SectionUserMovieTypeEnum;
   movie?: __MovieBriefType;
   episode?: __EpisodeBriefType;
 };

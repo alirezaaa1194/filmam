@@ -1,26 +1,32 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Slider } from "../../../../../utilities/components/ui/slider";
-import { FileTypeEnum, SectionUserMovieListItemType, SectionUserMovieTypeEnum } from "../../../../../types";
+import { FileTypeEnum, SectionUserMovieListItemType, SectionUserMovieTypeEnum, UserMovieListItemType } from "../../../../../types";
 import { TimerParser } from "../../../../../scripts";
 import { useLocale } from "@/hooks";
-function RecentWatchItemComp({ movie }: { movie: SectionUserMovieListItemType }) {
+function RecentWatchItemComp({ movie }: { movie: SectionUserMovieListItemType | UserMovieListItemType }) {
   const { t, dir } = useLocale();
+  const parentMovie = movie.movie;
+  if (!parentMovie) return null;
   let moviePoster = null;
   let movieFilm = null;
 
-  if (movie.entity_type === SectionUserMovieTypeEnum.EPISODE) {
+  if (movie.entity_type === SectionUserMovieTypeEnum.EPISODE && movie.episode) {
     moviePoster = movie.episode.files.find((file) => file.type === FileTypeEnum.POSTER);
   } else {
-    moviePoster = movie.movie.files.find((file) => file.type === FileTypeEnum.POSTER);
+    moviePoster = parentMovie.files.find((file) => file.type === FileTypeEnum.POSTER);
   }
 
-  if (movie.entity_type === SectionUserMovieTypeEnum.EPISODE) {
+  if (movie.entity_type === SectionUserMovieTypeEnum.EPISODE && movie.episode) {
     movieFilm = movie.episode.files.find((file) => file.type === FileTypeEnum.FILM);
   } else {
-    movieFilm = movie.movie.files.find((file) => file.type === FileTypeEnum.FILM);
+    movieFilm = parentMovie.files.find((file) => file.type === FileTypeEnum.FILM);
   }
-  const title = movie.entity_type === SectionUserMovieTypeEnum.MOVIE ? movie.movie.title : `${dir === "rtl" ? `${t("RecentWatch.series")} ${movie.movie.title}` : `${movie.movie.title} ${t("RecentWatch.series")}`} - ${t("RecentWatch.season")} ${movie.episode.season_order} - ${t("RecentWatch.episode")} ${movie.episode.order}`;
+  const title = movie.entity_type === SectionUserMovieTypeEnum.MOVIE || !movie.episode ? parentMovie.title : `${dir === "rtl" ? `${t("RecentWatch.series")} ${parentMovie.title}` : `${parentMovie.title} ${t("RecentWatch.series")}`} - ${t("RecentWatch.season")} ${movie.episode.season_order ?? 1} - ${t("RecentWatch.episode")} ${movie.episode.order}`;
+  const duration = Number(movieFilm?.duration);
+  const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0;
+  const progressTime = Number(movie.progress_time) || 0;
+  const progressPercent = safeDuration > 0 ? Math.min(100, Math.max(0, (progressTime / safeDuration) * 100)) : 0;
 
   const placeholderPath = "/images/placeholder-h.jpg";
 
@@ -30,9 +36,9 @@ function RecentWatchItemComp({ movie }: { movie: SectionUserMovieListItemType })
       <div className="absolute rounded-b-md lg:rounded-b-xl bottom-0 left-0 bg-black/70 backdrop-blur-[15px] w-full z-10 flex flex-col gap-px p-2">
         <span className="text-white text-caption-sm lg:text-body-xxs">{title}</span>
         <div className="w-full flex items-center justify-between gap-4">
-          <span className={`shrink-0 lg:text-caption-md text-caption-sm ${dir === "rtl" ? "order-1" : "order-3"}`}>{TimerParser(isNaN(Number(movieFilm?.duration)) ? 0 : Number(movieFilm?.duration), true)}</span>
-          <Slider defaultValue={[(movie.progress_time / (isNaN(Number(movieFilm?.duration)) ? 0 : Number(movieFilm?.duration))) * 100]} max={100} step={1} min={0} dir="ltr" disabled className="order-2" />
-          <span className={`shrink-0 lg:text-caption-md text-caption-sm ${dir === "rtl" ? "order-3" : "order-1"}`}>{TimerParser(Number(movie.progress_time), true)}</span>
+          <span className={`shrink-0 lg:text-caption-md text-caption-sm ${dir === "rtl" ? "order-1" : "order-3"}`}>{TimerParser(safeDuration, true)}</span>
+          <Slider defaultValue={[progressPercent]} max={100} step={1} min={0} dir="ltr" disabled className="order-2" />
+          <span className={`shrink-0 lg:text-caption-md text-caption-sm ${dir === "rtl" ? "order-3" : "order-1"}`}>{TimerParser(progressTime, true)}</span>
         </div>
       </div>
     </div>
