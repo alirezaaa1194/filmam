@@ -61,7 +61,8 @@ export default function UserPanelComp({ type, title }: { type: UserMovieTypeEnum
               likes_count: item.episode!.likes_count ?? 0,
               dislikes_count: item.episode!.dislikes_count ?? 0,
             } : item.movie!;
-            return <Link key={item.id} href={`/movies/${item.movie!.slug || item.movie!.id}`} className="block min-w-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"><MovieCardComp movie={movieCard} compact titleClassName={isLikedEpisode ? "block min-w-0 max-w-full truncate" : ""} /></Link>;
+            const cardHref = isLikedEpisode ? itemHref(item) : `/movies/${item.movie!.slug || item.movie!.id}`;
+            return <Link key={item.id} href={cardHref} className="block min-w-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"><MovieCardComp movie={movieCard} compact titleClassName={isLikedEpisode ? "block min-w-0 max-w-full truncate" : ""} /></Link>;
           })}
         </div>
       ) : null}
