@@ -1,11 +1,13 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import UserPanelComp from "@/features/userPanel/userPanel.index";
 import UserPanelSkeletonComp from "@/features/userPanel/userPanelSkeleton/userPanelSkeleton.index";
 import { UserMovieTypeEnum } from "@/types";
 import { GetTranslation } from "@/scripts/server/translation";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = { title: "Liked movies and series | Filmam", description: "Movies and series you like on Filmam." };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await GetTranslation();
+  return { title: t("UserPanel.metaLikedTitle"), description: t("UserPanel.metaLikedDescription") };
+}
 
 async function LikedContent() {
   const { t } = await GetTranslation();

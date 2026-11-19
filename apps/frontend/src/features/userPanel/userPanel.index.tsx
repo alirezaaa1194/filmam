@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useLocale } from "@/hooks";
-import { SectionUserMovieTypeEnum, UserMovieListItemType, UserMovieTypeEnum } from "@/types";
+import { FileTypeEnum, MovieTypeEnum, SectionUserMovieTypeEnum, UserMovieListItemType, UserMovieTypeEnum } from "@/types";
 import MovieCardComp from "@/utilities/components/movie/movieCard/movieCard.index";
 import RecentWatchItemComp from "@/features/home/sections/recentWatch/recentWatchItem/recentWatchItem.index";
 import RecentWatchItemSkeletonComp from "@/features/home/sections/recentWatch/recentWatchItem/skeleton/recentWatchItemSkeleton.index";
@@ -52,7 +52,17 @@ export default function UserPanelComp({ type, title }: { type: UserMovieTypeEnum
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6 xl:grid-cols-5">
-          {items.filter((item) => item.movie).map((item) => <Link key={item.id} href={`/movies/${item.movie!.slug || item.movie!.id}`} className="block min-w-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"><MovieCardComp movie={item.movie!} compact /></Link>)}
+          {items.filter((item) => item.movie).map((item) => {
+            const isLikedEpisode = type === UserMovieTypeEnum.LIKE && item.entity_type === SectionUserMovieTypeEnum.EPISODE && item.episode;
+            const movieCard = isLikedEpisode ? {
+              title: `${item.movie!.title} - ${t("RecentWatch.season")} ${item.episode!.season_order ?? 1} - ${t("RecentWatch.episode")} ${item.episode!.order}`,
+              files: item.episode!.files,
+              type: MovieTypeEnum.SERIES,
+              likes_count: item.episode!.likes_count ?? 0,
+              dislikes_count: item.episode!.dislikes_count ?? 0,
+            } : item.movie!;
+            return <Link key={item.id} href={`/movies/${item.movie!.slug || item.movie!.id}`} className="block min-w-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"><MovieCardComp movie={movieCard} compact titleClassName={isLikedEpisode ? "block min-w-0 max-w-full truncate" : ""} /></Link>;
+          })}
         </div>
       ) : null}
       {!query.isPending && query.isFetchingNextPage ? <div className="mt-5">{skeletons(4)}</div> : null}
