@@ -57,15 +57,15 @@ export default function ProfileSettingsComp() {
           <h2 className="text-h-6 font-semibold text-white">{t("UserPanel.changePassword")}</h2>
           <label className="flex flex-col gap-2 text-body-xxs text-gray-7">
             {t("UserPanel.currentPassword")}
-            <PasswordInput dir="ltr" autoComplete="current-password" minLength={8} required value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder={t("UserPanel.currentPasswordPlaceholder")} className="rounded-lg" />
+            <PasswordInput dir="ltr" autoComplete="current-password" minLength={8} required value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder={t("UserPanel.currentPasswordPlaceholder")} className={`rounded-lg text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} />
           </label>
           <label className="flex flex-col gap-2 text-body-xxs text-gray-7">
             {t("UserPanel.newPassword")}
-            <PasswordInput dir="ltr" autoComplete="new-password" minLength={8} required value={newPassword} onChange={(event) => setNewPassword(event.target.value)} placeholder={t("UserPanel.newPasswordPlaceholder")} className="rounded-lg" />
+            <PasswordInput dir="ltr" autoComplete="new-password" minLength={8} required value={newPassword} onChange={(event) => setNewPassword(event.target.value)} placeholder={t("UserPanel.newPasswordPlaceholder")} className={`rounded-lg text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} />
           </label>
           <label className="flex flex-col gap-2 text-body-xxs text-gray-7">
             {t("Auth.fields.confirmPassword")}
-            <PasswordInput dir="ltr" autoComplete="new-password" minLength={8} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder={t("UserPanel.confirmPasswordPlaceholder")} aria-invalid={!!confirmPassword && confirmPassword !== newPassword} className="rounded-lg" />
+            <PasswordInput dir="ltr" autoComplete="new-password" minLength={8} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder={t("UserPanel.confirmPasswordPlaceholder")} aria-invalid={!!confirmPassword && confirmPassword !== newPassword} className={`rounded-lg text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} />
           </label>
           {!!confirmPassword && confirmPassword !== newPassword ? <p className="text-caption-sm text-error">{t("Auth.validation.passwordsDoNotMatch")}</p> : null}
           <Button type="submit" disabled={passwordMutation.isPending || newPassword.length < 8 || newPassword !== confirmPassword || currentPassword.length < 8} className="h-11 w-full cursor-pointer rounded-md text-button-s sm:w-fit sm:px-8">
