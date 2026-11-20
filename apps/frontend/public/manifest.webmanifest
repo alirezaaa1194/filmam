@@ -1,4 +1,6 @@
 {
+  "name": "Filmam",
+  "short_name": "Filmam",
   "id": "/",
   "start_url": "/",
   "scope": "/",
@@ -9,16 +11,16 @@
   "theme_color": "#0c0c0c",
   "icons": [
     {
-      "src": "/icons/filmam-pwa.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
+      "src": "/icons/filmam-pwa-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "/icons/filmam-pwa.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
-      "purpose": "maskable"
+      "src": "/icons/filmam-pwa-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ]
 }
