@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-        <link rel="manifest" href={`/manifest.webmanifest?lang=${locale.toLowerCase()}`} />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="application-name" content={pwaTitle} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content={pwaTitle} />

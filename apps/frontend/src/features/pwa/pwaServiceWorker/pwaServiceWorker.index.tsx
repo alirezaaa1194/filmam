@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useLocale } from "@/hooks";
 
 export default function PwaServiceWorkerComp({ userId }: { userId: number | null }) {
-  const { locale } = useLocale();
-
-  useEffect(() => {
-    const manifest = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
-    if (manifest) manifest.href = `/manifest.webmanifest?lang=${locale.toLowerCase()}`;
-  }, [locale]);
-
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
