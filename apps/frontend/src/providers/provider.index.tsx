@@ -12,6 +12,7 @@ import AuthModalProvider from "./authModalProvider";
 import ConfirmModalProvider from "./confirmModalProvider";
 import { Toaster } from "../utilities/components/ui";
 import { getQueryClient } from "../lib/getQueryClient";
+import PwaServiceWorkerComp from "@/features/pwa/pwaServiceWorker/pwaServiceWorker.index";
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then((m) => ({
@@ -36,6 +37,7 @@ function Provider({ user, locale, children }: { user: UserType | null; locale: A
             <ConfirmModalProvider>
               <DirectionProvider dir={GetDir(locale)}>
                 <LayoutProvider>
+                  <PwaServiceWorkerComp userId={user?.id ?? null} />
                   {children}
                   <Toaster />
                 </LayoutProvider>
