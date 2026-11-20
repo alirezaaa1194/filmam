@@ -5,8 +5,15 @@ import { ParseSetCookie, DefaultLanguage } from "./scripts";
 export async function proxy(req: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
   const isUserPanelRoute = req.nextUrl.pathname === "/profile" || req.nextUrl.pathname.startsWith("/profile/");
+  const isForbiddenRoute = req.nextUrl.pathname === "/403";
+  const redirectResponse = (response: NextResponse, pathname: string) => {
+    const redirect = NextResponse.redirect(new URL(pathname, req.url));
+    response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+    return redirect;
+  };
 
   if (req.cookies.get("accessToken")?.value) {
+    if (isForbiddenRoute) return redirectResponse(NextResponse.next(), "/profile");
     return NextResponse.next();
   }
 
@@ -26,9 +33,7 @@ export async function proxy(req: NextRequest) {
 
   if (!refreshResponse.ok) {
     if (isUserPanelRoute) {
-      const redirectResponse = NextResponse.redirect(new URL("/403", req.url));
-      response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
-      return redirectResponse;
+      return redirectResponse(response, "/403");
     }
     return response;
   }
@@ -44,6 +49,8 @@ export async function proxy(req: NextRequest) {
 
     response.cookies.set(name, value, options);
   }
+
+  if (isForbiddenRoute) return redirectResponse(response, "/profile");
 
   return response;
 }

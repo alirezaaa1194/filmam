@@ -7,6 +7,7 @@ import { AuthModalContext } from "@/contexts/authModal";
 import { useLocale } from "@/hooks";
 import { AuthModeEnum } from "@/types";
 import { Button } from "@/utilities/components/ui/button/button.index";
+import { RedirectToProfile } from "@/scripts/server/actions";
 
 export default function AccessDeniedComp() {
   const { setAuthMode } = use(AuthModalContext);
@@ -19,7 +20,7 @@ export default function AccessDeniedComp() {
         <h1 className="mb-3 text-h-5 font-bold text-white">{t("UserPanel.accessTitle")}</h1>
         <p className="mb-7 text-body-xxs leading-7 text-gray-7">{t("UserPanel.accessDescription")}</p>
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-          <Button onClick={() => setAuthMode({ mode: AuthModeEnum.LOGIN })} className="h-11 cursor-pointer rounded-md px-8 text-button-s">{t("UserPanel.login")}</Button>
+          <Button onClick={() => setAuthMode({ mode: AuthModeEnum.LOGIN, callback: RedirectToProfile })} className="h-11 cursor-pointer rounded-md px-8 text-button-s">{t("UserPanel.login")}</Button>
           <Button asChild variant="outline" className="h-11 rounded-md border-gray-10 px-8 text-button-s text-white">
             <Link href="/">{t("Common.viewAll")}</Link>
           </Button>

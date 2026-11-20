@@ -72,7 +72,7 @@ export default function MovieCatalogComp({ initialFilters }: { initialFilters: M
 
         {query.isError ? <div className="rounded-xl border border-gray-10 py-16 text-center"><p className="mb-4 text-sm text-gray-7">{t("errors.unknown")}</p><Button onClick={() => void query.refetch()}>{t("MovieCatalog.retry")}</Button></div> : null}
         {!query.isError && movies.length === 0 && !query.isPending ? <div className="py-20 text-center text-gray-7">{t("MovieCatalog.noResults")}</div> : null}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:grid-cols-5 lg:gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6 xl:grid-cols-5">
           {movies.map((movie: MovieListItemType) => <Link href={`/movies/${movie.slug}`} key={movie.id} className="block min-w-0"><MovieCardComp movie={movie} compact /></Link>)}
           {(query.isPending || query.isFetchingNextPage) && Array.from({ length: MOVIE_PAGE_SIZE }).map((_, index) => <MovieCardSkeletonComp key={`skeleton-${index}`} compact />)}
         </div>

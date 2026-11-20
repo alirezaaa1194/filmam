@@ -19,7 +19,7 @@ export default function UserPanelLayoutComp({ children }: { children: React.Reac
   return (
     <main dir={dir} className="mx-auto min-h-screen w-full max-w-layout-max px-layout-x-space pb-16 pt-[104px] lg:pt-[152px]">
       <nav aria-label={t("UserPanel.navigation")} className="mb-6 w-full max-w-full overflow-x-auto overscroll-x-contain pb-1 lg:mb-8">
-        <div className="flex w-max flex-nowrap gap-2">
+        <div className="flex w-max flex-nowrap gap-2 pb-2">
         {links.map(({ href, key, icon: Icon }) => {
           const active = href === "/profile" ? pathname === href : pathname.startsWith(href);
           return (

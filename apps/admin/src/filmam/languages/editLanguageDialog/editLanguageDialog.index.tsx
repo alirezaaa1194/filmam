@@ -66,7 +66,7 @@ export function EditLanguageDialog({
         method: 'GET',
       }),
     enabled: open,
-    staleTime: 0,
+    staleTime: Infinity,
   })
 
   const isLoading = isPending || isFetching || !languageDetail

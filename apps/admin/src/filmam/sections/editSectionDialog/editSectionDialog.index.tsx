@@ -47,7 +47,7 @@ export function EditSectionDialog({
         method: 'GET',
       }),
     enabled: open,
-    staleTime: 0,
+    staleTime: Infinity,
   })
 
   const isLoading = isPending || isFetching || !sectionDetail

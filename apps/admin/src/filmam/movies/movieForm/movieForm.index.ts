@@ -150,6 +150,7 @@ export function buildMovieFilesFromDetail(
     banner: fileOf('BANNER'),
     trailer: fileOf('TRAILER'),
     film: fileOf('FILM'),
+    trailerDuration: fileOf('TRAILER')[0]?.duration ?? '',
     introStartTime:
       film?.intro_start_time != null ? String(film.intro_start_time) : '',
     introDuration:
@@ -176,7 +177,13 @@ export function buildMoviePayload(
   append(files.poster[0], 'POSTER')
   append(files.thumbnail[0], 'THUMBNAIL')
   append(files.banner[0], 'BANNER')
-  append(files.trailer[0], 'TRAILER')
+  if (files.trailer[0]) {
+    filesPayload.push({
+      upload_id: files.trailer[0].id,
+      upload_type: 'TRAILER',
+      duration: files.trailerDuration.trim() || undefined,
+    })
+  }
   if (files.film[0]) {
     filesPayload.push({
       upload_id: files.film[0].id,

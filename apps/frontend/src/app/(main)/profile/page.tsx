@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import ProfileSettingsComp from "@/features/userPanel/profileSettings/profileSettings.index";
 import UserPanelSkeletonComp from "@/features/userPanel/userPanelSkeleton/userPanelSkeleton.index";
 import { GetTranslation } from "@/scripts/server/translation";
+import MetadataRuntimeMarkerComp from "@/features/metadataRuntimeMarker/metadataRuntimeMarker.index";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await GetTranslation();
@@ -10,5 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function ProfilePage() {
-  return <Suspense fallback={<UserPanelSkeletonComp profile />}><ProfileSettingsComp /></Suspense>;
+  return <>
+    <Suspense fallback={null}><MetadataRuntimeMarkerComp /></Suspense>
+    <Suspense fallback={<UserPanelSkeletonComp profile />}><ProfileSettingsComp /></Suspense>
+  </>;
 }

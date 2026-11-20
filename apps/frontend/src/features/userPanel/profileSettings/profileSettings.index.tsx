@@ -38,7 +38,7 @@ export default function ProfileSettingsComp() {
     <section>
       <h1 className="mb-5 text-h-5 font-bold text-white">{t("UserPanel.profile")}</h1>
       <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
-        <form onSubmit={(event) => { event.preventDefault(); infoMutation.mutate(); }} className="flex flex-col gap-5 rounded-xl border border-gray-11 bg-gray-13 p-5 sm:p-6">
+        <form onSubmit={(event) => { event.preventDefault(); infoMutation.mutate(); }} className="flex flex-col gap-5 rounded-xl border border-gray-12 bg-gray-13 p-5 sm:p-6">
           <h2 className="text-h-6 font-semibold text-white">{t("UserPanel.accountInfo")}</h2>
           <label className="flex flex-col gap-2 text-body-xxs text-gray-7">
             {t("Auth.fields.email")}
@@ -48,12 +48,12 @@ export default function ProfileSettingsComp() {
             {t("Auth.fields.username")}
             <Input dir={dir} value={username} placeholder={t("UserPanel.usernamePlaceholder")} minLength={3} required onChange={(event) => setUsername(event.target.value)} className="rounded-lg" />
           </label>
-          <Button type="submit" disabled={infoMutation.isPending || username.trim().length < 3} className="h-11 w-full cursor-pointer rounded-md text-button-s sm:w-fit sm:px-8">
+          <Button type="submit" disabled={infoMutation.isPending || username.trim().length < 3} className="h-11 w-full cursor-pointer rounded-md text-button-s disabled:cursor-not-allowed disabled:bg-gray-11 disabled:text-gray-8 disabled:opacity-100 sm:w-fit sm:px-8">
             {infoMutation.isPending ? <><Spinner className="size-4" />{t("UserPanel.saving")}</> : t("UserPanel.save")}
           </Button>
         </form>
 
-        <form onSubmit={(event) => { event.preventDefault(); if (newPassword !== confirmPassword) return; passwordMutation.mutate(); }} className="flex flex-col gap-5 rounded-xl border border-gray-11 bg-gray-13 p-5 sm:p-6">
+        <form onSubmit={(event) => { event.preventDefault(); if (newPassword !== confirmPassword) return; passwordMutation.mutate(); }} className="flex flex-col gap-5 rounded-xl border border-gray-12 bg-gray-13 p-5 sm:p-6">
           <h2 className="text-h-6 font-semibold text-white">{t("UserPanel.changePassword")}</h2>
           <label className="flex flex-col gap-2 text-body-xxs text-gray-7">
             {t("UserPanel.currentPassword")}
@@ -68,7 +68,7 @@ export default function ProfileSettingsComp() {
             <PasswordInput dir="ltr" autoComplete="new-password" minLength={8} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder={t("UserPanel.confirmPasswordPlaceholder")} aria-invalid={!!confirmPassword && confirmPassword !== newPassword} className={`rounded-lg text-body-xxs ${dir === "rtl" ? "[&_input::placeholder]:text-right" : "[&_input::placeholder]:text-left"}`} />
           </label>
           {!!confirmPassword && confirmPassword !== newPassword ? <p className="text-caption-sm text-error">{t("Auth.validation.passwordsDoNotMatch")}</p> : null}
-          <Button type="submit" disabled={passwordMutation.isPending || newPassword.length < 8 || newPassword !== confirmPassword || currentPassword.length < 8} className="h-11 w-full cursor-pointer rounded-md text-button-s sm:w-fit sm:px-8">
+          <Button type="submit" disabled={passwordMutation.isPending || newPassword.length < 8 || newPassword !== confirmPassword || currentPassword.length < 8} className="h-11 w-full cursor-pointer rounded-md text-button-s disabled:cursor-not-allowed disabled:bg-gray-11 disabled:text-gray-8 disabled:opacity-100 sm:w-fit sm:px-8">
             {passwordMutation.isPending ? <><Spinner className="size-4" />{t("UserPanel.saving")}</> : t("UserPanel.updatePassword")}
           </Button>
         </form>

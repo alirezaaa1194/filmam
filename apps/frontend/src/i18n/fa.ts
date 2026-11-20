@@ -220,6 +220,12 @@ export const FA: typeof EN = {
     },
   },
   errors: {
+    pageNotFoundTitle: "صفحه پیدا نشد",
+    pageNotFoundDescription: "صفحه‌ای که دنبالش هستید ممکن است جابه‌جا شده باشد یا دیگر وجود نداشته باشد.",
+    pageErrorTitle: "مشکلی پیش آمده است",
+    pageErrorDescription: "هنگام بارگذاری این صفحه خطای غیرمنتظره‌ای رخ داد.",
+    tryAgain: "تلاش دوباره",
+    goHome: "رفتن به خانه",
     badRequest: "مشکلی پیش آمده. لطفاً ورودی خود را بررسی کنید.",
     unauthorized: "اطلاعات ورود نامعتبر است یا نشست منقضی شده. لطفاً دوباره تلاش کنید.",
     forbidden: "شما مجوز انجام این کار را ندارید.",

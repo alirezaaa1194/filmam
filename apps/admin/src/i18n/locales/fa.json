@@ -797,6 +797,7 @@
     "banner": "بنر",
     "thumbnail": "بندانگشتی",
     "trailer": "تیزر",
+    "trailer_duration": "مدت زمان تیزر (ثانیه)",
     "duration": "مدت زمان (ثانیه)",
     "intro_start_time": "زمان شروع اینترو",
     "intro_duration": "مدت اینترو",
@@ -842,7 +843,7 @@
       "poster_required": "فایل پوستر الزامی است.",
       "thumbnail_required": "فایل بندانگشتی الزامی است.",
       "film_required": "فایل فیلم الزامی است.",
-      "intro_outro_required": "فایل‌های اینترو و اترو باید با هم ارسال شوند.",
+      "intro_outro_required": "مدت فیلم، زمان شروع اینترو، مدت اینترو و مدت اترو باید عدد معتبر باشند.",
       "series_film_forbidden": "یک سریال نمی‌تواند یک فایل فیلم واحد داشته باشد."
     },
     "likes_count": "لایک‌ها",

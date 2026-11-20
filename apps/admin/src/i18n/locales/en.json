@@ -797,6 +797,7 @@
     "banner": "Banner",
     "thumbnail": "Thumbnail",
     "trailer": "Trailer",
+    "trailer_duration": "Trailer Duration (seconds)",
     "duration": "Duration (seconds)",
     "intro_start_time": "Intro Start Time",
     "intro_duration": "Intro Duration",
@@ -842,7 +843,7 @@
       "poster_required": "Poster file is required.",
       "thumbnail_required": "Thumbnail file is required.",
       "film_required": "Film file is required.",
-      "intro_outro_required": "Intro and outro files are required together.",
+      "intro_outro_required": "Film duration, intro start time, intro duration, and outro duration must be valid numbers.",
       "series_film_forbidden": "A series cannot have a single film file."
     },
     "likes_count": "Likes",

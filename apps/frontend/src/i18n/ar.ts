@@ -220,6 +220,12 @@ export const AR: typeof EN = {
     },
   },
   errors: {
+    pageNotFoundTitle: "الصفحة غير موجودة",
+    pageNotFoundDescription: "ربما نُقلت الصفحة التي تبحث عنها أو لم تعد موجودة.",
+    pageErrorTitle: "حدث خطأ ما",
+    pageErrorDescription: "حدث خطأ غير متوقع أثناء تحميل هذه الصفحة.",
+    tryAgain: "حاول مرة أخرى",
+    goHome: "العودة إلى الرئيسية",
     badRequest: "حدث خطأ. يرجى التحقق من المدخلات.",
     unauthorized: "بيانات الدخول غير صحيحة أو انتهت الجلسة. يرجى المحاولة مرة أخرى.",
     forbidden: "ليس لديك إذن للقيام بهذا الإجراء.",

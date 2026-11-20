@@ -218,6 +218,12 @@ export const EN = {
     },
   },
   errors: {
+    pageNotFoundTitle: "Page not found",
+    pageNotFoundDescription: "The page you are looking for may have moved or no longer exists.",
+    pageErrorTitle: "Something went wrong",
+    pageErrorDescription: "An unexpected error occurred while loading this page.",
+    tryAgain: "Try again",
+    goHome: "Go to home",
     badRequest: "Something went wrong. Please check your input.",
     unauthorized: "Invalid credentials or session expired. Please try again.",
     forbidden: "You don't have permission to perform this action.",

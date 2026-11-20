@@ -50,7 +50,7 @@ export function EditEpisodeDialog({
         method: 'GET',
       }),
     enabled: open,
-    staleTime: 0,
+    staleTime: Infinity,
   })
 
   const {

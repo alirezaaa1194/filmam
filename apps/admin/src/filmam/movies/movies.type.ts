@@ -77,6 +77,7 @@ export type MovieFilesState = {
   banner: UploadType[]
   trailer: UploadType[]
   film: UploadType[]
+  trailerDuration: string
   introStartTime: string
   introDuration: string
   outroDuration: string
@@ -89,6 +90,7 @@ export const emptyMovieFilesState: MovieFilesState = {
   banner: [],
   trailer: [],
   film: [],
+  trailerDuration: '',
   introStartTime: '',
   introDuration: '',
   outroDuration: '',

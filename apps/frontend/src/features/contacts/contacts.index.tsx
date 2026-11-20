@@ -54,7 +54,7 @@ export default function ContactPageComp() {
             <ContactInfoCard icon={<Send2 className="size-8 stroke-primary" />} description={t("Contact.telegramDescription")} value="@filmam" href="https://t.me/filmam" />
             <ContactInfoCard className="col-span-2 lg:col-span-1" compactMobile icon={<Sms className="size-8 stroke-primary" />} description={t("Contact.emailDescription")} value={t("Contact.emailLabel")} />
           </div>
-          <div className="flex min-h-20 flex-wrap items-center justify-center! gap-x-6 gap-y-3 rounded-xl bg-gray-13 px-5 py-5 lg:min-h-[126px] lg:justify-end lg:gap-8 lg:px-10">
+          <div className="flex min-h-20 flex-wrap items-center justify-center! gap-x-6 gap-y-3 rounded-xl border border-gray-12 bg-gray-13 px-5 py-5 lg:min-h-[126px] lg:justify-end lg:gap-8 lg:px-10">
             <span className="text-center text-body-xxs text-white">{t("Contact.socialTitle")}</span>
             <div className="flex items-center gap-2">
               <ContactSocialIcon href="https://www.youtube.com" label="YouTube">
@@ -72,7 +72,7 @@ export default function ContactPageComp() {
             </div>
           </div>
         </section>
-        <form onSubmit={handleSubmit} className={`flex flex-col gap-5 rounded-xl bg-gray-13 p-5 sm:p-6 ${user ? "h-fit" : ""}`}>
+        <form onSubmit={handleSubmit} className={`flex flex-col gap-5 rounded-xl border border-gray-12 bg-gray-13 p-5 sm:p-6 ${user ? "h-fit" : ""}`}>
           {!user ? (
             <ContactFormField label={t("Contact.email")}>
               <Input dir={dir} className="rounded-lg" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder={t("Contact.emailPlaceholder")} required />
@@ -81,7 +81,7 @@ export default function ContactPageComp() {
           <ContactFormField label={t("Contact.message")}>
             <Textarea className="h-[172px] resize-none rounded-lg" value={message} onChange={(event) => setMessage(event.target.value)} placeholder={t("Contact.messagePlaceholder")} required />
           </ContactFormField>
-          <Button type="submit" disabled={contactMutation.isPending || !message.trim() || (!user && !email.trim())} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary text-button-md text-white hover:bg-primary/85 disabled:bg-gray-12 disabled:text-gray-8">
+          <Button type="submit" disabled={contactMutation.isPending || !message.trim() || (!user && !email.trim())} className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-primary text-button-md text-white hover:bg-primary/85 disabled:cursor-not-allowed disabled:bg-gray-11 disabled:text-gray-8 disabled:opacity-100">
             {contactMutation.isPending ? (
               <>
                 <Spinner className="size-5" />

@@ -6,10 +6,11 @@ import Link from "next/link";
 import { AuthModeEnum, UserRoleEnum } from "@/types";
 import { Separator } from "@/utilities/components/ui/separator/separator.index";
 import { useLocale, useLogOut } from "@/hooks";
-import { ReactNode, use, useState } from "react";
+import { ReactNode, use, useEffect, useState } from "react";
 import LanguageSwitcher from "../../languageSwitcher/languageSwitcher.index";
 import { AuthModalContext } from "../../../../contexts/authModal";
 import { UserContext } from "../../../../contexts";
+import { usePathname } from "next/navigation";
 
 function Sidebar({ children }: { children: ReactNode }) {
   const { t, dir } = useLocale();
@@ -18,6 +19,11 @@ function Sidebar({ children }: { children: ReactNode }) {
   const [openSheet, setOpenSheet] = useState(false);
   const { setAuthMode } = use(AuthModalContext);
   const { setConfirm, mutate, isRefreshing } = useLogOut();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpenSheet(false);
+  }, [pathname]);
 
   return (
     <div className="block lg:hidden size-5 relative">

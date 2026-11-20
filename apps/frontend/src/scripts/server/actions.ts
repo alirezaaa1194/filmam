@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { AppLanguagesEnum } from "../../types";
 import { DefaultLanguage } from "..";
+import { redirect } from "next/navigation";
 
 const DEFAULT_MAX_AGE = 60 * 60 * 24 * 7;
 const SAFE_NAME = /^[a-zA-Z0-9_-]+$/;
@@ -34,4 +35,8 @@ export async function ClearCookies(prefix?: string): Promise<void> {
       store.delete(cookie.name);
     }
   }
+}
+
+export async function RedirectToProfile(): Promise<never> {
+  redirect("/profile");
 }

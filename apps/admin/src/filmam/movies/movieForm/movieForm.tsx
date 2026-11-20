@@ -603,6 +603,17 @@ export function MovieForm({
             value={files.trailer}
             onChange={updateFiles('trailer')}
           />
+          {files.trailer.length > 0 && (
+            <div className='grid grid-cols-1 gap-3 rounded-lg border p-3'>
+              <TimingInput
+                label={t('movies.trailer_duration')}
+                value={files.trailerDuration}
+                onChange={(value) =>
+                  setFiles((prev) => ({ ...prev, trailerDuration: value }))
+                }
+              />
+            </div>
+          )}
           <FileUploadField
             label={t('movies.film')}
             fileType='video'

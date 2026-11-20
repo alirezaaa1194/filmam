@@ -1,8 +1,7 @@
-"use client"
-function error() {
-  return (
-    <div>error</div>
-  )
-}
+"use client";
 
-export default error
+import StatusPageComp from "@/features/statusPage/statusPage.index";
+
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return <StatusPageComp type="error" onRetry={reset} />;
+}

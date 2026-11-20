@@ -22,9 +22,9 @@ function EpisodeActionDropdownComp({ episodeId, seasonSlug, userMovies }: { epis
           <MoreVertical />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="!mt-1 !p-1  bg-gray-12 border border-gray-11 rounded-lg gap-1">
+      <DropdownMenuContent align="end" className="!mt-1 !p-1 bg-gray-13 border border-gray-12 rounded-lg gap-1">
         <DropdownMenuItem
-          className="w-full rounded-md bg-gray-12 hover:bg-gray-11 justify-start cursor-pointer text-caption-md! gap-1"
+          className="w-full rounded-md bg-transparent hover:bg-gray-12 justify-start cursor-pointer text-caption-md! gap-1"
           onClick={() => {
             if (user) {
               saveToggleEpisodeAction({ episodeId, isCurrentlySaved: isCurrentlySaved });

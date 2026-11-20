@@ -797,6 +797,7 @@
     "banner": "اللافتة",
     "thumbnail": "الصورة المصغرة",
     "trailer": "الإعلان",
+    "trailer_duration": "مدة الإعلان (بالثواني)",
     "duration": "المدة (ثانية)",
     "intro_start_time": "وقت بداية المقدمة",
     "intro_duration": "مدة المقدمة",
@@ -842,7 +843,7 @@
       "poster_required": "ملف الملصق مطلوب.",
       "thumbnail_required": "ملف الصورة المصغرة مطلوب.",
       "film_required": "ملف الفيلم مطلوب.",
-      "intro_outro_required": "يجب إرسال ملفي المقدمة والخاتمة معًا.",
+      "intro_outro_required": "يجب أن تكون مدة الفيلم ووقت بداية المقدمة ومدتها ومدة الخاتمة أرقامًا صحيحة.",
       "series_film_forbidden": "لا يمكن أن يحتوي المسلسل على ملف فيلم واحد."
     },
     "likes_count": "الإعجابات",

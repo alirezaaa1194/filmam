@@ -10,6 +10,6 @@ export default function ContactInfoCard({ icon, description, value, href, classN
     </span>
     <span className={`${compactMobile ? "hidden lg:block" : "block"} text-h-5 font-bold text-gray-3`}>{value}</span>
   </>;
-  const classNames = `flex ${compactMobile ? "min-h-[72px] flex-row-reverse gap-10 py-4 lg:min-h-[288px] lg:flex-col lg:py-6" : "min-h-[164px] flex-col gap-10 py-5 lg:min-h-[288px] lg:py-6"} items-center justify-between rounded-xl bg-gray-13 px-4 text-center ${className}`;
+  const classNames = `flex ${compactMobile ? "min-h-[72px] flex-row-reverse gap-10 py-4 lg:min-h-[288px] lg:flex-col lg:py-6" : "min-h-[164px] flex-col gap-10 py-5 lg:min-h-[288px] lg:py-6"} items-center justify-between rounded-xl border border-gray-12 bg-gray-13 px-4 text-center ${className}`;
   return href ? <a href={href} className={classNames}>{content}</a> : <div className={classNames}>{content}</div>;
 }
