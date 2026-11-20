@@ -11,7 +11,11 @@ export default function PwaServiceWorkerComp({ userId }: { userId: number | null
 
     const notifyWorker = (flush = false) => {
       const worker = navigator.serviceWorker.controller ?? registration?.active;
-      worker?.postMessage({ type: flush ? "CLIENT_ONLINE" : "SET_USER_SCOPE", userId: scope });
+      worker?.postMessage({
+        type: flush ? "CLIENT_ONLINE" : "SET_USER_SCOPE",
+        userId: scope,
+        pageUrl: window.location.href,
+      });
     };
 
     const handleOnline = () => notifyWorker(true);

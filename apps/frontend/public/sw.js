@@ -36,12 +36,16 @@ self.addEventListener("message", (event) => {
   if (!message || typeof message !== "object") return;
 
   if (message.type === "SET_USER_SCOPE") {
-    event.waitUntil(updateUserScope(message.userId));
+    event.waitUntil((async () => {
+      await updateUserScope(message.userId);
+      await cacheInitialPages(message.pageUrl);
+    })());
   }
 
   if (message.type === "CLIENT_ONLINE") {
     event.waitUntil((async () => {
       if (message.userId !== undefined) await updateUserScope(message.userId);
+      await cacheInitialPages(message.pageUrl);
       await flushOutbox();
     })());
   }
@@ -189,9 +193,9 @@ function jsonResponse(body, status = 200) {
   });
 }
 
-async function readResponseForCache(response, maxBytes) {
+async function readResponseForCache(response, maxBytes, allowNoStore = false) {
   if (!response.ok || response.status !== 200 || response.type === "opaque" || response.headers.has("set-cookie")) return null;
-  if (/no-store/i.test(response.headers.get("cache-control") || "")) return null;
+  if (!allowNoStore && /no-store/i.test(response.headers.get("cache-control") || "")) return null;
   const contentType = response.headers.get("content-type") || "";
   if (!/(?:application\/json|text\/x-component|text\/html)/i.test(contentType)) return null;
   const body = await response.clone().arrayBuffer();
@@ -262,7 +266,9 @@ async function networkFirstPage(request) {
 
   try {
     const response = await fetch(new Request(request, { cache: "no-store" }));
-    const cacheResponse = await readResponseForCache(response, MAX_PAGE_ITEM_BYTES);
+    // Page HTML can be marked no-store by Next because it contains request-time data.
+    // The SW still stores it in its private, user-scoped cache for offline navigation.
+    const cacheResponse = await readResponseForCache(response, MAX_PAGE_ITEM_BYTES, true);
     if (cacheResponse) {
       try {
         await cache.put(key, cacheResponse);
@@ -285,6 +291,38 @@ async function networkFirstPage(request) {
       headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
     });
   }
+}
+
+async function cacheInitialPages(pageUrl) {
+  if (self.navigator?.onLine === false) return;
+  const urls = new Set([new URL("/", self.location.origin).href]);
+  try {
+    const current = new URL(pageUrl);
+    if (current.origin === self.location.origin) urls.add(current.href);
+  } catch {
+    // The root route is still warmed when the current URL is unavailable.
+  }
+
+  const scope = await getUserScope();
+  const cache = await caches.open(PAGE_CACHE);
+  await Promise.all(Array.from(urls, async (url) => {
+    try {
+      const request = new Request(url, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: { Accept: "text/html,application/xhtml+xml" },
+      });
+      const response = await fetch(request);
+      const cacheResponse = await readResponseForCache(response, MAX_PAGE_ITEM_BYTES, true);
+      if (!cacheResponse) return;
+      await cache.put(cacheKey(request, scope), cacheResponse);
+    } catch {
+      // Warming is best-effort and must not affect page rendering or SW registration.
+    }
+  }));
+  await pruneCache(cache, MAX_PAGE_ENTRIES);
+  await enforceStorageBudget();
 }
 
 async function networkFirstAsset(request) {
